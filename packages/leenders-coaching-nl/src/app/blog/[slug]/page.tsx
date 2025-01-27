@@ -8,17 +8,15 @@ import {
 } from "@/utilities/metadata";
 import { formatDate } from "@/utilities/index";
 import { PortableText } from "@portabletext/react";
+import { FC } from "react";
 
-type PageParams = {
-  slug: string;
-};
+type PageProps = {
+  params: Promise<{ slug: string }>;
+}
 
-export async function generateMetadata({
-  params,
-}: {
-  params: PageParams;
-}): Promise<Metadata> {
-  const post = await getPost(params.slug);
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const slug = (await params).slug;
+  const post = await getPost(slug);
 
   if (!post) {
     return createMetadata({
@@ -66,8 +64,9 @@ export async function generateMetadata({
 /**
  * Individual blog post page component
  */
-export default async function BlogPostPage({ params }: { params: PageParams }) {
-  const post = await getPost(params.slug);
+const BlogPostPage: FC<PageProps> = async ({ params }) => {
+  const slug = (await params).slug;
+  const post = await getPost(slug);
 
   if (!post) {
     notFound();
@@ -86,4 +85,6 @@ export default async function BlogPostPage({ params }: { params: PageParams }) {
       <PortableText value={post.body} />
     </article>
   );
-}
+};
+
+export default BlogPostPage;
