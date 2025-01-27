@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "name": "@leenders-coaching/root",
+  "scripts": {
+    "dev": "pnpm --parallel run dev",
+    "build": "pnpm --parallel run build",
+    "lint": "pnpm --parallel run lint"
+  },
+  "resolutions": {
+    "graphql": "^16.10.0"
+  }
+}
