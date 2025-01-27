@@ -1,0 +1,1 @@
+export { DescriptionText } from "./DescriptionText";

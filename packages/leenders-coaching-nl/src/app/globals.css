@@ -1,0 +1,175 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-geist-sans: "Geist Sans", system-ui, sans-serif;
+    --font-geist-mono: "Geist Mono", monospace;
+
+    /* Modern neutral background */
+    --background: 220 33% 98%;
+    --foreground: 224 71.4% 4.1%;
+
+    /* Warmer primary colors - adjusted for better contrast */
+    --primary: 20 84% 54%;
+    --primary-foreground: 60 9.1% 97.8%;
+
+    /* Subtle secondary */
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 220.9 39.3% 11%;
+
+    /* Accent with pop */
+    --accent: 12 89% 89%;
+    --accent-foreground: 24 9.8% 10%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 224 71.4% 4.1%;
+
+    /* Card styling */
+    --card: 0 0% 100%;
+    --card-foreground: 224 71.4% 4.1%;
+
+    /* Muted backgrounds */
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
+
+    /* Shadow colors */
+    --shadow-color: 220 40% 2%;
+    --shadow-strength: 1%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --success: 142 72% 35%;
+    --success-foreground: 0 0% 98%;
+
+    --warning: 45 100% 50%;
+    --warning-foreground: 0 0% 98%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 224 71.4% 4.1%;
+    --foreground: 210 20% 98%;
+
+    /* Adjusted primary colors for dark mode */
+    --primary: 20 84% 74%;
+    --primary-foreground: 60 9.1% 97.8%;
+
+    /* Darker secondary for better contrast */
+    --secondary: 215 27.9% 16.9%;
+    --secondary-foreground: 210 20% 98%;
+
+    /* Brighter accent for dark mode */
+    --accent: 12 89% 89%;
+    --accent-foreground: 24 9.8% 10%;
+
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 216 12.2% 83.9%;
+
+    /* Card styling for dark mode */
+    --card: 224 71.4% 4.1%;
+    --card-foreground: 210 20% 98%;
+
+    /* Muted colors for dark mode */
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 74.9%;
+
+    /* Shadow colors for dark mode */
+    --shadow-color: 220 40% 2%;
+    --shadow-strength: 25%;
+
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --destructive: 0 84% 65%;
+    --destructive-foreground: 0 0% 98%;
+
+    --success: 142 72% 45%;
+    --success-foreground: 0 0% 98%;
+
+    --warning: 45 100% 60%;
+    --warning-foreground: 0 0% 98%;
+  }
+
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  /* Modern glass effect with dark mode support */
+  .glass-card {
+    @apply bg-background/60 backdrop-blur-lg border border-border/50 
+           shadow-[0_4px_12px_-2px_hsl(var(--shadow-color)/calc(var(--shadow-strength)_+_2%)),0_2px_4px_-2px_hsl(var(--shadow-color)/calc(var(--shadow-strength)_+_4%))]
+           dark:bg-background/40 dark:border-border/30 dark:backdrop-blur-2xl
+           transition-all duration-300;
+  }
+
+  /* Gradient hover effect with dark mode */
+  .gradient-hover {
+    @apply relative overflow-hidden transition-all duration-300;
+  }
+
+  .gradient-hover::after {
+    @apply content-[''] absolute inset-0 
+           bg-gradient-to-r from-primary/10 to-accent/10 
+           dark:from-primary/20 dark:to-accent/20
+           opacity-0 transition-opacity duration-300;
+  }
+
+  .gradient-hover:hover::after {
+    @apply opacity-100;
+  }
+
+  /* Card hover effect */
+  .card-hover {
+    @apply transition-all duration-300
+           hover:shadow-[0_8px_24px_-4px_hsl(var(--shadow-color)/calc(var(--shadow-strength)_+_4%)),0_4px_8px_-4px_hsl(var(--shadow-color)/calc(var(--shadow-strength)_+_6%))]
+           hover:translate-y-[-2px];
+  }
+}
+
+/* Custom scrollbar styles with dark mode */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-secondary dark:bg-secondary/20;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary/60 rounded-full dark:bg-primary/40;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary/80 dark:bg-primary/60;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Modern text selection */
+::selection {
+  @apply bg-primary/30 text-foreground dark:bg-primary/40 dark:text-foreground;
+}
+
+/* Modern focus outline */
+*:focus-visible {
+  @apply outline-none ring-2 ring-primary/60 ring-offset-2 ring-offset-background 
+         dark:ring-primary/40 dark:ring-offset-background;
+}
