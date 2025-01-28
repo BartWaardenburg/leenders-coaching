@@ -4,6 +4,15 @@ import { defaultMetadata } from "@/config/metadata.config";
 
 export const runtime = "edge";
 
+/* Font loading */
+const playfairDisplayData = fetch(
+  new URL("../../../assets/fonts/PlayfairDisplay-Bold.ttf", import.meta.url)
+).then((res) => res.arrayBuffer());
+
+const montserratData = fetch(
+  new URL("../../../assets/fonts/Montserrat-Regular.ttf", import.meta.url)
+).then((res) => res.arrayBuffer());
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const title = searchParams.get("title");
@@ -15,17 +24,11 @@ export async function GET(request: Request) {
   }
 
   try {
-    const playfairDisplay = await fetch(
-      new URL(
-        "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap",
-      ),
-    ).then((res) => res.arrayBuffer());
-
-    const montserrat = await fetch(
-      new URL(
-        "https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap",
-      ),
-    ).then((res) => res.arrayBuffer());
+    /* Load fonts */
+    const [playfairDisplay, montserrat] = await Promise.all([
+      playfairDisplayData,
+      montserratData,
+    ]);
 
     return new ImageResponse(
       (
@@ -36,34 +39,64 @@ export async function GET(request: Request) {
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-start",
-            justifyContent: "flex-end",
-            backgroundImage: imagePath
-              ? `url(${imagePath})`
-              : "linear-gradient(to bottom right, #0A0B0F, #1F2937)",
+            justifyContent: "center",
+            background: imagePath
+              ? `linear-gradient(to right, rgba(236, 105, 39, 0.9), rgba(236, 105, 39, 0.8)), url(${imagePath})`
+              : `linear-gradient(135deg, #f7f3f0 0%, #efe7e1 100%)`,
             backgroundSize: "cover",
             backgroundPosition: "center",
-            padding: "48px",
+            position: "relative",
+            overflow: "hidden",
           }}
         >
+          {/* Decorative elements */}
           <div
             style={{
-              marginTop: "auto",
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: "8px",
+              background: "linear-gradient(90deg, rgb(236, 105, 39), transparent)",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              top: "48px",
+              left: "48px",
+              fontSize: "32px",
+              fontFamily: "Montserrat",
+              color: imagePath ? "#f7f3f0" : "rgb(236, 105, 39)",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+            }}
+          >
+            {defaultMetadata.title}
+          </div>
+          {/* Main content */}
+          <div
+            style={{
               display: "flex",
               flexDirection: "column",
-              gap: "16px",
-              color: "white",
+              gap: "32px",
+              padding: "0 48px",
+              maxWidth: "90%",
+              marginTop: "48px",
             }}
           >
             <h1
               style={{
-                fontSize: "64px",
+                fontSize: "120px",
                 fontFamily: "Playfair Display",
                 lineHeight: 1.1,
                 margin: 0,
-                background: "linear-gradient(to right, #FFFFFF, #E5E7EB)",
-                WebkitBackgroundClip: "text",
+                background: "linear-gradient(to bottom, rgb(236, 105, 39) 0%, rgb(236, 105, 39) 50%, rgba(236, 105, 39, 0.8) 100%)",
+                backgroundClip: "text",
                 color: "transparent",
-                maxWidth: "800px",
+                textShadow: "none",
+                letterSpacing: "-0.02em",
+                fontWeight: 800,
               }}
             >
               {title}
@@ -71,46 +104,30 @@ export async function GET(request: Request) {
             {description && (
               <p
                 style={{
-                  fontSize: "24px",
+                  fontSize: "42px",
                   fontFamily: "Montserrat",
                   margin: 0,
-                  color: "#E5E7EB",
-                  maxWidth: "600px",
+                  color: imagePath ? "#f7f3f0" : "rgb(236, 105, 39)",
+                  lineHeight: 1.4,
+                  textShadow: imagePath ? "0 1px 2px rgba(38, 24, 16, 0.1)" : "none",
+                  maxWidth: "95%",
                 }}
               >
                 {description}
               </p>
             )}
           </div>
+          {/* Bottom decorative line */}
           <div
             style={{
-              marginTop: "48px",
-              display: "flex",
-              alignItems: "center",
-              gap: "16px",
+              position: "absolute",
+              bottom: 0,
+              right: 0,
+              width: "50%",
+              height: "4px",
+              background: "linear-gradient(90deg, transparent, rgb(236, 105, 39))",
             }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logo.png"
-              alt={defaultMetadata.title}
-              width={48}
-              height={48}
-              style={{
-                borderRadius: "50%",
-              }}
-            />
-            <p
-              style={{
-                fontSize: "24px",
-                fontFamily: "Montserrat",
-                color: "#FFFFFF",
-                margin: 0,
-              }}
-            >
-              {defaultMetadata.title}
-            </p>
-          </div>
+          />
         </div>
       ),
       {

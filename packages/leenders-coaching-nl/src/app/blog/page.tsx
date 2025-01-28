@@ -5,7 +5,7 @@ import { BlogCard, type BlogPost } from "@/components/ui/BlogCard";
 import { Grid } from "@/components/ui/Grid";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Section } from "@/components/ui/Section";
-import { getAllPosts } from "@/lib/sanity.queries";
+import { getAllPosts } from "@/graphql/queries";
 import { formatDate, calculateReadingTime } from "@/utilities/index";
 import { generateMetadata } from "@/utilities/metadata";
 
@@ -30,15 +30,19 @@ export const metadata: Metadata = generateMetadata({
 const BlogPage: FC = async () => {
   const posts = await getAllPosts();
 
-  const blogPosts: BlogPost[] = posts.map((post) => ({
-    title: post.title,
-    description:
-      post.body?.[0]?.children?.[0]?.text || "Preview of the blog post...",
-    date: formatDate(post.publishedAt),
-    image: post.imageUrl ?? "/images/blog/placeholder.jpg",
-    slug: post.slug.current,
-    readingTime: calculateReadingTime(post.body),
-  }));
+  const blogPosts: BlogPost[] = posts
+    .filter((post): post is NonNullable<typeof post> =>
+      post?.title !== null &&
+      post?.slug?.current !== null
+    )
+    .map((post) => ({
+      title: post.title ?? "",
+      description: post.bodyRaw?.[0]?.children?.[0]?.text || "Preview of the blog post...",
+      date: formatDate(post.publishedAt),
+      image: post.image?.asset?.url ?? "/images/blog/placeholder.jpg",
+      slug: post.slug?.current ?? "",
+      readingTime: calculateReadingTime(post.bodyRaw),
+    }));
 
   return (
     <Section>
@@ -46,7 +50,7 @@ const BlogPage: FC = async () => {
         title="Blog & Insights"
         description="Thoughts and advice on personal development, career growth, and life coaching"
       />
-      <Grid columns={{ default: 1, md: 2 }} className="max-w-5xl">
+      <Grid columns={{ default: 1, md: 2 }} maxWidth="5xl">
         {blogPosts.map((post) => (
           <BlogCard key={post.slug} post={post} />
         ))}

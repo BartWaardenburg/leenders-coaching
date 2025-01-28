@@ -1,14 +1,17 @@
 import { type Metadata } from "next";
 import { notFound } from "next/navigation";
+import { type FC } from "react";
+import { PortableText as BasePortableText } from "@portabletext/react";
 
-import { getPost } from "@/lib/sanity.queries";
+import { CenteredContent } from "@/components/ui/CenteredContent";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { Section } from "@/components/ui/Section";
+import { getPost } from "@/graphql/queries";
 import {
   generateMetadata as createMetadata,
   generateArticleStructuredData,
 } from "@/utilities/metadata";
 import { formatDate } from "@/utilities/index";
-import { PortableText } from "@portabletext/react";
-import { FC } from "react";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -18,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const slug = (await params).slug;
   const post = await getPost(slug);
 
-  if (!post) {
+  if (!post?.title) {
     return createMetadata({
       title: "Post Not Found",
       description: "The requested blog post could not be found.",
@@ -26,35 +29,41 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     });
   }
 
-  // Create dynamic OG image URL
-  const ogImageUrl = new URL("/api/og", process.env.NEXT_PUBLIC_BASE_URL);
-  ogImageUrl.searchParams.set("title", post.title);
-  if (post.body?.[0]?.children?.[0]?.text) {
-    ogImageUrl.searchParams.set("description", post.body[0].children[0].text);
+  /* Get base URL from environment or use default */
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://leenders-coaching.nl';
+  const ogImageUrl = new URL('/api/og', baseUrl);
+
+  const title = post.title;
+  const description = post.bodyRaw?.[0]?.children?.[0]?.text;
+  const imageUrl = post.image?.asset?.url;
+
+  ogImageUrl.searchParams.set("title", title);
+  if (description) {
+    ogImageUrl.searchParams.set("description", description);
   }
-  if (post.imageUrl) {
-    ogImageUrl.searchParams.set("image", post.imageUrl);
+  if (imageUrl) {
+    ogImageUrl.searchParams.set("image", imageUrl);
   }
 
   const structuredData = generateArticleStructuredData({
-    title: post.title,
-    description: post.body?.[0]?.children?.[0]?.text,
-    image: post.imageUrl,
-    datePublished: post.publishedAt,
-    dateModified: post._updatedAt,
-    author: post.author?.name,
+    title,
+    description: description ?? undefined,
+    image: imageUrl ?? undefined,
+    datePublished: post.publishedAt ?? undefined,
+    dateModified: post.publishedAt ?? undefined,
+    author: undefined,
   });
 
   return createMetadata({
-    title: post.title,
-    description: post.body?.[0]?.children?.[0]?.text,
+    title,
+    description: description || undefined,
     type: "article",
     images: [
       {
         url: ogImageUrl.toString(),
         width: 1200,
         height: 630,
-        alt: post.title,
+        alt: title,
       },
     ],
     structuredData,
@@ -68,22 +77,22 @@ const BlogPostPage: FC<PageProps> = async ({ params }) => {
   const slug = (await params).slug;
   const post = await getPost(slug);
 
-  if (!post) {
+  if (!post?.title) {
     notFound();
   }
 
   return (
-    <article className="prose prose-lg dark:prose-invert mx-auto">
-      <header className="text-center mb-8">
-        <h1>{post.title}</h1>
-        {post.publishedAt && (
-          <time dateTime={post.publishedAt} className="text-muted-foreground">
-            {formatDate(post.publishedAt)}
-          </time>
-        )}
-      </header>
-      <PortableText value={post.body} />
-    </article>
+    <Section>
+      <CenteredContent maxWidth="3xl">
+        <PageHeader
+          title={post.title}
+          description={post.publishedAt ? formatDate(post.publishedAt) : undefined}
+        />
+        <article className="prose prose-lg dark:prose-invert mx-auto">
+          <BasePortableText value={post.bodyRaw} />
+        </article>
+      </CenteredContent>
+    </Section>
   );
 };
 

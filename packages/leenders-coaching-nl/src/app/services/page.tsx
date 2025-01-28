@@ -72,7 +72,7 @@ const ServicesPage: FC = () => {
           title="Our Services"
           description="Personalized coaching services to help you reach your full potential"
         />
-        <Grid columns={{ default: 1, md: 2, lg: 3 }} className="max-w-7xl">
+        <Grid columns={{ default: 1, md: 2, lg: 3 }}>
           {services.map((service) => (
             <ServiceCard key={service.slug} service={service} />
           ))}

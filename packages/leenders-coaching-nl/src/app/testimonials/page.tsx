@@ -39,7 +39,7 @@ const TestimonialsPage: FC = () => {
         title="Client Testimonials"
         description="Hear what others say about their coaching experience"
       />
-      <Grid className="max-w-7xl">
+      <Grid>
         {testimonials.map((testimonial) => (
           <TestimonialCard key={testimonial.author} testimonial={testimonial} />
         ))}

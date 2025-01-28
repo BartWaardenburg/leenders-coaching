@@ -10,6 +10,7 @@ type GridProps = {
   };
   gap?: number;
   className?: string;
+  maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl";
 };
 
 /**
@@ -24,6 +25,7 @@ export const Grid: FC<GridProps> = ({
   },
   gap = 8,
   className,
+  maxWidth = "7xl",
 }) => {
   const gridClass = twMerge(
     "grid",
@@ -32,6 +34,7 @@ export const Grid: FC<GridProps> = ({
     columns.md && `md:grid-cols-${columns.md}`,
     columns.lg && `lg:grid-cols-${columns.lg}`,
     "mx-auto",
+    `max-w-${maxWidth}`,
     className,
   );
 

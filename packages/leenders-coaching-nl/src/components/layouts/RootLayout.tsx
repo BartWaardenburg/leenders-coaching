@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Analytics } from "@vercel/analytics/react";
 
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { Box } from "@/components/ui/Box";
@@ -34,6 +35,7 @@ export const RootLayout = ({ children, fonts }: RootLayoutProps) => {
             <Header />
             <Main>{children}</Main>
             <Footer {...footerConfig} />
+            <Analytics />
           </GradientBackground>
         </ThemeProvider>
       </Box>

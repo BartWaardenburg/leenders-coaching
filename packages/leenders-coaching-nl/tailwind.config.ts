@@ -40,7 +40,7 @@ const config: Config = {
           200: "#deccbd",
           300: "#cdb199",
           400: "#bc9675",
-          500: "#ab7b51", // Main brand color (terracotta)
+          500: "#ab7b51",
           600: "#8a6241",
           700: "#694931",
           800: "#473121",
@@ -58,13 +58,25 @@ const config: Config = {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
         },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
         sage: {
           50: "#f4f7f4",
           100: "#e9efe9",
           200: "#d3dfd3",
           300: "#bdcfbd",
           400: "#a7bfa7",
-          500: "#91af91", // Secondary color (sage green)
+          500: "#91af91",
           600: "#748c74",
           700: "#576957",
           800: "#3a463a",
@@ -76,7 +88,7 @@ const config: Config = {
           200: "#ebe3d7",
           300: "#e1d5c3",
           400: "#d7c7af",
-          500: "#cdb99b", // Accent color (sand)
+          500: "#cdb99b",
           600: "#a4947c",
           700: "#7b6f5d",
           800: "#524a3e",
@@ -87,6 +99,12 @@ const config: Config = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      boxShadow: {
+        glass:
+          "0 4px 12px -2px hsl(var(--shadow-color)/calc(var(--shadow-strength) + 2%)), 0 2px 4px -2px hsl(var(--shadow-color)/calc(var(--shadow-strength) + 4%))",
+        hover:
+          "0 8px 24px -4px hsl(var(--shadow-color)/calc(var(--shadow-strength) + 4%)), 0 4px 8px -4px hsl(var(--shadow-color)/calc(var(--shadow-strength) + 6%))",
       },
       keyframes: {
         "accordion-down": {
