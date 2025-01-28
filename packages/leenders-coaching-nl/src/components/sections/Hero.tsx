@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/Button";
 import { ButtonGroup } from "@/components/ui/ButtonGroup";
 import { CenteredContent } from "@/components/ui/CenteredContent";
 import { DescriptionText } from "@/components/ui/DescriptionText";
-import { GradientTitle } from "@/components/ui/GradientTitle";
+import { Heading } from "@/components/ui/Heading";
 import { Section } from "@/components/ui/Section";
 import { Stack } from "@/components/ui/Stack";
 
@@ -34,7 +34,12 @@ export const Hero = ({
     <Section className="relative">
       <CenteredContent>
         <Stack space={6}>
-          <GradientTitle>{title}</GradientTitle>
+          <Heading
+            level="h1"
+            variant="gradient"
+          >
+            {title}
+          </Heading>
           <DescriptionText>{description}</DescriptionText>
           <ButtonGroup>
             <Link href={primaryCta.href}>

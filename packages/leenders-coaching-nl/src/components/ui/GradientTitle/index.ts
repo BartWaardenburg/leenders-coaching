@@ -1,1 +1,0 @@
-export { GradientTitle } from "./GradientTitle";

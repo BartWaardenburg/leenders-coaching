@@ -10,59 +10,67 @@
       "Liberation Mono", "Courier New", monospace;
 
     /* Base colors */
-    --background: 220 33% 98%;
-    --foreground: 224 71.4% 4.1%;
-    --primary: 20 84% 54%;
-    --primary-foreground: 60 9.1% 97.8%;
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 220.9 39.3% 11%;
-    --accent: 12 89% 89%;
-    --accent-foreground: 24 9.8% 10%;
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 224 71.4% 4.1%;
+    --background: 0 0% 100%; /* rgb(255, 255, 255) */
+    --menu-background: 20 100% 95.7%; /* rgb(255, 238, 233) */
+    --foreground: 24 25% 15%; /* rgb(46, 41, 38) */
+    --primary: 24 59% 45%; /* A darker, more visible peachy/terracotta shade */
+    --primary-foreground: 0 0% 100%; /* White text for contrast */
+    --secondary: 20 30% 96%; /* rgb(248, 244, 243) */
+    --secondary-foreground: 24 25% 25%; /* rgb(77, 68, 64) */
+    --accent: 20 63% 82%; /* darker version of primary */
+    --accent-foreground: 24 25% 15%; /* rgb(46, 41, 38) */
+    --muted: 20 20% 96%; /* rgb(247, 245, 244) */
+    --muted-foreground: 24 15% 40%; /* rgb(122, 112, 107) */
+    --border: 20 15% 90%; /* rgb(233, 230, 229) */
+    --input: 20 15% 90%; /* rgb(233, 230, 229) */
+    --ring: 24 25% 15%; /* rgb(46, 41, 38) */
 
     /* Feedback colors */
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-    --success: 142 72% 35%;
-    --success-foreground: 0 0% 98%;
-    --warning: 45 100% 50%;
-    --warning-foreground: 0 0% 98%;
+    --destructive: 0 84% 60%; /* rgb(245, 77, 77) */
+    --destructive-foreground: 0 0% 98%; /* rgb(250, 250, 250) */
+    --success: 142 72% 35%; /* rgb(24, 153, 57) */
+    --success-foreground: 0 0% 98%; /* rgb(250, 250, 250) */
+    --warning: 45 100% 50%; /* rgb(255, 191, 0) */
+    --warning-foreground: 0 0% 98%; /* rgb(250, 250, 250) */
 
     /* Effects */
     --radius: 0.5rem;
-    --shadow-color: 220 40% 2%;
+    --shadow-color: 24 25% 2%; /* rgb(6, 5, 5) */
     --shadow-strength: 1%;
   }
 
   .dark {
-    --background: 224 71.4% 4.1%;
-    --foreground: 210 20% 98%;
-    --primary: 20 84% 74%;
-    --primary-foreground: 60 9.1% 97.8%;
-    --secondary: 215 27.9% 16.9%;
-    --secondary-foreground: 210 20% 98%;
-    --accent: 12 89% 89%;
-    --accent-foreground: 24 9.8% 10%;
-    --muted: 215 27.9% 16.9%;
-    --muted-foreground: 217.9 10.6% 74.9%;
-    --border: 215 27.9% 16.9%;
-    --input: 215 27.9% 16.9%;
-    --ring: 216 12.2% 83.9%;
-    --destructive: 0 84% 65%;
-    --destructive-foreground: 0 0% 98%;
-    --success: 142 72% 45%;
-    --success-foreground: 0 0% 98%;
-    --warning: 45 100% 60%;
-    --warning-foreground: 0 0% 98%;
+    --background: 24 25% 10%; /* rgb(31, 27, 26) */
+    --menu-background: 20 15% 8%; /* rgb(25, 22, 21) */
+    --foreground: 20 10% 98%; /* rgb(251, 250, 250) */
+    --primary: 24 59% 45%; /* Keeping the same primary color in dark mode */
+    --primary-foreground: 0 0% 100%; /* White text for contrast */
+    --secondary: 24 25% 15%; /* rgb(46, 41, 38) */
+    --secondary-foreground: 20 10% 98%; /* rgb(251, 250, 250) */
+    --accent: 20 63% 82%; /* darker version of primary */
+    --accent-foreground: 20 10% 98%; /* rgb(251, 250, 250) */
+    --muted: 24 25% 15%; /* rgb(46, 41, 38) */
+    --muted-foreground: 20 10% 70%; /* rgb(189, 179, 176) */
+    --border: 24 25% 20%; /* rgb(61, 54, 51) */
+    --input: 24 25% 20%; /* rgb(61, 54, 51) */
+    --ring: 20 10% 80%; /* rgb(212, 207, 205) */
+    --destructive: 0 84% 65%; /* rgb(247, 102, 102) */
+    --destructive-foreground: 0 0% 98%; /* rgb(250, 250, 250) */
+    --success: 142 72% 45%; /* rgb(31, 196, 73) */
+    --success-foreground: 0 0% 98%; /* rgb(250, 250, 250) */
+    --warning: 45 100% 60%; /* rgb(255, 204, 51) */
+    --warning-foreground: 0 0% 98%; /* rgb(250, 250, 250) */
     --shadow-strength: 25%;
   }
 
   * {
     @apply border-border;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
   }
 
   body {
@@ -77,38 +85,9 @@
            dark:backdrop-blur-2xl transition-all duration-300;
   }
 
-  .gradient-hover {
-    @apply relative overflow-hidden transition-all duration-300;
-  }
-
-  .gradient-hover::after {
-    @apply content-[''] absolute inset-0 
-           bg-gradient-to-r from-primary/10 to-accent/10 
-           dark:from-primary/20 dark:to-accent/20
-           opacity-0 transition-opacity duration-300;
-  }
-
-  .gradient-hover:hover::after {
-    @apply opacity-100;
-  }
-
   .card-hover {
     @apply transition-all duration-300 hover:shadow-hover hover:-translate-y-0.5;
   }
-}
-
-/* Custom scrollbar styles */
-::-webkit-scrollbar {
-  @apply w-2 h-2;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-secondary dark:bg-secondary/20;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-primary/60 rounded-full dark:bg-primary/40 hover:bg-primary/80 
-         dark:hover:bg-primary/60 transition-colors;
 }
 
 /* Smooth scrolling */

@@ -25,7 +25,7 @@ type GridSectionProps = {
 } & ComponentPropsWithoutRef<"section">;
 
 /**
- * Generic grid section component with consistent styling and gradient background
+ * Generic grid section component with consistent styling
  */
 export const GridSection = ({
   title,
@@ -35,11 +35,6 @@ export const GridSection = ({
   maxWidth = "5xl",
   ...props
 }: GridSectionProps) => {
-  const gradientClass =
-    variant === "primary"
-      ? "from-transparent via-primary/5 to-transparent dark:via-primary/10"
-      : "from-transparent via-secondary/30 to-transparent dark:via-secondary/10";
-
   const gridClass = [
     "grid gap-6 md:gap-8",
     columns.default === 1 && "grid-cols-1",
@@ -57,14 +52,9 @@ export const GridSection = ({
 
   return (
     <section
-      className={`container mx-auto px-4 py-16 md:py-24 relative`}
+      className={`container mx-auto px-4 py-16 md:py-24 ${variant === "primary" ? "bg-primary/5" : "bg-secondary/10"}`}
       {...props}
     >
-      {/* Gradient background */}
-      <div
-        className={`absolute inset-0 bg-gradient-to-b ${gradientClass} -z-10`}
-      />
-
       {title && <SectionHeader title={title} className="mb-12 md:mb-16" />}
       <div className={`${gridClass} max-w-${maxWidth} mx-auto`}>{children}</div>
     </section>

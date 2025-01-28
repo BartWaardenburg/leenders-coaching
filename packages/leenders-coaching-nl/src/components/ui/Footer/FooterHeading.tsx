@@ -1,10 +1,10 @@
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import type { ComponentPropsWithoutRef } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { Heading } from "@/components/ui/Heading";
 
 type FooterHeadingProps = {
-  children: ReactNode;
+  children: React.ReactNode;
 } & ComponentPropsWithoutRef<"h3">;
 
 /**
@@ -18,10 +18,10 @@ export const FooterHeading = ({
   return (
     <Heading
       level="h3"
-      variant="gradient"
-      font="playfair"
-      weight="bold"
-      className={twMerge("text-lg mb-4", className)}
+      variant="menu"
+      weight="normal"
+      spacing="none"
+      className={twMerge("text-lg", className)}
       {...props}
     >
       {children}

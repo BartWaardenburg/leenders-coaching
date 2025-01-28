@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from "react";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { Heading } from "@/components/ui/Heading";
@@ -7,30 +7,38 @@ import { Text } from "@/components/ui/Text";
 type SectionHeaderProps = {
   title: ReactNode;
   description?: string;
-  className?: string;
-};
+  align?: "left" | "center";
+} & ComponentPropsWithoutRef<"div">;
 
 /**
- * Generic section header component with title and optional description
+ * Section header with title and optional description
  */
-export const SectionHeader: FC<SectionHeaderProps> = ({
+export const SectionHeader = ({
   title,
   description,
+  align = "left",
   className,
-}) => {
+  ...props
+}: SectionHeaderProps) => {
   return (
-    <div className={twMerge("text-center max-w-3xl mx-auto mb-12", className)}>
+    <div
+      className={twMerge(
+        "max-w-3xl",
+        align === "center" && "mx-auto text-center",
+        className,
+      )}
+      {...props}
+    >
       <Heading
         level="h2"
         variant="large"
-        font="playfair"
         weight="bold"
-        className="mb-4"
+        className="mb-6"
       >
         {title}
       </Heading>
       {description && (
-        <Text variant="large" weight="medium" className="text-foreground/80">
+        <Text variant="muted" className="text-lg">
           {description}
         </Text>
       )}

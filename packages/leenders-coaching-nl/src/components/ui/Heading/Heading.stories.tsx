@@ -24,11 +24,6 @@ const meta = {
       options: ["bold", "extrabold"],
       description: "The font weight of the heading",
     },
-    font: {
-      control: "select",
-      options: ["playfair", "montserrat"],
-      description: "The font family to use",
-    },
     spacing: {
       control: "select",
       options: ["none", "normal"],
@@ -89,12 +84,11 @@ export const SmallH1: Story = {
   },
 };
 
-export const ExtraboldMontserrat: Story = {
+export const ExtraboldHeading: Story = {
   args: {
     level: "h2",
     weight: "extrabold",
-    font: "montserrat",
-    children: "Extrabold Montserrat Heading",
+    children: "Extrabold Heading",
   },
 };
 

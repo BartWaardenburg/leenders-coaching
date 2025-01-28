@@ -6,9 +6,8 @@ type HeadingLevel = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 type HeadingProps = {
   level?: HeadingLevel;
   children: ReactNode;
-  variant?: "default" | "gradient" | "large" | "small";
-  weight?: "bold" | "extrabold";
-  font?: "playfair" | "montserrat";
+  variant?: "default" | "gradient" | "large" | "small" | "menu";
+  weight?: "bold" | "extrabold" | "normal";
   spacing?: "none" | "normal";
 } & ComponentPropsWithoutRef<"h1">;
 
@@ -19,8 +18,7 @@ export const Heading = ({
   level = "h1",
   children,
   variant = "default",
-  weight = "bold",
-  font = "playfair",
+  weight = "extrabold",
   spacing = "normal",
   className,
   ...props
@@ -29,15 +27,12 @@ export const Heading = ({
 
   const styles = twMerge(
     /* Font family */
-    font === "playfair" && "font-playfair",
-    font === "montserrat" && "font-montserrat",
+    "font-playfair",
+    "tracking-tight !leading-tight md:!leading-tight",
     /* Font weight */
     weight === "bold" && "font-bold",
     weight === "extrabold" && "font-extrabold",
-    /* Line heights */
-    level === "h1" && "leading-[1.6] md:leading-[1.6]",
-    level === "h2" && "leading-[1.5]",
-    level === "h3" && "leading-[1.5]",
+    weight === "normal" && "font-normal",
     /* Base sizes by level */
     level === "h1" && "text-4xl md:text-5xl",
     level === "h2" && "text-3xl md:text-4xl",
@@ -55,11 +50,9 @@ export const Heading = ({
       level === "h6" && "mb-2",
     ],
     /* Variants */
-    variant === "default" && "text-foreground",
+    variant === "default" && "bg-clip-text text-transparent bg-gradient-to-b from-primary via-primary to-primary/80",
     variant === "gradient" && [
       "bg-clip-text text-transparent bg-gradient-to-b from-primary via-primary to-primary/80",
-      "tracking-tight !leading-[1.3] md:!leading-[1.3]",
-      level === "h1" && "text-5xl md:text-7xl",
     ],
     variant === "large" && [
       level === "h1" && "text-5xl md:text-7xl",
@@ -70,6 +63,9 @@ export const Heading = ({
       level === "h1" && "text-3xl md:text-4xl",
       level === "h2" && "text-2xl md:text-3xl",
       level === "h3" && "text-xl md:text-2xl",
+    ],
+    variant === "menu" && [
+      "text-lg md:text-xl font-normal text-foreground",
     ],
     className,
   );

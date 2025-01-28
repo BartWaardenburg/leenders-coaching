@@ -1,16 +1,17 @@
-import type { ComponentPropsWithoutRef } from "react";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
+import { Container } from "@/components/ui/Container";
 import { Heading } from "@/components/ui/Heading";
 import { Text } from "@/components/ui/Text";
 
 type PageHeaderProps = {
-  title: string;
+  title: ReactNode;
   description?: string;
-} & ComponentPropsWithoutRef<"div">;
+} & ComponentPropsWithoutRef<"header">;
 
 /**
- * Page header component with title and optional description
+ * Page header with title and optional description
  */
 export const PageHeader = ({
   title,
@@ -19,21 +20,27 @@ export const PageHeader = ({
   ...props
 }: PageHeaderProps) => {
   return (
-    <div className={twMerge("text-center max-w-4xl mx-auto", className)} {...props}>
-      <Heading
-        level="h1"
-        variant="gradient"
-        font="playfair"
-        weight="extrabold"
-        className="text-5xl md:text-7xl mb-6"
-      >
-        {title}
-      </Heading>
-      {description && (
-        <Text variant="large" className="mb-8">
-          {description}
-        </Text>
-      )}
-    </div>
+    <header
+      className={twMerge("py-24 md:py-32", className)}
+      {...props}
+    >
+      <Container>
+        <div className="max-w-3xl">
+          <Heading
+            level="h1"
+            variant="large"
+            weight="bold"
+            className="mb-6"
+          >
+            {title}
+          </Heading>
+          {description && (
+            <Text variant="muted" className="text-lg md:text-xl">
+              {description}
+            </Text>
+          )}
+        </div>
+      </Container>
+    </header>
   );
 };
