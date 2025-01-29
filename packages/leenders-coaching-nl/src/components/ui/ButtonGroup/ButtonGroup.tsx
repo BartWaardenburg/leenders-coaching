@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
+import { Flex } from "@/components/ui/Flex";
 
 type ButtonGroupProps = {
   children: ReactNode;
@@ -17,15 +18,18 @@ export const ButtonGroup = ({
   ...props
 }: ButtonGroupProps) => {
   return (
-    <div
+    <Flex
+      direction={stackOnMobile ? "column" : "row"}
+      items="center"
+      justify="center"
+      gap={4}
       className={twMerge(
-        "flex gap-4 justify-center items-center",
-        stackOnMobile && "flex-col sm:flex-row",
+        stackOnMobile && "sm:flex-row",
         className,
       )}
       {...props}
     >
       {children}
-    </div>
+    </Flex>
   );
 };

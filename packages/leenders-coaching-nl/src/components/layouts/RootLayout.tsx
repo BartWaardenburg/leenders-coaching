@@ -24,14 +24,14 @@ export const RootLayout = ({ children, fonts }: RootLayoutProps) => {
   return (
     <Box
       as="html"
-      lang="en"
+      lang="nl"
       className={fonts.variables.join(" ")}
       suppressHydrationWarning
     >
-      <Box as="body" className="antialiased">
+      <Box as="body" className="antialiased min-h-screen flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Header />
-          <Main>{children}</Main>
+          <Main className="flex-1">{children}</Main>
           <Footer {...footerConfig} />
           <Analytics />
         </ThemeProvider>

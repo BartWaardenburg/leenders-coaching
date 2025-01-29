@@ -3,11 +3,14 @@
 import type { ComponentPropsWithoutRef } from "react";
 import { useState, useEffect } from "react";
 import { twMerge } from "tailwind-merge";
-import { FiMenu, FiX } from "react-icons/fi";
 
-import { IconButton } from "@/components/ui/IconButton";
+import { IconToggleButton } from "@/components/ui/IconToggleButton";
 import { ThemeToggleButton } from "@/components/ui/ThemeToggleButton";
+import { Container } from "@/components/ui/Container";
+import { Box } from "@/components/ui/Box";
+import { Flex } from "@/components/ui/Flex";
 import { uiConfig } from "@/config/ui.config";
+import { iconPaths } from "@/config/icons.config";
 
 import { Logo } from "./Logo";
 import { NavigationItems } from "./NavigationItems";
@@ -30,7 +33,8 @@ export const Header = ({ className, ...props }: HeaderProps) => {
 
   return (
     <>
-      <header
+      <Box
+        as="header"
         className={twMerge(
           "fixed top-0 z-50 w-full transition-colors duration-300 bg-background",
           className,
@@ -38,41 +42,42 @@ export const Header = ({ className, ...props }: HeaderProps) => {
         style={isMenuOpen ? { backgroundColor: "hsl(var(--menu-background))" } : undefined}
         {...props}
       >
-        <div className="container mx-auto px-4 sm:px-8 md:px-12 lg:px-16">
-          <div className="py-8 flex items-center justify-between">
+        <Container>
+          <Flex justify="between" items="center" className="py-8">
             <Logo />
-            <div className="flex items-center gap-4">
+            <Flex items="center" gap={4}>
               <ThemeToggleButton className="transition-transform hover:scale-105" />
-              <IconButton
+              <IconToggleButton
+                isToggled={isMenuOpen}
+                defaultIcon={iconPaths.menu.hamburger}
+                toggledIcon={iconPaths.menu.close}
                 label={uiConfig.mobileMenu.toggleButton}
                 onClick={toggleMenu}
                 className="transition-transform hover:scale-105"
-              >
-                {isMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
-              </IconButton>
-            </div>
-          </div>
-          <div className={`h-px transition-colors duration-300 ${isMenuOpen ? 'bg-foreground/80' : 'bg-foreground/10'}`} />
-        </div>
-      </header>
+              />
+            </Flex>
+          </Flex>
+          <Box className={`h-px transition-colors duration-300 ${isMenuOpen ? 'bg-foreground/80' : 'bg-foreground/10'}`} />
+        </Container>
+      </Box>
 
-      <div
+      <Box
         className={twMerge(
           "fixed inset-0 z-40 transform transition-transform duration-300 ease-in-out bg-menu",
           isMenuOpen ? "translate-y-0" : "-translate-y-full",
         )}
       >
-        <div className="h-screen overflow-y-auto">
-          <div className="container mx-auto px-4 sm:px-8 md:px-12 lg:px-16 min-h-screen pt-32">
-            <div className="flex flex-col h-full">
-              <nav className="mb-16">
+        <Box className="h-screen overflow-y-auto">
+          <Container className="min-h-screen pt-36">
+            <Flex direction="column" className="h-full">
+              <Box as="nav" className="mb-16 text-left md:text-right">
                 <NavigationItems onItemClick={() => setIsMenuOpen(false)} />
-              </nav>
+              </Box>
               <MenuFooter />
-            </div>
-          </div>
-        </div>
-      </div>
+            </Flex>
+          </Container>
+        </Box>
+      </Box>
     </>
   );
 };

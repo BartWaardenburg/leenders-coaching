@@ -3,16 +3,12 @@ import type { FC } from "react";
 import { Grid } from "@/components/ui/Grid";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Section } from "@/components/ui/Section";
-import {
-  TestimonialCard,
-  type Testimonial,
-} from "@/components/ui/TestimonialCard";
 
 /**
  * Testimonials page component
  */
 const TestimonialsPage: FC = () => {
-  const testimonials: Testimonial[] = [
+  const testimonials = [
     {
       quote:
         "Working with Leenders Coaching transformed my approach to leadership and personal growth.",
@@ -41,7 +37,7 @@ const TestimonialsPage: FC = () => {
       />
       <Grid>
         {testimonials.map((testimonial) => (
-          <TestimonialCard key={testimonial.author} testimonial={testimonial} />
+          <div key={testimonial.author}>{testimonial.author}</div>
         ))}
       </Grid>
     </Section>

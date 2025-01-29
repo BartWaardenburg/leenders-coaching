@@ -1,79 +1,115 @@
 import type { FC } from "react";
+import simoneImage from "@/assets/images/99-Simone-louise-boonstoppel-fotografie.jpg";
 
-import { FeaturedServices } from "@/components/sections/FeaturedServices";
-import { FeaturedTestimonials } from "@/components/sections/FeaturedTestimonials";
-import { Hero } from "@/components/sections/Hero";
+import { Card } from "@/components/ui/Card";
 import { Section } from "@/components/ui/Section";
-import type { Service } from "@/components/ui/ServiceCard";
 import { Stack } from "@/components/ui/Stack";
-import type { Testimonial } from "@/components/ui/TestimonialCard";
+import { Grid } from "@/components/ui/Grid";
+import { Button } from "@/components/ui/Button";
+import { Box } from "@/components/ui/Box";
+import { Text } from "@/components/ui/Text";
+import { Container } from "@/components/ui/Container";
 
 /**
  * Home page component
  */
 const HomePage: FC = () => {
-  const services: Service[] = [
-    {
-      title: "Personal Development",
-      description:
-        "Unlock your full potential and achieve personal growth through one-on-one coaching sessions.",
-      features: [
-        "Self-discovery and awareness",
-        "Goal setting and achievement",
-        "Confidence building",
-        "Work-life balance",
-      ],
-      slug: "personal-development",
-    },
-    {
-      title: "Career Coaching",
-      description:
-        "Navigate your career path and achieve your professional goals with expert guidance.",
-      features: [
-        "Career planning and strategy",
-        "Leadership development",
-        "Professional networking",
-        "Interview preparation",
-      ],
-      slug: "career-coaching",
-    },
-  ];
-
-  const testimonials: Testimonial[] = [
-    {
-      quote:
-        "Working with Leenders Coaching transformed my approach to leadership and personal growth.",
-      author: "Sarah Johnson",
-      role: "Marketing Executive",
-    },
-    {
-      quote:
-        "The coaching sessions helped me find clarity in my business goals and personal life.",
-      author: "Michael Chen",
-      role: "Entrepreneur",
-    },
-  ];
+  const buttonVariants = [
+    "black",
+    "transparent",
+    "blue",
+    "purple",
+    "green",
+    "pink",
+    "yellow",
+    "teal",
+  ] as const;
 
   return (
     <Section>
+      <Stack space={24} className="mb-24">
+        <Card featured={true}
+          title="Freelance Life 01"
+          date="01/11/18"
+          categories={["MISCELLANEOUS"]}
+          excerpt="At the beginning of August I took a leap of faith into the world of freelancing, you can find out..."
+          slug="freelance-life-01"
+          image={simoneImage}
+        />
+      </Stack>
       <Stack space={24}>
-        <Hero
-          title="Transform Your Life With Professional Coaching"
-          description="Discover your potential and achieve your goals with personalized coaching sessions"
-          primaryCta={{
-            href: "/contact",
-            label: "Book a Free Consultation",
-          }}
-          secondaryCta={{
-            href: "/services",
-            label: "Learn More",
-          }}
-        />
-        <FeaturedServices title="Our Services" services={services} />
-        <FeaturedTestimonials
-          title="What Our Clients Say"
-          testimonials={testimonials}
-        />
+        {/* Card Variants Grid */}
+        <Grid columns={{ default: 1, md: 2, lg: 3 }} gap={6}>
+          {/* Full featured card */}
+          <Card
+            featured
+            title="Full Featured Card"
+            date="01/11/18"
+            categories={["Featured", "Example"]}
+            excerpt="This card shows all possible features including featured flag, date, categories, and excerpt text."
+            slug="full-featured"
+            image={simoneImage}
+            variant="blue"
+          />
+
+          {/* Image only */}
+          <Card
+            title="Image Only Card"
+            slug="image-only"
+            image={simoneImage}
+            variant="purple"
+          />
+
+          {/* Text only */}
+          <Card
+            title="Text Only Card"
+            slug="text-only"
+            variant="green"
+          />
+
+          {/* With excerpt */}
+          <Card
+            title="Card with Excerpt"
+            excerpt="This card shows how it looks with just an excerpt and no other metadata."
+            slug="with-excerpt"
+            variant="pink"
+          />
+
+          {/* With metadata */}
+          <Card
+            title="Card with Metadata"
+            date="01/11/18"
+            categories={["Example", "Metadata"]}
+            slug="with-metadata"
+            variant="yellow"
+          />
+
+          {/* Featured only */}
+          <Card
+            featured
+            title="Featured Card"
+            slug="featured-only"
+            variant="teal"
+          />
+        </Grid>
+
+        {/* Button Variants */}
+        <Box className="py-24">
+          <Container>
+            <Stack space={12}>
+              {buttonVariants.map((variant) => (
+                <Box key={variant}>
+                  <Text variant="small" className="mb-4 capitalize">{variant}</Text>
+                  <Stack direction="row" space={4}>
+                    <Button variant={variant} size="sm">View All</Button>
+                    <Button variant={variant} size="md">View All</Button>
+                    <Button variant={variant} size="lg">View All</Button>
+                  </Stack>
+                </Box>
+              ))}
+            </Stack>
+          </Container>
+        </Box>
       </Stack>
     </Section>
   );

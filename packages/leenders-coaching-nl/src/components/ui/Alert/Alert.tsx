@@ -2,6 +2,7 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { Text } from "@/components/ui/Text";
+import { Box } from "@/components/ui/Box";
 
 type AlertProps = {
   children: ReactNode;
@@ -18,7 +19,7 @@ export const Alert = ({
   ...props
 }: AlertProps) => {
   return (
-    <div
+    <Box
       className={twMerge(
         "p-4 rounded-lg border",
         variant === "success" && "bg-success/10 border-success text-success",
@@ -32,6 +33,6 @@ export const Alert = ({
       <Text variant="muted" className="text-inherit">
         {children}
       </Text>
-    </div>
+    </Box>
   );
 };

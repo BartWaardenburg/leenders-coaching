@@ -4,7 +4,6 @@ import { type Metadata } from "next";
 import { Grid } from "@/components/ui/Grid";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Section } from "@/components/ui/Section";
-import { ServiceCard, type Service } from "@/components/ui/ServiceCard";
 import { Stack } from "@/components/ui/Stack";
 import { generateMetadata } from "@/utilities/metadata";
 
@@ -26,7 +25,7 @@ export const metadata: Metadata = generateMetadata({
  * Services page showcasing available coaching options
  */
 const ServicesPage: FC = () => {
-  const services: Service[] = [
+  const services = [
     {
       title: "Personal Development Coaching",
       description:
@@ -74,7 +73,7 @@ const ServicesPage: FC = () => {
         />
         <Grid columns={{ default: 1, md: 2, lg: 3 }}>
           {services.map((service) => (
-            <ServiceCard key={service.slug} service={service} />
+            <div key={service.slug}>{service.title}</div>
           ))}
         </Grid>
       </Stack>

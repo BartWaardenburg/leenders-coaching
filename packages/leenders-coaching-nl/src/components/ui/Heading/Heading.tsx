@@ -6,7 +6,7 @@ type HeadingLevel = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 type HeadingProps = {
   level?: HeadingLevel;
   children: ReactNode;
-  variant?: "default" | "gradient" | "large" | "small" | "menu";
+  variant?: "default" | "gradient" | "large" | "small" | "menu" | "card";
   weight?: "bold" | "extrabold" | "normal";
   spacing?: "none" | "normal";
 } & ComponentPropsWithoutRef<"h1">;
@@ -37,22 +37,16 @@ export const Heading = ({
     level === "h1" && "text-4xl md:text-5xl",
     level === "h2" && "text-3xl md:text-4xl",
     level === "h3" && "text-2xl md:text-3xl",
-    level === "h4" && "text-xl md:text-2xl",
-    level === "h5" && "text-lg md:text-xl",
-    level === "h6" && "text-base md:text-lg",
     /* Spacing */
     spacing === "normal" && [
       level === "h1" && "mb-8 md:mb-10",
       level === "h2" && "mb-6",
       level === "h3" && "mb-4",
-      level === "h4" && "mb-3",
-      level === "h5" && "mb-2",
-      level === "h6" && "mb-2",
     ],
     /* Variants */
-    variant === "default" && "bg-clip-text text-transparent bg-gradient-to-b from-primary via-primary to-primary/80",
+    variant === "default" && "transition-theme bg-clip-text text-transparent bg-gradient-to-b from-primary via-primary to-primary/80",
     variant === "gradient" && [
-      "bg-clip-text text-transparent bg-gradient-to-b from-primary via-primary to-primary/80",
+      "transition-theme bg-clip-text text-transparent bg-gradient-to-b from-primary via-primary to-primary/80",
     ],
     variant === "large" && [
       level === "h1" && "text-5xl md:text-7xl",
@@ -65,7 +59,10 @@ export const Heading = ({
       level === "h3" && "text-xl md:text-2xl",
     ],
     variant === "menu" && [
-      "text-lg md:text-xl font-normal text-foreground",
+      "text-lg md:text-xl font-normal text-foreground transition-theme",
+    ],
+    variant === "card" && [
+      "text-3xl leading-[1.1] text-foreground/90 dark:text-foreground sm:text-4xl md:text-[42px]",
     ],
     className,
   );

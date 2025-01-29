@@ -1,134 +1,98 @@
+import type { ComponentPropsWithoutRef } from "react";
+import { twMerge } from "tailwind-merge";
 import { Text } from "@/components/ui/Text";
-
-import { FooterHeading } from "./FooterHeading";
-import { FooterSocialLinks } from "./FooterSocialLinks";
-
-import Link from "next/link";
-
-import { FooterCopyright } from "./FooterCopyright";
-import { FooterList, FooterListItem } from "./FooterList";
-import { FooterSection, FooterSectionItem } from "./FooterSection";
-
-export type NavItem = {
-  href: string;
-  label: string;
-};
-
-export type SocialLink = {
-  href: string;
-  label: string;
-};
+import { Link } from "@/components/ui/Link";
+import { Container } from "@/components/ui/Container";
+import { Box } from "@/components/ui/Box";
+import { Flex } from "@/components/ui/Flex";
 
 type FooterProps = {
-  brandSection: {
-    title: string;
-    description: string;
+  copyright?: string;
+  instagram?: {
+    href: string;
+    label: string;
   };
-  navigationSection: {
-    title: string;
-    items: NavItem[];
+  contact?: {
+    email?: string;
+    phone?: string;
   };
-  contactSection: {
-    title: string;
-    email: {
-      label: string;
-      value: string;
-    };
-    phone: {
-      label: string;
-      value: string;
-    };
-    location: {
-      label: string;
-      value: string;
-    };
-  };
-  socialSection: {
-    title: string;
-    items: SocialLink[];
-  };
-  copyright: {
-    text: string;
-  };
-};
+} & ComponentPropsWithoutRef<"footer">;
 
 /**
- * Footer component with navigation, contact information, and social links
+ * Simplified footer component with copyright, Instagram link, and contact information
  */
 export const Footer = ({
-  brandSection,
-  navigationSection,
-  contactSection,
-  socialSection,
-  copyright,
+  copyright = "© 2025 Leenders Coaching",
+  instagram = {
+    href: "https://instagram.com/leenderscoaching",
+    label: "Instagram"
+  },
+  contact = {
+    email: "info@leenders-coaching.nl",
+    phone: "+31 6 12345678"
+  },
+  className,
+  ...props
 }: FooterProps) => {
   return (
-    <footer className="mt-auto bg-secondary/20">
-      <div className="container mx-auto px-4 py-16">
-        <FooterSection>
-          {/* Brand */}
-          <FooterSectionItem>
-            <FooterHeading>{brandSection.title}</FooterHeading>
-            <Text variant="muted">{brandSection.description}</Text>
-          </FooterSectionItem>
+    <Box
+      as="footer"
+      className={twMerge(
+        "mt-auto bg-secondary/20 dark:bg-menu transition-colors duration-300 bg-background",
+        className
+      )}
+      {...props}
+    >
+      <Container>
+        <Box className="h-px bg-muted-foreground/10" />
+        <Flex
+          direction="column"
+          items="start"
+          justify="between"
+          gap={8}
+          className="py-6 md:flex-row md:items-center"
+        >
+          {/* Copyright - first on desktop, second on mobile */}
+          <Text variant="muted" className="text-sm order-2 md:order-1">
+            {copyright}
+          </Text>
 
-          {/* Quick Links */}
-          <FooterSectionItem>
-            <FooterHeading>{navigationSection.title}</FooterHeading>
-            <FooterList>
-              {navigationSection.items.map((item) => (
-                <FooterListItem key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-muted-foreground hover:text-primary transition-colors hover:translate-x-1 duration-200"
-                  >
-                    {item.label}
-                  </Link>
-                </FooterListItem>
-              ))}
-            </FooterList>
-          </FooterSectionItem>
+          {/* Instagram - hidden on mobile, second on desktop */}
+          <Link
+            href={instagram.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="subtle"
+            className="hidden md:block md:order-2"
+          >
+            <Text variant="muted" className="text-sm hover:text-primary transition-colors">
+              {instagram.label}
+            </Text>
+          </Link>
 
-          {/* Contact */}
-          <FooterSectionItem>
-            <FooterHeading>{contactSection.title}</FooterHeading>
-            <FooterList>
-              <FooterListItem>
-                <Text variant="muted">
-                  <span className="text-primary">
-                    {contactSection.email.label}:
-                  </span>{" "}
-                  {contactSection.email.value}
+          {/* Contact - first on mobile, last on desktop */}
+          <Flex
+            direction="column"
+            gap={2}
+            className="md:flex-row md:gap-4 order-1 md:order-3"
+          >
+            {contact.email && (
+              <Link href={`mailto:${contact.email}`} variant="subtle">
+                <Text variant="muted" className="text-sm hover:text-primary transition-colors">
+                  {contact.email}
                 </Text>
-              </FooterListItem>
-              <FooterListItem>
-                <Text variant="muted">
-                  <span className="text-primary">
-                    {contactSection.phone.label}:
-                  </span>{" "}
-                  {contactSection.phone.value}
+              </Link>
+            )}
+            {contact.phone && (
+              <Link href={`tel:${contact.phone}`} variant="subtle">
+                <Text variant="muted" className="text-sm hover:text-primary transition-colors">
+                  {contact.phone}
                 </Text>
-              </FooterListItem>
-              <FooterListItem>
-                <Text variant="muted">
-                  <span className="text-primary">
-                    {contactSection.location.label}:
-                  </span>{" "}
-                  {contactSection.location.value}
-                </Text>
-              </FooterListItem>
-            </FooterList>
-          </FooterSectionItem>
-
-          {/* Social */}
-          <FooterSectionItem>
-            <FooterHeading>{socialSection.title}</FooterHeading>
-            <FooterSocialLinks items={socialSection.items} />
-          </FooterSectionItem>
-        </FooterSection>
-
-        <FooterCopyright>{copyright.text}</FooterCopyright>
-      </div>
-    </footer>
+              </Link>
+            )}
+          </Flex>
+        </Flex>
+      </Container>
+    </Box>
   );
 };

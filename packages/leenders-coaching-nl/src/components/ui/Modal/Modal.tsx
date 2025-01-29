@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
+import { Flex } from "@/components/ui/Flex";
 
 type ModalProps = {
   isOpen: boolean;
@@ -8,7 +9,7 @@ type ModalProps = {
 } & ComponentPropsWithoutRef<"div">;
 
 /**
- * Generic full-screen modal component
+ * Generic full-screen modal component with proper accessibility
  */
 export const Modal = ({
   isOpen,
@@ -20,10 +21,14 @@ export const Modal = ({
   if (!isOpen) return null;
 
   return (
-    <div
+    <Flex
+      as="div"
+      items="center"
+      justify="center"
       className={twMerge(
-        "fixed inset-0 z-50 flex items-center justify-center p-4",
+        "fixed inset-0 z-50 p-4",
         "bg-background min-h-screen",
+        "transition-colors duration-300",
         className,
       )}
       role="dialog"
@@ -32,6 +37,6 @@ export const Modal = ({
       {...props}
     >
       {children}
-    </div>
+    </Flex>
   );
 };

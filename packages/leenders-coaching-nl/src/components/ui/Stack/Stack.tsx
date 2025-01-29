@@ -1,17 +1,29 @@
-import type { FC, ReactNode } from "react";
+import type { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
-type StackProps = {
+type StackProps<T extends ElementType = "div"> = {
   children: ReactNode;
   space?: number;
-  className?: string;
-};
+  direction?: "row" | "col";
+  as?: T;
+} & ComponentPropsWithoutRef<T>;
 
 /**
- * Reusable stack component for vertical spacing
+ * Reusable stack component for vertical or horizontal spacing with polymorphic as prop
  */
-export const Stack: FC<StackProps> = ({ children, space = 4, className }) => {
-  const stackClass = twMerge(`space-y-${space}`, className);
+export const Stack = <T extends ElementType = "div">({
+  children,
+  space = 4,
+  direction = "col",
+  as,
+  className,
+  ...props
+}: StackProps<T>) => {
+  const Component = as || "div";
+  const stackClass = twMerge(
+    direction === "col" ? `space-y-${space}` : `flex space-x-${space}`,
+    className
+  );
 
-  return <div className={stackClass}>{children}</div>;
+  return <Component className={stackClass} {...props}>{children}</Component>;
 };

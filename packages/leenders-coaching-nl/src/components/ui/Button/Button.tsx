@@ -2,18 +2,18 @@ import type { ComponentPropsWithoutRef } from "react";
 import { twMerge } from "tailwind-merge";
 
 type ButtonProps = ComponentPropsWithoutRef<"button"> & {
-  variant?: "primary" | "secondary" | "outline" | "ghost" | "link";
+  variant?: "black" | "transparent" | "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
   size?: "sm" | "md" | "lg";
   isLoading?: boolean;
   fullWidthOnMobile?: boolean;
 };
 
 /**
- * Modern button component with different variants, sizes, and loading state
+ * Modern button component with different variants and sizes
  */
 export const Button = ({
   className,
-  variant = "primary",
+  variant = "black",
   size = "md",
   isLoading = false,
   fullWidthOnMobile = false,
@@ -22,56 +22,62 @@ export const Button = ({
   ...props
 }: ButtonProps) => {
   const baseStyles = `
-        inline-flex items-center justify-center rounded-lg font-medium
-        transition-all duration-200 ease-in-out
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background
-        dark:focus-visible:ring-ring/40
-        disabled:pointer-events-none disabled:opacity-50
-        active:scale-[0.98]
-        relative overflow-hidden
-    `;
+    inline-flex items-center justify-center
+    font-montserrat uppercase tracking-[0.1em] text-[13px]
+    transition-all duration-200 ease-in-out
+    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background
+    dark:focus-visible:ring-ring/40
+    disabled:pointer-events-none disabled:opacity-50
+    relative overflow-hidden
+    border border-foreground/80 dark:border-background/80
+  `;
 
   const variants = {
-    primary: `
-            bg-primary text-primary-foreground
-            hover:bg-primary/90
-            shadow-[0_1px_2px_0_hsl(var(--shadow-color)/calc(var(--shadow-strength)_+_2%))]
-            dark:shadow-[0_1px_3px_0_hsl(var(--shadow-color)/calc(var(--shadow-strength)_+_5%))]
-            before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/10 before:to-transparent
-            before:translate-x-[-200%] hover:before:translate-x-[200%] before:transition-transform before:duration-700
-            dark:before:from-white/20
-        `,
-    secondary: `
-            bg-secondary text-secondary-foreground
-            hover:bg-secondary/80
-            shadow-[0_1px_2px_0_hsl(var(--shadow-color)/calc(var(--shadow-strength)_+_2%))]
-            dark:shadow-[0_1px_3px_0_hsl(var(--shadow-color)/calc(var(--shadow-strength)_+_5%))]
-            before:absolute before:inset-0 before:bg-gradient-to-r before:from-primary/5 before:to-transparent
-            before:translate-x-[-200%] hover:before:translate-x-[200%] before:transition-transform before:duration-700
-            dark:before:from-primary/10
-        `,
-    outline: `
-            border-2 border-primary/80 bg-transparent text-primary
-            hover:bg-primary/10 hover:border-primary
-            dark:border-primary/60 dark:text-primary-foreground
-            dark:hover:bg-primary/20 dark:hover:border-primary/80
-        `,
-    ghost: `
-            bg-transparent text-foreground hover:bg-accent/50
-            hover:text-accent-foreground
-            dark:text-foreground dark:hover:bg-accent/30
-        `,
-    link: `
-            text-primary underline-offset-4 hover:underline
-            dark:text-primary-foreground
-            p-0 h-auto
-        `,
+    black: `
+      bg-foreground text-background hover:bg-background hover:text-foreground
+      dark:bg-background dark:text-foreground dark:hover:bg-foreground dark:hover:text-background
+      dark:border-foreground/80
+    `,
+    transparent: `
+      bg-transparent text-foreground hover:bg-foreground hover:text-background
+      dark:bg-transparent dark:text-foreground dark:border-foreground/80 dark:hover:bg-foreground dark:hover:text-background
+    `,
+    blue: `
+      bg-pastel-blue text-foreground hover:bg-pastel-blue-dark hover:text-background
+      dark:bg-pastel-blue-dark dark:text-pastel-blue dark:hover:bg-pastel-blue dark:hover:text-pastel-blue-dark
+      dark:border-pastel-blue
+    `,
+    purple: `
+      bg-pastel-purple text-foreground hover:bg-pastel-purple-dark hover:text-background
+      dark:bg-pastel-purple-dark dark:text-pastel-purple dark:hover:bg-pastel-purple dark:hover:text-pastel-purple-dark
+      dark:border-pastel-purple
+    `,
+    green: `
+      bg-pastel-green text-foreground hover:bg-pastel-green-dark hover:text-background
+      dark:bg-pastel-green-dark dark:text-pastel-green dark:hover:bg-pastel-green dark:hover:text-pastel-green-dark
+      dark:border-pastel-green
+    `,
+    pink: `
+      bg-pastel-pink text-foreground hover:bg-pastel-pink-dark hover:text-background
+      dark:bg-pastel-pink-dark dark:text-pastel-pink dark:hover:bg-pastel-pink dark:hover:text-pastel-pink-dark
+      dark:border-pastel-pink
+    `,
+    yellow: `
+      bg-pastel-yellow text-foreground hover:bg-pastel-yellow-dark hover:text-background
+      dark:bg-pastel-yellow-dark dark:text-pastel-yellow dark:hover:bg-pastel-yellow dark:hover:text-pastel-yellow-dark
+      dark:border-pastel-yellow
+    `,
+    teal: `
+      bg-pastel-teal text-foreground hover:bg-pastel-teal-dark hover:text-background
+      dark:bg-pastel-teal-dark dark:text-pastel-teal dark:hover:bg-pastel-teal dark:hover:text-pastel-teal-dark
+      dark:border-pastel-teal
+    `,
   };
 
   const sizes = {
-    sm: "h-9 px-3 text-sm",
-    md: "h-11 px-6 py-2",
-    lg: "h-12 px-8 text-lg",
+    sm: "h-9 px-4",
+    md: "h-11 px-8",
+    lg: "h-12 px-12",
   };
 
   const loadingStyles = isLoading

@@ -1,18 +1,20 @@
-import type { FC, ReactNode } from "react";
+import type { ComponentProps } from "react";
 import { twMerge } from "tailwind-merge";
+import { Box } from "@/components/ui/Box";
 
-type ContainerProps = {
-  children: ReactNode;
-  className?: string;
-};
+type ContainerProps = ComponentProps<"div">;
 
 /**
  * Container component for consistent page layouts and spacing
  */
-export const Container: FC<ContainerProps> = ({ children, className }) => {
+export const Container = ({ className, ...props }: ContainerProps) => {
   return (
-    <div className={twMerge("container mx-auto px-4", className)}>
-      {children}
-    </div>
+    <Box
+      className={twMerge(
+        "container mx-auto px-4 sm:px-8 md:px-12 lg:px-16",
+        className
+      )}
+      {...props}
+    />
   );
 };

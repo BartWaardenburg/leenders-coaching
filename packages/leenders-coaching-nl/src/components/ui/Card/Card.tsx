@@ -1,132 +1,157 @@
-import Link from "next/link";
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
-import { twMerge } from "tailwind-merge";
+import { FC } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Text } from '@/components/ui/Text'
+import { Heading } from '@/components/ui/Heading'
+import { Flex } from '@/components/ui/Flex'
+import type { StaticImageData } from 'next/image'
+import { Box } from '@/components/ui/Box'
+import { twMerge } from 'tailwind-merge'
 
-import { Heading } from "@/components/ui/Heading";
-import { Text } from "@/components/ui/Text";
-
+/* Types for the Card component props */
 type CardProps = {
-  children: ReactNode;
-  variant?: "default" | "glass" | "secondary";
-  spacing?: "default" | "form";
-  href?: string;
-  hover?: boolean;
-} & ComponentPropsWithoutRef<"div">;
+  featured?: boolean
+  title: string
+  date?: string
+  categories?: string[]
+  excerpt?: string
+  slug: string
+  image?: string | StaticImageData
+  variant?: 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal'
+}
 
-type CardFormFieldsProps = ComponentPropsWithoutRef<"div">;
-type CardFormFieldProps = ComponentPropsWithoutRef<"div">;
-
-const CardRoot = ({
-  children,
-  variant = "default",
-  spacing = "default",
-  href,
-  hover = true,
-  className,
-  ...props
-}: CardProps) => {
-  const cardClasses = twMerge(
-    "rounded-3xl relative overflow-hidden",
-    variant === "default" && [
-      "bg-background border border-border",
-      hover && "hover:bg-secondary/5 hover:scale-[1.02] hover:shadow-lg",
-    ],
-    variant === "glass" && [
-      "glass-card border-2 border-primary/20 dark:border-primary/10",
-      hover && "hover:scale-[1.02] hover:shadow-lg",
-    ],
-    variant === "secondary" && [
-      "bg-secondary/20 dark:bg-secondary/10 border border-border",
-      hover && "hover:bg-secondary/30 hover:scale-[1.02] hover:shadow-lg",
-    ],
-    spacing === "default" && "p-8",
-    spacing === "form" && "p-12 space-y-8",
-    className,
-  );
-
-  const content = (
-    <div className={cardClasses} {...props}>
-      {children}
-    </div>
-  );
-
-  if (href) {
-    return (
-      <Link href={href} className="group">
-        {content}
-      </Link>
-    );
+const getCardBackground = (variant: CardProps['variant']) => {
+  const backgrounds = {
+    blue: 'bg-pastel-blue dark:bg-pastel-blue-dark',
+    purple: 'bg-pastel-purple dark:bg-pastel-purple-dark',
+    green: 'bg-pastel-green dark:bg-pastel-green-dark',
+    pink: 'bg-pastel-pink dark:bg-pastel-pink-dark',
+    yellow: 'bg-pastel-yellow dark:bg-pastel-yellow-dark',
+    teal: 'bg-pastel-teal dark:bg-pastel-teal-dark',
   }
+  return backgrounds[variant || 'blue']
+}
 
-  return content;
-};
+/**
+ * Card component for displaying article previews
+ */
+const Card: FC<CardProps> = ({
+  featured = false,
+  title,
+  date,
+  categories = [],
+  excerpt,
+  slug,
+  image,
+  variant = 'blue',
+}) => {
+  const hasMetaData = date || categories.length > 0;
 
-const CardFormFields = ({ className, ...props }: CardFormFieldsProps) => (
-  <div className={twMerge("space-y-6", className)} {...props} />
-);
+  return (
+    <Box
+      as="article"
+      className={twMerge(
+        'group relative @container/card',
+        image && '@md/card:pl-6 @lg/card:pl-12 @xl/card:pl-16',
+        getCardBackground(variant)
+      )}
+    >
+      <Flex className="h-full items-stretch flex-col @md/card:flex-row">
+        {image && (
+          <Box className="relative border-b @md/card:border-b-0 @md/card:border-l @md/card:border-r border-foreground/80 h-48 @md/card:h-auto w-full @md/card:w-1/2 @lg/card:w-2/3 shrink-0 overflow-hidden">
+            <Image
+              src={image}
+              alt={title}
+              fill
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          </Box>
+        )}
 
-const CardFormField = ({ className, ...props }: CardFormFieldProps) => (
-  <div className={twMerge("", className)} {...props} />
-);
+        <Box className="flex-1 p-6 @md/card:p-8 @lg/card:p-12">
+          <Flex direction="column" className="h-full">
+            <Box>
+              {featured && (
+                <Box className="relative mb-6">
+                  <Text
+                    variant="card-meta"
+                    weight="medium"
+                    className="mb-2"
+                  >
+                    Featured
+                  </Text>
+                  <Box className="h-[2px] w-12 bg-foreground/80" />
+                </Box>
+              )}
 
-export const Card = Object.assign(CardRoot, {
-  FormFields: CardFormFields,
-  FormField: CardFormField,
-});
+              <Box className="pb-6">
+                <Heading
+                  level="h2"
+                  variant="card"
+                  weight="normal"
+                  spacing="none"
+                >
+                  {title}
+                </Heading>
+              </Box>
 
-/* Common text styles */
-export const CardTitle = ({
-  children,
-  className,
-  ...props
-}: ComponentPropsWithoutRef<"h3">) => (
-  <Heading level="h3" className={twMerge("mb-4", className)} {...props}>
-    {children}
-  </Heading>
-);
+              {hasMetaData && (
+                <Box className="border-b border-t border-foreground/80">
+                  <Flex
+                    gap={0}
+                    justify='center'
+                    className={twMerge(
+                      "relative divide-foreground/80",
+                      "flex-row divide-x"
+                    )}
+                  >
+                    {date && (
+                      <Box className={twMerge(
+                        "px-4 py-2",
+                      )}>
+                        <Text variant="card-meta">
+                          {date}
+                        </Text>
+                      </Box>
+                    )}
+                    {categories.length > 0 && (
+                      <Box className="px-4 py-2">
+                        <Text variant="card-meta">
+                          {categories.join(', ')}
+                        </Text>
+                      </Box>
+                    )}
+                  </Flex>
+                </Box>
+              )}
 
-export const CardDescription = ({
-  children,
-  className,
-  ...props
-}: ComponentPropsWithoutRef<"p">) => (
-  <Text variant="muted" className={twMerge("mb-6", className)} {...props}>
-    {children}
-  </Text>
-);
+              {excerpt && (
+                <Box className="py-6">
+                  <Text variant="card-excerpt">
+                    {excerpt}
+                  </Text>
+                </Box>
+              )}
+            </Box>
 
-export const CardList = ({
-  items,
-  className,
-  bulletStyle = "dot",
-  ...props
-}: {
-  items: string[];
-  bulletStyle?: "dot" | "check";
-} & ComponentPropsWithoutRef<"ul">) => (
-  <ul className={twMerge("space-y-2", className)} {...props}>
-    {items.map((item) => (
-      <li key={item} className="flex items-start">
-        <span className="text-primary mr-2">
-          {bulletStyle === "check" ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className="w-5 h-5"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                clipRule="evenodd"
-              />
-            </svg>
-          ) : (
-            "•"
-          )}
-        </span>
-        <Text variant="muted">{item}</Text>
-      </li>
-    ))}
-  </ul>
-);
+            <Flex justify="end" className="mt-auto pt-6">
+              <Box className="relative group/link">
+                <Box className="h-[2px] w-12 bg-foreground/80 transition-all duration-300 group-hover/link:translate-x-2 group-hover/link:bg-primary" />
+                <Text variant="card-meta" weight="medium">
+                  <Link
+                    href={`/blog/${slug}`}
+                    className="pt-2 inline-block transition-colors hover:text-primary"
+                  >
+                    Read Article
+                  </Link>
+                </Text>
+              </Box>
+            </Flex>
+          </Flex>
+        </Box>
+      </Flex>
+    </Box>
+  )
+}
+
+export default Card

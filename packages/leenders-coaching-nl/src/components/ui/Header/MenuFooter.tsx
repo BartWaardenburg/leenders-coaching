@@ -2,7 +2,11 @@ import Link from "next/link";
 import { FiLinkedin, FiInstagram } from "react-icons/fi";
 import { Text } from "@/components/ui/Text";
 import { menuFooterConfig } from "@/config/footer";
-import { Heading } from "../Heading";
+import { Heading } from "@/components/ui/Heading";
+import { Box } from "@/components/ui/Box";
+import { Flex } from "@/components/ui/Flex";
+import { Stack } from "@/components/ui/Stack";
+import { Grid } from "@/components/ui/Grid";
 
 type FooterSectionProps = {
     title: string;
@@ -11,14 +15,14 @@ type FooterSectionProps = {
 };
 
 const FooterSection = ({ title, children, isLast = false }: FooterSectionProps) => (
-    <div className="flex flex-col">
+    <Flex direction="column">
         <Heading level="h3" variant="menu" spacing="none" className="mb-6 sm:px-0 md:px-4">
             {title}
         </Heading>
-        <div className={`border-t ${!isLast ? 'md:border-r' : ''} border-foreground/80 pt-4 sm:px-0 md:px-4 pb-8 h-full`}>
+        <Box className={`border-t ${!isLast ? 'md:border-r' : ''} border-foreground/80 pt-4 sm:px-0 md:px-4 pb-8 h-full`}>
             {children}
-        </div>
-    </div>
+        </Box>
+    </Flex>
 );
 
 type SocialLinkProps = {
@@ -27,16 +31,15 @@ type SocialLinkProps = {
 };
 
 const SocialLink = ({ href, label }: SocialLinkProps) => (
-    <Link
-        href={href}
-        className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-    >
-        {label}
-        {label.toLowerCase() === "linkedin" ? (
-            <FiLinkedin className="w-5 h-5" />
-        ) : (
-            <FiInstagram className="w-5 h-5" />
-        )}
+    <Link href={href} className="text-muted-foreground hover:text-foreground transition-colors">
+        <Flex items="center" gap={2}>
+            {label}
+            {label.toLowerCase() === "linkedin" ? (
+                <FiLinkedin className="w-5 h-5" />
+            ) : (
+                <FiInstagram className="w-5 h-5" />
+            )}
+        </Flex>
     </Link>
 );
 
@@ -44,8 +47,8 @@ export const MenuFooter = () => {
     const { sections } = menuFooterConfig;
 
     return (
-        <div>
-            <div className="grid grid-cols-1 md:grid-cols-3">
+        <Box>
+            <Grid columns={{ default: 1, md: 3 }} gap={0}>
                 <FooterSection title={sections.about.title}>
                     <Text variant="muted" className="text-sm">
                         {sections.about.description}
@@ -53,39 +56,41 @@ export const MenuFooter = () => {
                 </FooterSection>
 
                 <FooterSection title={sections.elsewhere.title}>
-                    <ul className="space-y-4">
-                        {sections.elsewhere.items.map((item) => (
-                            <li key={item.href}>
-                                <SocialLink href={item.href} label={item.label} />
-                            </li>
-                        ))}
-                    </ul>
+                    <Box as="ul">
+                        <Stack space={4}>
+                            {sections.elsewhere.items.map((item) => (
+                                <Box as="li" key={item.href}>
+                                    <SocialLink href={item.href} label={item.label} />
+                                </Box>
+                            ))}
+                        </Stack>
+                    </Box>
                 </FooterSection>
 
                 <FooterSection title={sections.contact.title} isLast>
-                    <div>
-                        <div className="mb-4">
-                            <span className="text-sm">{sections.contact.projectEnquiry.label} /</span>
+                    <Stack space={4}>
+                        <Box>
+                            <Text as="span" className="text-sm">{sections.contact.projectEnquiry.label} /</Text>
                             <Link
                                 href={sections.contact.projectEnquiry.href}
                                 className="text-sm underline hover:text-primary transition-colors ml-1"
                             >
                                 {sections.contact.projectEnquiry.linkText}
                             </Link>
-                        </div>
-                        <div>
-                            <span className="text-sm">{sections.contact.generalEnquiry.label} /</span>
+                        </Box>
+                        <Box>
+                            <Text as="span" className="text-sm">{sections.contact.generalEnquiry.label} /</Text>
                             <Link
                                 href={sections.contact.generalEnquiry.href}
                                 className="text-sm underline hover:text-primary transition-colors ml-1"
                             >
                                 {sections.contact.generalEnquiry.linkText}
                             </Link>
-                        </div>
-                    </div>
+                        </Box>
+                    </Stack>
                 </FooterSection>
-            </div>
-            <div className="h-px bg-foreground/80" />
-        </div>
+            </Grid>
+            <Box className="h-px bg-foreground/80" />
+        </Box>
     );
 }; 

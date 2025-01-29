@@ -1,1 +1,1 @@
-export { Card, CardTitle, CardDescription, CardList } from "./Card";
+export { default as Card } from "./Card";

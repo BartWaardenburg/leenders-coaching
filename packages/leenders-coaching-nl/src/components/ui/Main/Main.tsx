@@ -2,6 +2,7 @@ import type { ComponentPropsWithoutRef } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { Container } from "@/components/ui/Container";
+import { Flex } from "@/components/ui/Flex";
 
 type MainProps = ComponentPropsWithoutRef<"main">;
 
@@ -10,14 +11,16 @@ type MainProps = ComponentPropsWithoutRef<"main">;
  */
 export const Main = ({ children, className, ...props }: MainProps) => {
   return (
-    <main
+    <Flex
+      as="main"
+      direction="column"
       className={twMerge(
-        "flex-grow animate-in fade-in duration-500",
+        "flex-grow transition-colors duration-300 bg-background mt-[125px]",
         className,
       )}
       {...props}
     >
       <Container>{children}</Container>
-    </main>
+    </Flex>
   );
 };

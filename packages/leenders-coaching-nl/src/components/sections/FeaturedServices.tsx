@@ -1,11 +1,13 @@
 import type { FC } from "react";
 
 import { GridSection } from "@/components/ui/GridSection";
-import { ServiceCard, type Service } from "@/components/ui/ServiceCard";
 
 type FeaturedServicesProps = {
   title: string;
-  services: Service[];
+  services: {
+    title: string;
+    description: string;
+  }[];
 };
 
 /**
@@ -18,7 +20,7 @@ export const FeaturedServices: FC<FeaturedServicesProps> = ({
   return (
     <GridSection title={title} variant="secondary">
       {services.map((service) => (
-        <ServiceCard key={service.title} service={service} />
+        <div key={service.title}>{service.title}</div>
       ))}
     </GridSection>
   );

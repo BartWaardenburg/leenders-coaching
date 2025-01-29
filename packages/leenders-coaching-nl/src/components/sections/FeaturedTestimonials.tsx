@@ -1,14 +1,14 @@
 import type { FC } from "react";
 
 import { GridSection } from "@/components/ui/GridSection";
-import {
-  TestimonialCard,
-  type Testimonial,
-} from "@/components/ui/TestimonialCard";
 
 type FeaturedTestimonialsProps = {
   title: string;
-  testimonials: Testimonial[];
+  testimonials: {
+    quote: string;
+    author: string;
+    role: string;
+  }[];
 };
 
 /**
@@ -26,7 +26,7 @@ export const FeaturedTestimonials: FC<FeaturedTestimonialsProps> = ({
       maxWidth="6xl"
     >
       {testimonials.map((testimonial) => (
-        <TestimonialCard key={testimonial.author} testimonial={testimonial} />
+        <div key={testimonial.author}>{testimonial.author}</div>
       ))}
     </GridSection>
   );

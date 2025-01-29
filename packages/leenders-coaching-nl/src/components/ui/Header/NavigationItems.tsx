@@ -1,31 +1,46 @@
 import Link from "next/link";
 import { navigationConfig } from "@/config/navigation";
+import { Box } from "@/components/ui/Box";
+import { Stack } from "@/components/ui/Stack";
+import { Text } from "@/components/ui/Text";
 
 type NavigationItemsProps = {
     onItemClick: () => void;
 };
 
 export const NavigationItems = ({ onItemClick }: NavigationItemsProps) => (
-    <ul className="mb-24">
-        {navigationConfig.items.map((item) => (
-            <li key={item.href} className="pb-4">
+    <Box as="ul">
+        <Stack space={4}>
+            {navigationConfig.items.map((item) => (
+                <Box as="li" key={item.href}>
+                    <Link
+                        href={item.href}
+                        onClick={onItemClick}
+                        className="block text-foreground hover:text-primary/80 transition-colors"
+                    >
+                        <Text
+                            as="span"
+                            variant="navigation"
+                        >
+                            {item.label}
+                        </Text>
+                    </Link>
+                </Box>
+            ))}
+            <Box as="li">
                 <Link
-                    href={item.href}
-                    className="text-4xl font-playfair text-foreground hover:text-primary/80 transition-colors"
+                    href={navigationConfig.cta.href}
                     onClick={onItemClick}
+                    className="block text-primary hover:text-primary/80 transition-colors"
                 >
-                    {item.label}
+                    <Text
+                        as="span"
+                        variant="navigation"
+                    >
+                        {navigationConfig.cta.label}
+                    </Text>
                 </Link>
-            </li>
-        ))}
-        <li className="pb-4">
-            <Link
-                href={navigationConfig.cta.href}
-                className="text-4xl font-playfair text-primary hover:text-primary/80 transition-colors"
-                onClick={onItemClick}
-            >
-                {navigationConfig.cta.label}
-            </Link>
-        </li>
-    </ul>
+            </Box>
+        </Stack>
+    </Box>
 ); 

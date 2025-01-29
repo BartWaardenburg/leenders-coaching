@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant, Montserrat, Playfair_Display } from "next/font/google";
+import { Montserrat, Playfair_Display } from "next/font/google";
 import type { ReactNode } from "react";
 
 import { RootLayout } from "@/components/layouts/RootLayout";
@@ -9,11 +9,6 @@ import "./globals.css";
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair",
-});
-
-const cormorant = Cormorant({
-  subsets: ["latin"],
-  variable: "--font-cormorant",
 });
 
 const montserrat = Montserrat({
@@ -49,7 +44,7 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <RootLayout
       fonts={{
-        variables: [playfair.variable, cormorant.variable, montserrat.variable],
+        variables: [playfair.variable, montserrat.variable],
       }}
     >
       {children}

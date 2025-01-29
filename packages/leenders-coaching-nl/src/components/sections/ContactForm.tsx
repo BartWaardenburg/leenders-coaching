@@ -7,9 +7,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Alert } from "@/components/ui/Alert";
-import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
-import { Input } from "@/components/ui/Input";
 import { Section } from "@/components/ui/Section";
 
 export const contactSchema = z.object({
@@ -32,9 +29,7 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit }) => {
     "idle" | "loading" | "success" | "error"
   >("idle");
   const {
-    register,
     handleSubmit,
-    formState: { errors },
     reset,
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
@@ -67,42 +62,6 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit }) => {
             </Alert>
           )}
 
-          <Card variant="glass" spacing="form">
-            <Card.FormFields>
-              <Card.FormField>
-                <Input
-                  label="Name"
-                  error={errors.name?.message}
-                  {...register("name")}
-                />
-              </Card.FormField>
-              <Card.FormField>
-                <Input
-                  type="email"
-                  label="Email"
-                  error={errors.email?.message}
-                  {...register("email")}
-                />
-              </Card.FormField>
-              <Card.FormField>
-                <Input
-                  as="textarea"
-                  label="Message"
-                  error={errors.message?.message}
-                  {...register("message")}
-                />
-              </Card.FormField>
-            </Card.FormFields>
-
-            <Button
-              type="submit"
-              size="lg"
-              className="w-full"
-              disabled={status === "loading"}
-            >
-              {status === "loading" ? "Sending..." : "Send Message"}
-            </Button>
-          </Card>
         </form>
       </div>
     </Section>

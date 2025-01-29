@@ -8,13 +8,18 @@ import Image from "next/image";
 import { Heading } from "@/components/ui/Heading";
 import { Link } from "@/components/ui/Link";
 import { Text } from "@/components/ui/Text";
+import { Box } from "@/components/ui/Box";
 
 const components: PortableTextComponents = {
   block: {
     h1: ({ children }) => <Heading level="h1">{children}</Heading>,
     h2: ({ children }) => <Heading level="h2">{children}</Heading>,
     h3: ({ children }) => <Heading level="h3">{children}</Heading>,
-    normal: ({ children }) => <Text className="mb-4">{children}</Text>,
+    normal: ({ children }) => (
+      <Box className="mb-4">
+        <Text>{children}</Text>
+      </Box>
+    ),
   },
   marks: {
     link: ({ children, value }) => (
@@ -25,7 +30,7 @@ const components: PortableTextComponents = {
   },
   types: {
     image: ({ value }) => (
-      <div className="my-8">
+      <Box className="my-8">
         <Image
           src={value?.asset?.url}
           alt={value?.alt || ""}
@@ -33,7 +38,7 @@ const components: PortableTextComponents = {
           height={400}
           className="rounded-lg"
         />
-      </div>
+      </Box>
     ),
   },
 };

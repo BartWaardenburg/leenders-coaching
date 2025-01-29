@@ -1,9 +1,9 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
-import { Container } from "@/components/ui/Container";
 import { Heading } from "@/components/ui/Heading";
 import { Text } from "@/components/ui/Text";
+import { Stack } from "@/components/ui/Stack";
 
 type PageHeaderProps = {
   title: ReactNode;
@@ -20,27 +20,27 @@ export const PageHeader = ({
   ...props
 }: PageHeaderProps) => {
   return (
-    <header
-      className={twMerge("py-24 md:py-32", className)}
+    <Stack
+      as="header"
+      className={twMerge(
+        "py-12 md:py-16",
+        "transition-colors duration-300 bg-background",
+        className
+      )}
       {...props}
     >
-      <Container>
-        <div className="max-w-3xl">
-          <Heading
-            level="h1"
-            variant="large"
-            weight="bold"
-            className="mb-6"
-          >
-            {title}
-          </Heading>
-          {description && (
-            <Text variant="muted" className="text-lg md:text-xl">
-              {description}
-            </Text>
-          )}
-        </div>
-      </Container>
-    </header>
+      <Heading
+        level="h1"
+        variant="large"
+        weight="bold"
+      >
+        {title}
+      </Heading>
+      {description && (
+        <Text variant="muted" className="text-lg md:text-xl">
+          {description}
+        </Text>
+      )}
+    </Stack>
   );
 };

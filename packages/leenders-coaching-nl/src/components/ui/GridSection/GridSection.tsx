@@ -1,15 +1,18 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
-
+import { twMerge } from "tailwind-merge";
+import { Section } from "@/components/ui/Section";
+import { Grid } from "@/components/ui/Grid";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { Container } from "@/components/ui/Container";
 
 type GridSectionProps = {
   title?: ReactNode;
   children: ReactNode;
   variant?: "primary" | "secondary";
   columns?: {
-    default?: number;
-    md?: number;
-    lg?: number;
+    default?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+    md?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+    lg?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
   };
   maxWidth?:
   | "sm"
@@ -33,30 +36,29 @@ export const GridSection = ({
   variant = "secondary",
   columns = { default: 1, md: 2, lg: 2 },
   maxWidth = "5xl",
+  className,
   ...props
 }: GridSectionProps) => {
-  const gridClass = [
-    "grid gap-6 md:gap-8",
-    columns.default === 1 && "grid-cols-1",
-    columns.default === 2 && "grid-cols-2",
-    columns.default === 3 && "grid-cols-3",
-    columns.md === 1 && "md:grid-cols-1",
-    columns.md === 2 && "md:grid-cols-2",
-    columns.md === 3 && "md:grid-cols-3",
-    columns.lg === 1 && "lg:grid-cols-1",
-    columns.lg === 2 && "lg:grid-cols-2",
-    columns.lg === 3 && "lg:grid-cols-3",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
   return (
-    <section
-      className={`container mx-auto px-4 py-16 md:py-24 ${variant === "primary" ? "bg-primary/5" : "bg-secondary/10"}`}
+    <Section
+      className={twMerge(
+        "py-16 md:py-24",
+        variant === "primary" ? "bg-primary/5" : "bg-secondary/10",
+        className
+      )}
       {...props}
     >
-      {title && <SectionHeader title={title} className="mb-12 md:mb-16" />}
-      <div className={`${gridClass} max-w-${maxWidth} mx-auto`}>{children}</div>
-    </section>
+      <Container>
+        {title && <SectionHeader title={title} className="mb-12 md:mb-16" />}
+        <Grid
+          columns={columns}
+          gap={6}
+          maxWidth={maxWidth}
+          className="md:gap-8"
+        >
+          {children}
+        </Grid>
+      </Container>
+    </Section>
   );
 };

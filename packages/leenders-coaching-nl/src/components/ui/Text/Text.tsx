@@ -4,14 +4,16 @@ import { twMerge } from "tailwind-merge";
 type TextProps<T extends ElementType = "p"> = {
   children: ReactNode;
   variant?:
-    | "default"
-    | "muted"
-    | "large"
-    | "small"
-    | "label"
-    | "error"
-    | "cormorant"
-    | "playfair";
+  | "default"
+  | "muted"
+  | "large"
+  | "small"
+  | "label"
+  | "error"
+  | "playfair"
+  | "navigation"
+  | "card-meta"
+  | "card-excerpt";
   weight?: "normal" | "medium" | "bold";
   as?: T;
 } & Omit<ComponentPropsWithoutRef<T>, "as">;
@@ -34,9 +36,8 @@ export const Text = <T extends ElementType = "p">({
       className={twMerge(
         "leading-relaxed",
         /* Font family */
-        variant !== "cormorant" && variant !== "playfair" && "font-montserrat",
-        variant === "cormorant" && "font-cormorant",
-        variant === "playfair" && "font-playfair",
+        variant !== "playfair" && variant !== "navigation" && "font-montserrat",
+        (variant === "playfair" || variant === "navigation") && "font-playfair",
         /* Font weight */
         weight === "normal" && "font-normal",
         weight === "medium" && "font-medium",
@@ -48,8 +49,10 @@ export const Text = <T extends ElementType = "p">({
         variant === "small" && "text-sm text-foreground/80",
         variant === "label" && "text-sm font-medium text-foreground",
         variant === "error" && "text-sm text-destructive",
-        variant === "cormorant" && "text-lg text-muted-foreground",
         variant === "playfair" && "text-lg text-foreground",
+        variant === "navigation" && "text-4xl text-inherit",
+        variant === "card-meta" && "text-[13px] uppercase text-foreground/60 dark:text-foreground/80",
+        variant === "card-excerpt" && "text-base leading-relaxed text-foreground/70 dark:text-foreground/90",
         className,
       )}
       {...props}

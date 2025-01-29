@@ -1,7 +1,6 @@
 import { type FC } from "react";
 import { type Metadata } from "next";
 
-import { BlogCard, type BlogPost } from "@/components/ui/BlogCard";
 import { Grid } from "@/components/ui/Grid";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Section } from "@/components/ui/Section";
@@ -30,7 +29,7 @@ export const metadata: Metadata = generateMetadata({
 const BlogPage: FC = async () => {
   const posts = await getAllPosts();
 
-  const blogPosts: BlogPost[] = posts
+  const blogPosts = posts
     .filter((post): post is NonNullable<typeof post> =>
       post?.title !== null &&
       post?.slug?.current !== null
@@ -52,7 +51,7 @@ const BlogPage: FC = async () => {
       />
       <Grid columns={{ default: 1, md: 2 }} maxWidth="5xl">
         {blogPosts.map((post) => (
-          <BlogCard key={post.slug} post={post} />
+          <div key={post.slug}>{post.title}</div>
         ))}
       </Grid>
     </Section>

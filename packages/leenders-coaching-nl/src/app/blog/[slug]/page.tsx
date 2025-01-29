@@ -1,11 +1,10 @@
 import { type Metadata } from "next";
 import { notFound } from "next/navigation";
 import { type FC } from "react";
-import { PortableText as BasePortableText } from "@portabletext/react";
 
-import { CenteredContent } from "@/components/ui/CenteredContent";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Section } from "@/components/ui/Section";
+import { Article } from "@/components/ui/Article";
 import { getPost } from "@/graphql/queries";
 import {
   generateMetadata as createMetadata,
@@ -83,15 +82,11 @@ const BlogPostPage: FC<PageProps> = async ({ params }) => {
 
   return (
     <Section>
-      <CenteredContent maxWidth="3xl">
-        <PageHeader
-          title={post.title}
-          description={post.publishedAt ? formatDate(post.publishedAt) : undefined}
-        />
-        <article className="prose prose-lg dark:prose-invert mx-auto">
-          <BasePortableText value={post.bodyRaw} />
-        </article>
-      </CenteredContent>
+      <PageHeader
+        title={post.title}
+        description={post.publishedAt ? formatDate(post.publishedAt) : undefined}
+      />
+      <Article content={post.bodyRaw} />
     </Section>
   );
 };

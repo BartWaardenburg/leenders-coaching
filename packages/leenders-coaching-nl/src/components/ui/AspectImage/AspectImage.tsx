@@ -2,6 +2,8 @@ import Image from "next/image";
 import type { ComponentPropsWithoutRef } from "react";
 import { twMerge } from "tailwind-merge";
 
+import { Box } from "@/components/ui/Box";
+
 type AspectImageProps = {
   src: string;
   alt: string;
@@ -19,7 +21,7 @@ export const AspectImage = ({
   ...props
 }: AspectImageProps) => {
   return (
-    <div
+    <Box
       className={twMerge(
         "relative rounded-lg overflow-hidden",
         `aspect-[${aspect}]`,
@@ -35,6 +37,6 @@ export const AspectImage = ({
         className="object-cover"
         {...props}
       />
-    </div>
+    </Box>
   );
 };

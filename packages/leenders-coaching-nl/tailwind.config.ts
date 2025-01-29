@@ -1,6 +1,8 @@
 import type { Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 import animate from "tailwindcss-animate";
+import plugin from "tailwindcss/plugin";
+import containerQueries from "@tailwindcss/container-queries";
 
 const config: Config = {
   darkMode: ["class"],
@@ -24,7 +26,6 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-montserrat)", ...fontFamily.sans],
         playfair: ["var(--font-playfair)", ...fontFamily.serif],
-        cormorant: ["var(--font-cormorant)", ...fontFamily.serif],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -95,6 +96,38 @@ const config: Config = {
           800: "#524a3e",
           900: "#29251f",
         },
+        pastel: {
+          blue: {
+            light: "#F0F8FF",
+            DEFAULT: "#F0F8FF",
+            dark: "#0F1A29",
+          },
+          purple: {
+            light: "#F8F0FF",
+            DEFAULT: "#F8F0FF",
+            dark: "#1A0F29",
+          },
+          green: {
+            light: "#F0FFF0",
+            DEFAULT: "#F0FFF0",
+            dark: "#0F290F",
+          },
+          pink: {
+            light: "#FFF0F8",
+            DEFAULT: "#FFF0F8",
+            dark: "#290F1A",
+          },
+          yellow: {
+            light: "#FFF8F0",
+            DEFAULT: "#FFF8F0",
+            dark: "#291A0F",
+          },
+          teal: {
+            light: "#F0FFF8",
+            DEFAULT: "#F0FFF8",
+            dark: "#0F291A",
+          },
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -126,9 +159,45 @@ const config: Config = {
         "accordion-up": "accordion-up 0.2s ease-out",
         shimmer: "shimmer 2.5s infinite",
       },
+      transitionProperty: {
+        theme:
+          "color, background-color, border-color, text-decoration-color, fill, stroke, background-image",
+      },
+      transitionTimingFunction: {
+        theme: "cubic-bezier(0.4, 0, 0.2, 1)",
+      },
+      transitionDuration: {
+        theme: "200ms",
+      },
+      containers: {
+        xs: "20rem",
+        sm: "24rem",
+        md: "28rem",
+        lg: "32rem",
+        xl: "36rem",
+        "2xl": "42rem",
+        "3xl": "48rem",
+        "4xl": "56rem",
+        "5xl": "64rem",
+        "6xl": "72rem",
+        "7xl": "80rem",
+      },
     },
   },
-  plugins: [animate],
+  plugins: [
+    animate,
+    containerQueries,
+    plugin(({ addUtilities }) => {
+      addUtilities({
+        ".transition-theme": {
+          "transition-property":
+            "color, background-color, border-color, text-decoration-color, fill, stroke, background-image",
+          "transition-timing-function": "cubic-bezier(0.4, 0, 0.2, 1)",
+          "transition-duration": "200ms",
+        },
+      });
+    }),
+  ],
 } satisfies Config;
 
 export default config;

@@ -3,6 +3,8 @@ import { twMerge } from "tailwind-merge";
 
 import { Heading } from "@/components/ui/Heading";
 import { Text } from "@/components/ui/Text";
+import { Box } from "@/components/ui/Box";
+import { Stack } from "@/components/ui/Stack";
 
 type SectionHeaderProps = {
   title: ReactNode;
@@ -21,7 +23,7 @@ export const SectionHeader = ({
   ...props
 }: SectionHeaderProps) => {
   return (
-    <div
+    <Box
       className={twMerge(
         "max-w-3xl",
         align === "center" && "mx-auto text-center",
@@ -29,19 +31,20 @@ export const SectionHeader = ({
       )}
       {...props}
     >
-      <Heading
-        level="h2"
-        variant="large"
-        weight="bold"
-        className="mb-6"
-      >
-        {title}
-      </Heading>
-      {description && (
-        <Text variant="muted" className="text-lg">
-          {description}
-        </Text>
-      )}
-    </div>
+      <Stack space={6}>
+        <Heading
+          level="h2"
+          variant="large"
+          weight="bold"
+        >
+          {title}
+        </Heading>
+        {description && (
+          <Text variant="muted" className="text-lg">
+            {description}
+          </Text>
+        )}
+      </Stack>
+    </Box>
   );
 };
