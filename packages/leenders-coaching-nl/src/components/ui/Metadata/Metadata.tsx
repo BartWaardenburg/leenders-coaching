@@ -1,20 +1,46 @@
 import { type FC } from "react";
 import Head from "next/head";
 
-import type { MetadataConfig } from "@/config/metadata.config";
-
-type MetadataProps = Partial<MetadataConfig> & {
-  /**
-   * Base URL of the website, used for generating absolute URLs
-   * @example 'https://www.leenderscoaching.nl'
-   */
+interface MetadataProps {
+  title?: string;
+  description?: string;
+  keywords?: string[];
+  openGraph?: {
+    title?: string;
+    description?: string;
+    type?: string;
+    url?: string;
+    siteName?: string;
+    image?: {
+      url: string;
+      width?: number;
+      height?: number;
+      alt?: string;
+    };
+  };
+  twitter?: {
+    card?: string;
+    site?: string;
+    creator?: string;
+    image?: {
+      url: string;
+      alt?: string;
+    };
+  };
+  robots?: {
+    index?: boolean;
+    follow?: boolean;
+    googleBot?: {
+      index?: boolean;
+      follow?: boolean;
+      "max-video-preview"?: number;
+      "max-image-preview"?: string;
+      "max-snippet"?: number;
+    };
+  };
   baseUrl?: string;
-  /**
-   * Current pathname, used for generating canonical URL
-   * @example '/blog'
-   */
   pathname?: string;
-};
+}
 
 /**
  * Component for managing SEO metadata and social sharing tags

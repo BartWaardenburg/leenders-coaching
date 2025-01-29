@@ -10,3 +10,33 @@ export const iconPaths = {
   close: "M4 4l16 16M4 20L20 4",
   message: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z",
 } as const;
+
+export const iconConfig = {
+  navigation: {
+    menu: {
+      label: "Menu openen",
+      icon: "menu",
+    },
+    close: {
+      label: "Menu sluiten",
+      icon: "x",
+    },
+  },
+  theme: {
+    toggle: {
+      label: "Wissel kleurenschema",
+      icon: "sun",
+      iconDark: "moon",
+    },
+  },
+  social: {
+    instagram: {
+      label: "Volg op Instagram",
+      icon: "instagram",
+    },
+    linkedin: {
+      label: "Volg op LinkedIn",
+      icon: "linkedin",
+    },
+  },
+} as const;

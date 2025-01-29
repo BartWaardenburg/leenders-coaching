@@ -1,39 +1,20 @@
 import type { ComponentPropsWithoutRef } from "react";
 import { twMerge } from "tailwind-merge";
+
 import { Text } from "@/components/ui/Text";
 import { Link } from "@/components/ui/Link";
 import { Container } from "@/components/ui/Container";
 import { Box } from "@/components/ui/Box";
 import { Flex } from "@/components/ui/Flex";
 
-type FooterProps = {
-  copyright?: string;
-  instagram?: {
-    href: string;
-    label: string;
-  };
-  contact?: {
-    email?: string;
-    phone?: string;
-  };
-} & ComponentPropsWithoutRef<"footer">;
+import { footerConfig } from "@/config/footer.config";
+
+type FooterProps = ComponentPropsWithoutRef<"footer">;
 
 /**
- * Simplified footer component with copyright, Instagram link, and contact information
+ * Footer component using the footerConfig for content
  */
-export const Footer = ({
-  copyright = "© 2025 Leenders Coaching",
-  instagram = {
-    href: "https://instagram.com/leenderscoaching",
-    label: "Instagram"
-  },
-  contact = {
-    email: "info@leenders-coaching.nl",
-    phone: "+31 6 12345678"
-  },
-  className,
-  ...props
-}: FooterProps) => {
+export const Footer = ({ className, ...props }: FooterProps) => {
   return (
     <Box
       as="footer"
@@ -54,19 +35,19 @@ export const Footer = ({
         >
           {/* Copyright - first on desktop, second on mobile */}
           <Text variant="muted" className="text-sm order-2 md:order-1">
-            {copyright}
+            {footerConfig.copyright}
           </Text>
 
           {/* Instagram - hidden on mobile, second on desktop */}
           <Link
-            href={instagram.href}
+            href={footerConfig.instagram.href}
             target="_blank"
             rel="noopener noreferrer"
             variant="subtle"
             className="hidden md:block md:order-2"
           >
             <Text variant="muted" className="text-sm hover:text-primary transition-colors">
-              {instagram.label}
+              {footerConfig.instagram.label}
             </Text>
           </Link>
 
@@ -76,17 +57,17 @@ export const Footer = ({
             gap={2}
             className="md:flex-row md:gap-4 order-1 md:order-3"
           >
-            {contact.email && (
-              <Link href={`mailto:${contact.email}`} variant="subtle">
+            {footerConfig.contact.email && (
+              <Link href={`mailto:${footerConfig.contact.email}`} variant="subtle">
                 <Text variant="muted" className="text-sm hover:text-primary transition-colors">
-                  {contact.email}
+                  {footerConfig.contact.email}
                 </Text>
               </Link>
             )}
-            {contact.phone && (
-              <Link href={`tel:${contact.phone}`} variant="subtle">
+            {footerConfig.contact.phone && (
+              <Link href={`tel:${footerConfig.contact.phone}`} variant="subtle">
                 <Text variant="muted" className="text-sm hover:text-primary transition-colors">
-                  {contact.phone}
+                  {footerConfig.contact.phone}
                 </Text>
               </Link>
             )}

@@ -1,5 +1,11 @@
 import { type Metadata } from "next";
-import { defaultMetadata } from "@/config/metadata.config";
+import { metadataConfig } from "@/config/metadata.config";
+
+const defaultMetadata = {
+  ...metadataConfig.default,
+  openGraph: metadataConfig.openGraph,
+  robots: metadataConfig.robots,
+};
 
 type GenerateMetadataOptions = {
   title?: string;
@@ -104,10 +110,10 @@ export const generateArticleStructuredData = ({
   publisher: {
     "@type": "Organization",
     name: defaultMetadata.title,
-    logo: defaultMetadata.openGraph.image
+    logo: defaultMetadata.openGraph.images?.[0]
       ? {
           "@type": "ImageObject",
-          url: defaultMetadata.openGraph.image.url,
+          url: defaultMetadata.openGraph.images[0].url,
         }
       : undefined,
   },
@@ -167,6 +173,10 @@ export const generateMetadata = ({
         )
     : structuredData;
 
+  const defaultImages = defaultMetadata.openGraph.images
+    ? [...defaultMetadata.openGraph.images]
+    : undefined;
+
   return {
     title: pageTitle,
     description: description || defaultMetadata.description,
@@ -174,22 +184,12 @@ export const generateMetadata = ({
       title: pageTitle,
       description: description || defaultMetadata.description,
       type,
-      images:
-        images ||
-        (defaultMetadata.openGraph.image
-          ? [defaultMetadata.openGraph.image]
-          : undefined),
+      images: images || defaultImages,
       siteName: defaultMetadata.openGraph.siteName,
     },
     twitter: {
       card: "summary_large_image",
-      site: defaultMetadata.twitter?.site,
-      creator: defaultMetadata.twitter?.creator,
-      images:
-        images ||
-        (defaultMetadata.twitter?.image
-          ? [defaultMetadata.twitter.image]
-          : undefined),
+      images: images || defaultImages,
     },
     robots: {
       index: !noindex,

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { FiLinkedin, FiInstagram } from "react-icons/fi";
 import { Text } from "@/components/ui/Text";
-import { menuFooterConfig } from "@/config/footer";
+import { menuFooterConfig } from "@/config/footer.config";
 import { Heading } from "@/components/ui/Heading";
 import { Box } from "@/components/ui/Box";
 import { Flex } from "@/components/ui/Flex";

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { navigationConfig } from "@/config/navigation";
+import { navigationConfig } from "@/config/navigation.config";
 import { Box } from "@/components/ui/Box";
 import { Stack } from "@/components/ui/Stack";
 import { Text } from "@/components/ui/Text";
@@ -11,10 +11,10 @@ type NavigationItemsProps = {
 export const NavigationItems = ({ onItemClick }: NavigationItemsProps) => (
     <Box as="ul">
         <Stack space={4}>
-            {navigationConfig.items.map((item) => (
-                <Box as="li" key={item.href}>
+            {navigationConfig.links.map((link) => (
+                <Box as="li" key={link.href}>
                     <Link
-                        href={item.href}
+                        href={link.href}
                         onClick={onItemClick}
                         className="block text-foreground hover:text-primary/80 transition-colors"
                     >
@@ -22,25 +22,11 @@ export const NavigationItems = ({ onItemClick }: NavigationItemsProps) => (
                             as="span"
                             variant="navigation"
                         >
-                            {item.label}
+                            {link.label}
                         </Text>
                     </Link>
                 </Box>
             ))}
-            <Box as="li">
-                <Link
-                    href={navigationConfig.cta.href}
-                    onClick={onItemClick}
-                    className="block text-primary hover:text-primary/80 transition-colors"
-                >
-                    <Text
-                        as="span"
-                        variant="navigation"
-                    >
-                        {navigationConfig.cta.label}
-                    </Text>
-                </Link>
-            </Box>
         </Stack>
     </Box>
 ); 

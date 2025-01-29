@@ -10,4 +10,16 @@ export const uiConfig = {
   themeToggle: {
     label: "Toggle color theme",
   },
+  buttons: {
+    loadMore: "Laad meer",
+    readMore: "Lees meer",
+    submit: "Verstuur",
+    close: "Sluiten",
+  },
+  forms: {
+    required: "Verplicht veld",
+    invalid: "Ongeldig formaat",
+    success: "Bericht verzonden",
+    error: "Er is iets misgegaan",
+  },
 } as const;

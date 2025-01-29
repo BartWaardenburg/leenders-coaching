@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useTheme } from "next-themes";
-import { navigationConfig } from "@/config/navigation";
 
 import logoColor from "@/assets/images/logo-color.png";
 import logoWhite from "@/assets/images/logo-white.png";
@@ -22,7 +21,7 @@ export const Logo = () => {
             <div className="absolute inset-0 flex items-center justify-center">
                 <Image
                     src={isDark ? logoWhite : logoColor}
-                    alt={navigationConfig.brand.title}
+                    alt="Simone Leenders Coaching"
                     width={400}
                     height={133}
                     className="object-cover w-full scale-[1.5]"

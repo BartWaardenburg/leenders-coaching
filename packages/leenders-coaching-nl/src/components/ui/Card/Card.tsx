@@ -1,14 +1,25 @@
 import { FC } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import type { StaticImageData } from 'next/image'
 import { Text } from '@/components/ui/Text'
 import { Heading } from '@/components/ui/Heading'
 import { Flex } from '@/components/ui/Flex'
-import type { StaticImageData } from 'next/image'
 import { Box } from '@/components/ui/Box'
 import { twMerge } from 'tailwind-merge'
+import { cardConfig } from '@/config/card.config'
 
-/* Types for the Card component props */
+type CardVariant = 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal'
+
+const cardBackgrounds: Record<CardVariant, string> = {
+  blue: "bg-pastel-blue dark:bg-pastel-blue-dark",
+  purple: "bg-pastel-purple dark:bg-pastel-purple-dark",
+  green: "bg-pastel-green dark:bg-pastel-green-dark",
+  pink: "bg-pastel-pink dark:bg-pastel-pink-dark",
+  yellow: "bg-pastel-yellow dark:bg-pastel-yellow-dark",
+  teal: "bg-pastel-teal dark:bg-pastel-teal-dark",
+}
+
 type CardProps = {
   featured?: boolean
   title: string
@@ -17,19 +28,7 @@ type CardProps = {
   excerpt?: string
   slug: string
   image?: string | StaticImageData
-  variant?: 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal'
-}
-
-const getCardBackground = (variant: CardProps['variant']) => {
-  const backgrounds = {
-    blue: 'bg-pastel-blue dark:bg-pastel-blue-dark',
-    purple: 'bg-pastel-purple dark:bg-pastel-purple-dark',
-    green: 'bg-pastel-green dark:bg-pastel-green-dark',
-    pink: 'bg-pastel-pink dark:bg-pastel-pink-dark',
-    yellow: 'bg-pastel-yellow dark:bg-pastel-yellow-dark',
-    teal: 'bg-pastel-teal dark:bg-pastel-teal-dark',
-  }
-  return backgrounds[variant || 'blue']
+  variant?: CardVariant
 }
 
 /**
@@ -52,13 +51,13 @@ const Card: FC<CardProps> = ({
       as="article"
       className={twMerge(
         'group relative @container/card',
-        image && '@md/card:pl-6 @lg/card:pl-12 @xl/card:pl-16',
-        getCardBackground(variant)
+        image && '@lg/card:pl-6 @xl/card:pl-12',
+        cardBackgrounds[variant]
       )}
     >
-      <Flex className="h-full items-stretch flex-col @md/card:flex-row">
+      <Flex className="h-full items-stretch flex-col @lg/card:flex-row">
         {image && (
-          <Box className="relative border-b @md/card:border-b-0 @md/card:border-l @md/card:border-r border-foreground/80 h-48 @md/card:h-auto w-full @md/card:w-1/2 @lg/card:w-2/3 shrink-0 overflow-hidden">
+          <Box className="relative border-b @lg/card:border-b-0 @lg/card:border-l @lg/card:border-r border-foreground/80 h-48 @lg/card:h-auto w-full @lg/card:w-1/2 @4xl/card:w-2/3 shrink-0 overflow-hidden">
             <Image
               src={image}
               alt={title}
@@ -78,7 +77,7 @@ const Card: FC<CardProps> = ({
                     weight="medium"
                     className="mb-2"
                   >
-                    Featured
+                    {cardConfig.labels.featured}
                   </Text>
                   <Box className="h-[2px] w-12 bg-foreground/80" />
                 </Box>
@@ -100,15 +99,10 @@ const Card: FC<CardProps> = ({
                   <Flex
                     gap={0}
                     justify='center'
-                    className={twMerge(
-                      "relative divide-foreground/80",
-                      "flex-row divide-x"
-                    )}
+                    className="relative divide-foreground/80 flex-row divide-x"
                   >
                     {date && (
-                      <Box className={twMerge(
-                        "px-4 py-2",
-                      )}>
+                      <Box className="px-4 py-2">
                         <Text variant="card-meta">
                           {date}
                         </Text>
@@ -139,10 +133,10 @@ const Card: FC<CardProps> = ({
                 <Box className="h-[2px] w-12 bg-foreground/80 transition-all duration-300 group-hover/link:translate-x-2 group-hover/link:bg-primary" />
                 <Text variant="card-meta" weight="medium">
                   <Link
-                    href={`/blog/${slug}`}
+                    href={`${cardConfig.paths.blog}/${slug}`}
                     className="pt-2 inline-block transition-colors hover:text-primary"
                   >
-                    Read Article
+                    {cardConfig.labels.readArticle}
                   </Link>
                 </Text>
               </Box>

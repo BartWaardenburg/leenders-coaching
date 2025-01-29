@@ -6,7 +6,6 @@ import { Box } from "@/components/ui/Box";
 import { Footer } from "@/components/ui/Footer";
 import { Header } from "@/components/ui/Header";
 import { Main } from "@/components/ui/Main";
-import { footerConfig } from "@/config/footer";
 
 import "@/app/globals.css";
 
@@ -31,8 +30,8 @@ export const RootLayout = ({ children, fonts }: RootLayoutProps) => {
       <Box as="body" className="antialiased min-h-screen flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Header />
-          <Main className="flex-1">{children}</Main>
-          <Footer {...footerConfig} />
+          <Main>{children}</Main>
+          <Footer />
           <Analytics />
         </ThemeProvider>
       </Box>
