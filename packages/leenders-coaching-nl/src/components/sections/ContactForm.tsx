@@ -52,12 +52,12 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit }) => {
       <div className="max-w-4xl mx-auto">
         <form onSubmit={handleSubmit(onSubmitForm)}>
           {status === "success" && (
-            <Alert variant="success" className="mb-6">
+            <Alert variant="green" className="mb-6">
               Your message has been sent successfully!
             </Alert>
           )}
           {status === "error" && (
-            <Alert variant="error" className="mb-6">
+            <Alert variant="pink" className="mb-6">
               There was an error sending your message. Please try again.
             </Alert>
           )}
