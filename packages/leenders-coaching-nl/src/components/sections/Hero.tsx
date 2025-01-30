@@ -34,7 +34,7 @@ export const Hero = ({
       <Stack space={6}>
         <Heading
           level="h1"
-          variant="gradient"
+          variant="large"
         >
           {title}
         </Heading>
