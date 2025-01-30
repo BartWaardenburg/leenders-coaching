@@ -2,8 +2,8 @@ import { type Metadata } from "next";
 import { notFound } from "next/navigation";
 import { type FC } from "react";
 
-import { PageHeader } from "@/components/ui/PageHeader";
-import { Section } from "@/components/ui/Section";
+import { SectionHeader } from "@/components/sections/SectionHeader";
+import { SectionContent } from "@/components/sections/SectionContent";
 import { Article } from "@/components/ui/Article";
 import { getPost } from "@/graphql/queries";
 import {
@@ -81,13 +81,15 @@ const BlogPostPage: FC<PageProps> = async ({ params }) => {
   }
 
   return (
-    <Section>
-      <PageHeader
+    <>
+      <SectionHeader
         title={post.title}
         description={post.publishedAt ? formatDate(post.publishedAt) : undefined}
       />
-      <Article content={post.bodyRaw} />
-    </Section>
+      <SectionContent>
+        <Article content={post.bodyRaw} />
+      </SectionContent>
+    </>
   );
 };
 

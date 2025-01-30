@@ -12,12 +12,12 @@ import { cardConfig } from '@/config/card.config'
 type CardVariant = 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal'
 
 const cardBackgrounds: Record<CardVariant, string> = {
-  blue: "bg-pastel-blue dark:bg-pastel-blue-dark",
-  purple: "bg-pastel-purple dark:bg-pastel-purple-dark",
-  green: "bg-pastel-green dark:bg-pastel-green-dark",
-  pink: "bg-pastel-pink dark:bg-pastel-pink-dark",
-  yellow: "bg-pastel-yellow dark:bg-pastel-yellow-dark",
-  teal: "bg-pastel-teal dark:bg-pastel-teal-dark",
+  blue: "bg-pastel-blue dark:bg-pastel-blue-dark border-pastel-blue-dark dark:border-pastel-blue",
+  purple: "bg-pastel-purple dark:bg-pastel-purple-dark border-pastel-purple-dark dark:border-pastel-purple",
+  green: "bg-pastel-green dark:bg-pastel-green-dark border-pastel-green-dark dark:border-pastel-green",
+  pink: "bg-pastel-pink dark:bg-pastel-pink-dark border-pastel-pink-dark dark:border-pastel-pink",
+  yellow: "bg-pastel-yellow dark:bg-pastel-yellow-dark border-pastel-yellow-dark dark:border-pastel-yellow",
+  teal: "bg-pastel-teal dark:bg-pastel-teal-dark border-pastel-teal-dark dark:border-pastel-teal",
 }
 
 type CardProps = {
@@ -29,6 +29,7 @@ type CardProps = {
   slug: string
   image?: string | StaticImageData
   variant?: CardVariant
+  border?: boolean
 }
 
 /**
@@ -43,6 +44,7 @@ const Card: FC<CardProps> = ({
   slug,
   image,
   variant = 'blue',
+  border = false,
 }) => {
   const hasMetaData = date || categories.length > 0;
 
@@ -52,7 +54,8 @@ const Card: FC<CardProps> = ({
       className={twMerge(
         'group relative @container/card',
         image && '@lg/card:pl-6 @xl/card:pl-12',
-        cardBackgrounds[variant]
+        cardBackgrounds[variant],
+        border && 'border'
       )}
     >
       <Flex className="h-full items-stretch flex-col @lg/card:flex-row">
@@ -83,7 +86,7 @@ const Card: FC<CardProps> = ({
                 </Box>
               )}
 
-              <Box className="pb-6">
+              <Box className="pb-6 w-full">
                 <Heading
                   level="h2"
                   variant="medium"
@@ -121,7 +124,7 @@ const Card: FC<CardProps> = ({
 
               {excerpt && (
                 <Box className="py-6">
-                  <Text variant="card-excerpt">
+                  <Text variant="card-excerpt" className="break-words hyphens-auto">
                     {excerpt}
                   </Text>
                 </Box>

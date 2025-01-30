@@ -13,9 +13,12 @@ type TextProps<T extends ElementType = "p"> = {
   | "playfair"
   | "navigation"
   | "card-meta"
-  | "card-excerpt";
+  | "card-excerpt"
+  | "quote";
   weight?: "normal" | "medium" | "bold";
   as?: T;
+  textAlign?: "left" | "center" | "right";
+  italic?: boolean;
 } & Omit<ComponentPropsWithoutRef<T>, "as">;
 
 /**
@@ -27,6 +30,8 @@ export const Text = <T extends ElementType = "p">({
   weight = "normal",
   as,
   className,
+  textAlign,
+  italic,
   ...props
 }: TextProps<T>) => {
   const Component = as || "p";
@@ -34,7 +39,7 @@ export const Text = <T extends ElementType = "p">({
   return (
     <Component
       className={twMerge(
-        "leading-relaxed",
+        "leading-relaxed transition-theme",
         /* Font family */
         variant !== "playfair" && variant !== "navigation" && "font-montserrat",
         (variant === "playfair" || variant === "navigation") && "font-playfair",
@@ -53,6 +58,10 @@ export const Text = <T extends ElementType = "p">({
         variant === "navigation" && "text-4xl text-inherit",
         variant === "card-meta" && "text-[13px] uppercase text-foreground/60 dark:text-foreground/80",
         variant === "card-excerpt" && "text-base leading-relaxed text-foreground/70 dark:text-foreground/90",
+        variant === "quote" && "text-xl md:text-2xl text-foreground",
+        textAlign === "center" && "text-center",
+        textAlign === "right" && "text-right",
+        italic && "italic",
         className,
       )}
       {...props}

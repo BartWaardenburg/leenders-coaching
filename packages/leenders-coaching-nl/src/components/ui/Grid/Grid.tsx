@@ -1,69 +1,64 @@
 import type { FC, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
+import { Children, isValidElement, Fragment } from "react";
+
+type ResponsiveColumns = {
+  default: number;
+  sm?: number;
+  md?: number;
+  lg?: number;
+  xl?: number;
+  "2xl"?: number;
+};
 
 type GridProps = {
   children: ReactNode;
-  columns?: {
-    default?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-    md?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-    lg?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-  };
+  maxColumns?: number;
+  columns?: ResponsiveColumns;
   gap?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
   className?: string;
   maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl";
 };
 
-const getGridColumns = (columns: GridProps['columns']) => {
-  const colClasses = {
-    1: 'grid-cols-1',
-    2: 'grid-cols-2',
-    3: 'grid-cols-3',
-    4: 'grid-cols-4',
-    5: 'grid-cols-5',
-    6: 'grid-cols-6',
-    7: 'grid-cols-7',
-    8: 'grid-cols-8',
-    9: 'grid-cols-9',
-    10: 'grid-cols-10',
-    11: 'grid-cols-11',
-    12: 'grid-cols-12',
-  };
+const countChildren = (children: ReactNode): number => {
+  let count = 0;
+  Children.forEach(children, (child) => {
+    if (isValidElement<{ children?: ReactNode }>(child)) {
+      if (child.type === Fragment) {
+        count += countChildren(child.props.children);
+      } else {
+        count++;
+      }
+    }
+  });
+  return count;
+};
 
-  const mdColClasses = {
-    1: 'md:grid-cols-1',
-    2: 'md:grid-cols-2',
-    3: 'md:grid-cols-3',
-    4: 'md:grid-cols-4',
-    5: 'md:grid-cols-5',
-    6: 'md:grid-cols-6',
-    7: 'md:grid-cols-7',
-    8: 'md:grid-cols-8',
-    9: 'md:grid-cols-9',
-    10: 'md:grid-cols-10',
-    11: 'md:grid-cols-11',
-    12: 'md:grid-cols-12',
-  };
+const getGridColumns = (childCount: number, maxColumns?: number, columns?: ResponsiveColumns) => {
+  if (columns) {
+    const breakpoints = {
+      default: columns.default,
+      sm: columns.sm,
+      md: columns.md,
+      lg: columns.lg,
+      xl: columns.xl,
+      "2xl": columns["2xl"],
+    };
 
-  const lgColClasses = {
-    1: 'lg:grid-cols-1',
-    2: 'lg:grid-cols-2',
-    3: 'lg:grid-cols-3',
-    4: 'lg:grid-cols-4',
-    5: 'lg:grid-cols-5',
-    6: 'lg:grid-cols-6',
-    7: 'lg:grid-cols-7',
-    8: 'lg:grid-cols-8',
-    9: 'lg:grid-cols-9',
-    10: 'lg:grid-cols-10',
-    11: 'lg:grid-cols-11',
-    12: 'lg:grid-cols-12',
-  };
+    return Object.entries(breakpoints)
+      .filter(([_, value]) => value !== undefined)
+      .map(([breakpoint, value]) => {
+        const prefix = breakpoint === 'default' ? '' : `${breakpoint}:`;
+        return `${prefix}grid-cols-${value}`;
+      })
+      .join(' ');
+  }
 
-  return [
-    columns?.default && colClasses[columns.default],
-    columns?.md && mdColClasses[columns.md],
-    columns?.lg && lgColClasses[columns.lg],
-  ].filter(Boolean).join(' ');
+  // Legacy maxColumns behavior with fixed column classes
+  const cols = Math.min(childCount, maxColumns || 3);
+  if (cols === 1) return 'grid-cols-1';
+  if (cols === 2) return 'grid-cols-1 md:grid-cols-2';
+  return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3';
 };
 
 const getGapClass = (gap: GridProps['gap']) => {
@@ -92,23 +87,32 @@ const getMaxWidthClass = (maxWidth: GridProps['maxWidth']) => {
 
 /**
  * Reusable grid component with responsive column support
+ * @example
+ * // Using maxColumns (legacy)
+ * <Grid maxColumns={3}>
+ *   <Item />
+ * </Grid>
+ * 
+ * // Using responsive columns
+ * <Grid columns={{ default: 1, md: 3 }}>
+ *   <Item />
+ * </Grid>
  */
 export const Grid: FC<GridProps> = ({
   children,
-  columns = {
-    default: 1,
-    md: 2,
-    lg: 3,
-  },
+  maxColumns,
+  columns,
   gap = 8,
   className,
   maxWidth = "7xl",
 }) => {
+  const childCount = countChildren(children);
+
   return (
     <div
       className={twMerge(
         'grid',
-        getGridColumns(columns),
+        getGridColumns(childCount, maxColumns, columns),
         getGapClass(gap),
         getMaxWidthClass(maxWidth),
         'mx-auto',

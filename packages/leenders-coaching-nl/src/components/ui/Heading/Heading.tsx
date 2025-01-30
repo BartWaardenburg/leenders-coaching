@@ -25,6 +25,7 @@ type HeadingProps = {
   showBorder?: boolean;
   borderColor?: BorderColor;
   color?: HeadingColor;
+  textAlign?: "left" | "center" | "right";
 } & ComponentPropsWithoutRef<"h1">;
 
 /**
@@ -39,39 +40,43 @@ export const Heading = ({
   showBorder = false,
   borderColor = "default",
   color = "default",
+  textAlign = "left",
   className,
   ...props
 }: HeadingProps) => {
   const Component = level;
 
-  const styles = twMerge(
-    /* Font family */
-    "font-playfair",
-    "tracking-tight !leading-tight md:!leading-tight",
-    /* Font weight */
-    weight === "bold" && "font-bold",
-    weight === "normal" && "font-normal",
-    /* Spacing */
-    spacing === "normal" && "mb-6",
-    /* Colors */
-    color === "default" && "text-foreground",
-    color === "muted" && "text-foreground/80",
-    /* Variants */
-    variant === "default" && "text-3xl md:text-4xl",
-    variant === "large" && "text-5xl md:text-7xl",
-    variant === "medium" && "text-3xl sm:text-4xl md:text-[42px] leading-[1.1]",
-    variant === "small" && "text-lg md:text-xl",
-    className,
-  );
-
   return (
-    <Box className="relative inline-block">
-      <Component className={styles} {...props}>
+    <Box className="relative inline-block w-full">
+      <Component className={twMerge(
+        /* Font family */
+        "font-playfair w-full",
+        "tracking-tight !leading-tight md:!leading-tight",
+        /* Word breaking */
+        "break-words hyphens-auto [word-break:break-word]",
+        /* Font weight */
+        weight === "bold" && "font-bold",
+        weight === "normal" && "font-normal",
+        /* Spacing */
+        spacing === "normal" && "mb-6",
+        /* Colors */
+        color === "default" && "text-foreground",
+        color === "muted" && "text-foreground/80",
+        /* Variants */
+        variant === "default" && "text-3xl md:text-4xl",
+        variant === "large" && "text-5xl md:text-7xl",
+        variant === "medium" && "text-3xl sm:text-4xl md:text-[42px] leading-[1.1]",
+        variant === "small" && "text-lg md:text-xl",
+        /* Text alignment */
+        textAlign === "center" && "text-center",
+        textAlign === "right" && "text-right",
+        className
+      )} {...props}>
         {children}
       </Component>
       {showBorder && (
         <Box className={twMerge(
-          "absolute -bottom-4 left-1/2 -translate-x-1/2 h-[2px] w-24",
+          "absolute bottom-[1px] left-1/2 -translate-x-1/2 h-[2px] w-24",
           borderColors[borderColor]
         )} />
       )}

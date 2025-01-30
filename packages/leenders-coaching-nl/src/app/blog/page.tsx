@@ -1,9 +1,9 @@
 import { type FC } from "react";
 import { type Metadata } from "next";
 
-import { Grid } from "@/components/ui/Grid";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { Section } from "@/components/ui/Section";
+import { Card } from "@/components/ui/Card";
+import { SectionHeader } from "@/components/sections/SectionHeader";
+import { SectionCards } from "@/components/sections/SectionCards";
 import { getAllPosts } from "@/graphql/queries";
 import { formatDate, calculateReadingTime } from "@/utilities/index";
 import { generateMetadata } from "@/utilities/metadata";
@@ -44,17 +44,25 @@ const BlogPage: FC = async () => {
     }));
 
   return (
-    <Section>
-      <PageHeader
+    <>
+      <SectionHeader
         title="Blog & Insights"
         description="Thoughts and advice on personal development, career growth, and life coaching"
       />
-      <Grid columns={{ default: 1, md: 2 }} maxWidth="5xl">
+      <SectionCards>
         {blogPosts.map((post) => (
-          <div key={post.slug}>{post.title}</div>
+          <Card
+            key={post.slug}
+            title={post.title}
+            excerpt={post.description}
+            date={post.date}
+            image={post.image}
+            slug={post.slug}
+            variant="blue"
+          />
         ))}
-      </Grid>
-    </Section>
+      </SectionCards>
+    </>
   );
 };
 

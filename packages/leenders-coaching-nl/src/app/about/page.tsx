@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 
-import { PageHeader } from "@/components/ui/PageHeader";
-import { Section } from "@/components/ui/Section";
-import { Stack } from "@/components/ui/Stack";
+import { SectionHeader } from "@/components/sections/SectionHeader";
+import { SectionContent } from "@/components/sections/SectionContent";
+import { SectionCards } from "@/components/sections/SectionCards";
+import { Card } from "@/components/ui/Card";
 
 export const metadata: Metadata = {
   title: "About - Leenders Coaching",
@@ -15,17 +16,37 @@ export const metadata: Metadata = {
  */
 export default function AboutPage() {
   return (
-    <Section>
-      <Stack space={12}>
-        <PageHeader
-          title="About Me"
-          description="Discover my unique approach to personal development and coaching"
-        />
-
-        <Stack space={8}>
-          <div>About</div>
-        </Stack>
-      </Stack>
-    </Section>
+    <>
+      <SectionHeader
+        title="About Me"
+        description="Discover my unique approach to personal development and coaching"
+        background="teal"
+      />
+      <SectionContent border title="Over mij">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+          veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+          ea commodo consequat.
+        </p>
+        <p>
+          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+          dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+          proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+          veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+          ea commodo consequat.
+        </p>
+      </SectionContent>
+      <SectionCards title="Mijn expertise">
+        <Card title="Mijn expertise" slug="my-expertise" />
+        <Card title="Mijn expertise" slug="my-expertise" />
+        <Card title="Mijn expertise" slug="my-expertise" />
+        <Card title="Mijn expertise" slug="my-expertise" />
+      </SectionCards>
+    </>
   );
 }

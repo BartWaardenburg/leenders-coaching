@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 
-import { ContactForm } from "@/components/sections/ContactForm";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { Section } from "@/components/ui/Section";
-import { Stack } from "@/components/ui/Stack";
+import { SectionHeader } from "@/components/sections/SectionHeader";
 
 export const metadata: Metadata = {
   title: "Contact - Leenders Coaching",
@@ -16,14 +13,9 @@ export const metadata: Metadata = {
  */
 export default function ContactPage() {
   return (
-    <Section>
-      <Stack space={12}>
-        <PageHeader
-          title="Contact Me"
-          description="Ready to start your journey? Get in touch today"
-        />
-        <ContactForm />
-      </Stack>
-    </Section>
+    <SectionHeader
+      title="Contact Me"
+      description="Ready to start your journey? Get in touch today"
+    />
   );
 }
