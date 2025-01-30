@@ -23,7 +23,7 @@ const components: PortableTextComponents = {
   },
   marks: {
     link: ({ children, value }) => (
-      <Link href={value?.href} variant="underline">
+      <Link href={value?.href} variant="subtle">
         {children}
       </Link>
     ),

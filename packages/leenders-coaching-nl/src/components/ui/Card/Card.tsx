@@ -86,7 +86,7 @@ const Card: FC<CardProps> = ({
               <Box className="pb-6">
                 <Heading
                   level="h2"
-                  variant="card"
+                  variant="medium"
                   weight="normal"
                   spacing="none"
                 >

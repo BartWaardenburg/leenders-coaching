@@ -1,14 +1,30 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
+import { Box } from "@/components/ui/Box";
 
 type HeadingLevel = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+type HeadingColor = "default" | "muted";
+type BorderColor = "default" | "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
+
+const borderColors: Record<BorderColor, string> = {
+  default: "bg-foreground/40 dark:bg-foreground/60",
+  blue: "bg-pastel-blue-dark dark:bg-pastel-blue-light",
+  purple: "bg-pastel-purple-dark dark:bg-pastel-purple-light",
+  green: "bg-pastel-green-dark dark:bg-pastel-green-light",
+  pink: "bg-pastel-pink-dark dark:bg-pastel-pink-light",
+  yellow: "bg-pastel-yellow-dark dark:bg-pastel-yellow-light",
+  teal: "bg-pastel-teal-dark dark:bg-pastel-teal-light",
+};
 
 type HeadingProps = {
   level?: HeadingLevel;
   children: ReactNode;
-  variant?: "default" | "gradient" | "large" | "small" | "menu" | "card";
-  weight?: "bold" | "extrabold" | "normal";
+  variant?: "default" | "large" | "medium" | "small";
+  weight?: "bold" | "normal";
   spacing?: "none" | "normal";
+  showBorder?: boolean;
+  borderColor?: BorderColor;
+  color?: HeadingColor;
 } & ComponentPropsWithoutRef<"h1">;
 
 /**
@@ -18,8 +34,11 @@ export const Heading = ({
   level = "h1",
   children,
   variant = "default",
-  weight = "extrabold",
+  weight = "bold",
   spacing = "normal",
+  showBorder = false,
+  borderColor = "default",
+  color = "default",
   className,
   ...props
 }: HeadingProps) => {
@@ -31,45 +50,31 @@ export const Heading = ({
     "tracking-tight !leading-tight md:!leading-tight",
     /* Font weight */
     weight === "bold" && "font-bold",
-    weight === "extrabold" && "font-extrabold",
     weight === "normal" && "font-normal",
-    /* Base sizes by level */
-    level === "h1" && "text-4xl md:text-5xl",
-    level === "h2" && "text-3xl md:text-4xl",
-    level === "h3" && "text-2xl md:text-3xl",
     /* Spacing */
-    spacing === "normal" && [
-      level === "h1" && "mb-8 md:mb-10",
-      level === "h2" && "mb-6",
-      level === "h3" && "mb-4",
-    ],
+    spacing === "normal" && "mb-6",
+    /* Colors */
+    color === "default" && "text-foreground",
+    color === "muted" && "text-foreground/80",
     /* Variants */
-    variant === "default" && "transition-theme bg-clip-text text-transparent bg-gradient-to-b from-primary via-primary to-primary/80",
-    variant === "gradient" && [
-      "transition-theme bg-clip-text text-transparent bg-gradient-to-b from-primary via-primary to-primary/80",
-    ],
-    variant === "large" && [
-      level === "h1" && "text-5xl md:text-7xl",
-      level === "h2" && "text-4xl md:text-6xl",
-      level === "h3" && "text-3xl md:text-5xl",
-    ],
-    variant === "small" && [
-      level === "h1" && "text-3xl md:text-4xl",
-      level === "h2" && "text-2xl md:text-3xl",
-      level === "h3" && "text-xl md:text-2xl",
-    ],
-    variant === "menu" && [
-      "text-lg md:text-xl font-normal text-foreground transition-theme",
-    ],
-    variant === "card" && [
-      "text-3xl leading-[1.1] text-foreground/90 dark:text-foreground sm:text-4xl md:text-[42px]",
-    ],
+    variant === "default" && "text-3xl md:text-4xl",
+    variant === "large" && "text-5xl md:text-7xl",
+    variant === "medium" && "text-3xl sm:text-4xl md:text-[42px] leading-[1.1]",
+    variant === "small" && "text-lg md:text-xl",
     className,
   );
 
   return (
-    <Component className={styles} {...props}>
-      {children}
-    </Component>
+    <Box className="relative inline-block">
+      <Component className={styles} {...props}>
+        {children}
+      </Component>
+      {showBorder && (
+        <Box className={twMerge(
+          "absolute -bottom-4 left-1/2 -translate-x-1/2 h-[2px] w-24",
+          borderColors[borderColor]
+        )} />
+      )}
+    </Box>
   );
 };

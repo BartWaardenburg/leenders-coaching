@@ -47,7 +47,7 @@ export const Text = <T extends ElementType = "p">({
         variant === "muted" && "text-muted-foreground",
         variant === "large" && "text-lg text-foreground/90",
         variant === "small" && "text-sm text-foreground/80",
-        variant === "label" && "text-sm font-medium text-foreground",
+        variant === "label" && "text-md font-medium text-foreground",
         variant === "error" && "text-sm text-destructive",
         variant === "playfair" && "text-lg text-foreground",
         variant === "navigation" && "text-4xl text-inherit",

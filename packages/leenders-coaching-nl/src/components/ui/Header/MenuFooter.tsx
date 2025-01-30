@@ -16,7 +16,7 @@ type FooterSectionProps = {
 
 const FooterSection = ({ title, children, isLast = false }: FooterSectionProps) => (
     <Flex direction="column">
-        <Heading level="h3" variant="menu" spacing="none" className="mb-6 sm:px-0 md:px-4">
+        <Heading level="h3" variant="small" spacing="none" className="mb-6 sm:px-0 md:px-4">
             {title}
         </Heading>
         <Box className={`border-t ${!isLast ? 'md:border-r' : ''} border-foreground/80 pt-4 sm:px-0 md:px-4 pb-8 h-full`}>

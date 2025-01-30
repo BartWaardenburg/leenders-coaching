@@ -11,8 +11,21 @@ const meta = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["success", "error", "warning"],
+      options: ["blue", "purple", "green", "pink", "yellow", "teal"],
       description: "The visual style variant of the alert",
+    },
+    size: {
+      control: "select",
+      options: ["small", "medium", "large"],
+      description: "The size of the alert",
+    },
+    showCloseButton: {
+      control: "boolean",
+      description: "Whether to show a close button",
+    },
+    onClose: {
+      action: "closed",
+      description: "Callback function when the alert is closed",
     },
     children: {
       control: "text",
@@ -22,32 +35,120 @@ const meta = {
 } satisfies Meta<typeof Alert>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Alert>;
 
-export const Success: Story = {
+export const Default: Story = {
   args: {
-    variant: "success",
-    children: "Operation completed successfully!",
+    variant: "blue",
+    size: "medium",
+    children: "This is a default alert message.",
   },
 };
 
-export const Error: Story = {
+export const WithCloseButton: Story = {
   args: {
-    variant: "error",
-    children: "An error occurred while processing your request.",
+    variant: "blue",
+    size: "medium",
+    showCloseButton: true,
+    children: "This is an alert with a close button.",
   },
 };
 
-export const Warning: Story = {
+export const Small: Story = {
   args: {
-    variant: "warning",
-    children: "Please review your information before proceeding.",
+    variant: "blue",
+    size: "small",
+    children: "This is a small alert message.",
   },
+};
+
+export const SmallWithClose: Story = {
+  args: {
+    variant: "blue",
+    size: "small",
+    showCloseButton: true,
+    children: "This is a small alert with a close button.",
+  },
+};
+
+export const Medium: Story = {
+  args: {
+    variant: "blue",
+    size: "medium",
+    children: "This is a medium alert message.",
+  },
+};
+
+export const MediumWithClose: Story = {
+  args: {
+    variant: "blue",
+    size: "medium",
+    showCloseButton: true,
+    children: "This is a medium alert with a close button.",
+  },
+};
+
+export const Large: Story = {
+  args: {
+    variant: "blue",
+    size: "large",
+    children: "This is a large alert message.",
+  },
+};
+
+export const LargeWithClose: Story = {
+  args: {
+    variant: "blue",
+    size: "large",
+    showCloseButton: true,
+    children: "This is a large alert with a close button.",
+  },
+};
+
+export const AllSizes: Story = {
+  parameters: {
+    controls: { hideNoControlsWarning: true },
+  },
+  args: {
+    variant: "blue",
+    children: "Alert Message",
+    showCloseButton: true,
+  },
+  render: (args) => (
+    <div className="flex flex-col gap-4 w-[500px]">
+      <Alert {...args} size="small">Small Alert Message</Alert>
+      <Alert {...args} size="medium">Medium Alert Message</Alert>
+      <Alert {...args} size="large">Large Alert Message</Alert>
+    </div>
+  ),
+};
+
+export const AllVariants: Story = {
+  parameters: {
+    controls: { hideNoControlsWarning: true },
+  },
+  args: {
+    size: "medium",
+    children: "Alert Message",
+    showCloseButton: true,
+  },
+  render: (args) => (
+    <div className="flex flex-col gap-4 w-[500px]">
+      <Alert {...args} variant="blue">Blue Alert Message</Alert>
+      <Alert {...args} variant="purple">Purple Alert Message</Alert>
+      <Alert {...args} variant="green">Green Alert Message</Alert>
+      <Alert {...args} variant="pink">Pink Alert Message</Alert>
+      <Alert {...args} variant="yellow">Yellow Alert Message</Alert>
+      <Alert {...args} variant="teal">Teal Alert Message</Alert>
+    </div>
+  ),
 };
 
 export const LongContent: Story = {
   args: {
-    variant: "success",
+    variant: "blue",
+    size: "medium",
+    showCloseButton: true,
     children:
       "This is an alert with longer content that might wrap to multiple lines. It demonstrates how the alert handles longer text content while maintaining its layout and readability.",
   },
