@@ -27,6 +27,8 @@ type SectionProps = {
   children: React.ReactNode;
   background?: PastelColor;
   border?: boolean;
+  /** Whether to disable the default padding */
+  noPadding?: boolean;
 } & ComponentPropsWithoutRef<"section">;
 
 /**
@@ -36,6 +38,7 @@ export const Section = ({
   children,
   background,
   border = false,
+  noPadding = false,
   className,
   ...props
 }: SectionProps) => {
@@ -43,7 +46,8 @@ export const Section = ({
     <Box
       as="section"
       className={twMerge(
-        "py-12 transition-theme bg-white dark:bg-zinc-950",
+        !noPadding && "py-12",
+        "transition-theme bg-background",
         background && backgroundStyles[background],
         border && background && [
           "border-y",
@@ -53,9 +57,14 @@ export const Section = ({
       )}
       {...props}
     >
-      <Container>
-        {children}
-      </Container>
+      {!noPadding ? (
+        <Container>
+          {children}
+        </Container>
+      ) : (
+        children
+      )}
     </Box>
   );
 };
+

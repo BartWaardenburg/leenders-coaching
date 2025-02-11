@@ -41,7 +41,7 @@ export const SectionForm = ({
             {...props}
         >
             <Box className={twMerge("mx-auto", `max-w-${maxWidth}`)}>
-                <Stack space={8}>
+                <Stack gap={8}>
                     {(title || description) && (
                         <Stack space={4} className="text-center">
                             {title && (

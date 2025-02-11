@@ -1,5 +1,4 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
-import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 
 import { Button } from "@/components/ui/Button";
@@ -13,6 +12,7 @@ import { Box } from "@/components/ui/Box";
 type CallToAction = {
     href: string;
     label: string;
+    variant?: "black" | "transparent" | "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
 };
 
 type SectionHeaderProps = {
@@ -49,7 +49,7 @@ export const SectionHeader = ({
             )}
             {...props}
         >
-            <Stack space={6} className="md:items-center">
+            <Stack gap={8} className="md:items-center">
                 <Box className="w-full md:text-center">
                     <Heading
                         level="h2"
@@ -66,24 +66,32 @@ export const SectionHeader = ({
                     )}
                 </Box>
                 {(primaryCta || secondaryCta) && (
-                    <Box className="w-full flex justify-start md:justify-end">
-                        <ButtonGroup>
-                            {primaryCta && (
-                                <Link href={primaryCta.href}>
-                                    <Button size="lg" fullWidthOnMobile>
-                                        {primaryCta.label}
-                                    </Button>
-                                </Link>
-                            )}
-                            {secondaryCta && (
-                                <Link href={secondaryCta.href}>
-                                    <Button variant="black" size="lg" fullWidthOnMobile>
-                                        {secondaryCta.label}
-                                    </Button>
-                                </Link>
-                            )}
-                        </ButtonGroup>
-                    </Box>
+                    <ButtonGroup
+                        flex
+                        width="full"
+                        justify="end"
+                    >
+                        {primaryCta && (
+                            <Button
+                                size="lg"
+                                fullWidthOnMobile
+                                href={primaryCta.href}
+                                variant={primaryCta.variant}
+                            >
+                                {primaryCta.label}
+                            </Button>
+                        )}
+                        {secondaryCta && (
+                            <Button
+                                size="lg"
+                                fullWidthOnMobile
+                                href={secondaryCta.href}
+                                variant={secondaryCta.variant}
+                            >
+                                {secondaryCta.label}
+                            </Button>
+                        )}
+                    </ButtonGroup>
                 )}
             </Stack>
         </Section>

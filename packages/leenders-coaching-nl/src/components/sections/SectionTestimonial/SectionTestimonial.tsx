@@ -37,7 +37,7 @@ export const SectionTestimonial = ({
             className={twMerge("py-12", className)}
             {...props}
         >
-            <Stack space={6} className="max-w-3xl mx-auto">
+            <Stack gap={8} className="max-w-3xl mx-auto">
                 <Quote
                     cite={
                         <Person

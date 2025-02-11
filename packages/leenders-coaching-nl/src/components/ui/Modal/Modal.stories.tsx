@@ -1,5 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Modal } from "./Modal";
+import { Stack } from "@/components/ui/Stack";
+import { Box } from "@/components/ui/Box";
+import { Text } from "@/components/ui/Text";
+import { Button } from "@/components/ui/Button";
+import { Section } from "@/components/ui/Section";
+import { Heading } from "@/components/ui/Heading";
 
 const meta = {
   title: "UI/Modal",
@@ -62,12 +68,12 @@ export const WithLongContent: Story = {
     isOpen: true,
     label: "Long Content Modal",
     children: (
-      <div className="space-y-4">
-        <p>This modal contains longer content to demonstrate scrolling behavior.</p>
-        <p>You can add multiple paragraphs and other content here.</p>
-        <p>The modal will automatically handle overflow and scrolling.</p>
-        <p>Click outside the modal or press ESC to close it.</p>
-      </div>
+      <Stack gap={4}>
+        <Text>This modal contains longer content to demonstrate scrolling behavior.</Text>
+        <Text>You can add multiple paragraphs and other content here.</Text>
+        <Text>The modal will automatically handle overflow and scrolling.</Text>
+        <Text>Click outside the modal or press ESC to close it.</Text>
+      </Stack>
     ),
   },
 };
@@ -81,38 +87,39 @@ export const WithBackgroundContent: Story = {
     label: "Modal with Background Content",
     variant: "purple",
     children: (
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Welcome Back!</h2>
-        <p>This modal appears on top of the main content with a nice blur effect.</p>
-        <button
-          className="px-4 py-2 rounded-md bg-white/10 hover:bg-white/20 transition-colors"
+      <Stack gap={4}>
+        <Heading level="h2" variant="medium">Welcome Back!</Heading>
+        <Text>This modal appears on top of the main content with a nice blur effect.</Text>
+        <Button
+          variant="purple"
           onClick={() => console.log("Button clicked")}
         >
           Click me
-        </button>
-      </div>
+        </Button>
+      </Stack>
     ),
   },
   render: (args) => (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-950 dark:to-pink-950 p-8">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <h1 className="text-3xl font-bold text-purple-800 dark:text-purple-200">Main Page Content</h1>
-        <div className="grid grid-cols-3 gap-4">
+    <Section className="min-h-screen">
+      <Stack gap={6} className="max-w-4xl mx-auto">
+        <Heading level="h1" variant="large" >
+          Main Page Content
+        </Heading>
+        <Box className="grid grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
-            <div
+            <Box
               key={i}
-              className="p-4 rounded-lg bg-white/50 dark:bg-white/5 backdrop-blur-sm"
             >
-              <h3 className="font-medium mb-2">Card {i}</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <Heading level="h3" variant="small" >Card {i}</Heading>
+              <Text >
                 This is some example content that sits behind the modal.
                 The modal will appear on top with a nice backdrop blur effect.
-              </p>
-            </div>
+              </Text>
+            </Box>
           ))}
-        </div>
+        </Box>
         <Modal {...args} />
-      </div>
-    </div>
+      </Stack>
+    </Section>
   ),
 };

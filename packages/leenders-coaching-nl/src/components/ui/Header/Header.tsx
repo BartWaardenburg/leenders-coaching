@@ -36,7 +36,7 @@ export const Header = ({ className, ...props }: HeaderProps) => {
       <Box
         as="header"
         className={twMerge(
-          "fixed top-0 z-50 w-full transition-colors duration-300 bg-background",
+          "fixed top-0 z-50 w-full transition-theme bg-background",
           className,
         )}
         style={isMenuOpen ? { backgroundColor: "hsl(var(--menu-background))" } : undefined}
@@ -57,7 +57,7 @@ export const Header = ({ className, ...props }: HeaderProps) => {
               />
             </Flex>
           </Flex>
-          <Box className={`h-px transition-colors duration-300 ${isMenuOpen ? 'bg-foreground/80' : 'bg-foreground/10'}`} />
+          <Box className={`h-px transition-theme ${isMenuOpen ? 'bg-foreground/80' : 'bg-foreground/10'}`} />
         </Container>
       </Box>
 

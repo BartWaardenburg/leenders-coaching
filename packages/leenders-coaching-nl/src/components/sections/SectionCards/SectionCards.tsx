@@ -34,7 +34,7 @@ export const SectionCards = ({
             className={twMerge("py-12", className)}
             {...props}
         >
-            <Stack space={8}>
+            <Stack gap={8}>
                 {(title || description) && (
                     <Stack space={4} className="text-center">
                         {title && (

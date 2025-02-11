@@ -16,7 +16,7 @@ export const NavigationItems = ({ onItemClick }: NavigationItemsProps) => (
                     <Link
                         href={link.href}
                         onClick={onItemClick}
-                        className="block text-foreground hover:text-primary/80 transition-colors"
+                        className="block text-foreground hover:text-primary/80 transition-theme"
                     >
                         <Text
                             as="span"

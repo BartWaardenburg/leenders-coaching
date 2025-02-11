@@ -6,14 +6,7 @@ import containerQueries from "@tailwindcss/container-queries";
 
 const config: Config = {
   darkMode: ["class"],
-  content: [
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
-    "./.storybook/**/*.{ts,tsx}",
-    "./stories/**/*.{ts,tsx,mdx}",
-  ],
+  content: ["./src/**/*.{ts,tsx}", "./.storybook/**/*.{ts,tsx}"],
   safelist: [
     "grid-cols-1",
     "grid-cols-2",
@@ -98,30 +91,6 @@ const config: Config = {
           DEFAULT: "hsl(var(--warning))",
           foreground: "hsl(var(--warning-foreground))",
         },
-        sage: {
-          50: "#f4f7f4",
-          100: "#e9efe9",
-          200: "#d3dfd3",
-          300: "#bdcfbd",
-          400: "#a7bfa7",
-          500: "#91af91",
-          600: "#748c74",
-          700: "#576957",
-          800: "#3a463a",
-          900: "#1d231d",
-        },
-        sand: {
-          50: "#faf8f5",
-          100: "#f5f1eb",
-          200: "#ebe3d7",
-          300: "#e1d5c3",
-          400: "#d7c7af",
-          500: "#cdb99b",
-          600: "#a4947c",
-          700: "#7b6f5d",
-          800: "#524a3e",
-          900: "#29251f",
-        },
         pastel: {
           blue: {
             light: "#F0F8FF",
@@ -154,11 +123,6 @@ const config: Config = {
             dark: "#1A4242",
           },
         },
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
       },
       boxShadow: {
         glass:

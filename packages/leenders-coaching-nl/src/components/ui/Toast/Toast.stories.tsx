@@ -2,6 +2,10 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { useEffect, useState } from "react";
 import { ToastProvider, useToast } from "./ToastManager";
 import type { ModalVariant } from "../Modal/Modal";
+import { Stack } from "@/components/ui/Stack";
+import { Box } from "@/components/ui/Box";
+import { Heading } from "@/components/ui/Heading";
+import { Button } from "@/components/ui/Button";
 
 const ToastDemo = () => {
     const toast = useToast();
@@ -18,19 +22,18 @@ const ToastDemo = () => {
     }, [toast, hasShown]);
 
     return (
-        <div className="p-4">
-            <button
+        <Box className="p-4">
+            <Button
                 onClick={() => {
                     toast.show("Clicked toast message", {
                         variant: "purple",
                         duration: 3000
                     });
                 }}
-                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded"
             >
                 Show another toast
-            </button>
-        </div>
+            </Button>
+        </Box>
     );
 };
 
@@ -60,36 +63,38 @@ export const Interactive: Story = {
         const toast = useToast();
 
         return (
-            <div className="p-4 space-y-4">
-                <h1 className="text-2xl font-bold">Toast Demo</h1>
-                <div className="flex flex-wrap gap-4">
-                    {(["blue", "purple", "green", "pink", "yellow", "teal"] as ModalVariant[]).map((variant) => (
-                        <button
-                            key={variant}
+            <Box className="p-4">
+                <Stack gap={4}>
+                    <Heading level="h1" variant="large">
+                        Toast Demo
+                    </Heading>
+                    <Box className="flex flex-wrap gap-4">
+                        {(["blue", "purple", "green", "pink", "yellow", "teal"] as ModalVariant[]).map((variant) => (
+                            <Button
+                                key={variant}
+                                onClick={() =>
+                                    toast.show(`This is a ${variant} toast message`, {
+                                        variant,
+                                        duration: 3000,
+                                    })
+                                }
+                            >
+                                Show {variant} toast
+                            </Button>
+                        ))}
+                        <Button
                             onClick={() =>
-                                toast.show(`This is a ${variant} toast message`, {
-                                    variant,
-                                    duration: 3000,
+                                toast.show("This toast won't auto-dismiss", {
+                                    variant: "purple",
+                                    showCloseButton: true,
                                 })
                             }
-                            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded"
                         >
-                            Show {variant} toast
-                        </button>
-                    ))}
-                    <button
-                        onClick={() =>
-                            toast.show("This toast won't auto-dismiss", {
-                                variant: "purple",
-                                showCloseButton: true,
-                            })
-                        }
-                        className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded"
-                    >
-                        Show persistent toast
-                    </button>
-                </div>
-            </div>
+                            Show persistent toast
+                        </Button>
+                    </Box>
+                </Stack>
+            </Box>
         );
     },
-}; 
+};

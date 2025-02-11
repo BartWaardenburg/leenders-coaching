@@ -19,7 +19,7 @@ export const Footer = ({ className, ...props }: FooterProps) => {
     <Box
       as="footer"
       className={twMerge(
-        "mt-auto bg-secondary/20 dark:bg-menu transition-colors duration-300 bg-background",
+        "mt-auto bg-secondary/20 dark:bg-menu transition-theme bg-background",
         className
       )}
       {...props}
@@ -46,7 +46,7 @@ export const Footer = ({ className, ...props }: FooterProps) => {
             variant="subtle"
             className="hidden md:block md:order-2"
           >
-            <Text variant="muted" className="text-sm hover:text-primary transition-colors">
+            <Text variant="muted" className="text-sm hover:text-primary transition-theme">
               {footerConfig.instagram.label}
             </Text>
           </Link>
@@ -59,14 +59,14 @@ export const Footer = ({ className, ...props }: FooterProps) => {
           >
             {footerConfig.contact.email && (
               <Link href={`mailto:${footerConfig.contact.email}`} variant="subtle">
-                <Text variant="muted" className="text-sm hover:text-primary transition-colors">
+                <Text variant="muted" className="text-sm hover:text-primary transition-theme">
                   {footerConfig.contact.email}
                 </Text>
               </Link>
             )}
             {footerConfig.contact.phone && (
               <Link href={`tel:${footerConfig.contact.phone}`} variant="subtle">
-                <Text variant="muted" className="text-sm hover:text-primary transition-colors">
+                <Text variant="muted" className="text-sm hover:text-primary transition-theme">
                   {footerConfig.contact.phone}
                 </Text>
               </Link>

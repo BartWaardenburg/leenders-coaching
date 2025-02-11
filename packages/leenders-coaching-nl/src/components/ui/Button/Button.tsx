@@ -1,15 +1,30 @@
 import type { ComponentPropsWithoutRef } from "react";
+import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 
-type ButtonProps = ComponentPropsWithoutRef<"button"> & {
+type ButtonBaseProps = {
   variant?: "black" | "transparent" | "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
   size?: "sm" | "md" | "lg";
   isLoading?: boolean;
   fullWidthOnMobile?: boolean;
+  disabled?: boolean;
 };
+
+type ButtonAsButtonProps = ButtonBaseProps &
+  Omit<ComponentPropsWithoutRef<"button">, keyof ButtonBaseProps> & {
+    href?: never;
+  };
+
+type ButtonAsLinkProps = ButtonBaseProps &
+  Omit<ComponentPropsWithoutRef<"a">, "href" | keyof ButtonBaseProps> & {
+    href: string;
+  };
+
+type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
 
 /**
  * Modern button component with different variants and sizes
+ * Can be rendered as a button or a Next.js Link component when href is provided
  */
 export const Button = ({
   className,
@@ -19,6 +34,7 @@ export const Button = ({
   fullWidthOnMobile = false,
   children,
   disabled,
+  href,
   ...props
 }: ButtonProps) => {
   const baseStyles = `
@@ -84,25 +100,45 @@ export const Button = ({
     ? "relative text-transparent transition-none hover:text-transparent"
     : "";
 
+  const buttonStyles = twMerge(
+    baseStyles,
+    variants[variant],
+    sizes[size],
+    loadingStyles,
+    fullWidthOnMobile && "w-full sm:w-auto",
+    className,
+  );
+
+  const loadingSpinner = isLoading && (
+    <div className="absolute inset-0 flex items-center justify-center">
+      <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-t-2 border-current opacity-80" />
+    </div>
+  );
+
+  if (href) {
+    const { href: _, ...linkProps } = props as ButtonAsLinkProps;
+    return (
+      <Link
+        href={href}
+        className={twMerge(buttonStyles, (disabled || isLoading) && "pointer-events-none opacity-50")}
+        aria-disabled={disabled || isLoading}
+        {...linkProps}
+      >
+        {children}
+        {loadingSpinner}
+      </Link>
+    );
+  }
+
+  const buttonProps = props as ButtonAsButtonProps;
   return (
     <button
-      className={twMerge(
-        baseStyles,
-        variants[variant],
-        sizes[size],
-        loadingStyles,
-        fullWidthOnMobile && "w-full sm:w-auto",
-        className,
-      )}
+      className={buttonStyles}
       disabled={disabled || isLoading}
-      {...props}
+      {...buttonProps}
     >
       {children}
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-t-2 border-current opacity-80" />
-        </div>
-      )}
+      {loadingSpinner}
     </button>
   );
 };

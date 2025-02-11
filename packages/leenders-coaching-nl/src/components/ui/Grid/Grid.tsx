@@ -54,7 +54,6 @@ const getGridColumns = (childCount: number, maxColumns?: number, columns?: Respo
       .join(' ');
   }
 
-  // Legacy maxColumns behavior with fixed column classes
   const cols = Math.min(childCount, maxColumns || 3);
   if (cols === 1) return 'grid-cols-1';
   if (cols === 2) return 'grid-cols-1 md:grid-cols-2';
@@ -86,16 +85,38 @@ const getMaxWidthClass = (maxWidth: GridProps['maxWidth']) => {
 };
 
 /**
- * Reusable grid component with responsive column support
+ * A flexible grid component that supports responsive layouts and various customization options.
+ * 
+ * @param {GridProps} props - The component props
+ * @param {ReactNode} props.children - The grid items to be rendered
+ * @param {number} [props.maxColumns] - Legacy prop to set maximum number of columns (defaults to 3)
+ * @param {ResponsiveColumns} [props.columns] - Object defining number of columns at different breakpoints
+ * @param {number} [props.gap=8] - Space between grid items (0-12)
+ * @param {string} [props.className] - Additional CSS classes
+ * @param {string} [props.maxWidth="7xl"] - Maximum width constraint of the grid
+ * 
  * @example
- * // Using maxColumns (legacy)
+ * // Basic usage with fixed columns
  * <Grid maxColumns={3}>
- *   <Item />
+ *   <Card />
+ *   <Card />
+ *   <Card />
  * </Grid>
  * 
- * // Using responsive columns
- * <Grid columns={{ default: 1, md: 3 }}>
- *   <Item />
+ * @example
+ * // Responsive columns with custom gap and max width
+ * <Grid 
+ *   columns={{ 
+ *     default: 1,
+ *     sm: 2, 
+ *     md: 3,
+ *     lg: 4 
+ *   }}
+ *   gap={4}
+ *   maxWidth="6xl"
+ * >
+ *   <Card />
+ *   <Card />
  * </Grid>
  */
 export const Grid: FC<GridProps> = ({

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { SectionForm } from "./SectionForm";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { Stack } from "@/components/ui/Stack";
 
 const meta = {
     title: "Sections/SectionForm",
@@ -44,7 +45,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const FormContent = () => (
-    <div className="space-y-6">
+    <Stack gap={6}>
         <Input
             label="Name"
             type="text"
@@ -66,7 +67,7 @@ const FormContent = () => (
         <Button type="submit" variant="blue" fullWidthOnMobile>
             Submit
         </Button>
-    </div>
+    </Stack>
 );
 
 export const Default: Story = {

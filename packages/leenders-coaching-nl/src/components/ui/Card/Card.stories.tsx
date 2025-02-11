@@ -2,8 +2,9 @@ import type { Meta, StoryObj } from "@storybook/react";
 import Card from "./Card";
 
 import { Section } from "@/components/ui/Section";
+import { Text } from "@/components/ui/Text";
 
-/* Example image import - you'll need to add an actual image */
+/* Voorbeeld afbeelding import - je moet een echte afbeelding toevoegen */
 import exampleImage from "../../../assets/images/99-Simone-louise-boonstoppel-fotografie.jpg";
 import { Grid } from "../Grid";
 
@@ -24,36 +25,32 @@ const meta = {
     argTypes: {
         border: {
             control: 'boolean',
-            description: 'Whether to show a border around the card',
+            description: 'Of er een rand rond de kaart moet worden weergegeven',
         },
         variant: {
             control: "select",
             options: ["blue", "purple", "green", "pink", "yellow", "teal"],
-            description: "Background color variant of the card",
+            description: "Achtergrondkleur variant van de kaart",
         },
         featured: {
             control: "boolean",
-            description: "Whether the card is featured",
+            description: "Of de kaart uitgelicht is",
         },
         title: {
             control: "text",
-            description: "Title of the card",
-        },
-        excerpt: {
-            control: "text",
-            description: "Excerpt text for the card",
+            description: "Titel van de kaart",
         },
         date: {
             control: "text",
-            description: "Date to display",
+            description: "Datum om weer te geven",
         },
         categories: {
             control: "object",
-            description: "Array of category names",
+            description: "Array van categorienamen",
         },
         image: {
             control: "object",
-            description: "Image source for the card",
+            description: "Afbeeldingsbron voor de kaart",
         },
     },
 } satisfies Meta<typeof Card>;
@@ -62,9 +59,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const defaultArgs = {
-    title: "Communication Skills",
-    excerpt: "Enhance your communication abilities for better personal and professional relationships.",
-    slug: "communication-skills",
+    title: "Communicatievaardigheden",
+    excerpt: "Verbeter je communicatievaardigheden voor betere persoonlijke en professionele relaties.",
+    slug: "communicatievaardigheden",
+    children: <Text>Voorbeeldinhoud voor blauwe variant</Text>
 };
 
 export const Default: Story = {
@@ -88,15 +86,15 @@ export const Featured: Story = {
 export const WithMetadata: Story = {
     args: {
         ...defaultArgs,
-        date: "March 15, 2024",
-        categories: ["Personal Development", "Career"],
+        date: "15 maart 2024",
+        categories: ["Persoonlijke Ontwikkeling", "Carrière"],
     },
 };
 
 export const LongTitle: Story = {
     args: {
         ...defaultArgs,
-        title: "Understanding the Complexities of Interpersonal Communication in Professional Environments",
+        title: "De complexiteit begrijpen van interpersoonlijke communicatie in professionele omgevingen",
     },
 };
 
@@ -106,18 +104,29 @@ export const AllVariants: Story = {
     },
     render: (args) => (
         <Grid >
-            <Card {...args} variant="blue" title="Blue Variant" />
-            <Card {...args} variant="purple" title="Purple Variant" />
-            <Card {...args} variant="green" title="Green Variant" />
-            <Card {...args} variant="pink" title="Pink Variant" />
-            <Card {...args} variant="yellow" title="Yellow Variant" />
-            <Card {...args} variant="teal" title="Teal Variant" />
+            <Card {...args} image={exampleImage} variant="blue" title="Blauwe Variant">
+                <Text>Voorbeeldinhoud voor blauwe variant</Text>
+            </Card>
+            <Card {...args} image={exampleImage} variant="purple" title="Paarse Variant">
+                <Text>Voorbeeldinhoud voor paarse variant</Text>
+            </Card>
+            <Card {...args} image={exampleImage} variant="green" title="Groene Variant">
+                <Text>Voorbeeldinhoud voor groene variant</Text>
+            </Card>
+            <Card {...args} image={exampleImage} variant="pink" title="Roze Variant">
+                <Text>Voorbeeldinhoud voor roze variant</Text>
+            </Card>
+            <Card {...args} image={exampleImage} variant="yellow" title="Gele Variant">
+                <Text>Voorbeeldinhoud voor gele variant</Text>
+            </Card>
+            <Card {...args} image={exampleImage} variant="teal" title="Turquoise Variant">
+                <Text>Voorbeeldinhoud voor turquoise variant</Text>
+            </Card>
         </Grid>
     ),
     args: {
-        excerpt: defaultArgs.excerpt,
         slug: defaultArgs.slug,
-        title: "Color Variant",
+        title: "Kleur Variant",
         border: true,
     },
 };
@@ -126,8 +135,8 @@ export const FullExample: Story = {
     args: {
         ...defaultArgs,
         featured: true,
-        date: "March 15, 2024",
-        categories: ["Communication", "Leadership"],
+        date: "15 maart 2024",
+        categories: ["Communicatie", "Leiderschap"],
         image: exampleImage,
         variant: "blue",
     },
@@ -149,7 +158,7 @@ export const WithBorder: Story = {
 
 export const OnlyTitle: Story = {
     args: {
-        title: "Minimal Card Example",
-        slug: "minimal",
+        title: "Minimaal Kaart Voorbeeld",
+        slug: "minimaal",
     },
 }; 

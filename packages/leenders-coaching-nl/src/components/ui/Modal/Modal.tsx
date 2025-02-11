@@ -105,7 +105,7 @@ export const Modal = ({
             type="button"
             onClick={handleClose}
             className={twMerge(
-              "absolute right-2 top-2 p-2",
+              "absolute right-2 top-2 p-2 z-10",
               "text-inherit opacity-80 hover:opacity-100 transition-opacity",
               "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
               "focus-visible:ring-current focus-visible:ring-offset-inherit",
