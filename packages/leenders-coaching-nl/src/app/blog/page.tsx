@@ -54,12 +54,13 @@ const BlogPage: FC = async () => {
           <Card
             key={post.slug}
             title={post.title}
-            excerpt={post.description}
             date={post.date}
             image={post.image}
             slug={post.slug}
             variant="blue"
-          />
+          >
+            {post.description}
+          </Card>
         ))}
       </SectionCards>
     </>

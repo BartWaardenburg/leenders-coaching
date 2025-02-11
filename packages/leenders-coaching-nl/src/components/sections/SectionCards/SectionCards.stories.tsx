@@ -75,9 +75,10 @@ const generateCards = (count: number) => {
         <Card
             key={card.slug}
             title={card.title}
-            excerpt={card.excerpt}
             slug={card.slug}
-        />
+        >
+            {card.excerpt}
+        </Card>
     ));
 };
 

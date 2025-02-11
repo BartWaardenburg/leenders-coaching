@@ -17,10 +17,11 @@ const HomePage: FC = () => {
           title="Freelance Life 01"
           date="01/11/18"
           categories={["MISCELLANEOUS"]}
-          excerpt="At the beginning of August I took a leap of faith into the world of freelancing, you can find out..."
           slug="freelance-life-01"
           image={simoneImage}
-        />
+        >
+          At the beginning of August I took a leap of faith into the world of freelancing, you can find out...
+        </Card>
       </Stack>
     </Section>
   );
