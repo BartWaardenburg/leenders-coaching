@@ -6,7 +6,8 @@
     "dev": "pnpm --parallel run dev",
     "build": "pnpm --parallel run build",
     "lint": "pnpm --parallel run lint",
-    "type-check": "pnpm --parallel run type-check"
+    "type-check": "pnpm --parallel run type-check",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
   },
   "resolutions": {
     "graphql": "16.10.0"

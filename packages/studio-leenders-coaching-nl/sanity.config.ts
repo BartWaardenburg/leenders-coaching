@@ -1,18 +1,21 @@
-import {defineConfig} from 'sanity'
-import {structureTool} from 'sanity/structure'
-import {visionTool} from '@sanity/vision'
-import {schemaTypes} from './schemaTypes'
+import { defineConfig } from 'sanity';
+import { deskTool } from 'sanity/desk';
+import { visionTool } from '@sanity/vision';
+import { schemaTypes } from './schemaTypes';
+import { structure } from './structure';
 
 export default defineConfig({
   name: 'default',
-  title: 'leenders-coaching.nl',
-
+  title: 'Leenders Coaching',
   projectId: 'unh7vl3r',
   dataset: 'production',
-
-  plugins: [structureTool(), visionTool()],
-
+  plugins: [
+    deskTool({
+      structure,
+    }),
+    visionTool(),
+  ],
   schema: {
     types: schemaTypes,
   },
-})
+});

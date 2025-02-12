@@ -1,1 +1,1 @@
-export * from "./SectionCards";
+export * from './SectionCards';

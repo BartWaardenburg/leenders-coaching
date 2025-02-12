@@ -1,41 +1,106 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { SectionTestimonial } from "./SectionTestimonial";
+import type { Meta, StoryObj } from '@storybook/react';
+import { SectionTestimonial } from './SectionTestimonial';
 
 const meta = {
-    title: "Sections/SectionTestimonial",
-    component: SectionTestimonial,
-    parameters: {
-        layout: "fullscreen",
+  title: 'Sections/SectionTestimonial',
+  component: SectionTestimonial,
+  parameters: {
+    layout: 'fullscreen',
+  },
+  tags: ['autodocs'],
+  argTypes: {
+    background: {
+      control: 'select',
+      options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
+      description: 'Background color of the section',
     },
-    tags: ["autodocs"],
+    border: {
+      control: 'boolean',
+      description: 'Show top and bottom borders',
+    },
+    showBorder: {
+      control: 'boolean',
+      description: 'Show border under heading',
+    },
+    maxWidth: {
+      control: 'select',
+      options: [
+        'sm',
+        'md',
+        'lg',
+        'xl',
+        '2xl',
+        '3xl',
+        '4xl',
+        '5xl',
+        '6xl',
+        '7xl',
+      ],
+      description: 'Maximum width of the content',
+    },
+  },
 } satisfies Meta<typeof SectionTestimonial>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const defaultArgs = {
-    quote: "Working with this coach has been transformative. The insights and guidance provided helped me overcome challenges and achieve my goals.",
-    personName: "Alex Johnson",
-    personDescription: "Senior Marketing Director & Brand Strategy Consultant",
-    personImageSrc: "https://i.pravatar.cc/300",
-    personImageAlt: "Alex Johnson",
-};
+const defaultTestimonials = [
+  {
+    quote:
+      "The coaching sessions have been transformative. I've gained clarity about my goals and the confidence to pursue them.",
+    name: 'Sarah Johnson',
+    role: 'Marketing Director',
+    image:
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80',
+  },
+  {
+    quote:
+      "Working with this coach has helped me overcome obstacles I didn't think were possible. The results speak for themselves.",
+    name: 'Michael Chen',
+    role: 'Software Engineer',
+    image:
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80',
+  },
+  {
+    quote:
+      'The personalized approach and actionable strategies have made a real difference in both my professional and personal life.',
+    name: 'Emma Davis',
+    role: 'Business Owner',
+    image:
+      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80',
+  },
+];
 
 export const Default: Story = {
-    args: defaultArgs,
+  args: {
+    title: 'What Our Clients Say',
+    description:
+      'Read about the experiences of people who have worked with us.',
+    testimonials: defaultTestimonials,
+  },
 };
 
 export const WithBackground: Story = {
-    args: {
-        ...defaultArgs,
-        background: "blue",
-    },
+  args: {
+    ...Default.args,
+    background: 'blue',
+    border: true,
+    showBorder: true,
+  },
 };
 
-export const WithBorder: Story = {
-    args: {
-        ...defaultArgs,
-        background: "blue",
-        border: true,
-    },
+export const WithPurpleBackground: Story = {
+  args: {
+    ...Default.args,
+    background: 'purple',
+    border: true,
+    showBorder: true,
+  },
+};
+
+export const Narrow: Story = {
+  args: {
+    ...Default.args,
+    maxWidth: 'xl',
+  },
 };

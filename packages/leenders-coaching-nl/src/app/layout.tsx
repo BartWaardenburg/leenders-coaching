@@ -1,35 +1,38 @@
-import type { Metadata } from "next";
-import { Montserrat, Playfair_Display } from "next/font/google";
-import type { ReactNode } from "react";
+import type { Metadata } from 'next';
+import { Montserrat, Playfair_Display } from 'next/font/google';
+import type { ReactNode } from 'react';
 
-import { RootLayout } from "@/components/layouts/RootLayout";
+import { RootLayout } from '@/components/layouts/RootLayout';
 
-import "./globals.css";
+import './globals.css';
 
 const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair",
+  subsets: ['latin'],
+  variable: '--font-playfair',
 });
 
 const montserrat = Montserrat({
-  subsets: ["latin"],
-  variable: "--font-montserrat",
+  subsets: ['latin'],
+  variable: '--font-montserrat',
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://leenders-coaching.nl"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || 'https://leenders-coaching.nl',
+  ),
   title: {
-    template: "%s | Leenders Coaching",
-    default: "Leenders Coaching",
+    template: '%s | Leenders Coaching',
+    default: 'Leenders Coaching',
   },
-  description: "Professional life coaching services to help you achieve your goals and transform your life.",
+  description:
+    'Professional life coaching services to help you achieve your goals and transform your life.',
   openGraph: {
-    type: "website",
-    locale: "nl_NL",
-    siteName: "Leenders Coaching",
+    type: 'website',
+    locale: 'nl_NL',
+    siteName: 'Leenders Coaching',
   },
   twitter: {
-    card: "summary_large_image",
+    card: 'summary_large_image',
   },
 };
 

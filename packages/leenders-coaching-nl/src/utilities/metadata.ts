@@ -1,5 +1,5 @@
-import { type Metadata } from "next";
-import { metadataConfig } from "@/config/metadata.config";
+import { type Metadata } from 'next';
+import { metadataConfig } from '@/config/metadata.config';
 
 const defaultMetadata = {
   ...metadataConfig.default,
@@ -16,44 +16,44 @@ type GenerateMetadataOptions = {
     height?: number;
     alt?: string;
   }[];
-  type?: "website" | "article" | "profile";
+  type?: 'website' | 'article' | 'profile';
   noindex?: boolean;
   structuredData?: object;
 };
 
 type WebsiteStructuredData = {
-  "@context": "https://schema.org";
-  "@type": "WebSite";
+  '@context': 'https://schema.org';
+  '@type': 'WebSite';
   name: string;
   description?: string;
   url: string;
 };
 
 type ArticleStructuredData = {
-  "@context": "https://schema.org";
-  "@type": "Article";
+  '@context': 'https://schema.org';
+  '@type': 'Article';
   headline: string;
   description?: string;
   image?: string;
   datePublished?: string;
   dateModified?: string;
   author?: {
-    "@type": "Person";
+    '@type': 'Person';
     name: string;
   };
   publisher?: {
-    "@type": "Organization";
+    '@type': 'Organization';
     name: string;
     logo?: {
-      "@type": "ImageObject";
+      '@type': 'ImageObject';
       url: string;
     };
   };
 };
 
 type OrganizationStructuredData = {
-  "@context": "https://schema.org";
-  "@type": "Organization";
+  '@context': 'https://schema.org';
+  '@type': 'Organization';
   name: string;
   description?: string;
   url: string;
@@ -69,11 +69,11 @@ export const generateWebsiteStructuredData = (
   description?: string,
   url?: string,
 ): WebsiteStructuredData => ({
-  "@context": "https://schema.org",
-  "@type": "WebSite",
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
   name: title,
   description,
-  url: url || defaultMetadata.openGraph.url || "",
+  url: url || defaultMetadata.openGraph.url || '',
 });
 
 /**
@@ -94,8 +94,8 @@ export const generateArticleStructuredData = ({
   dateModified?: string;
   author?: string;
 }): ArticleStructuredData => ({
-  "@context": "https://schema.org",
-  "@type": "Article",
+  '@context': 'https://schema.org',
+  '@type': 'Article',
   headline: title,
   description,
   image,
@@ -103,16 +103,16 @@ export const generateArticleStructuredData = ({
   dateModified,
   author: author
     ? {
-        "@type": "Person",
+        '@type': 'Person',
         name: author,
       }
     : undefined,
   publisher: {
-    "@type": "Organization",
+    '@type': 'Organization',
     name: defaultMetadata.title,
     logo: defaultMetadata.openGraph.images?.[0]
       ? {
-          "@type": "ImageObject",
+          '@type': 'ImageObject',
           url: defaultMetadata.openGraph.images[0].url,
         }
       : undefined,
@@ -135,11 +135,11 @@ export const generateOrganizationStructuredData = ({
   logo?: string;
   socialLinks?: string[];
 }): OrganizationStructuredData => ({
-  "@context": "https://schema.org",
-  "@type": "Organization",
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
   name,
   description,
-  url: url || defaultMetadata.openGraph.url || "",
+  url: url || defaultMetadata.openGraph.url || '',
   logo,
   sameAs: socialLinks,
 });
@@ -151,7 +151,7 @@ export const generateMetadata = ({
   title,
   description,
   images,
-  type = "website",
+  type = 'website',
   noindex = false,
   structuredData,
 }: GenerateMetadataOptions): Metadata => {
@@ -161,7 +161,7 @@ export const generateMetadata = ({
 
   // Generate default structured data if none provided
   const defaultStructuredData = !structuredData
-    ? type === "article"
+    ? type === 'article'
       ? generateArticleStructuredData({
           title: pageTitle,
           description: description || defaultMetadata.description,
@@ -188,7 +188,7 @@ export const generateMetadata = ({
       siteName: defaultMetadata.openGraph.siteName,
     },
     twitter: {
-      card: "summary_large_image",
+      card: 'summary_large_image',
       images: images || defaultImages,
     },
     robots: {
@@ -197,13 +197,13 @@ export const generateMetadata = ({
       googleBot: {
         index: !noindex,
         follow: !noindex,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
       },
     },
     other: {
-      "script:ld+json": JSON.stringify(defaultStructuredData),
+      'script:ld+json': JSON.stringify(defaultStructuredData),
     },
   };
 };

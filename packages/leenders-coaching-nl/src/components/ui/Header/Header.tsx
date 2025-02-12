@@ -1,32 +1,119 @@
-"use client";
+'use client';
 
-import type { ComponentPropsWithoutRef } from "react";
-import { useState, useEffect } from "react";
-import { twMerge } from "tailwind-merge";
+import type { ComponentPropsWithoutRef } from 'react';
+import { useState, useEffect } from 'react';
+import { twMerge } from 'tailwind-merge';
+import { motion, AnimatePresence } from 'framer-motion';
 
-import { IconToggleButton } from "@/components/ui/IconToggleButton";
-import { ThemeToggleButton } from "@/components/ui/ThemeToggleButton";
-import { Container } from "@/components/ui/Container";
-import { Box } from "@/components/ui/Box";
-import { Flex } from "@/components/ui/Flex";
-import { uiConfig } from "@/config/ui.config";
-import { iconPaths } from "@/config/icons.config";
+import { IconToggleButton } from '@/components/ui/IconToggleButton';
+import { ThemeToggleButton } from '@/components/ui/ThemeToggleButton';
+import { Container } from '@/components/ui/Container';
+import { Box } from '@/components/ui/Box';
+import { Flex } from '@/components/ui/Flex';
+import { uiConfig } from '@/config/ui.config';
+import { iconPaths } from '@/config/icons.config';
 
-import { Logo } from "./Logo";
-import { NavigationItems } from "./NavigationItems";
-import { MenuFooter } from "./MenuFooter";
+import { Logo } from './Logo';
+import { NavigationItems } from './NavigationItems';
+import { MenuFooter as HeaderMenuFooter } from './MenuFooter';
 
-type HeaderProps = ComponentPropsWithoutRef<"header">;
+type NavigationItem = {
+  _key: string;
+  label: string | null;
+  href: string | null;
+};
+
+type Navigation = {
+  items: NavigationItem[];
+};
+
+type MenuFooterSection = {
+  title: string | null;
+  description: string | null;
+};
+
+type MenuFooterEnquiry = {
+  label: string | null;
+  href: string | null;
+  linkText: string | null;
+};
+
+type MenuFooterContact = {
+  title: string | null;
+  projectEnquiry: MenuFooterEnquiry;
+  generalEnquiry: MenuFooterEnquiry;
+};
+
+type MenuFooterSocial = {
+  title: string | null;
+};
+
+type MenuFooter = {
+  about: MenuFooterSection;
+  social: MenuFooterSocial;
+  contact: MenuFooterContact;
+};
+
+type SocialLink = {
+  _key: string;
+  platform: string | null;
+  url: string | null;
+};
+
+type HeaderProps = ComponentPropsWithoutRef<'header'> & {
+  navigation: Navigation;
+  menuFooter: MenuFooter;
+  socialLinks: SocialLink[];
+};
+
+/* Animation variants for the menu overlay */
+const menuVariants = {
+  hidden: {
+    y: '-100%',
+    transition: {
+      duration: 0.4,
+      ease: [0.4, 0, 0.2, 1],
+    },
+  },
+  visible: {
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: [0.4, 0, 0.2, 1],
+    },
+  },
+};
+
+/* Animation variants for the menu content */
+const contentVariants = {
+  hidden: {
+    opacity: 0,
+    y: -20,
+    transition: {
+      duration: 0.2,
+    },
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.3,
+      delay: 0.2,
+    },
+  },
+};
 
 /**
  * Header component with hamburger menu and full-screen overlay
  */
-export const Header = ({ className, ...props }: HeaderProps) => {
+export const Header = ({ className, navigation, menuFooter, socialLinks, ...props }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    document.body.style.overflow = isMenuOpen ? "hidden" : "unset";
-    return () => { document.body.style.overflow = "unset"; };
+    document.body.style.overflow = isMenuOpen ? 'hidden' : 'unset';
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
   }, [isMenuOpen]);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -36,48 +123,69 @@ export const Header = ({ className, ...props }: HeaderProps) => {
       <Box
         as="header"
         className={twMerge(
-          "fixed top-0 z-50 w-full transition-theme bg-background",
+          'fixed top-0 z-50 w-full transition-theme bg-background',
           className,
         )}
-        style={isMenuOpen ? { backgroundColor: "hsl(var(--menu-background))" } : undefined}
+        style={
+          isMenuOpen
+            ? { backgroundColor: 'hsl(var(--menu-background))' }
+            : undefined
+        }
         {...props}
       >
         <Container>
           <Flex justify="between" items="center" className="py-8">
             <Logo />
             <Flex items="center" gap={4}>
-              <ThemeToggleButton className="transition-transform hover:scale-105" />
+              <ThemeToggleButton />
               <IconToggleButton
                 isToggled={isMenuOpen}
                 defaultIcon={iconPaths.menu.hamburger}
                 toggledIcon={iconPaths.menu.close}
                 label={uiConfig.mobileMenu.toggleButton}
                 onClick={toggleMenu}
-                className="transition-transform hover:scale-105"
+                speed="quick"
               />
             </Flex>
           </Flex>
-          <Box className={`h-px transition-theme ${isMenuOpen ? 'bg-foreground/80' : 'bg-foreground/10'}`} />
+          <Box
+            className={`h-px transition-theme ${isMenuOpen ? 'bg-foreground/80' : 'bg-foreground/10'}`}
+          />
         </Container>
       </Box>
 
-      <Box
-        className={twMerge(
-          "fixed inset-0 z-40 transform transition-transform duration-300 ease-in-out bg-menu",
-          isMenuOpen ? "translate-y-0" : "-translate-y-full",
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={menuVariants}
+            className="fixed inset-0 z-40 bg-menu"
+          >
+            <Box className="h-screen overflow-y-auto">
+              <Container className="min-h-screen pt-36">
+                <motion.div
+                  variants={contentVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                >
+                  <Flex direction="column" className="h-full">
+                    <Box as="nav" className="mb-16 text-left md:text-right">
+                      <NavigationItems
+                        links={navigation.items}
+                        onItemClick={() => setIsMenuOpen(false)}
+                      />
+                    </Box>
+                    <HeaderMenuFooter sections={menuFooter} socialLinks={socialLinks} />
+                  </Flex>
+                </motion.div>
+              </Container>
+            </Box>
+          </motion.div>
         )}
-      >
-        <Box className="h-screen overflow-y-auto">
-          <Container className="min-h-screen pt-36">
-            <Flex direction="column" className="h-full">
-              <Box as="nav" className="mb-16 text-left md:text-right">
-                <NavigationItems onItemClick={() => setIsMenuOpen(false)} />
-              </Box>
-              <MenuFooter />
-            </Flex>
-          </Container>
-        </Box>
-      </Box>
+      </AnimatePresence>
     </>
   );
 };

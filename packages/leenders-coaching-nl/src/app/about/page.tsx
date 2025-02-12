@@ -1,52 +1,68 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
+import { getAboutPage } from '@/graphql/queries';
+import { notFound } from 'next/navigation';
+import { SectionMapper } from '@/components/sections/SectionMapper';
+import type { Section } from '@/components/sections/SectionMapper';
+import type { Maybe } from '@/graphql/generated/graphql';
 
-import { SectionHeader } from "@/components/sections/SectionHeader";
-import { SectionContent } from "@/components/sections/SectionContent";
-import { SectionCards } from "@/components/sections/SectionCards";
-import { Card } from "@/components/ui/Card";
+/* Generate metadata from Sanity data */
+export async function generateMetadata(): Promise<Metadata> {
+  const aboutPage = await getAboutPage();
 
-export const metadata: Metadata = {
-  title: "About - Leenders Coaching",
-  description:
-    "Learn about my approach to coaching and how I can help you achieve your goals.",
-};
+  if (!aboutPage?.metadata) {
+    return {
+      title: 'About - Leenders Coaching',
+      description: 'Learn about my approach to coaching and how I can help you achieve your goals.',
+    };
+  }
+
+  const { metadata } = aboutPage;
+
+  return {
+    title: metadata.title || 'About - Leenders Coaching',
+    description: metadata.description || undefined,
+    keywords: metadata.keywords?.filter((keyword): keyword is string => Boolean(keyword)) || undefined,
+    openGraph: metadata.image?.asset?.url ? {
+      images: [{
+        url: metadata.image.asset.url,
+        alt: metadata.image.asset.altText || ''
+      }],
+    } : undefined,
+  };
+}
 
 /**
  * About page with information about the coach and approach
  */
-export default function AboutPage() {
-  return (
-    <>
-      <SectionHeader
-        title="About Me"
-        description="Discover my unique approach to personal development and coaching"
-        background="teal"
-      />
-      <SectionContent border title="Over mij">
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-          veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-          ea commodo consequat.
-        </p>
-        <p>
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-          dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-          proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-          veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-          ea commodo consequat.
-        </p>
-      </SectionContent>
-      <SectionCards title="Mijn expertise">
-        <Card title="Mijn expertise" slug="my-expertise" />
-        <Card title="Mijn expertise" slug="my-expertise" />
-        <Card title="Mijn expertise" slug="my-expertise" />
-        <Card title="Mijn expertise" slug="my-expertise" />
-      </SectionCards>
-    </>
-  );
+export default async function AboutPage() {
+  const aboutPage = await getAboutPage();
+
+  if (!aboutPage) {
+    notFound();
+  }
+
+  console.log('Raw aboutPage:', JSON.stringify(aboutPage, null, 2));
+
+  const sections = aboutPage.sections?.map((section): Maybe<Section> => {
+    if (!section) return null;
+    if (section._type === 'sectionHeader' || section._type === 'sectionContent' || section._type === 'sectionCards') {
+      const mappedSection = {
+        ...section,
+        _key: section._key ?? '',
+        title: section.title ?? '',
+        displayTitle: section.displayTitle ?? undefined,
+        description: 'description' in section ? section.description : undefined,
+        background: undefined,
+        showBorder: undefined,
+        maxWidth: undefined,
+      } as Section;
+      console.log('Mapped section:', JSON.stringify(mappedSection, null, 2));
+      return mappedSection;
+    }
+    return null;
+  }) ?? null;
+
+  console.log('Final sections:', JSON.stringify(sections, null, 2));
+
+  return <SectionMapper sections={sections} />;
 }

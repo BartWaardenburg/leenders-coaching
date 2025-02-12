@@ -1,4 +1,4 @@
-import type { PortableTextBlock } from "@portabletext/types";
+import type { PortableTextBlock } from '@portabletext/types';
 
 /**
  * Calculates the estimated reading time for a given array of Portable Text blocks
@@ -13,10 +13,10 @@ export const calculateReadingTime = (
   // Extract text content from blocks
   const text = blocks
     .map((block) => {
-      if (block._type !== "block" || !block.children) return "";
-      return block.children.map((child) => child.text || "").join(" ");
+      if (block._type !== 'block' || !block.children) return '';
+      return block.children.map((child) => child.text || '').join(' ');
     })
-    .join(" ");
+    .join(' ');
 
   // Count words (split by whitespace)
   const words = text.trim().split(/\s+/).length;

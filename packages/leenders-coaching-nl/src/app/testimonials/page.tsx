@@ -1,12 +1,11 @@
-import type { FC } from "react";
+import type { FC } from 'react';
 
-import { SectionHeader } from "@/components/sections/SectionHeader";
+import { SectionHeader } from '@/components/sections/SectionHeader';
 
 /**
  * Testimonials page component
  */
 const TestimonialsPage: FC = () => {
-
   return (
     <SectionHeader
       title="Client Testimonials"

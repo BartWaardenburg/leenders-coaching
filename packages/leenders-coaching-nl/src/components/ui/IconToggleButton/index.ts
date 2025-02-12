@@ -1,1 +1,1 @@
-export { IconToggleButton } from "./IconToggleButton";
+export { IconToggleButton } from './IconToggleButton';

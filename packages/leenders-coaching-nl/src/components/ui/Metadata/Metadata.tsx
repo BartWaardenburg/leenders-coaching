@@ -1,5 +1,5 @@
-import { type FC } from "react";
-import Head from "next/head";
+import { type FC } from 'react';
+import Head from 'next/head';
 
 interface MetadataProps {
   title?: string;
@@ -33,9 +33,9 @@ interface MetadataProps {
     googleBot?: {
       index?: boolean;
       follow?: boolean;
-      "max-video-preview"?: number;
-      "max-image-preview"?: string;
-      "max-snippet"?: number;
+      'max-video-preview'?: number;
+      'max-image-preview'?: string;
+      'max-snippet'?: number;
     };
   };
   baseUrl?: string;
@@ -52,8 +52,8 @@ export const Metadata: FC<MetadataProps> = ({
   openGraph,
   twitter,
   robots,
-  baseUrl = "https://www.leenderscoaching.nl",
-  pathname = "/",
+  baseUrl = 'https://www.leenderscoaching.nl',
+  pathname = '/',
 }) => {
   const url = `${baseUrl}${pathname}`;
 
@@ -61,14 +61,14 @@ export const Metadata: FC<MetadataProps> = ({
   const og = {
     ...openGraph,
     url: openGraph?.url || url,
-    type: openGraph?.type || "website",
+    type: openGraph?.type || 'website',
   };
 
   // Ensure image URLs are absolute
-  if (og.image?.url && !og.image.url.startsWith("http")) {
+  if (og.image?.url && !og.image.url.startsWith('http')) {
     og.image.url = `${baseUrl}${og.image.url}`;
   }
-  if (twitter?.image?.url && !twitter.image.url.startsWith("http")) {
+  if (twitter?.image?.url && !twitter.image.url.startsWith('http')) {
     twitter.image.url = `${baseUrl}${twitter.image.url}`;
   }
 
@@ -77,7 +77,7 @@ export const Metadata: FC<MetadataProps> = ({
       {/* Basic metadata */}
       <title>{title}</title>
       <meta name="description" content={description} />
-      {keywords && <meta name="keywords" content={keywords.join(", ")} />}
+      {keywords && <meta name="keywords" content={keywords.join(', ')} />}
       <link rel="canonical" href={url} />
 
       {/* OpenGraph metadata */}
@@ -131,32 +131,34 @@ export const Metadata: FC<MetadataProps> = ({
         <>
           <meta
             name="robots"
-            content={`${robots.index ? "index" : "noindex"}, ${robots.follow ? "follow" : "nofollow"
-              }`}
+            content={`${robots.index ? 'index' : 'noindex'}, ${
+              robots.follow ? 'follow' : 'nofollow'
+            }`}
           />
           {robots.googleBot && (
             <>
               <meta
                 name="googlebot"
-                content={`${robots.googleBot.index ? "index" : "noindex"}, ${robots.googleBot.follow ? "follow" : "nofollow"
-                  }`}
+                content={`${robots.googleBot.index ? 'index' : 'noindex'}, ${
+                  robots.googleBot.follow ? 'follow' : 'nofollow'
+                }`}
               />
-              {robots.googleBot["max-video-preview"] !== undefined && (
+              {robots.googleBot['max-video-preview'] !== undefined && (
                 <meta
                   name="googlebot-video"
-                  content={`max-video-preview:${robots.googleBot["max-video-preview"]}`}
+                  content={`max-video-preview:${robots.googleBot['max-video-preview']}`}
                 />
               )}
-              {robots.googleBot["max-image-preview"] && (
+              {robots.googleBot['max-image-preview'] && (
                 <meta
                   name="googlebot-image"
-                  content={`max-image-preview:${robots.googleBot["max-image-preview"]}`}
+                  content={`max-image-preview:${robots.googleBot['max-image-preview']}`}
                 />
               )}
-              {robots.googleBot["max-snippet"] !== undefined && (
+              {robots.googleBot['max-snippet'] !== undefined && (
                 <meta
                   name="googlebot-news"
-                  content={`max-snippet:${robots.googleBot["max-snippet"]}`}
+                  content={`max-snippet:${robots.googleBot['max-snippet']}`}
                 />
               )}
             </>

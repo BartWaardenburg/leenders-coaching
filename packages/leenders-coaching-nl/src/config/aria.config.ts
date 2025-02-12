@@ -3,10 +3,14 @@
  */
 export const ariaConfig = {
   toast: {
-    closeButton: "Close notification",
+    closeButton: 'Sluiten',
   },
   modal: {
-    closeButton: "Close modal",
+    closeButton: 'Sluiten',
+  },
+  calendar: {
+    previousMonth: 'Vorige maand',
+    nextMonth: 'Volgende maand',
   },
 } as const;
 

@@ -1,65 +1,128 @@
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
-import { twMerge } from "tailwind-merge";
-import { Box } from "@/components/ui/Box";
-import { HiOutlineExternalLink } from "react-icons/hi";
+'use client';
+
+import type { ReactNode } from 'react';
+import { twMerge } from 'tailwind-merge';
+import { HiOutlineExternalLink } from 'react-icons/hi';
+import { motion, type HTMLMotionProps } from 'framer-motion';
+import { Box } from '@/components/ui/Box';
+
+type LinkVariant = 'default' | 'subtle' | 'animated';
+type LinePosition = 'above' | 'below';
+type LineStyle = 'slide' | 'move';
 
 type LinkProps = {
+  variant?: LinkVariant;
+  linePosition?: LinePosition;
+  lineStyle?: LineStyle;
   children: ReactNode;
-  variant?: "default" | "subtle" | "animated";
-  linePosition?: "above" | "below";
-  lineStyle?: "slide" | "move";
-} & ComponentPropsWithoutRef<"a">;
+} & Omit<HTMLMotionProps<'a'>, 'ref' | 'children'>;
+
+const MotionBox = motion(Box);
 
 /**
- * Reusable link component with consistent styling
+ * Link component with various animation styles
  */
 export const Link = ({
   children,
-  variant = "default",
-  linePosition = "below",
-  lineStyle = "slide",
+  variant = 'default',
+  linePosition = 'below',
+  lineStyle = 'slide',
   className,
   target,
   ...props
 }: LinkProps) => {
-  const isExternal = target === "_blank";
+  const isExternal = target === '_blank';
 
-  if (variant === "animated") {
+  if (variant === 'animated') {
+    const lineVariants = {
+      initial:
+        lineStyle === 'slide'
+          ? { width: 0, backgroundColor: 'hsl(var(--foreground) / 0.8)' }
+          : {
+              width: '3rem',
+              x: 0,
+              backgroundColor: 'hsl(var(--foreground) / 0.8)',
+            },
+      hover:
+        lineStyle === 'slide'
+          ? { width: '3rem', backgroundColor: 'hsl(var(--primary))' }
+          : {
+              width: '3rem',
+              x: '0.5rem',
+              backgroundColor: 'hsl(var(--primary))',
+            },
+    };
+
+    const textVariants = {
+      initial: { color: 'hsl(var(--foreground))' },
+      hover: { color: 'hsl(var(--primary))' },
+    };
+
     return (
-      <Box className="relative group/link inline-block">
-        <Box className={twMerge(
-          "absolute h-[2px] bg-foreground/80 transition-all duration-300",
-          lineStyle === "slide" && "w-0 group-hover/link:w-12",
-          lineStyle === "move" && "w-12 group-hover/link:translate-x-2",
-          "group-hover/link:bg-primary",
-          linePosition === "above" ? "-top-1" : "-bottom-1",
-          "left-0",
-        )} />
-        <a
+      <motion.div
+        className="relative inline-block"
+        initial="initial"
+        whileHover="hover"
+      >
+        <MotionBox
           className={twMerge(
-            "inline-flex items-center transition-colors hover:text-primary",
-            className
+            'absolute h-[2px]',
+            linePosition === 'above' ? '-top-1' : '-bottom-1',
+            'left-0',
           )}
+          variants={lineVariants}
+          transition={{
+            duration: 0.3,
+            ease: [0.32, 0.72, 0, 1],
+          }}
+        />
+        <motion.a
+          className={twMerge('inline-flex items-center', className)}
+          variants={textVariants}
+          transition={{ duration: 0.2 }}
           target={target}
           {...props}
         >
           {children}
           {isExternal && (
-            <HiOutlineExternalLink className="ml-1 h-4 w-4" aria-hidden="true" />
+            <HiOutlineExternalLink
+              className="ml-1 h-4 w-4"
+              aria-hidden="true"
+            />
           )}
-        </a>
-      </Box>
+        </motion.a>
+      </motion.div>
     );
   }
 
+  const defaultVariants = {
+    initial:
+      variant === 'default'
+        ? { borderColor: 'hsl(var(--primary))', color: 'hsl(var(--primary))' }
+        : { color: 'hsl(var(--muted-foreground))', borderBottom: 'none' },
+    hover:
+      variant === 'default'
+        ? { borderColor: 'transparent', color: 'hsl(var(--primary) / 0.8)' }
+        : {
+            color: 'hsl(var(--foreground))',
+            borderBottom: '1px solid hsl(var(--foreground))',
+          },
+  };
+
   return (
-    <a
+    <motion.a
       className={twMerge(
-        "transition-all inline-flex items-center",
-        variant === "default" && "text-primary border-b border-primary hover:border-transparent hover:text-primary/80",
-        variant === "subtle" && "text-muted-foreground hover:text-foreground hover:border-b hover:border-foreground",
+        'inline-flex items-center',
+        variant === 'default' && 'border-b',
         className,
       )}
+      initial="initial"
+      whileHover="hover"
+      variants={defaultVariants}
+      transition={{
+        duration: 0.2,
+        ease: [0.32, 0.72, 0, 1],
+      }}
       target={target}
       {...props}
     >
@@ -67,6 +130,6 @@ export const Link = ({
       {isExternal && (
         <HiOutlineExternalLink className="ml-1 h-4 w-4" aria-hidden="true" />
       )}
-    </a>
+    </motion.a>
   );
 };

@@ -1,95 +1,90 @@
-import { type Metadata } from "next";
-import { notFound } from "next/navigation";
-import { type FC } from "react";
+import type { Metadata } from 'next';
+import { getPost } from '@/graphql/queries';
+import { notFound } from 'next/navigation';
+import Image from 'next/image';
 
-import { SectionHeader } from "@/components/sections/SectionHeader";
-import { SectionContent } from "@/components/sections/SectionContent";
-import { Article } from "@/components/ui/Article";
-import { getPost } from "@/graphql/queries";
-import {
-  generateMetadata as createMetadata,
-  generateArticleStructuredData,
-} from "@/utilities/metadata";
-import { formatDate } from "@/utilities/index";
-
-type PageProps = {
-  params: Promise<{ slug: string }>;
-}
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const slug = (await params).slug;
-  const post = await getPost(slug);
-
-  if (!post?.title) {
-    return createMetadata({
-      title: "Post Not Found",
-      description: "The requested blog post could not be found.",
-      noindex: true,
-    });
-  }
-
-  /* Get base URL from environment or use default */
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://leenders-coaching.nl';
-  const ogImageUrl = new URL('/api/og', baseUrl);
-
-  const title = post.title;
-  const description = post.bodyRaw?.[0]?.children?.[0]?.text;
-  const imageUrl = post.image?.asset?.url;
-
-  ogImageUrl.searchParams.set("title", title);
-  if (description) {
-    ogImageUrl.searchParams.set("description", description);
-  }
-  if (imageUrl) {
-    ogImageUrl.searchParams.set("image", imageUrl);
-  }
-
-  const structuredData = generateArticleStructuredData({
-    title,
-    description: description ?? undefined,
-    image: imageUrl ?? undefined,
-    datePublished: post.publishedAt ?? undefined,
-    dateModified: post.publishedAt ?? undefined,
-    author: undefined,
-  });
-
-  return createMetadata({
-    title,
-    description: description || undefined,
-    type: "article",
-    images: [
-      {
-        url: ogImageUrl.toString(),
-        width: 1200,
-        height: 630,
-        alt: title,
-      },
-    ],
-    structuredData,
-  });
-}
+type BlogPostPageProps = {
+  params: {
+    slug: string;
+  };
+};
 
 /**
- * Individual blog post page component
+ * Fetches data for a single blog post
  */
-const BlogPostPage: FC<PageProps> = async ({ params }) => {
-  const slug = (await params).slug;
+const getBlogPostData = async (slug: string) => {
+  console.log('Fetching blog post with slug:', slug);
   const post = await getPost(slug);
-
-  if (!post?.title) {
+  console.log('Found post:', post);
+  if (!post) {
     notFound();
   }
+  return { post };
+};
+
+/**
+ * Generates metadata for the blog post
+ */
+export const generateMetadata = async ({
+  params,
+}: BlogPostPageProps): Promise<Metadata> => {
+  const { post } = await getBlogPostData(params.slug);
+
+  const openGraphImage = post.image?.asset?.url && post.image.asset.metadata?.dimensions
+    ? {
+      images: [
+        {
+          url: post.image.asset.url,
+          width: Number(post.image.asset.metadata.dimensions.width),
+          height: Number(post.image.asset.metadata.dimensions.height),
+          alt: post.title || 'Blog post image',
+        },
+      ],
+    }
+    : undefined;
+
+  return {
+    title: `${post.title} | Blog | Leenders Coaching`,
+    description: post.description || undefined,
+    openGraph: openGraphImage,
+  };
+};
+
+/**
+ * Blog post page component
+ */
+const BlogPostPage = async ({ params }: BlogPostPageProps) => {
+  const { post } = await getBlogPostData(params.slug);
 
   return (
-    <>
-      <SectionHeader
-        title={post.title}
-        description={post.publishedAt ? formatDate(post.publishedAt) : undefined}
-      />
-      <SectionContent>
-        <Article content={post.bodyRaw} />
-      </SectionContent>
-    </>
+    <main className="container mx-auto px-4 py-8">
+      <article className="prose prose-lg mx-auto">
+        <h1 className="mb-4">{post.title}</h1>
+        {post.image?.asset?.url && post.image.asset.metadata?.dimensions && (
+          <div className="relative aspect-video mb-8">
+            <Image
+              src={post.image.asset.url}
+              alt={post.title || 'Blog post image'}
+              fill
+              className="object-cover rounded-lg"
+              sizes="(min-width: 1024px) 800px, 100vw"
+              priority
+            />
+          </div>
+        )}
+        <time dateTime={post.publishedAt} className="text-muted-foreground block mb-8">
+          {new Date(post.publishedAt).toLocaleDateString('nl-NL', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}
+        </time>
+        <div className="mt-8">
+          {/* TODO: Implement rich text rendering */}
+          {post.description}
+        </div>
+      </article>
+    </main>
   );
 };
 

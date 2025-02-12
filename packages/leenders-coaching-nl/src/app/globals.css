@@ -78,18 +78,6 @@
   }
 }
 
-@layer components {
-  .glass-card {
-    @apply bg-background/60 backdrop-blur-lg border border-border/50 
-           shadow-glass dark:bg-background/40 dark:border-border/30 
-           dark:backdrop-blur-2xl transition-theme;
-  }
-
-  .card-hover {
-    @apply hover:shadow-hover hover:-translate-y-0.5 transition-[transform,box-shadow] duration-150;
-  }
-}
-
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;

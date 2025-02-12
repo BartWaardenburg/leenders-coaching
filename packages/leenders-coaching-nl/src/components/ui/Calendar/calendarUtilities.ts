@@ -18,22 +18,22 @@ export type DisabledDates = {
 };
 
 export const monthNames = [
-  "Januari",
-  "Februari",
-  "Maart",
-  "April",
-  "Mei",
-  "Juni",
-  "Juli",
-  "Augustus",
-  "September",
-  "Oktober",
-  "November",
-  "December",
+  'Januari',
+  'Februari',
+  'Maart',
+  'April',
+  'Mei',
+  'Juni',
+  'Juli',
+  'Augustus',
+  'September',
+  'Oktober',
+  'November',
+  'December',
 ];
 
 /* Week days starting with Monday */
-export const weekDays = ["Ma", "Di", "Wo", "Do", "Vr", "Za", "Zo"];
+export const weekDays = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
 
 /**
  * Converts a JavaScript day number (0-6, starting with Sunday)

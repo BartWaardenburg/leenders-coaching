@@ -1,42 +1,42 @@
 export const iconPaths = {
   menu: {
-    hamburger: "M3 4h18M3 12h18M3 20h18",
-    close: "M4 4l16 16M4 20L20 4",
+    hamburger: 'M3 4h18M3 12h18M3 20h18',
+    close: 'M4 4l16 16M4 20L20 4',
   },
   theme: {
-    sun: "M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z",
-    moon: "M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z",
+    sun: 'M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z',
+    moon: 'M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z',
   },
-  close: "M4 4l16 16M4 20L20 4",
-  message: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z",
+  close: 'M4 4l16 16M4 20L20 4',
+  message: 'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z',
 } as const;
 
 export const iconConfig = {
   navigation: {
     menu: {
-      label: "Menu openen",
-      icon: "menu",
+      label: 'Menu openen',
+      icon: 'menu',
     },
     close: {
-      label: "Menu sluiten",
-      icon: "x",
+      label: 'Menu sluiten',
+      icon: 'x',
     },
   },
   theme: {
     toggle: {
-      label: "Wissel kleurenschema",
-      icon: "sun",
-      iconDark: "moon",
+      label: 'Wissel kleurenschema',
+      icon: 'sun',
+      iconDark: 'moon',
     },
   },
   social: {
     instagram: {
-      label: "Volg op Instagram",
-      icon: "instagram",
+      label: 'Volg op Instagram',
+      icon: 'instagram',
     },
     linkedin: {
-      label: "Volg op LinkedIn",
-      icon: "linkedin",
+      label: 'Volg op LinkedIn',
+      icon: 'linkedin',
     },
   },
 } as const;

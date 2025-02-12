@@ -1,53 +1,76 @@
-import type { ComponentPropsWithoutRef } from "react";
-import { twMerge } from "tailwind-merge";
-import { Icon } from "@/components/ui/Icon";
+'use client';
+
+import { twMerge } from 'tailwind-merge';
+import { motion, AnimatePresence, type HTMLMotionProps } from 'framer-motion';
+import { Icon } from '@/components/ui/Icon';
+
+type TransitionSpeed = 'quick' | 'slow';
 
 type IconToggleButtonProps = {
-    isToggled?: boolean;
-    defaultIcon: string;
-    toggledIcon: string;
-    label: string;
-    className?: string;
-} & Omit<ComponentPropsWithoutRef<"button">, "aria-label" | "onClick">;
+  isToggled?: boolean;
+  defaultIcon: string;
+  toggledIcon: string;
+  label: string;
+  className?: string;
+  speed?: TransitionSpeed;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+} & Omit<HTMLMotionProps<'button'>, 'aria-label' | 'onClick'>;
+
+const MotionIcon = motion(Icon);
+
+const transitionDurations: Record<TransitionSpeed, number> = {
+  quick: 0.2,
+  slow: 0.5,
+};
 
 /**
- * A button that toggles between two icons with a rotating animation
+ * A button that toggles between two icons with a smooth animation
  */
 export const IconToggleButton = ({
-    isToggled = false,
-    defaultIcon,
-    toggledIcon,
-    label,
-    className,
-    onClick,
-    ...props
-}: IconToggleButtonProps & { onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void }) => {
-    return (
-        <button
-            type="button"
-            className={twMerge(
-                "w-10 h-10 p-0 rounded-full relative",
-                "hover:bg-secondary/10",
-                className
-            )}
-            aria-label={label}
-            onClick={onClick}
-            {...props}
-        >
-            <Icon
-                path={defaultIcon}
-                className={twMerge(
-                    "absolute inset-0 m-auto transition-all duration-300 text-foreground",
-                    isToggled ? "-rotate-90 scale-0" : "rotate-0 scale-100"
-                )}
-            />
-            <Icon
-                path={toggledIcon}
-                className={twMerge(
-                    "absolute inset-0 m-auto transition-all duration-300 text-foreground",
-                    isToggled ? "rotate-0 scale-100" : "rotate-90 scale-0"
-                )}
-            />
-        </button>
-    );
+  isToggled = false,
+  defaultIcon,
+  toggledIcon,
+  label,
+  className,
+  speed = 'slow',
+  onClick,
+  ...props
+}: IconToggleButtonProps) => {
+  const duration = transitionDurations[speed];
+
+  return (
+    <motion.button
+      type="button"
+      className={twMerge('w-10 h-10 p-0 rounded-full relative', className)}
+      whileHover={{ backgroundColor: 'var(--secondary-10)' }}
+      transition={{ duration: duration }}
+      aria-label={label}
+      onClick={onClick}
+      {...props}
+    >
+      <AnimatePresence mode="wait">
+        {!isToggled ? (
+          <MotionIcon
+            key="default"
+            path={defaultIcon}
+            className="absolute inset-0 m-auto text-foreground"
+            initial={{ rotate: -90, opacity: 0 }}
+            animate={{ rotate: 0, opacity: 1 }}
+            exit={{ rotate: 90, opacity: 0 }}
+            transition={{ duration: duration, ease: 'easeOut' }}
+          />
+        ) : (
+          <MotionIcon
+            key="toggled"
+            path={toggledIcon}
+            className="absolute inset-0 m-auto text-foreground"
+            initial={{ rotate: -90, opacity: 0 }}
+            animate={{ rotate: 0, opacity: 1 }}
+            exit={{ rotate: 90, opacity: 0 }}
+            transition={{ duration: duration, ease: 'easeOut' }}
+          />
+        )}
+      </AnimatePresence>
+    </motion.button>
+  );
 };

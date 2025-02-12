@@ -1,9 +1,9 @@
 export const cardConfig = {
   labels: {
-    featured: "Uitgelicht",
-    readArticle: "Lees artikel",
+    featured: 'Uitgelicht',
+    readArticle: 'Lees artikel',
   },
   paths: {
-    blog: "/blog",
+    blog: '/blog',
   },
 } as const;

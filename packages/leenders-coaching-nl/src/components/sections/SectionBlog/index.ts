@@ -1,0 +1,1 @@
+export { SectionBlog } from './SectionBlog';

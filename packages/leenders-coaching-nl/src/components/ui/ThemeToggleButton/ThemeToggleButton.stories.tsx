@@ -1,17 +1,17 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { ThemeToggleButton } from "./ThemeToggleButton";
+import type { Meta, StoryObj } from '@storybook/react';
+import { ThemeToggleButton } from './ThemeToggleButton';
 
 const meta = {
-  title: "UI/ThemeToggleButton",
+  title: 'UI/ThemeToggleButton',
   component: ThemeToggleButton,
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     className: {
-      control: "text",
-      description: "Additional CSS classes to apply",
+      control: 'text',
+      description: 'Additional CSS classes to apply',
     },
   },
 } satisfies Meta<typeof ThemeToggleButton>;
@@ -21,6 +21,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    className: "text-foreground",
+    className: 'text-foreground',
   },
 };

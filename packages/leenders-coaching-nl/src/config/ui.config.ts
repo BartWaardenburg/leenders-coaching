@@ -1,25 +1,25 @@
 export const uiConfig = {
   mobileMenu: {
-    toggleButton: "Toggle menu",
-    menuLabel: "Mobile navigation menu",
-    closeButton: "Close menu",
+    toggleButton: 'Menu openen',
+    menuLabel: 'Mobiel navigatiemenu',
+    closeButton: 'Sluiten',
   },
   notifications: {
-    closeButton: "Close notification",
+    closeButton: 'Sluiten',
   },
   themeToggle: {
-    label: "Toggle color theme",
+    label: 'Wissel kleurenschema',
   },
   buttons: {
-    loadMore: "Laad meer",
-    readMore: "Lees meer",
-    submit: "Verstuur",
-    close: "Sluiten",
+    loadMore: 'Laad meer',
+    readMore: 'Lees meer',
+    submit: 'Verstuur',
+    close: 'Sluiten',
   },
   forms: {
-    required: "Verplicht veld",
-    invalid: "Ongeldig formaat",
-    success: "Bericht verzonden",
-    error: "Er is iets misgegaan",
+    required: 'Verplicht veld',
+    invalid: 'Ongeldig formaat',
+    success: 'Bericht verzonden',
+    error: 'Er is iets misgegaan',
   },
 } as const;

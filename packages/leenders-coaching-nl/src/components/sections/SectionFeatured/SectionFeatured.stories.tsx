@@ -1,62 +1,71 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { SectionFeatured } from "./SectionFeatured";
-
-import exampleImage from "../../../assets/images/99-Simone-louise-boonstoppel-fotografie.jpg";
+import type { Meta, StoryObj } from '@storybook/react';
+import { SectionFeatured } from './SectionFeatured';
 
 const meta = {
-    title: "Sections/SectionFeatured",
-    component: SectionFeatured,
-    parameters: {
-        layout: "fullscreen",
+  title: 'Sections/SectionFeatured',
+  component: SectionFeatured,
+  parameters: {
+    layout: 'fullscreen',
+  },
+  tags: ['autodocs'],
+  argTypes: {
+    background: {
+      control: 'select',
+      options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
+      description: 'Background color of the section',
     },
-    tags: ["autodocs"],
+    border: {
+      control: 'boolean',
+      description: 'Show top and bottom borders',
+    },
+    reverse: {
+      control: 'boolean',
+      description: 'Reverse the layout (image on right)',
+    },
+  },
 } satisfies Meta<typeof SectionFeatured>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-    args: {
-        title: "Featured Section",
-        description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-        image: exampleImage,
-        imageAlt: "Featured image",
-    },
-};
+const defaultArgs = {
+  title: 'Featured Section',
+  description:
+    'This is a featured section with an image and some descriptive text. It can be used to highlight important content or features.',
+  image:
+    'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80',
+  imageAlt: 'People working together',
+  cta: {
+    href: '#',
+    label: 'Learn More',
+    variant: 'blue' as const,
+  },
+} as const;
 
-export const WithCTA: Story = {
-    args: {
-        ...Default.args,
-        cta: {
-            href: "#",
-            label: "Learn More",
-            variant: "black",
-        },
-    },
+export const Default: Story = {
+  args: defaultArgs,
 };
 
 export const WithBackground: Story = {
-    args: {
-        ...WithCTA.args,
-        background: "blue",
-        cta: {
-            href: "#",
-            label: "Learn More",
-            variant: "transparent",
-        },
-    },
+  args: {
+    ...defaultArgs,
+    background: 'blue',
+    border: true,
+  },
 };
 
-export const WithBorder: Story = {
-    args: {
-        ...WithCTA.args,
-        background: "blue",
-        border: true,
-        cta: {
-            href: "#",
-            label: "Learn More",
-            variant: "transparent",
-        },
-    },
-}; 
+export const Reversed: Story = {
+  args: {
+    ...defaultArgs,
+    reverse: true,
+  },
+};
+
+export const ReversedWithBackground: Story = {
+  args: {
+    ...defaultArgs,
+    reverse: true,
+    background: 'purple',
+    border: true,
+  },
+};

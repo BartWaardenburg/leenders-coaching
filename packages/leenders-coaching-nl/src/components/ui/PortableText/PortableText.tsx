@@ -1,14 +1,14 @@
-import { PortableText as BasePortableText } from "@portabletext/react";
+import { PortableText as BasePortableText } from '@portabletext/react';
 import type {
   PortableTextComponents,
   PortableTextBlock,
-} from "@portabletext/react";
-import Image from "next/image";
+} from '@portabletext/react';
+import Image from 'next/image';
 
-import { Heading } from "@/components/ui/Heading";
-import { Link } from "@/components/ui/Link";
-import { Text } from "@/components/ui/Text";
-import { Box } from "@/components/ui/Box";
+import { Heading } from '@/components/ui/Heading';
+import { Link } from '@/components/ui/Link';
+import { Text } from '@/components/ui/Text';
+import { Box } from '@/components/ui/Box';
 
 const components: PortableTextComponents = {
   block: {
@@ -33,7 +33,7 @@ const components: PortableTextComponents = {
       <Box className="my-8">
         <Image
           src={value?.asset?.url}
-          alt={value?.alt || ""}
+          alt={value?.alt || ''}
           width={800}
           height={400}
           className="rounded-lg"

@@ -1,2 +1,2 @@
-export { formatDate } from "./formatDate";
-export { calculateReadingTime } from "./readingTime";
+export { formatDate } from './formatDate';
+export { calculateReadingTime } from './readingTime';

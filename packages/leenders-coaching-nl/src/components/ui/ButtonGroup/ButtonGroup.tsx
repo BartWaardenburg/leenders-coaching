@@ -1,6 +1,6 @@
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
-import { twMerge } from "tailwind-merge";
-import { Flex } from "@/components/ui/Flex";
+import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import { twMerge } from 'tailwind-merge';
+import { Flex } from '@/components/ui/Flex';
 
 type ResponsiveValue<T> = {
   base?: T;
@@ -8,11 +8,11 @@ type ResponsiveValue<T> = {
   md?: T;
   lg?: T;
   xl?: T;
-  "2xl"?: T;
+  '2xl'?: T;
 };
 
-type JustifyValue = "start" | "end" | "center";
-type WidthValue = "full" | "auto";
+type JustifyValue = 'start' | 'end' | 'center';
+type WidthValue = 'full' | 'auto';
 
 type ButtonGroupProps = {
   children: ReactNode;
@@ -24,7 +24,7 @@ type ButtonGroupProps = {
   width?: WidthValue | ResponsiveValue<WidthValue>;
   /** Whether to wrap the buttons in a flex container */
   flex?: boolean;
-} & ComponentPropsWithoutRef<"div">;
+} & ComponentPropsWithoutRef<'div'>;
 
 /**
  * A component for grouping buttons with responsive layout
@@ -33,43 +33,49 @@ export const ButtonGroup = ({
   children,
   className,
   stackOnMobile = true,
-  justify = "center",
-  width = "auto",
+  justify = 'center',
+  width = 'auto',
   flex = false,
   ...props
 }: ButtonGroupProps) => {
   /* Convert justify prop to responsive classes */
   const getJustifyClasses = () => {
-    if (typeof justify === "string") {
+    if (typeof justify === 'string') {
       return `justify-${justify}`;
     }
 
-    return Object.entries(justify).map(([breakpoint, value]) =>
-      breakpoint === "base" ? `justify-${value}` : `${breakpoint}:justify-${value}`
-    ).join(" ");
+    return Object.entries(justify)
+      .map(([breakpoint, value]) =>
+        breakpoint === 'base'
+          ? `justify-${value}`
+          : `${breakpoint}:justify-${value}`,
+      )
+      .join(' ');
   };
 
   /* Convert width prop to responsive classes */
   const getWidthClasses = () => {
-    if (typeof width === "string") {
+    if (typeof width === 'string') {
       return `w-${width}`;
     }
 
-    return Object.entries(width).map(([breakpoint, value]) =>
-      breakpoint === "base" ? `w-${value}` : `${breakpoint}:w-${value}`
-    ).join(" ");
+    return Object.entries(width)
+      .map(([breakpoint, value]) =>
+        breakpoint === 'base' ? `w-${value}` : `${breakpoint}:w-${value}`,
+      )
+      .join(' ');
   };
 
   return (
     <Flex
-      direction={stackOnMobile ? "column" : "row"}
+      direction={stackOnMobile ? 'column' : 'row'}
       items="center"
       gap={4}
       className={twMerge(
         getJustifyClasses(),
         getWidthClasses(),
-        stackOnMobile && "sm:flex-row",
-        flex && "flex",
+        stackOnMobile && 'sm:flex-row',
+        flex && 'flex',
         className,
       )}
       {...props}

@@ -1,13 +1,13 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Text } from "./Text";
+import type { Meta, StoryObj } from '@storybook/react';
+import { Text } from './Text';
 
 const meta = {
-  title: "UI/Text",
+  title: 'UI/Text',
   component: Text,
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
-  tags: ["autodocs"],
+  tags: ['autodocs'],
 } satisfies Meta<typeof Text>;
 
 export default meta;
@@ -15,6 +15,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: "Text Example",
+    children: 'Text Example',
   },
 };

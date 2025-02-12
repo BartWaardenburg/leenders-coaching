@@ -1,22 +1,30 @@
-import type { ComponentPropsWithoutRef } from "react";
-import Link from "next/link";
-import { twMerge } from "tailwind-merge";
+import type { ComponentPropsWithoutRef } from 'react';
+import Link from 'next/link';
+import { twMerge } from 'tailwind-merge';
 
 type ButtonBaseProps = {
-  variant?: "black" | "transparent" | "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-  size?: "sm" | "md" | "lg";
+  variant?:
+  | 'black'
+  | 'transparent'
+  | 'blue'
+  | 'purple'
+  | 'green'
+  | 'pink'
+  | 'yellow'
+  | 'teal';
+  size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
-  fullWidthOnMobile?: boolean;
+  fullWidthOnContainer?: boolean;
   disabled?: boolean;
 };
 
 type ButtonAsButtonProps = ButtonBaseProps &
-  Omit<ComponentPropsWithoutRef<"button">, keyof ButtonBaseProps> & {
+  Omit<ComponentPropsWithoutRef<'button'>, keyof ButtonBaseProps> & {
     href?: never;
   };
 
 type ButtonAsLinkProps = ButtonBaseProps &
-  Omit<ComponentPropsWithoutRef<"a">, "href" | keyof ButtonBaseProps> & {
+  Omit<ComponentPropsWithoutRef<'a'>, 'href' | keyof ButtonBaseProps> & {
     href: string;
   };
 
@@ -28,16 +36,17 @@ type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
  */
 export const Button = ({
   className,
-  variant = "black",
-  size = "md",
+  variant = 'black',
+  size = 'md',
   isLoading = false,
-  fullWidthOnMobile = false,
+  fullWidthOnContainer = false,
   children,
   disabled,
   href,
   ...props
 }: ButtonProps) => {
   const baseStyles = `
+    transition-theme
     inline-flex items-center justify-center
     font-montserrat uppercase tracking-[0.1em] text-[13px]
     transition-all duration-200 ease-in-out
@@ -91,21 +100,21 @@ export const Button = ({
   };
 
   const sizes = {
-    sm: "h-9 px-4",
-    md: "h-11 px-8",
-    lg: "h-12 px-12",
+    sm: 'h-9 px-4',
+    md: 'h-11 px-8',
+    lg: 'h-12 px-12',
   };
 
   const loadingStyles = isLoading
-    ? "relative text-transparent transition-none hover:text-transparent"
-    : "";
+    ? 'relative text-transparent transition-none hover:text-transparent'
+    : '';
 
   const buttonStyles = twMerge(
     baseStyles,
     variants[variant],
     sizes[size],
     loadingStyles,
-    fullWidthOnMobile && "w-full sm:w-auto",
+    fullWidthOnContainer && 'w-full @md:w-auto',
     className,
   );
 
@@ -120,7 +129,10 @@ export const Button = ({
     return (
       <Link
         href={href}
-        className={twMerge(buttonStyles, (disabled || isLoading) && "pointer-events-none opacity-50")}
+        className={twMerge(
+          buttonStyles,
+          (disabled || isLoading) && 'pointer-events-none opacity-50',
+        )}
         aria-disabled={disabled || isLoading}
         {...linkProps}
       >

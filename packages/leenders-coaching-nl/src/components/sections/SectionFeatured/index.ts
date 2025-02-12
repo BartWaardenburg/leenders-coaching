@@ -1,1 +1,1 @@
-export { SectionFeatured } from "./SectionFeatured";
+export { SectionFeatured } from './SectionFeatured';

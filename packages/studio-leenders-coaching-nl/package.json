@@ -9,21 +9,29 @@
     "start": "sanity start",
     "build": "sanity build",
     "deploy": "sanity deploy",
-    "deploy-graphql": "sanity graphql deploy --playground",
-    "generate-types": "sanity graphql deploy --generate-types"
+    "deploy-graphql": "sanity graphql deploy",
+    "create-singletons": "ts-node scripts/createSingletons.ts"
   },
   "keywords": [
     "sanity"
   ],
   "dependencies": {
-    "@sanity/vision": "3.72.1",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "sanity": "3.72.1",
-    "styled-components": "6.1.14"
+    "@sanity/client": "^6.11.1",
+    "@sanity/vision": "^3.23.4",
+    "dotenv": "^16.3.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-is": "^18.2.0",
+    "sanity": "^3.23.4",
+    "styled-components": "^6.1.0"
   },
   "devDependencies": {
-    "@sanity/eslint-config-studio": "5.0.1"
-  },
-  "prettier": {}
+    "@sanity/eslint-config-studio": "^3.0.1",
+    "@types/node": "^20.10.6",
+    "@types/react": "^18.2.46",
+    "eslint": "^8.6.0",
+    "prettier": "^3.1.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
 }

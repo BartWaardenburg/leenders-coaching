@@ -1,30 +1,30 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { IconButton } from "./IconButton";
+import type { Meta, StoryObj } from '@storybook/react';
+import { IconButton } from './IconButton';
 
 const meta = {
-  title: "UI/IconButton",
+  title: 'UI/IconButton',
   component: IconButton,
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     variant: {
-      control: "select",
-      options: ["primary", "ghost"],
-      description: "The visual style variant of the button",
+      control: 'select',
+      options: ['primary', 'ghost'],
+      description: 'The visual style variant of the button',
     },
     label: {
-      control: "text",
-      description: "Accessible label for the button (used for aria-label)",
+      control: 'text',
+      description: 'Accessible label for the button (used for aria-label)',
     },
     disabled: {
-      control: "boolean",
-      description: "Whether the button is disabled",
+      control: 'boolean',
+      description: 'Whether the button is disabled',
     },
     onClick: {
-      action: "clicked",
-      description: "Click handler for the button",
+      action: 'clicked',
+      description: 'Click handler for the button',
     },
   },
   decorators: [
@@ -57,23 +57,23 @@ const SearchIcon = () => (
 export const Primary: Story = {
   args: {
     children: <SearchIcon />,
-    label: "Search",
-    variant: "primary",
+    label: 'Search',
+    variant: 'primary',
   },
 };
 
 export const Ghost: Story = {
   args: {
     children: <SearchIcon />,
-    label: "Search",
-    variant: "ghost",
+    label: 'Search',
+    variant: 'ghost',
   },
 };
 
 export const Disabled: Story = {
   args: {
     children: <SearchIcon />,
-    label: "Search",
+    label: 'Search',
     disabled: true,
   },
 };

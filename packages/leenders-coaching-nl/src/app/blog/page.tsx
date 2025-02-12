@@ -1,69 +1,56 @@
-import { type FC } from "react";
-import { type Metadata } from "next";
-
-import { Card } from "@/components/ui/Card";
-import { SectionHeader } from "@/components/sections/SectionHeader";
-import { SectionCards } from "@/components/sections/SectionCards";
-import { getAllPosts } from "@/graphql/queries";
-import { formatDate, calculateReadingTime } from "@/utilities/index";
-import { generateMetadata } from "@/utilities/metadata";
-
-export const metadata: Metadata = generateMetadata({
-  title: "Blog & Insights",
-  description:
-    "Read our latest insights on coaching, personal development, and professional growth.",
-  type: "article",
-  images: [
-    {
-      url: "/blog-og-image.jpg",
-      width: 1200,
-      height: 630,
-      alt: "Leenders Coaching Blog",
-    },
-  ],
-});
+import type { Metadata } from 'next';
+import { getAllPosts } from '@/graphql/queries';
+import { SectionHeader } from '@/components/sections/SectionHeader';
+import { SectionCards } from '@/components/sections/SectionCards';
+import { Card } from '@/components/ui/Card';
 
 /**
- * Blog listing page component
+ * Fetches data for the Blog page
  */
-const BlogPage: FC = async () => {
+const getBlogPageData = async () => {
   const posts = await getAllPosts();
+  return { posts };
+};
 
-  const blogPosts = posts
-    .filter((post): post is NonNullable<typeof post> =>
-      post?.title !== null &&
-      post?.slug?.current !== null
-    )
-    .map((post) => ({
-      title: post.title ?? "",
-      description: post.bodyRaw?.[0]?.children?.[0]?.text || "Preview of the blog post...",
-      date: formatDate(post.publishedAt),
-      image: post.image?.asset?.url ?? "/images/blog/placeholder.jpg",
-      slug: post.slug?.current ?? "",
-      readingTime: calculateReadingTime(post.bodyRaw),
-    }));
+/**
+ * Generates metadata for the Blog page
+ */
+export const generateMetadata = async (): Promise<Metadata> => {
+  const data = await getBlogPageData();
+
+  return {
+    title: 'Blog | Leenders Coaching',
+    description: 'Lees de laatste artikelen over coaching en persoonlijke ontwikkeling.',
+  };
+};
+
+/**
+ * Blog overview page component
+ */
+const BlogPage = async () => {
+  const { posts } = await getBlogPageData();
 
   return (
-    <>
+    <main>
       <SectionHeader
-        title="Blog & Insights"
-        description="Thoughts and advice on personal development, career growth, and life coaching"
+        title="Blog"
+        description="Lees de laatste artikelen over coaching en persoonlijke ontwikkeling"
+        background="pink"
       />
       <SectionCards>
-        {blogPosts.map((post) => (
+        {posts.map((post) => (
           <Card
-            key={post.slug}
-            title={post.title}
-            date={post.date}
-            image={post.image}
-            slug={post.slug}
-            variant="blue"
+            key={post._id}
+            title={post.title || ''}
+            image={post.image?.asset?.url || undefined}
+            slug={post.slug?.current || ''}
+            date={post.publishedAt || undefined}
           >
             {post.description}
           </Card>
         ))}
       </SectionCards>
-    </>
+    </main>
   );
 };
 

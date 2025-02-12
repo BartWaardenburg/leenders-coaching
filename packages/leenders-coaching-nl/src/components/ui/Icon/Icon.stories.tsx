@@ -1,22 +1,22 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Icon } from "./Icon";
-import { iconPaths } from "@/config/icons.config";
+import type { Meta, StoryObj } from '@storybook/react';
+import { Icon } from './Icon';
+import { iconPaths } from '@/config/icons.config';
 
 const meta = {
-  title: "UI/Icon",
+  title: 'UI/Icon',
   component: Icon,
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     path: {
-      control: "text",
-      description: "SVG path data for the icon",
+      control: 'text',
+      description: 'SVG path data for the icon',
     },
     className: {
-      control: "text",
-      description: "Additional CSS classes to apply",
+      control: 'text',
+      description: 'Additional CSS classes to apply',
     },
   },
 } satisfies Meta<typeof Icon>;

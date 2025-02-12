@@ -6,24 +6,24 @@ export type NavItem = {
 export const navigationConfig = {
   links: [
     {
-      label: "Home",
-      href: "/",
+      label: 'Home',
+      href: '/',
     },
     {
-      label: "Over mij",
-      href: "/about",
+      label: 'Over mij',
+      href: '/about',
     },
     {
-      label: "Diensten",
-      href: "/services",
+      label: 'Diensten',
+      href: '/services',
     },
     {
-      label: "Blog",
-      href: "/blog",
+      label: 'Blog',
+      href: '/blog',
     },
     {
-      label: "Contact",
-      href: "/contact",
+      label: 'Contact',
+      href: '/contact',
     },
   ],
 } as const;
