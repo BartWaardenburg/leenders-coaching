@@ -12,8 +12,8 @@
   "rangeStrategy": "pin",
   "packageRules": [
     {
-      "matchPackagePatterns": ["*"],
-      "rangeStrategy": "pin"
+      "rangeStrategy": "pin",
+      "matchPackageNames": ["*"]
     },
     {
       "matchDepTypes": ["devDependencies"],
