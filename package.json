@@ -29,7 +29,7 @@
   },
   "pnpm": {
     "overrides": {
-      "graphql": "16.10.0"
+      "graphql@*": "16.10.0"
     }
   },
   "engines": {
