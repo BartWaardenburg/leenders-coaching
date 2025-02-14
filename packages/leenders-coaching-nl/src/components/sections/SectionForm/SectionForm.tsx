@@ -1,6 +1,8 @@
+"use client";
+
 import type { ComponentPropsWithoutRef } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { useForm as useHookForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 import { Section, type PastelColor } from '@/components/ui/Section';
 import { Stack } from '@/components/ui/Stack';
@@ -57,7 +59,7 @@ export const SectionForm = ({
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useHookForm<ContactFormData>();
+  } = useForm<ContactFormData>();
 
   const handleFormSubmit = async (data: ContactFormData) => {
     if (onSubmit) {
