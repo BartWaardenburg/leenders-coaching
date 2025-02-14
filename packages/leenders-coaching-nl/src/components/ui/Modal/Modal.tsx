@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { IoClose } from 'react-icons/io5';
-import { motion, AnimatePresence, type HTMLMotionProps } from 'framer-motion';
+import { motion, AnimatePresence, type HTMLMotionProps } from 'motion/react';
 import { Flex } from '@/components/ui/Flex';
 import { ariaConfig } from '@/config/aria.config';
 
@@ -47,7 +47,7 @@ type ModalProps = {
   | 'onDragExit'
 >;
 
-const MotionFlex = motion(Flex);
+const MotionFlex = motion.create(Flex);
 
 /**
  * Generic full-screen modal component with proper accessibility and pastel styling

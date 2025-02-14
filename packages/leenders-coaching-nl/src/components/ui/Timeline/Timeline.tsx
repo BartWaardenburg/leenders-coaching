@@ -1,6 +1,6 @@
 import { type ComponentPropsWithoutRef, type ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 
 import { Box } from '@/components/ui/Box';
 import { Stack } from '@/components/ui/Stack';
@@ -31,7 +31,7 @@ type TimelineProps = {
   color?: Color;
 } & ComponentPropsWithoutRef<'div'>;
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 /**
  * Timeline component for displaying a vertical process flow with alternating sides

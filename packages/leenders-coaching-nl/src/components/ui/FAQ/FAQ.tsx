@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { twMerge } from 'tailwind-merge';
 import { IoChevronDown } from 'react-icons/io5';
 
@@ -35,7 +35,7 @@ type FAQProps = {
   className?: string;
 };
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 /**
  * FAQ component with smooth animations and pastel styling

@@ -3,7 +3,7 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { useState, useEffect } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 
 import { IconToggleButton } from '@/components/ui/IconToggleButton';
 import { ThemeToggleButton } from '@/components/ui/ThemeToggleButton';

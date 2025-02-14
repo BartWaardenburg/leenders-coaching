@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { HiOutlineExternalLink } from 'react-icons/hi';
-import { motion, type HTMLMotionProps } from 'framer-motion';
+import { motion, type HTMLMotionProps } from 'motion/react';
 import { Box } from '@/components/ui/Box';
 
 type LinkVariant = 'default' | 'subtle' | 'animated';
@@ -17,7 +17,7 @@ type LinkProps = {
   children: ReactNode;
 } & Omit<HTMLMotionProps<'a'>, 'ref' | 'children'>;
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 /**
  * Link component with various animation styles
@@ -39,18 +39,18 @@ export const Link = ({
         lineStyle === 'slide'
           ? { width: 0, backgroundColor: 'hsl(var(--foreground) / 0.8)' }
           : {
-              width: '3rem',
-              x: 0,
-              backgroundColor: 'hsl(var(--foreground) / 0.8)',
-            },
+            width: '3rem',
+            x: 0,
+            backgroundColor: 'hsl(var(--foreground) / 0.8)',
+          },
       hover:
         lineStyle === 'slide'
           ? { width: '3rem', backgroundColor: 'hsl(var(--primary))' }
           : {
-              width: '3rem',
-              x: '0.5rem',
-              backgroundColor: 'hsl(var(--primary))',
-            },
+            width: '3rem',
+            x: '0.5rem',
+            backgroundColor: 'hsl(var(--primary))',
+          },
     };
 
     const textVariants = {
@@ -104,9 +104,9 @@ export const Link = ({
       variant === 'default'
         ? { borderColor: 'transparent', color: 'hsl(var(--primary) / 0.8)' }
         : {
-            color: 'hsl(var(--foreground))',
-            borderBottom: '1px solid hsl(var(--foreground))',
-          },
+          color: 'hsl(var(--foreground))',
+          borderBottom: '1px solid hsl(var(--foreground))',
+        },
   };
 
   return (

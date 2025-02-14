@@ -1,12 +1,12 @@
 # Leenders Coaching Website
 
-A modern, type-safe website built with Next.js 14 and Sanity.io.
+A modern, type-safe website built with Next.js and Sanity.io.
 
 ## Architecture Overview
 
 ### Tech Stack
 
-- **Frontend Framework**: Next.js 14 (App Router)
+- **Frontend Framework**: Next.js (App Router)
 - **CMS**: Sanity.io
 - **Data Layer**: GraphQL
 - **Type Safety**: TypeScript
@@ -14,7 +14,7 @@ A modern, type-safe website built with Next.js 14 and Sanity.io.
 - **Testing**: Vitest + React Testing Library
 - **Component Development**: Storybook
 - **Form Handling**: react-hook-form + zod
-- **Animation**: Framer Motion
+- **Animation**: motion/react
 - **Email Integration**: Resend
 
 ### Project Structure

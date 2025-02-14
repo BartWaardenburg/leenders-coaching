@@ -7,7 +7,7 @@ import { twMerge } from 'tailwind-merge';
 import { Flex } from '@/components/ui/Flex';
 import { IconButton } from '@/components/ui/IconButton';
 import { Icon } from '@/components/ui/Icon';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { ariaConfig } from '@/config/aria.config';
 import {
   type DisabledDates,
@@ -34,8 +34,8 @@ type CalendarProps = {
   disabledDates?: DisabledDates;
 };
 
-const MotionBox = motion(Box);
-const MotionText = motion(Text);
+const MotionBox = motion.create(Box);
+const MotionText = motion.create(Text);
 
 /**
  * Calendar component that displays a month view in a grid format with smooth animations
@@ -246,12 +246,12 @@ export const Calendar: FC<CalendarProps> = ({
                             : 'hover:bg-pastel-blue/80 dark:hover:bg-pastel-blue-dark/80',
                         ],
                         dayIsToday &&
-                          'after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary',
+                        'after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary',
                         isInteractive &&
-                          dayIsCurrentMonth &&
-                          'ring-inset ring-1 ring-foreground/80',
+                        dayIsCurrentMonth &&
+                        'ring-inset ring-1 ring-foreground/80',
                         (dayIsPastDay || dayIsDisabled) &&
-                          'opacity-50 cursor-default',
+                        'opacity-50 cursor-default',
                       )}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
@@ -262,17 +262,17 @@ export const Calendar: FC<CalendarProps> = ({
                       whileHover={
                         isInteractive
                           ? {
-                              scale: 0.97,
-                              transition: { duration: 0.2 },
-                            }
+                            scale: 0.97,
+                            transition: { duration: 0.2 },
+                          }
                           : undefined
                       }
                       whileTap={
                         isInteractive
                           ? {
-                              scale: 0.95,
-                              transition: { duration: 0.1 },
-                            }
+                            scale: 0.95,
+                            transition: { duration: 0.1 },
+                          }
                           : undefined
                       }
                     >
