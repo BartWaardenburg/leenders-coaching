@@ -1,15 +1,3 @@
-import { postType } from './postType';
-import { navigation } from './navigation';
-import { footer } from './footer';
-import { menuFooter } from './menuFooter';
-import { siteSettings } from './siteSettings';
-import { navigationItem } from './navigationItem';
-import { footerContact } from './footerContact';
-import { socialLink } from './socialLink';
-import { menuFooterAbout } from './menuFooterAbout';
-import { menuFooterContact } from './menuFooterContact';
-import { menuFooterEnquiry } from './menuFooterEnquiry';
-import { metadata } from './metadata';
 import {
   homePage,
   aboutPage,
@@ -18,6 +6,9 @@ import {
   blogPage,
   contactPage,
 } from './pages';
+
+import { postType } from './documents';
+
 import {
   sectionHeader,
   sectionBlog,
@@ -31,21 +22,36 @@ import {
   sectionCards,
   sectionTestimonial,
 } from './sections';
+
 import {
   callToAction,
   link,
+  card,
   featureItem,
   pricingCard,
   faqItem,
   timelineEvent,
   formField,
-  card,
-  testimonial,
+  formConfiguration,
   timeSlot,
   calendarSettings,
-  formConfiguration,
+  testimonial,
 } from './objects';
-import { menuFooterSocial } from './menuFooterSocial';
+
+import { navigation, navigationItem } from './navigation';
+
+import {
+  footer,
+  footerContact,
+  socialLink,
+  menuFooter,
+  menuFooterAbout,
+  menuFooterContact,
+  menuFooterEnquiry,
+  menuFooterSocial,
+} from './footer';
+
+import { siteSettings, metadata } from './settings';
 
 export const schemaTypes = [
   // Pages
@@ -55,6 +61,9 @@ export const schemaTypes = [
   approachPage,
   blogPage,
   contactPage,
+
+  // Documents
+  postType,
 
   // Sections
   sectionHeader,
@@ -72,19 +81,16 @@ export const schemaTypes = [
   // Objects
   callToAction,
   link,
+  card,
   featureItem,
   pricingCard,
   faqItem,
   timelineEvent,
   formField,
-  card,
-  testimonial,
+  formConfiguration,
   timeSlot,
   calendarSettings,
-  formConfiguration,
-
-  // Content Types
-  postType,
+  testimonial,
 
   // Navigation & Menus
   navigation,
@@ -102,3 +108,11 @@ export const schemaTypes = [
   siteSettings,
   metadata,
 ];
+
+export * from './sections';
+export * from './pages';
+export * from './navigation';
+export * from './footer';
+export * from './settings';
+export * from './objects';
+export * from './documents';

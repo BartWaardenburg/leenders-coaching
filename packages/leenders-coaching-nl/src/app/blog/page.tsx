@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getAllPosts } from '@/graphql/queries';
+import { getAllPosts } from '@/graphql/pages/blog';
 import { SectionHeader } from '@/components/sections/SectionHeader';
 import { SectionCards } from '@/components/sections/SectionCards';
 import { Card } from '@/components/ui/Card';
@@ -15,19 +15,18 @@ const getBlogPageData = async () => {
 /**
  * Generates metadata for the Blog page
  */
-export const generateMetadata = async (): Promise<Metadata> => {
-  const data = await getBlogPageData();
-
+export async function generateMetadata(): Promise<Metadata> {
+  await getBlogPageData();
   return {
     title: 'Blog | Leenders Coaching',
-    description: 'Lees de laatste artikelen over coaching en persoonlijke ontwikkeling.',
+    description: 'Lees de laatste blogs van Leenders Coaching',
   };
-};
+}
 
 /**
  * Blog overview page component
  */
-const BlogPage = async () => {
+export default async function BlogPage() {
   const { posts } = await getBlogPageData();
 
   return (
@@ -52,6 +51,4 @@ const BlogPage = async () => {
       </SectionCards>
     </main>
   );
-};
-
-export default BlogPage;
+}

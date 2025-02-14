@@ -11,27 +11,23 @@ const getCoachingPageData = async () => {
 /**
  * Generates metadata for the Coaching page
  */
-export const generateMetadata = async (): Promise<Metadata> => {
-  const data = await getCoachingPageData();
-
+export async function generateMetadata(): Promise<Metadata> {
+  await getCoachingPageData();
   return {
     title: 'Coaching | Leenders Coaching',
-    description: 'Ontdek mijn coaching diensten en hoe ik je kan helpen.',
+    description: 'Ontdek de coaching mogelijkheden van Leenders Coaching',
   };
-};
+}
 
 /**
  * Coaching page component
  */
-const CoachingPage = async () => {
-  const data = await getCoachingPageData();
-
+export default async function CoachingPage() {
+  await getCoachingPageData();
   return (
     <main>
       {/* TODO: Implement page sections based on data */}
       <h1>Coaching</h1>
     </main>
   );
-};
-
-export default CoachingPage; 
+} 

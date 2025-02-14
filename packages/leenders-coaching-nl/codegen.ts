@@ -5,25 +5,26 @@ loadEnvConfig(process.cwd());
 
 const config: CodegenConfig = {
   schema: `https://${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}.api.sanity.io/v1/graphql/${process.env.NEXT_PUBLIC_SANITY_DATASET}/default`,
-  documents: ['src/**/*.tsx', 'src/**/*.ts'],
+  documents: ['src/**/*.{ts,tsx}'],
   generates: {
     './src/graphql/generated/': {
       preset: 'client',
-      plugins: [],
-      presetConfig: {
-        gqlTagName: 'gql',
+      config: {
+        useTypeImports: true,
+        scalars: {
+          Date: 'string',
+          DateTime: 'string',
+          JSON: '{ [key: string]: any }',
+        },
+        dedupeFragments: true,
       },
     },
     './src/graphql/generated/schema.json': {
       plugins: ['introspection'],
     },
-    './src/graphql/generated/types.ts': {
-      plugins: ['typescript', 'typescript-operations'],
-      config: {
-        dedupeFragments: true,
-        pureMagicComment: true,
-      },
-    },
+  },
+  hooks: {
+    afterAllFileWrite: ['prettier --write'],
   },
   ignoreNoDocuments: true,
 };

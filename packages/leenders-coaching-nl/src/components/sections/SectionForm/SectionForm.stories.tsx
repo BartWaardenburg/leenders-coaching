@@ -70,7 +70,7 @@ const FormContent = () => (
       name="message"
       placeholder="Your message"
     />
-    <Button type="submit" variant="blue" fullWidthOnMobile>
+    <Button type="submit" variant="blue" fullWidthOnContainer>
       Submit
     </Button>
   </Stack>

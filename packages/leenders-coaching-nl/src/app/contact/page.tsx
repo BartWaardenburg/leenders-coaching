@@ -12,21 +12,19 @@ const getContactPageData = async () => {
 /**
  * Generates metadata for the Contact page
  */
-export const generateMetadata = async (): Promise<Metadata> => {
-  const data = await getContactPageData();
-
+export async function generateMetadata(): Promise<Metadata> {
+  await getContactPageData();
   return {
     title: 'Contact | Leenders Coaching',
-    description: 'Neem contact op voor een vrijblijvend gesprek over coaching.',
+    description: 'Neem contact op met Leenders Coaching',
   };
-};
+}
 
 /**
  * Contact page component
  */
-const ContactPage = async () => {
-  const data = await getContactPageData();
-
+export default async function ContactPage() {
+  await getContactPageData();
   return (
     <main>
       <SectionForm
@@ -37,6 +35,4 @@ const ContactPage = async () => {
       />
     </main>
   );
-};
-
-export default ContactPage;
+}

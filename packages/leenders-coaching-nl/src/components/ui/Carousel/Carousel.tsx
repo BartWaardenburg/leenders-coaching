@@ -145,7 +145,7 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={1}
                 style={{ x }}
-                onDragEnd={(_, { offset, velocity }) => {
+                onDragEnd={(_: MouseEvent | TouchEvent | PointerEvent, { offset, velocity }: { offset: { x: number; y: number }; velocity: { x: number; y: number } }) => {
                   const swipe = swipePower(offset.x, velocity.x);
 
                   if (swipe < -swipeConfidenceThreshold) {

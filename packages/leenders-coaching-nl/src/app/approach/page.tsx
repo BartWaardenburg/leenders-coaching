@@ -11,27 +11,23 @@ const getApproachPageData = async () => {
 /**
  * Generates metadata for the Approach page
  */
-export const generateMetadata = async (): Promise<Metadata> => {
-  const data = await getApproachPageData();
-
+export async function generateMetadata(): Promise<Metadata> {
+  await getApproachPageData();
   return {
     title: 'Aanpak | Leenders Coaching',
-    description: 'Ontdek mijn unieke aanpak en methodologie voor coaching.',
+    description: 'Ontdek de aanpak van Leenders Coaching',
   };
-};
+}
 
 /**
  * Approach page component
  */
-const ApproachPage = async () => {
-  const data = await getApproachPageData();
-
+export default async function ApproachPage() {
+  await getApproachPageData();
   return (
     <main>
       {/* TODO: Implement page sections based on data */}
       <h1>Aanpak</h1>
     </main>
   );
-};
-
-export default ApproachPage; 
+} 

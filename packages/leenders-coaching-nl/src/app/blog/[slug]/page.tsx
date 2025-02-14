@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getPost } from '@/graphql/queries';
+import { getPost } from '@/graphql/pages/blog';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 
@@ -72,13 +72,6 @@ const BlogPostPage = async ({ params }: BlogPostPageProps) => {
             />
           </div>
         )}
-        <time dateTime={post.publishedAt} className="text-muted-foreground block mb-8">
-          {new Date(post.publishedAt).toLocaleDateString('nl-NL', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          })}
-        </time>
         <div className="mt-8">
           {/* TODO: Implement rich text rendering */}
           {post.description}

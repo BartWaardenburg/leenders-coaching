@@ -1,9 +1,17 @@
 import type { Metadata } from 'next';
-import { getAboutPage } from '@/graphql/queries';
 import { notFound } from 'next/navigation';
-import { SectionMapper } from '@/components/sections/SectionMapper';
-import type { Section } from '@/components/sections/SectionMapper';
-import type { Maybe } from '@/graphql/generated/graphql';
+import { graphqlClient } from '@/graphql/client';
+import { AboutPageDocument } from '@/graphql/generated/graphql';
+import type { AboutPageQuery } from '@/graphql/generated/graphql';
+
+/**
+ * Fetches about page data using the generated GraphQL client.
+ * @returns Promise resolving to the about page data or null.
+ */
+const getAboutPage = async () => {
+  const response = await graphqlClient.request<AboutPageQuery>(AboutPageDocument);
+  return response.allAboutPage[0] ?? null;
+};
 
 /* Generate metadata from Sanity data */
 export async function generateMetadata(): Promise<Metadata> {
@@ -17,52 +25,37 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 
   const { metadata } = aboutPage;
-
   return {
     title: metadata.title || 'About - Leenders Coaching',
     description: metadata.description || undefined,
-    keywords: metadata.keywords?.filter((keyword): keyword is string => Boolean(keyword)) || undefined,
-    openGraph: metadata.image?.asset?.url ? {
-      images: [{
-        url: metadata.image.asset.url,
-        alt: metadata.image.asset.altText || ''
-      }],
-    } : undefined,
+    keywords: metadata.keywords?.filter((keyword): keyword is string => keyword !== null) || undefined,
+    openGraph: metadata.image?.asset?.url
+      ? {
+        images: [{
+          url: metadata.image.asset.url,
+          alt: metadata.image.asset.altText || ''
+        }],
+      }
+      : undefined,
   };
 }
 
 /**
- * About page with information about the coach and approach
+ * AboutPage component
  */
 export default async function AboutPage() {
   const aboutPage = await getAboutPage();
-
   if (!aboutPage) {
     notFound();
   }
 
-  console.log('Raw aboutPage:', JSON.stringify(aboutPage, null, 2));
+  console.log(aboutPage)
 
-  const sections = aboutPage.sections?.map((section): Maybe<Section> => {
-    if (!section) return null;
-    if (section._type === 'sectionHeader' || section._type === 'sectionContent' || section._type === 'sectionCards') {
-      const mappedSection = {
-        ...section,
-        _key: section._key ?? '',
-        title: section.title ?? '',
-        displayTitle: section.displayTitle ?? undefined,
-        description: 'description' in section ? section.description : undefined,
-        background: undefined,
-        showBorder: undefined,
-        maxWidth: undefined,
-      } as Section;
-      console.log('Mapped section:', JSON.stringify(mappedSection, null, 2));
-      return mappedSection;
-    }
-    return null;
-  }) ?? null;
-
-  console.log('Final sections:', JSON.stringify(sections, null, 2));
-
-  return <SectionMapper sections={sections} />;
+  return (
+    <div>
+      {/* TODO: Implement page sections rendering */}
+      <h1>{aboutPage.title}</h1>
+      {/* Add section rendering logic here */}
+    </div>
+  );
 }

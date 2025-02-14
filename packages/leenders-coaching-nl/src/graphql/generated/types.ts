@@ -1,20 +1,33 @@
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
+export type MakeEmpty<
+  T extends { [key: string]: unknown },
+  K extends keyof T,
+> = { [_ in K]?: never };
+export type Incremental<T> =
+  | T
+  | {
+      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
+    };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-  Date: { input: any; output: any; }
-  DateTime: { input: any; output: any; }
-  JSON: { input: any; output: any; }
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  Date: { input: string; output: string };
+  DateTime: { input: string; output: string };
+  JSON: { input: { [key: string]: any }; output: { [key: string]: any } };
 };
 
 export type AboutPage = Document & {
@@ -31,7 +44,11 @@ export type AboutPage = Document & {
   /** Date the document was last modified */
   _updatedAt?: Maybe<Scalars['DateTime']['output']>;
   metadata?: Maybe<Metadata>;
-  sections?: Maybe<Array<Maybe<SectionBlogOrSectionCalendarOrSectionCardsOrSectionContentOrSectionFaqOrSectionFeaturedOrSectionFormOrSectionHeaderOrSectionPricingOrSectionTestimonialOrSectionTimeline>>>;
+  sections?: Maybe<
+    Array<
+      Maybe<SectionBlogOrSectionCalendarOrSectionCardsOrSectionContentOrSectionFaqOrSectionFeaturedOrSectionFormOrSectionHeaderOrSectionPricingOrSectionTestimonialOrSectionTimeline>
+    >
+  >;
   slug?: Maybe<Slug>;
   title?: Maybe<Scalars['String']['output']>;
 };
@@ -76,7 +93,11 @@ export type ApproachPage = Document & {
   /** Date the document was last modified */
   _updatedAt?: Maybe<Scalars['DateTime']['output']>;
   metadata?: Maybe<Metadata>;
-  sections?: Maybe<Array<Maybe<SectionBlogOrSectionCalendarOrSectionCardsOrSectionContentOrSectionFaqOrSectionFeaturedOrSectionFormOrSectionHeaderOrSectionPricingOrSectionTestimonialOrSectionTimeline>>>;
+  sections?: Maybe<
+    Array<
+      Maybe<SectionBlogOrSectionCalendarOrSectionCardsOrSectionContentOrSectionFaqOrSectionFeaturedOrSectionFormOrSectionHeaderOrSectionPricingOrSectionTestimonialOrSectionTimeline>
+    >
+  >;
   slug?: Maybe<Slug>;
   title?: Maybe<Scalars['String']['output']>;
 };
@@ -133,7 +154,11 @@ export type BlogPage = Document & {
   /** Date the document was last modified */
   _updatedAt?: Maybe<Scalars['DateTime']['output']>;
   metadata?: Maybe<Metadata>;
-  sections?: Maybe<Array<Maybe<SectionBlogOrSectionCalendarOrSectionCardsOrSectionContentOrSectionFaqOrSectionFeaturedOrSectionFormOrSectionHeaderOrSectionPricingOrSectionTestimonialOrSectionTimeline>>>;
+  sections?: Maybe<
+    Array<
+      Maybe<SectionBlogOrSectionCalendarOrSectionCardsOrSectionContentOrSectionFaqOrSectionFeaturedOrSectionFormOrSectionHeaderOrSectionPricingOrSectionTestimonialOrSectionTimeline>
+    >
+  >;
   slug?: Maybe<Slug>;
   title?: Maybe<Scalars['String']['output']>;
 };
@@ -259,7 +284,11 @@ export type CoachingPage = Document & {
   /** Date the document was last modified */
   _updatedAt?: Maybe<Scalars['DateTime']['output']>;
   metadata?: Maybe<Metadata>;
-  sections?: Maybe<Array<Maybe<SectionBlogOrSectionCalendarOrSectionCardsOrSectionContentOrSectionFaqOrSectionFeaturedOrSectionFormOrSectionHeaderOrSectionPricingOrSectionTestimonialOrSectionTimeline>>>;
+  sections?: Maybe<
+    Array<
+      Maybe<SectionBlogOrSectionCalendarOrSectionCardsOrSectionContentOrSectionFaqOrSectionFeaturedOrSectionFormOrSectionHeaderOrSectionPricingOrSectionTestimonialOrSectionTimeline>
+    >
+  >;
   slug?: Maybe<Slug>;
   title?: Maybe<Scalars['String']['output']>;
 };
@@ -304,7 +333,11 @@ export type ContactPage = Document & {
   /** Date the document was last modified */
   _updatedAt?: Maybe<Scalars['DateTime']['output']>;
   metadata?: Maybe<Metadata>;
-  sections?: Maybe<Array<Maybe<SectionBlogOrSectionCalendarOrSectionCardsOrSectionContentOrSectionFaqOrSectionFeaturedOrSectionFormOrSectionHeaderOrSectionPricingOrSectionTestimonialOrSectionTimeline>>>;
+  sections?: Maybe<
+    Array<
+      Maybe<SectionBlogOrSectionCalendarOrSectionCardsOrSectionContentOrSectionFaqOrSectionFeaturedOrSectionFormOrSectionHeaderOrSectionPricingOrSectionTestimonialOrSectionTimeline>
+    >
+  >;
   slug?: Maybe<Slug>;
   title?: Maybe<Scalars['String']['output']>;
 };
@@ -670,7 +703,11 @@ export type HomePage = Document & {
   /** Date the document was last modified */
   _updatedAt?: Maybe<Scalars['DateTime']['output']>;
   metadata?: Maybe<Metadata>;
-  sections?: Maybe<Array<Maybe<SectionBlogOrSectionCalendarOrSectionCardsOrSectionContentOrSectionFaqOrSectionFeaturedOrSectionFormOrSectionHeaderOrSectionPricingOrSectionTestimonialOrSectionTimeline>>>;
+  sections?: Maybe<
+    Array<
+      Maybe<SectionBlogOrSectionCalendarOrSectionCardsOrSectionContentOrSectionFaqOrSectionFeaturedOrSectionFormOrSectionHeaderOrSectionPricingOrSectionTestimonialOrSectionTimeline>
+    >
+  >;
   slug?: Maybe<Slug>;
   title?: Maybe<Scalars['String']['output']>;
 };
@@ -1150,131 +1187,105 @@ export type RootQuery = {
   allSiteSettings: Array<SiteSettings>;
 };
 
-
 export type RootQueryAboutPageArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type RootQueryApproachPageArgs = {
   id: Scalars['ID']['input'];
 };
 
-
 export type RootQueryBlogPageArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type RootQueryCoachingPageArgs = {
   id: Scalars['ID']['input'];
 };
 
-
 export type RootQueryContactPageArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type RootQueryDocumentArgs = {
   id: Scalars['ID']['input'];
 };
 
-
 export type RootQueryFooterArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type RootQueryHomePageArgs = {
   id: Scalars['ID']['input'];
 };
 
-
 export type RootQueryMenuFooterArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type RootQueryNavigationArgs = {
   id: Scalars['ID']['input'];
 };
 
-
 export type RootQueryPostArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type RootQuerySanityFileAssetArgs = {
   id: Scalars['ID']['input'];
 };
 
-
 export type RootQuerySanityImageAssetArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type RootQuerySectionBlogArgs = {
   id: Scalars['ID']['input'];
 };
 
-
 export type RootQuerySectionCalendarArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type RootQuerySectionCardsArgs = {
   id: Scalars['ID']['input'];
 };
 
-
 export type RootQuerySectionContentArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type RootQuerySectionFaqArgs = {
   id: Scalars['ID']['input'];
 };
 
-
 export type RootQuerySectionFeaturedArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type RootQuerySectionFormArgs = {
   id: Scalars['ID']['input'];
 };
 
-
 export type RootQuerySectionHeaderArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type RootQuerySectionPricingArgs = {
   id: Scalars['ID']['input'];
 };
 
-
 export type RootQuerySectionTestimonialArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type RootQuerySectionTimelineArgs = {
   id: Scalars['ID']['input'];
 };
 
-
 export type RootQuerySiteSettingsArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type RootQueryAllAboutPageArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1283,14 +1294,12 @@ export type RootQueryAllAboutPageArgs = {
   where?: InputMaybe<AboutPageFilter>;
 };
 
-
 export type RootQueryAllApproachPageArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<ApproachPageSorting>>;
   where?: InputMaybe<ApproachPageFilter>;
 };
-
 
 export type RootQueryAllBlogPageArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1299,14 +1308,12 @@ export type RootQueryAllBlogPageArgs = {
   where?: InputMaybe<BlogPageFilter>;
 };
 
-
 export type RootQueryAllCoachingPageArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<CoachingPageSorting>>;
   where?: InputMaybe<CoachingPageFilter>;
 };
-
 
 export type RootQueryAllContactPageArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1315,14 +1322,12 @@ export type RootQueryAllContactPageArgs = {
   where?: InputMaybe<ContactPageFilter>;
 };
 
-
 export type RootQueryAllDocumentArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<DocumentSorting>>;
   where?: InputMaybe<DocumentFilter>;
 };
-
 
 export type RootQueryAllFooterArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1331,14 +1336,12 @@ export type RootQueryAllFooterArgs = {
   where?: InputMaybe<FooterFilter>;
 };
 
-
 export type RootQueryAllHomePageArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<HomePageSorting>>;
   where?: InputMaybe<HomePageFilter>;
 };
-
 
 export type RootQueryAllMenuFooterArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1347,14 +1350,12 @@ export type RootQueryAllMenuFooterArgs = {
   where?: InputMaybe<MenuFooterFilter>;
 };
 
-
 export type RootQueryAllNavigationArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<NavigationSorting>>;
   where?: InputMaybe<NavigationFilter>;
 };
-
 
 export type RootQueryAllPostArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1363,14 +1364,12 @@ export type RootQueryAllPostArgs = {
   where?: InputMaybe<PostFilter>;
 };
 
-
 export type RootQueryAllSanityFileAssetArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<SanityFileAssetSorting>>;
   where?: InputMaybe<SanityFileAssetFilter>;
 };
-
 
 export type RootQueryAllSanityImageAssetArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1379,14 +1378,12 @@ export type RootQueryAllSanityImageAssetArgs = {
   where?: InputMaybe<SanityImageAssetFilter>;
 };
 
-
 export type RootQueryAllSectionBlogArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<SectionBlogSorting>>;
   where?: InputMaybe<SectionBlogFilter>;
 };
-
 
 export type RootQueryAllSectionCalendarArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1395,14 +1392,12 @@ export type RootQueryAllSectionCalendarArgs = {
   where?: InputMaybe<SectionCalendarFilter>;
 };
 
-
 export type RootQueryAllSectionCardsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<SectionCardsSorting>>;
   where?: InputMaybe<SectionCardsFilter>;
 };
-
 
 export type RootQueryAllSectionContentArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1411,14 +1406,12 @@ export type RootQueryAllSectionContentArgs = {
   where?: InputMaybe<SectionContentFilter>;
 };
 
-
 export type RootQueryAllSectionFaqArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<SectionFaqSorting>>;
   where?: InputMaybe<SectionFaqFilter>;
 };
-
 
 export type RootQueryAllSectionFeaturedArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1427,14 +1420,12 @@ export type RootQueryAllSectionFeaturedArgs = {
   where?: InputMaybe<SectionFeaturedFilter>;
 };
 
-
 export type RootQueryAllSectionFormArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<SectionFormSorting>>;
   where?: InputMaybe<SectionFormFilter>;
 };
-
 
 export type RootQueryAllSectionHeaderArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1443,14 +1434,12 @@ export type RootQueryAllSectionHeaderArgs = {
   where?: InputMaybe<SectionHeaderFilter>;
 };
 
-
 export type RootQueryAllSectionPricingArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<SectionPricingSorting>>;
   where?: InputMaybe<SectionPricingFilter>;
 };
-
 
 export type RootQueryAllSectionTestimonialArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1459,14 +1448,12 @@ export type RootQueryAllSectionTestimonialArgs = {
   where?: InputMaybe<SectionTestimonialFilter>;
 };
 
-
 export type RootQueryAllSectionTimelineArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<SectionTimelineSorting>>;
   where?: InputMaybe<SectionTimelineFilter>;
 };
-
 
 export type RootQueryAllSiteSettingsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1898,7 +1885,19 @@ export type SectionBlogFilter = {
   title?: InputMaybe<StringFilter>;
 };
 
-export type SectionBlogOrSectionCalendarOrSectionCardsOrSectionContentOrSectionFaqOrSectionFeaturedOrSectionFormOrSectionHeaderOrSectionPricingOrSectionTestimonialOrSectionTimeline = SectionBlog | SectionCalendar | SectionCards | SectionContent | SectionFaq | SectionFeatured | SectionForm | SectionHeader | SectionPricing | SectionTestimonial | SectionTimeline;
+export type SectionBlogOrSectionCalendarOrSectionCardsOrSectionContentOrSectionFaqOrSectionFeaturedOrSectionFormOrSectionHeaderOrSectionPricingOrSectionTestimonialOrSectionTimeline =
+
+    | SectionBlog
+    | SectionCalendar
+    | SectionCards
+    | SectionContent
+    | SectionFaq
+    | SectionFeatured
+    | SectionForm
+    | SectionHeader
+    | SectionPricing
+    | SectionTestimonial
+    | SectionTimeline;
 
 export type SectionBlogSorting = {
   _createdAt?: InputMaybe<SortOrder>;
@@ -2604,12 +2603,11 @@ export type SocialLinkSorting = {
   url?: InputMaybe<SortOrder>;
 };
 
-export enum SortOrder {
+export type SortOrder =
   /** Sorts on the value in ascending order. */
-  Asc = 'ASC',
+  | 'ASC'
   /** Sorts on the value in descending order. */
-  Desc = 'DESC'
-}
+  | 'DESC';
 
 export type Span = {
   __typename?: 'Span';
@@ -2707,39 +2705,723 @@ export type TimelineEventSorting = {
   title?: InputMaybe<SortOrder>;
 };
 
-export type SiteSettingsQueryVariables = Exact<{ [key: string]: never; }>;
+export type AboutPageQueryVariables = Exact<{ [key: string]: never }>;
 
+export type AboutPageQuery = {
+  __typename?: 'RootQuery';
+  allAboutPage: Array<{
+    __typename?: 'AboutPage';
+    _id?: string | null;
+    title?: string | null;
+    sections?: Array<
+      | {
+          __typename: 'SectionBlog';
+          _key?: string | null;
+          _type?: string | null;
+          title?: string | null;
+          displayTitle?: string | null;
+          subtitle?: string | null;
+          background?: string | null;
+          maxWidth?: string | null;
+          showBorder?: boolean | null;
+          postsToShow?: number | null;
+          showFeaturedOnly?: boolean | null;
+          sortOrder?: string | null;
+        }
+      | {
+          __typename: 'SectionCalendar';
+          _key?: string | null;
+          _type?: string | null;
+          title?: string | null;
+          displayTitle?: string | null;
+          subtitle?: string | null;
+          background?: string | null;
+          maxWidth?: string | null;
+          showBorder?: boolean | null;
+          description?: string | null;
+          settings?: {
+            __typename?: 'CalendarSettings';
+            availableDays?: Array<string | null> | null;
+            excludedDates?: Array<string | null> | null;
+            availableTimeSlots?: Array<{
+              __typename?: 'TimeSlot';
+              _key?: string | null;
+              startTime?: string | null;
+              endTime?: string | null;
+            } | null> | null;
+          } | null;
+        }
+      | {
+          __typename: 'SectionCards';
+          _key?: string | null;
+          _type?: string | null;
+          title?: string | null;
+          displayTitle?: string | null;
+          subtitle?: string | null;
+          background?: string | null;
+          maxWidth?: string | null;
+          showBorder?: boolean | null;
+          cards?: Array<{
+            __typename?: 'Card';
+            _key?: string | null;
+            title?: string | null;
+            description?: string | null;
+            image?: {
+              __typename?: 'Image';
+              asset?: {
+                __typename?: 'SanityImageAsset';
+                url?: string | null;
+                metadata?: {
+                  __typename?: 'SanityImageMetadata';
+                  dimensions?: {
+                    __typename?: 'SanityImageDimensions';
+                    width?: number | null;
+                    height?: number | null;
+                  } | null;
+                } | null;
+              } | null;
+            } | null;
+            link?: {
+              __typename?: 'Link';
+              text?: string | null;
+              url?: string | null;
+            } | null;
+          } | null> | null;
+        }
+      | {
+          __typename: 'SectionContent';
+          _key?: string | null;
+          _type?: string | null;
+          title?: string | null;
+          displayTitle?: string | null;
+          contentRaw?: { [key: string]: any } | null;
+          background?: string | null;
+          maxWidth?: string | null;
+          showBorder?: boolean | null;
+        }
+      | {
+          __typename: 'SectionFAQ';
+          _key?: string | null;
+          _type?: string | null;
+          title?: string | null;
+          displayTitle?: string | null;
+          subtitle?: string | null;
+          background?: string | null;
+          maxWidth?: string | null;
+          showBorder?: boolean | null;
+          questions?: Array<{
+            __typename?: 'FaqItem';
+            _key?: string | null;
+            question?: string | null;
+            answer?: string | null;
+          } | null> | null;
+        }
+      | {
+          __typename: 'SectionFeatured';
+          _key?: string | null;
+          _type?: string | null;
+          title?: string | null;
+          displayTitle?: string | null;
+          subtitle?: string | null;
+          background?: string | null;
+          maxWidth?: string | null;
+          showBorder?: boolean | null;
+          items?: Array<{
+            __typename?: 'FeatureItem';
+            _key?: string | null;
+            title?: string | null;
+            description?: string | null;
+            image?: {
+              __typename?: 'Image';
+              asset?: {
+                __typename?: 'SanityImageAsset';
+                url?: string | null;
+                metadata?: {
+                  __typename?: 'SanityImageMetadata';
+                  dimensions?: {
+                    __typename?: 'SanityImageDimensions';
+                    width?: number | null;
+                    height?: number | null;
+                  } | null;
+                } | null;
+              } | null;
+            } | null;
+          } | null> | null;
+        }
+      | {
+          __typename: 'SectionForm';
+          _key?: string | null;
+          _type?: string | null;
+          title?: string | null;
+          displayTitle?: string | null;
+          subtitle?: string | null;
+          background?: string | null;
+          maxWidth?: string | null;
+          showBorder?: boolean | null;
+          form?: {
+            __typename?: 'FormConfiguration';
+            submitLabel?: string | null;
+            successMessage?: string | null;
+            errorMessage?: string | null;
+          } | null;
+        }
+      | {
+          __typename: 'SectionHeader';
+          _key?: string | null;
+          _type?: string | null;
+          title?: string | null;
+          displayTitle?: string | null;
+          subtitle?: string | null;
+          background?: string | null;
+          maxWidth?: string | null;
+          showBorder?: boolean | null;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              url?: string | null;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number | null;
+                  height?: number | null;
+                } | null;
+              } | null;
+            } | null;
+          } | null;
+          cta?: {
+            __typename?: 'CallToAction';
+            text?: string | null;
+            link?: string | null;
+            variant?: string | null;
+          } | null;
+        }
+      | {
+          __typename: 'SectionPricing';
+          _key?: string | null;
+          _type?: string | null;
+          title?: string | null;
+          displayTitle?: string | null;
+          subtitle?: string | null;
+          background?: string | null;
+          maxWidth?: string | null;
+          showBorder?: boolean | null;
+          pricingCards?: Array<{
+            __typename?: 'PricingCard';
+            _key?: string | null;
+            title?: string | null;
+            price?: string | null;
+            description?: string | null;
+            features?: Array<string | null> | null;
+            isPopular?: boolean | null;
+            variant?: string | null;
+            cta?: {
+              __typename?: 'CallToAction';
+              text?: string | null;
+              link?: string | null;
+              variant?: string | null;
+            } | null;
+          } | null> | null;
+        }
+      | { __typename: 'SectionTestimonial' }
+      | { __typename: 'SectionTimeline' }
+      | null
+    > | null;
+    metadata?: {
+      __typename?: 'Metadata';
+      title?: string | null;
+      description?: string | null;
+      keywords?: Array<string | null> | null;
+      image?: {
+        __typename?: 'Image';
+        asset?: {
+          __typename?: 'SanityImageAsset';
+          url?: string | null;
+          altText?: string | null;
+        } | null;
+      } | null;
+    } | null;
+  }>;
+};
 
-export type SiteSettingsQuery = { __typename?: 'RootQuery', allSiteSettings: Array<{ __typename?: 'SiteSettings', title?: string | null, description?: string | null, keywords?: Array<string | null> | null, defaultMetaImage?: { __typename?: 'Image', asset?: { __typename?: 'SanityImageAsset', url?: string | null, altText?: string | null } | null } | null }> };
+type SectionBase_SectionBlog_Fragment = {
+  __typename?: 'SectionBlog';
+  _key?: string | null;
+  _type?: string | null;
+  title?: string | null;
+  displayTitle?: string | null;
+  description?: string | null;
+  background?: string | null;
+  maxWidth?: string | null;
+  showBorder?: boolean | null;
+};
 
-export type AllPostsQueryVariables = Exact<{ [key: string]: never; }>;
+type SectionBase_SectionCalendar_Fragment = {
+  __typename?: 'SectionCalendar';
+  _key?: string | null;
+  _type?: string | null;
+  title?: string | null;
+  displayTitle?: string | null;
+  description?: string | null;
+  background?: string | null;
+  maxWidth?: string | null;
+  showBorder?: boolean | null;
+};
 
+type SectionBase_SectionCards_Fragment = {
+  __typename?: 'SectionCards';
+  _key?: string | null;
+  _type?: string | null;
+  title?: string | null;
+  displayTitle?: string | null;
+  description?: string | null;
+  background?: string | null;
+  maxWidth?: string | null;
+  showBorder?: boolean | null;
+};
 
-export type AllPostsQuery = { __typename?: 'RootQuery', allPost: Array<{ __typename?: 'Post', _id?: string | null, title?: string | null, description?: string | null, publishedAt?: any | null, categories?: Array<string | null> | null, featured?: boolean | null, variant?: string | null, slug?: { __typename?: 'Slug', current?: string | null } | null, image?: { __typename?: 'Image', asset?: { __typename?: 'SanityImageAsset', url?: string | null, metadata?: { __typename?: 'SanityImageMetadata', dimensions?: { __typename?: 'SanityImageDimensions', width?: number | null, height?: number | null } | null } | null } | null } | null }> };
+type SectionBase_SectionContent_Fragment = {
+  __typename?: 'SectionContent';
+  _key?: string | null;
+  _type?: string | null;
+  title?: string | null;
+  displayTitle?: string | null;
+  contentRaw?: { [key: string]: any } | null;
+  background?: string | null;
+  maxWidth?: string | null;
+  showBorder?: boolean | null;
+};
+
+type SectionBase_SectionFaq_Fragment = {
+  __typename?: 'SectionFAQ';
+  _key?: string | null;
+  _type?: string | null;
+  title?: string | null;
+  displayTitle?: string | null;
+  description?: string | null;
+  background?: string | null;
+  maxWidth?: string | null;
+  showBorder?: boolean | null;
+};
+
+type SectionBase_SectionFeatured_Fragment = {
+  __typename?: 'SectionFeatured';
+  _key?: string | null;
+  _type?: string | null;
+  title?: string | null;
+  displayTitle?: string | null;
+  description?: string | null;
+  background?: string | null;
+  maxWidth?: string | null;
+  showBorder?: boolean | null;
+};
+
+type SectionBase_SectionForm_Fragment = {
+  __typename?: 'SectionForm';
+  _key?: string | null;
+  _type?: string | null;
+  title?: string | null;
+  displayTitle?: string | null;
+  description?: string | null;
+  background?: string | null;
+  maxWidth?: string | null;
+  showBorder?: boolean | null;
+};
+
+type SectionBase_SectionHeader_Fragment = {
+  __typename?: 'SectionHeader';
+  _key?: string | null;
+  _type?: string | null;
+  title?: string | null;
+  displayTitle?: string | null;
+  description?: string | null;
+  background?: string | null;
+  maxWidth?: string | null;
+  showBorder?: boolean | null;
+};
+
+type SectionBase_SectionPricing_Fragment = {
+  __typename?: 'SectionPricing';
+  _key?: string | null;
+  _type?: string | null;
+  title?: string | null;
+  displayTitle?: string | null;
+  description?: string | null;
+  background?: string | null;
+  maxWidth?: string | null;
+  showBorder?: boolean | null;
+};
+
+type SectionBase_SectionTestimonial_Fragment = {
+  __typename?: 'SectionTestimonial';
+  _key?: string | null;
+  _type?: string | null;
+  title?: string | null;
+  displayTitle?: string | null;
+  description?: string | null;
+  background?: string | null;
+  maxWidth?: string | null;
+  showBorder?: boolean | null;
+};
+
+type SectionBase_SectionTimeline_Fragment = {
+  __typename?: 'SectionTimeline';
+  _key?: string | null;
+  _type?: string | null;
+  title?: string | null;
+  displayTitle?: string | null;
+  description?: string | null;
+  background?: string | null;
+  maxWidth?: string | null;
+  showBorder?: boolean | null;
+};
+
+export type SectionBaseFragment =
+  | SectionBase_SectionBlog_Fragment
+  | SectionBase_SectionCalendar_Fragment
+  | SectionBase_SectionCards_Fragment
+  | SectionBase_SectionContent_Fragment
+  | SectionBase_SectionFaq_Fragment
+  | SectionBase_SectionFeatured_Fragment
+  | SectionBase_SectionForm_Fragment
+  | SectionBase_SectionHeader_Fragment
+  | SectionBase_SectionPricing_Fragment
+  | SectionBase_SectionTestimonial_Fragment
+  | SectionBase_SectionTimeline_Fragment;
+
+export type SectionBlogFragment = {
+  __typename?: 'SectionBlog';
+  postsToShow?: number | null;
+  showFeaturedOnly?: boolean | null;
+  sortOrder?: string | null;
+  _key?: string | null;
+  _type?: string | null;
+  title?: string | null;
+  displayTitle?: string | null;
+  description?: string | null;
+  background?: string | null;
+  maxWidth?: string | null;
+  showBorder?: boolean | null;
+};
+
+export type SectionCardsFragment = {
+  __typename?: 'SectionCards';
+  _key?: string | null;
+  _type?: string | null;
+  title?: string | null;
+  displayTitle?: string | null;
+  description?: string | null;
+  background?: string | null;
+  maxWidth?: string | null;
+  showBorder?: boolean | null;
+  cards?: Array<{
+    __typename?: 'Card';
+    _key?: string | null;
+    title?: string | null;
+    description?: string | null;
+    image?: {
+      __typename?: 'Image';
+      asset?: {
+        __typename?: 'SanityImageAsset';
+        url?: string | null;
+        metadata?: {
+          __typename?: 'SanityImageMetadata';
+          dimensions?: {
+            __typename?: 'SanityImageDimensions';
+            width?: number | null;
+            height?: number | null;
+          } | null;
+        } | null;
+      } | null;
+    } | null;
+    link?: {
+      __typename?: 'Link';
+      text?: string | null;
+      url?: string | null;
+    } | null;
+  } | null> | null;
+};
+
+export type SectionFeaturedFragment = {
+  __typename?: 'SectionFeatured';
+  _key?: string | null;
+  _type?: string | null;
+  title?: string | null;
+  displayTitle?: string | null;
+  description?: string | null;
+  background?: string | null;
+  maxWidth?: string | null;
+  showBorder?: boolean | null;
+  items?: Array<{
+    __typename?: 'FeatureItem';
+    _key?: string | null;
+    title?: string | null;
+    description?: string | null;
+    image?: {
+      __typename?: 'Image';
+      asset?: {
+        __typename?: 'SanityImageAsset';
+        url?: string | null;
+        metadata?: {
+          __typename?: 'SanityImageMetadata';
+          dimensions?: {
+            __typename?: 'SanityImageDimensions';
+            width?: number | null;
+            height?: number | null;
+          } | null;
+        } | null;
+      } | null;
+    } | null;
+  } | null> | null;
+};
+
+export type SectionFormFragment = {
+  __typename?: 'SectionForm';
+  _key?: string | null;
+  _type?: string | null;
+  title?: string | null;
+  displayTitle?: string | null;
+  description?: string | null;
+  background?: string | null;
+  maxWidth?: string | null;
+  showBorder?: boolean | null;
+  form?: {
+    __typename?: 'FormConfiguration';
+    submitLabel?: string | null;
+    successMessage?: string | null;
+    errorMessage?: string | null;
+  } | null;
+};
+
+export type SectionHeaderFragment = {
+  __typename?: 'SectionHeader';
+  _key?: string | null;
+  _type?: string | null;
+  title?: string | null;
+  displayTitle?: string | null;
+  description?: string | null;
+  background?: string | null;
+  maxWidth?: string | null;
+  showBorder?: boolean | null;
+  image?: {
+    __typename?: 'Image';
+    asset?: {
+      __typename?: 'SanityImageAsset';
+      url?: string | null;
+      metadata?: {
+        __typename?: 'SanityImageMetadata';
+        dimensions?: {
+          __typename?: 'SanityImageDimensions';
+          width?: number | null;
+          height?: number | null;
+        } | null;
+      } | null;
+    } | null;
+  } | null;
+  cta?: {
+    __typename?: 'CallToAction';
+    text?: string | null;
+    link?: string | null;
+    variant?: string | null;
+  } | null;
+};
+
+export type SectionPricingFragment = {
+  __typename?: 'SectionPricing';
+  _key?: string | null;
+  _type?: string | null;
+  title?: string | null;
+  displayTitle?: string | null;
+  description?: string | null;
+  background?: string | null;
+  maxWidth?: string | null;
+  showBorder?: boolean | null;
+  pricingCards?: Array<{
+    __typename?: 'PricingCard';
+    _key?: string | null;
+    title?: string | null;
+    price?: string | null;
+    description?: string | null;
+    features?: Array<string | null> | null;
+    isPopular?: boolean | null;
+    variant?: string | null;
+    cta?: {
+      __typename?: 'CallToAction';
+      text?: string | null;
+      link?: string | null;
+      variant?: string | null;
+    } | null;
+  } | null> | null;
+};
+
+export type AllPostsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type AllPostsQuery = {
+  __typename?: 'RootQuery';
+  allPost: Array<{
+    __typename?: 'Post';
+    _id?: string | null;
+    title?: string | null;
+    description?: string | null;
+    publishedAt?: string | null;
+    categories?: Array<string | null> | null;
+    featured?: boolean | null;
+    variant?: string | null;
+    slug?: { __typename?: 'Slug'; current?: string | null } | null;
+    image?: {
+      __typename?: 'Image';
+      asset?: {
+        __typename?: 'SanityImageAsset';
+        url?: string | null;
+        metadata?: {
+          __typename?: 'SanityImageMetadata';
+          dimensions?: {
+            __typename?: 'SanityImageDimensions';
+            width?: number | null;
+            height?: number | null;
+          } | null;
+        } | null;
+      } | null;
+    } | null;
+  }>;
+};
 
 export type PostBySlugQueryVariables = Exact<{
   current: Scalars['String']['input'];
 }>;
 
+export type PostBySlugQuery = {
+  __typename?: 'RootQuery';
+  allPost: Array<{
+    __typename?: 'Post';
+    _id?: string | null;
+    title?: string | null;
+    description?: string | null;
+    contentRaw?: { [key: string]: any } | null;
+    publishedAt?: string | null;
+    categories?: Array<string | null> | null;
+    featured?: boolean | null;
+    variant?: string | null;
+    slug?: { __typename?: 'Slug'; current?: string | null } | null;
+    image?: {
+      __typename?: 'Image';
+      asset?: {
+        __typename?: 'SanityImageAsset';
+        url?: string | null;
+        metadata?: {
+          __typename?: 'SanityImageMetadata';
+          dimensions?: {
+            __typename?: 'SanityImageDimensions';
+            width?: number | null;
+            height?: number | null;
+          } | null;
+        } | null;
+      } | null;
+    } | null;
+    metadata?: {
+      __typename?: 'Metadata';
+      title?: string | null;
+      description?: string | null;
+      keywords?: Array<string | null> | null;
+      image?: {
+        __typename?: 'Image';
+        asset?: {
+          __typename?: 'SanityImageAsset';
+          url?: string | null;
+          altText?: string | null;
+        } | null;
+      } | null;
+    } | null;
+  }>;
+};
 
-export type PostBySlugQuery = { __typename?: 'RootQuery', allPost: Array<{ __typename?: 'Post', _id?: string | null, title?: string | null, description?: string | null, contentRaw?: any | null, publishedAt?: any | null, categories?: Array<string | null> | null, featured?: boolean | null, variant?: string | null, slug?: { __typename?: 'Slug', current?: string | null } | null, image?: { __typename?: 'Image', asset?: { __typename?: 'SanityImageAsset', url?: string | null, metadata?: { __typename?: 'SanityImageMetadata', dimensions?: { __typename?: 'SanityImageDimensions', width?: number | null, height?: number | null } | null } | null } | null } | null, metadata?: { __typename?: 'Metadata', title?: string | null, description?: string | null, keywords?: Array<string | null> | null, image?: { __typename?: 'Image', asset?: { __typename?: 'SanityImageAsset', url?: string | null, altText?: string | null } | null } | null } | null }> };
+export type SiteSettingsQueryVariables = Exact<{ [key: string]: never }>;
 
-export type NavigationQueryVariables = Exact<{ [key: string]: never; }>;
+export type SiteSettingsQuery = {
+  __typename?: 'RootQuery';
+  allSiteSettings: Array<{
+    __typename?: 'SiteSettings';
+    title?: string | null;
+    description?: string | null;
+    keywords?: Array<string | null> | null;
+    defaultMetaImage?: {
+      __typename?: 'Image';
+      asset?: {
+        __typename?: 'SanityImageAsset';
+        url?: string | null;
+        altText?: string | null;
+      } | null;
+    } | null;
+  }>;
+};
 
+export type NavigationQueryVariables = Exact<{ [key: string]: never }>;
 
-export type NavigationQuery = { __typename?: 'RootQuery', allNavigation: Array<{ __typename?: 'Navigation', _id?: string | null, items?: Array<{ __typename?: 'NavigationItem', _key?: string | null, label?: string | null, href?: string | null } | null> | null }> };
+export type NavigationQuery = {
+  __typename?: 'RootQuery';
+  allNavigation: Array<{
+    __typename?: 'Navigation';
+    _id?: string | null;
+    items?: Array<{
+      __typename?: 'NavigationItem';
+      _key?: string | null;
+      label?: string | null;
+      href?: string | null;
+    } | null> | null;
+  }>;
+};
 
-export type FooterQueryVariables = Exact<{ [key: string]: never; }>;
+export type FooterQueryVariables = Exact<{ [key: string]: never }>;
 
+export type FooterQuery = {
+  __typename?: 'RootQuery';
+  allFooter: Array<{
+    __typename?: 'Footer';
+    _id?: string | null;
+    copyright?: string | null;
+    contact?: {
+      __typename?: 'FooterContact';
+      email?: string | null;
+      phone?: string | null;
+    } | null;
+    socialLinks?: Array<{
+      __typename?: 'SocialLink';
+      _key?: string | null;
+      platform?: string | null;
+      url?: string | null;
+    } | null> | null;
+  }>;
+};
 
-export type FooterQuery = { __typename?: 'RootQuery', allFooter: Array<{ __typename?: 'Footer', _id?: string | null, copyright?: string | null, contact?: { __typename?: 'FooterContact', email?: string | null, phone?: string | null } | null, socialLinks?: Array<{ __typename?: 'SocialLink', _key?: string | null, platform?: string | null, url?: string | null } | null> | null }> };
+export type MenuFooterQueryVariables = Exact<{ [key: string]: never }>;
 
-export type MenuFooterQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type MenuFooterQuery = { __typename?: 'RootQuery', allMenuFooter: Array<{ __typename?: 'MenuFooter', _id?: string | null, about?: { __typename?: 'MenuFooterAbout', title?: string | null, description?: string | null } | null, social?: { __typename?: 'MenuFooterSocial', title?: string | null } | null, contact?: { __typename?: 'MenuFooterContact', title?: string | null, projectEnquiry?: { __typename?: 'MenuFooterEnquiry', label?: string | null, href?: string | null, linkText?: string | null } | null, generalEnquiry?: { __typename?: 'MenuFooterEnquiry', label?: string | null, href?: string | null, linkText?: string | null } | null } | null }> };
-
-export type AboutPageQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type AboutPageQuery = { __typename?: 'RootQuery', allAboutPage: Array<{ __typename?: 'AboutPage', _id?: string | null, title?: string | null, sections?: Array<{ __typename?: 'SectionBlog', _key?: string | null, _type?: string | null } | { __typename?: 'SectionCalendar', _key?: string | null, _type?: string | null } | { __typename?: 'SectionCards', _key?: string | null, _type?: string | null, title?: string | null, displayTitle?: string | null, description?: string | null, cards?: Array<{ __typename?: 'Card', _key?: string | null, title?: string | null, description?: string | null, image?: { __typename?: 'Image', asset?: { __typename?: 'SanityImageAsset', url?: string | null } | null } | null } | null> | null } | { __typename?: 'SectionContent', _key?: string | null, _type?: string | null, title?: string | null, displayTitle?: string | null, contentRaw?: any | null } | { __typename?: 'SectionFAQ', _key?: string | null, _type?: string | null } | { __typename?: 'SectionFeatured', _key?: string | null, _type?: string | null } | { __typename?: 'SectionForm', _key?: string | null, _type?: string | null } | { __typename?: 'SectionHeader', _key?: string | null, _type?: string | null, title?: string | null, displayTitle?: string | null, description?: string | null, image?: { __typename?: 'Image', asset?: { __typename?: 'SanityImageAsset', url?: string | null } | null } | null } | { __typename?: 'SectionPricing', _key?: string | null, _type?: string | null } | { __typename?: 'SectionTestimonial', _key?: string | null, _type?: string | null } | { __typename?: 'SectionTimeline', _key?: string | null, _type?: string | null } | null> | null, metadata?: { __typename?: 'Metadata', title?: string | null, description?: string | null, keywords?: Array<string | null> | null, image?: { __typename?: 'Image', asset?: { __typename?: 'SanityImageAsset', url?: string | null, altText?: string | null } | null } | null } | null }> };
+export type MenuFooterQuery = {
+  __typename?: 'RootQuery';
+  allMenuFooter: Array<{
+    __typename?: 'MenuFooter';
+    _id?: string | null;
+    about?: {
+      __typename?: 'MenuFooterAbout';
+      title?: string | null;
+      description?: string | null;
+    } | null;
+    social?: { __typename?: 'MenuFooterSocial'; title?: string | null } | null;
+    contact?: {
+      __typename?: 'MenuFooterContact';
+      title?: string | null;
+      projectEnquiry?: {
+        __typename?: 'MenuFooterEnquiry';
+        label?: string | null;
+        href?: string | null;
+        linkText?: string | null;
+      } | null;
+      generalEnquiry?: {
+        __typename?: 'MenuFooterEnquiry';
+        label?: string | null;
+        href?: string | null;
+        linkText?: string | null;
+      } | null;
+    } | null;
+  }>;
+};

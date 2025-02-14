@@ -1,7 +1,7 @@
-import { defineType, Rule } from 'sanity';
+import { Rule } from 'sanity';
 
 /* Define base page fields that all pages will share */
-const basePageFields = [
+export const basePageFields = [
   {
     name: 'title',
     title: 'Page Title',
@@ -66,7 +66,7 @@ const basePageFields = [
 ];
 
 /* Base groups that all pages will share */
-const baseGroups = [
+export const baseGroups = [
   {
     name: 'content',
     title: 'Content',
@@ -77,57 +77,3 @@ const baseGroups = [
     title: 'SEO & Metadata',
   },
 ];
-
-/* Home Page */
-export const homePage = defineType({
-  name: 'homePage',
-  title: 'Home Page',
-  type: 'document',
-  groups: baseGroups,
-  fields: [...basePageFields],
-});
-
-/* About Page */
-export const aboutPage = defineType({
-  name: 'aboutPage',
-  title: 'Over Mij',
-  type: 'document',
-  groups: baseGroups,
-  fields: [...basePageFields],
-});
-
-/* Coaching Page */
-export const coachingPage = defineType({
-  name: 'coachingPage',
-  title: 'Coaching',
-  type: 'document',
-  groups: baseGroups,
-  fields: [...basePageFields],
-});
-
-/* Approach Page */
-export const approachPage = defineType({
-  name: 'approachPage',
-  title: 'Aanpak',
-  type: 'document',
-  groups: baseGroups,
-  fields: [...basePageFields],
-});
-
-/* Blog Page */
-export const blogPage = defineType({
-  name: 'blogPage',
-  title: 'Blog',
-  type: 'document',
-  groups: baseGroups,
-  fields: [...basePageFields],
-});
-
-/* Contact Page */
-export const contactPage = defineType({
-  name: 'contactPage',
-  title: 'Contact',
-  type: 'document',
-  groups: baseGroups,
-  fields: [...basePageFields],
-});
