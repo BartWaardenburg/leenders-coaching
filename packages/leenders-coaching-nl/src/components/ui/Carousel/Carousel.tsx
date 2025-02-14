@@ -7,7 +7,7 @@ import {
   useRef,
   useEffect,
 } from 'react';
-import { motion, AnimatePresence, useMotionValue } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue } from 'motion/react';
 import { twMerge } from 'tailwind-merge';
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
 
@@ -23,7 +23,7 @@ type CarouselProps = {
   className?: string;
 };
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 const variants = {
   enter: (direction: number) => ({

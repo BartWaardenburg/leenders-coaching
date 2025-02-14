@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { IoClose } from 'react-icons/io5';
-import { motion, AnimatePresence, type HTMLMotionProps } from 'framer-motion';
+import { motion, AnimatePresence, type HTMLMotionProps } from 'motion/react';
 import { Flex } from '@/components/ui/Flex';
 import { modalStyles, type ModalVariant } from '../Modal/Modal';
 import { ariaConfig } from '@/config/aria.config';
@@ -38,7 +38,7 @@ type ToastProps = {
   | 'onDragExit'
 >;
 
-const MotionFlex = motion(Flex);
+const MotionFlex = motion.create(Flex);
 
 /**
  * Toast notification component with smooth animations and auto-dismiss functionality

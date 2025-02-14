@@ -10,7 +10,7 @@ import { Flex } from '@/components/ui/Flex';
 import { Box } from '@/components/ui/Box';
 import { twMerge } from 'tailwind-merge';
 import { cardConfig } from '@/config/card.config';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 
 type CardVariant = 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal';
 
@@ -259,7 +259,7 @@ export const Card: FC<CardProps> = ({
     </motion.div>
   );
 
-  const MotionLink = motion(Link);
+  const MotionLink = motion.create(Link);
 
   if (slug) {
     return (

@@ -3,7 +3,7 @@ import { Box } from '@/components/ui/Box'
 import { Flex } from '@/components/ui/Flex'
 import { Button } from '@/components/ui/Button'
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 
 interface PaginationProps {
   /**

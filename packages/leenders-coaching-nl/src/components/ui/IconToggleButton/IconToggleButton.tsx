@@ -1,7 +1,7 @@
 'use client';
 
 import { twMerge } from 'tailwind-merge';
-import { motion, AnimatePresence, type HTMLMotionProps } from 'framer-motion';
+import { motion, AnimatePresence, type HTMLMotionProps } from 'motion/react';
 import { Icon } from '@/components/ui/Icon';
 
 type TransitionSpeed = 'quick' | 'slow';
@@ -16,7 +16,7 @@ type IconToggleButtonProps = {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 } & Omit<HTMLMotionProps<'button'>, 'aria-label' | 'onClick'>;
 
-const MotionIcon = motion(Icon);
+const MotionIcon = motion.create(Icon);
 
 const transitionDurations: Record<TransitionSpeed, number> = {
   quick: 0.2,

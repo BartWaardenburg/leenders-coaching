@@ -1,7 +1,7 @@
 'use client';
 
 import { twMerge } from 'tailwind-merge';
-import { motion, type HTMLMotionProps } from 'framer-motion';
+import { motion, type HTMLMotionProps } from 'motion/react';
 import { Avatar } from '@/components/ui/Avatar';
 import { Heading } from '@/components/ui/Heading';
 import { Text } from '@/components/ui/Text';
@@ -25,8 +25,8 @@ type PersonProps = {
   | 'onDragExit'
 >;
 
-const MotionStack = motion(Stack);
-const MotionBox = motion(Box);
+const MotionStack = motion.create(Stack);
+const MotionBox = motion.create(Box);
 
 /**
  * Person component for displaying a person's information with avatar and animations

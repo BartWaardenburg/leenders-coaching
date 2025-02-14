@@ -14,7 +14,7 @@ A modern, type-safe website built with Next.js 14 and Sanity.io.
 - **Testing**: Vitest + React Testing Library
 - **Component Development**: Storybook
 - **Form Handling**: react-hook-form + zod
-- **Animation**: Framer Motion
+- **Animation**: motion/react
 - **Email Integration**: Resend
 
 ### Project Structure

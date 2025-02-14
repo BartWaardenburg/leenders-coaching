@@ -16,22 +16,26 @@
     "sanity"
   ],
   "dependencies": {
-    "@sanity/client": "^6.11.1",
-    "@sanity/vision": "^3.23.4",
-    "dotenv": "^16.3.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-is": "^18.2.0",
-    "sanity": "^3.23.4",
-    "styled-components": "^6.1.0"
+    "@sanity/client": "6.28.0",
+    "@sanity/vision": "3.75.0",
+    "dotenv": "16.4.7",
+    "lodash.defaults": "4.2.0",
+    "lodash.difference": "4.5.0",
+    "lodash.flatten": "4.4.0",
+    "lodash.union": "4.6.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-is": "19.0.0",
+    "sanity": "3.75.0",
+    "styled-components": "6.1.15"
   },
   "devDependencies": {
-    "@sanity/eslint-config-studio": "^3.0.1",
-    "@types/node": "^20.10.6",
-    "@types/react": "^18.2.46",
-    "eslint": "^8.6.0",
-    "prettier": "^3.1.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "@sanity/eslint-config-studio": "5.0.1",
+    "@types/node": "22.13.4",
+    "@types/react": "19.0.8",
+    "eslint": "9.20.1",
+    "prettier": "3.5.1",
+    "ts-node": "10.9.2",
+    "typescript": "5.7.3"
   }
 }

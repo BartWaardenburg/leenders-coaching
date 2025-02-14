@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { motion, type HTMLMotionProps } from 'framer-motion';
+import { motion, type HTMLMotionProps } from 'motion/react';
 
 import { Text } from '@/components/ui/Text';
 import { Box } from '@/components/ui/Box';
@@ -24,7 +24,7 @@ type QuoteProps = {
   | 'onDragExit'
 >;
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 /**
  * Quote component for displaying testimonials with smooth animations

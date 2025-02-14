@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { FiLinkedin, FiInstagram } from 'react-icons/fi';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Text } from '@/components/ui/Text';
 import { Heading } from '@/components/ui/Heading';
 import { Box } from '@/components/ui/Box';
