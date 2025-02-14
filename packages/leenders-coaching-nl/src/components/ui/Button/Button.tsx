@@ -125,7 +125,7 @@ export const Button = ({
   );
 
   if (href) {
-    const { href: _, ...linkProps } = props as ButtonAsLinkProps;
+    const { href: unused, ...linkProps } = props as ButtonAsLinkProps;
     return (
       <Link
         href={href}
