@@ -1,7 +1,5 @@
-/* eslint-disable */
-import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
+export type Maybe<T> = T;
+export type InputMaybe<T> = T;
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
 };
@@ -27,12 +25,9 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
-  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
-  Date: { input: string; output: string };
-  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
-  DateTime: { input: string; output: string };
-  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
-  JSON: { input: { [key: string]: any }; output: { [key: string]: any } };
+  Date: { input: any; output: any };
+  DateTime: { input: any; output: any };
+  JSON: { input: any; output: any };
 };
 
 export type AboutPage = Document & {
@@ -2711,1892 +2706,1307 @@ export type TimelineEventSorting = {
   title?: InputMaybe<SortOrder>;
 };
 
-export type AboutPageQueryVariables = Exact<{ [key: string]: never }>;
+export type FooterFieldsFragment = {
+  __typename?: 'Footer';
+  copyright?: string;
+  contact?: { __typename?: 'FooterContact'; email?: string; phone?: string };
+  socialLinks?: Array<{
+    __typename?: 'SocialLink';
+    _key?: string;
+    platform?: string;
+    url?: string;
+  }>;
+};
 
-export type AboutPageQuery = {
-  __typename?: 'RootQuery';
-  allAboutPage: Array<{
-    __typename?: 'AboutPage';
-    _id?: string | null;
-    title?: string | null;
-    sections?: Array<
-      | {
-          __typename: 'SectionBlog';
-          _key?: string | null;
-          _type?: string | null;
-          title?: string | null;
-          displayTitle?: string | null;
-          subtitle?: string | null;
-          background?: string | null;
-          maxWidth?: string | null;
-          showBorder?: boolean | null;
-          postsToShow?: number | null;
-          showFeaturedOnly?: boolean | null;
-          sortOrder?: string | null;
-        }
-      | {
-          __typename: 'SectionCalendar';
-          _key?: string | null;
-          _type?: string | null;
-          title?: string | null;
-          displayTitle?: string | null;
-          subtitle?: string | null;
-          background?: string | null;
-          maxWidth?: string | null;
-          showBorder?: boolean | null;
-          description?: string | null;
-          settings?: {
-            __typename?: 'CalendarSettings';
-            availableDays?: Array<string | null> | null;
-            excludedDates?: Array<string | null> | null;
-            availableTimeSlots?: Array<{
-              __typename?: 'TimeSlot';
-              _key?: string | null;
-              startTime?: string | null;
-              endTime?: string | null;
-            } | null> | null;
-          } | null;
-        }
-      | {
-          __typename: 'SectionCards';
-          _key?: string | null;
-          _type?: string | null;
-          title?: string | null;
-          displayTitle?: string | null;
-          subtitle?: string | null;
-          background?: string | null;
-          maxWidth?: string | null;
-          showBorder?: boolean | null;
-          cards?: Array<{
-            __typename?: 'Card';
-            _key?: string | null;
-            title?: string | null;
-            description?: string | null;
-            image?: {
-              __typename?: 'Image';
-              asset?: {
-                __typename?: 'SanityImageAsset';
-                url?: string | null;
-                metadata?: {
-                  __typename?: 'SanityImageMetadata';
-                  dimensions?: {
-                    __typename?: 'SanityImageDimensions';
-                    width?: number | null;
-                    height?: number | null;
-                  } | null;
-                } | null;
-              } | null;
-            } | null;
-            link?: {
-              __typename?: 'Link';
-              text?: string | null;
-              url?: string | null;
-            } | null;
-          } | null> | null;
-        }
-      | {
-          __typename: 'SectionContent';
-          _key?: string | null;
-          _type?: string | null;
-          title?: string | null;
-          displayTitle?: string | null;
-          contentRaw?: { [key: string]: any } | null;
-          background?: string | null;
-          maxWidth?: string | null;
-          showBorder?: boolean | null;
-        }
-      | {
-          __typename: 'SectionFAQ';
-          _key?: string | null;
-          _type?: string | null;
-          title?: string | null;
-          displayTitle?: string | null;
-          subtitle?: string | null;
-          background?: string | null;
-          maxWidth?: string | null;
-          showBorder?: boolean | null;
-          questions?: Array<{
-            __typename?: 'FaqItem';
-            _key?: string | null;
-            question?: string | null;
-            answer?: string | null;
-          } | null> | null;
-        }
-      | {
-          __typename: 'SectionFeatured';
-          _key?: string | null;
-          _type?: string | null;
-          title?: string | null;
-          displayTitle?: string | null;
-          subtitle?: string | null;
-          background?: string | null;
-          maxWidth?: string | null;
-          showBorder?: boolean | null;
-          items?: Array<{
-            __typename?: 'FeatureItem';
-            _key?: string | null;
-            title?: string | null;
-            description?: string | null;
-            image?: {
-              __typename?: 'Image';
-              asset?: {
-                __typename?: 'SanityImageAsset';
-                url?: string | null;
-                metadata?: {
-                  __typename?: 'SanityImageMetadata';
-                  dimensions?: {
-                    __typename?: 'SanityImageDimensions';
-                    width?: number | null;
-                    height?: number | null;
-                  } | null;
-                } | null;
-              } | null;
-            } | null;
-          } | null> | null;
-        }
-      | {
-          __typename: 'SectionForm';
-          _key?: string | null;
-          _type?: string | null;
-          title?: string | null;
-          displayTitle?: string | null;
-          subtitle?: string | null;
-          background?: string | null;
-          maxWidth?: string | null;
-          showBorder?: boolean | null;
-          form?: {
-            __typename?: 'FormConfiguration';
-            submitLabel?: string | null;
-            successMessage?: string | null;
-            errorMessage?: string | null;
-          } | null;
-        }
-      | {
-          __typename: 'SectionHeader';
-          _key?: string | null;
-          _type?: string | null;
-          title?: string | null;
-          displayTitle?: string | null;
-          subtitle?: string | null;
-          background?: string | null;
-          maxWidth?: string | null;
-          showBorder?: boolean | null;
+export type ImageFieldsFragment = {
+  __typename?: 'Image';
+  asset?: {
+    __typename?: 'SanityImageAsset';
+    _id?: string;
+    url?: string;
+    altText?: string;
+    metadata?: {
+      __typename?: 'SanityImageMetadata';
+      lqip?: string;
+      dimensions?: {
+        __typename?: 'SanityImageDimensions';
+        width?: number;
+        height?: number;
+        aspectRatio?: number;
+      };
+    };
+  };
+  hotspot?: {
+    __typename?: 'SanityImageHotspot';
+    x?: number;
+    y?: number;
+    height?: number;
+    width?: number;
+  };
+  crop?: {
+    __typename?: 'SanityImageCrop';
+    top?: number;
+    bottom?: number;
+    left?: number;
+    right?: number;
+  };
+};
+
+export type MenuFooterFieldsFragment = {
+  __typename?: 'MenuFooter';
+  about?: {
+    __typename?: 'MenuFooterAbout';
+    title?: string;
+    description?: string;
+  };
+  social?: { __typename?: 'MenuFooterSocial'; title?: string };
+  contact?: {
+    __typename?: 'MenuFooterContact';
+    title?: string;
+    projectEnquiry?: {
+      __typename?: 'MenuFooterEnquiry';
+      label?: string;
+      href?: string;
+      linkText?: string;
+    };
+    generalEnquiry?: {
+      __typename?: 'MenuFooterEnquiry';
+      label?: string;
+      href?: string;
+      linkText?: string;
+    };
+  };
+};
+
+export type MetadataFieldsFragment = {
+  __typename?: 'Metadata';
+  title?: string;
+  description?: string;
+  keywords?: Array<string>;
+  noindex?: boolean;
+  image?: {
+    __typename?: 'Image';
+    asset?: { __typename?: 'SanityImageAsset'; url?: string; altText?: string };
+  };
+};
+
+export type NavigationFieldsFragment = {
+  __typename?: 'Navigation';
+  items?: Array<{
+    __typename?: 'NavigationItem';
+    _key?: string;
+    label?: string;
+    href?: string;
+  }>;
+};
+
+export type PageFieldsFragment = {
+  __typename?: 'AboutPage';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+  title?: string;
+  metadata?: {
+    __typename?: 'Metadata';
+    title?: string;
+    description?: string;
+    keywords?: Array<string>;
+    noindex?: boolean;
+    image?: {
+      __typename?: 'Image';
+      asset?: {
+        __typename?: 'SanityImageAsset';
+        url?: string;
+        altText?: string;
+      };
+    };
+  };
+  sections?: Array<
+    | {
+        __typename?: 'SectionBlog';
+        _id?: string;
+        _type?: string;
+        _key?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        postsToShow?: number;
+        showFeaturedOnly?: boolean;
+        sortOrder?: string;
+      }
+    | {
+        __typename?: 'SectionCalendar';
+        _id?: string;
+        _type?: string;
+        _key?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        settings?: {
+          __typename?: 'CalendarSettings';
+          availableDays?: Array<string>;
+          excludedDates?: Array<string>;
+          availableTimeSlots?: Array<{
+            __typename?: 'TimeSlot';
+            startTime?: string;
+            endTime?: string;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionCards';
+        _id?: string;
+        _type?: string;
+        _key?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        cards?: Array<{
+          __typename?: 'Card';
+          _key?: string;
+          title?: string;
+          description?: string;
           image?: {
             __typename?: 'Image';
             asset?: {
               __typename?: 'SanityImageAsset';
-              url?: string | null;
+              _id?: string;
+              url?: string;
+              altText?: string;
               metadata?: {
                 __typename?: 'SanityImageMetadata';
+                lqip?: string;
                 dimensions?: {
                   __typename?: 'SanityImageDimensions';
-                  width?: number | null;
-                  height?: number | null;
-                } | null;
-              } | null;
-            } | null;
-          } | null;
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+          link?: { __typename?: 'Link'; text?: string; url?: string };
+        }>;
+      }
+    | {
+        __typename?: 'SectionContent';
+        _id?: string;
+        _type?: string;
+        _key?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        contentRaw?: any;
+      }
+    | {
+        __typename?: 'SectionFAQ';
+        _id?: string;
+        _type?: string;
+        _key?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        questions?: Array<{
+          __typename?: 'FaqItem';
+          _key?: string;
+          question?: string;
+          answer?: string;
+        }>;
+      }
+    | {
+        __typename?: 'SectionFeatured';
+        _id?: string;
+        _type?: string;
+        _key?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        items?: Array<{
+          __typename?: 'FeatureItem';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionForm';
+        _id?: string;
+        _type?: string;
+        _key?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        form?: {
+          __typename?: 'FormConfiguration';
+          emailSubject?: string;
+          emailTo?: string;
+          errorMessage?: string;
+          submitLabel?: string;
+          successMessage?: string;
+        };
+      }
+    | {
+        __typename?: 'SectionHeader';
+        _id?: string;
+        _type?: string;
+        _key?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        image?: {
+          __typename?: 'Image';
+          asset?: {
+            __typename?: 'SanityImageAsset';
+            _id?: string;
+            url?: string;
+            altText?: string;
+            metadata?: {
+              __typename?: 'SanityImageMetadata';
+              lqip?: string;
+              dimensions?: {
+                __typename?: 'SanityImageDimensions';
+                width?: number;
+                height?: number;
+                aspectRatio?: number;
+              };
+            };
+          };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+            height?: number;
+            width?: number;
+          };
+          crop?: {
+            __typename?: 'SanityImageCrop';
+            top?: number;
+            bottom?: number;
+            left?: number;
+            right?: number;
+          };
+        };
+        cta?: {
+          __typename?: 'CallToAction';
+          text?: string;
+          link?: string;
+          variant?: string;
+        };
+      }
+    | {
+        __typename?: 'SectionPricing';
+        _id?: string;
+        _type?: string;
+        _key?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        pricingCards?: Array<{
+          __typename?: 'PricingCard';
+          _key?: string;
+          title?: string;
+          description?: string;
+          price?: string;
+          features?: Array<string>;
+          isPopular?: boolean;
+          variant?: string;
           cta?: {
             __typename?: 'CallToAction';
-            text?: string | null;
-            link?: string | null;
-            variant?: string | null;
-          } | null;
+            text?: string;
+            link?: string;
+            variant?: string;
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTestimonial';
+        _id?: string;
+        _type?: string;
+        _key?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        testimonials?: Array<{
+          __typename?: 'Testimonial';
+          _key?: string;
+          name?: string;
+          role?: string;
+          quote?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTimeline';
+        _id?: string;
+        _type?: string;
+        _key?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        events?: Array<{
+          __typename?: 'TimelineEvent';
+          _key?: string;
+          title?: string;
+          date?: string;
+          description?: string;
+        }>;
+      }
+  >;
+  slug?: { __typename?: 'Slug'; current?: string };
+};
+
+export type PostFieldsFragment = {
+  __typename?: 'Post';
+  _id?: string;
+  _type?: string;
+  title?: string;
+  description?: string;
+  publishedAt?: any;
+  categories?: Array<string>;
+  featured?: boolean;
+  variant?: string;
+  contentRaw?: any;
+  slug?: { __typename?: 'Slug'; current?: string };
+  image?: {
+    __typename?: 'Image';
+    asset?: {
+      __typename?: 'SanityImageAsset';
+      _id?: string;
+      url?: string;
+      altText?: string;
+      metadata?: {
+        __typename?: 'SanityImageMetadata';
+        lqip?: string;
+        dimensions?: {
+          __typename?: 'SanityImageDimensions';
+          width?: number;
+          height?: number;
+          aspectRatio?: number;
+        };
+      };
+    };
+    hotspot?: {
+      __typename?: 'SanityImageHotspot';
+      x?: number;
+      y?: number;
+      height?: number;
+      width?: number;
+    };
+    crop?: {
+      __typename?: 'SanityImageCrop';
+      top?: number;
+      bottom?: number;
+      left?: number;
+      right?: number;
+    };
+  };
+  metadata?: {
+    __typename?: 'Metadata';
+    title?: string;
+    description?: string;
+    keywords?: Array<string>;
+    noindex?: boolean;
+    image?: {
+      __typename?: 'Image';
+      asset?: {
+        __typename?: 'SanityImageAsset';
+        url?: string;
+        altText?: string;
+      };
+    };
+  };
+};
+
+export type SectionBlogFieldsFragment = {
+  __typename?: 'SectionBlog';
+  _id?: string;
+  _type?: string;
+  _key?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  postsToShow?: number;
+  showFeaturedOnly?: boolean;
+  sortOrder?: string;
+};
+
+export type SectionCalendarFieldsFragment = {
+  __typename?: 'SectionCalendar';
+  _id?: string;
+  _type?: string;
+  _key?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  settings?: {
+    __typename?: 'CalendarSettings';
+    availableDays?: Array<string>;
+    excludedDates?: Array<string>;
+    availableTimeSlots?: Array<{
+      __typename?: 'TimeSlot';
+      startTime?: string;
+      endTime?: string;
+    }>;
+  };
+};
+
+export type SectionCardsFieldsFragment = {
+  __typename?: 'SectionCards';
+  _id?: string;
+  _type?: string;
+  _key?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  cards?: Array<{
+    __typename?: 'Card';
+    _key?: string;
+    title?: string;
+    description?: string;
+    image?: {
+      __typename?: 'Image';
+      asset?: {
+        __typename?: 'SanityImageAsset';
+        _id?: string;
+        url?: string;
+        altText?: string;
+        metadata?: {
+          __typename?: 'SanityImageMetadata';
+          lqip?: string;
+          dimensions?: {
+            __typename?: 'SanityImageDimensions';
+            width?: number;
+            height?: number;
+            aspectRatio?: number;
+          };
+        };
+      };
+      hotspot?: {
+        __typename?: 'SanityImageHotspot';
+        x?: number;
+        y?: number;
+        height?: number;
+        width?: number;
+      };
+      crop?: {
+        __typename?: 'SanityImageCrop';
+        top?: number;
+        bottom?: number;
+        left?: number;
+        right?: number;
+      };
+    };
+    link?: { __typename?: 'Link'; text?: string; url?: string };
+  }>;
+};
+
+export type SectionContentFieldsFragment = {
+  __typename?: 'SectionContent';
+  _id?: string;
+  _type?: string;
+  _key?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  contentRaw?: any;
+};
+
+export type SectionFaqFieldsFragment = {
+  __typename?: 'SectionFAQ';
+  _id?: string;
+  _type?: string;
+  _key?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  questions?: Array<{
+    __typename?: 'FaqItem';
+    _key?: string;
+    question?: string;
+    answer?: string;
+  }>;
+};
+
+export type SectionFeaturedFieldsFragment = {
+  __typename?: 'SectionFeatured';
+  _id?: string;
+  _type?: string;
+  _key?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  items?: Array<{
+    __typename?: 'FeatureItem';
+    _key?: string;
+    title?: string;
+    description?: string;
+    image?: {
+      __typename?: 'Image';
+      asset?: {
+        __typename?: 'SanityImageAsset';
+        _id?: string;
+        url?: string;
+        altText?: string;
+        metadata?: {
+          __typename?: 'SanityImageMetadata';
+          lqip?: string;
+          dimensions?: {
+            __typename?: 'SanityImageDimensions';
+            width?: number;
+            height?: number;
+            aspectRatio?: number;
+          };
+        };
+      };
+      hotspot?: {
+        __typename?: 'SanityImageHotspot';
+        x?: number;
+        y?: number;
+        height?: number;
+        width?: number;
+      };
+      crop?: {
+        __typename?: 'SanityImageCrop';
+        top?: number;
+        bottom?: number;
+        left?: number;
+        right?: number;
+      };
+    };
+  }>;
+};
+
+export type SectionFormFieldsFragment = {
+  __typename?: 'SectionForm';
+  _id?: string;
+  _type?: string;
+  _key?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  form?: {
+    __typename?: 'FormConfiguration';
+    emailSubject?: string;
+    emailTo?: string;
+    errorMessage?: string;
+    submitLabel?: string;
+    successMessage?: string;
+  };
+};
+
+export type SectionHeaderFieldsFragment = {
+  __typename?: 'SectionHeader';
+  _id?: string;
+  _type?: string;
+  _key?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  image?: {
+    __typename?: 'Image';
+    asset?: {
+      __typename?: 'SanityImageAsset';
+      _id?: string;
+      url?: string;
+      altText?: string;
+      metadata?: {
+        __typename?: 'SanityImageMetadata';
+        lqip?: string;
+        dimensions?: {
+          __typename?: 'SanityImageDimensions';
+          width?: number;
+          height?: number;
+          aspectRatio?: number;
+        };
+      };
+    };
+    hotspot?: {
+      __typename?: 'SanityImageHotspot';
+      x?: number;
+      y?: number;
+      height?: number;
+      width?: number;
+    };
+    crop?: {
+      __typename?: 'SanityImageCrop';
+      top?: number;
+      bottom?: number;
+      left?: number;
+      right?: number;
+    };
+  };
+  cta?: {
+    __typename?: 'CallToAction';
+    text?: string;
+    link?: string;
+    variant?: string;
+  };
+};
+
+export type SectionPricingFieldsFragment = {
+  __typename?: 'SectionPricing';
+  _id?: string;
+  _type?: string;
+  _key?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  pricingCards?: Array<{
+    __typename?: 'PricingCard';
+    _key?: string;
+    title?: string;
+    description?: string;
+    price?: string;
+    features?: Array<string>;
+    isPopular?: boolean;
+    variant?: string;
+    cta?: {
+      __typename?: 'CallToAction';
+      text?: string;
+      link?: string;
+      variant?: string;
+    };
+  }>;
+};
+
+export type SectionTestimonialFieldsFragment = {
+  __typename?: 'SectionTestimonial';
+  _id?: string;
+  _type?: string;
+  _key?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  testimonials?: Array<{
+    __typename?: 'Testimonial';
+    _key?: string;
+    name?: string;
+    role?: string;
+    quote?: string;
+    image?: {
+      __typename?: 'Image';
+      asset?: {
+        __typename?: 'SanityImageAsset';
+        _id?: string;
+        url?: string;
+        altText?: string;
+        metadata?: {
+          __typename?: 'SanityImageMetadata';
+          lqip?: string;
+          dimensions?: {
+            __typename?: 'SanityImageDimensions';
+            width?: number;
+            height?: number;
+            aspectRatio?: number;
+          };
+        };
+      };
+      hotspot?: {
+        __typename?: 'SanityImageHotspot';
+        x?: number;
+        y?: number;
+        height?: number;
+        width?: number;
+      };
+      crop?: {
+        __typename?: 'SanityImageCrop';
+        top?: number;
+        bottom?: number;
+        left?: number;
+        right?: number;
+      };
+    };
+  }>;
+};
+
+export type SectionTimelineFieldsFragment = {
+  __typename?: 'SectionTimeline';
+  _id?: string;
+  _type?: string;
+  _key?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  events?: Array<{
+    __typename?: 'TimelineEvent';
+    _key?: string;
+    title?: string;
+    date?: string;
+    description?: string;
+  }>;
+};
+
+export type GetPageQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetPageQuery = {
+  __typename?: 'RootQuery';
+  allAboutPage: Array<{
+    __typename?: 'AboutPage';
+    _id?: string;
+    _createdAt?: any;
+    _updatedAt?: any;
+    _rev?: string;
+    _type?: string;
+    title?: string;
+    metadata?: {
+      __typename?: 'Metadata';
+      title?: string;
+      description?: string;
+      keywords?: Array<string>;
+      noindex?: boolean;
+      image?: {
+        __typename?: 'Image';
+        asset?: {
+          __typename?: 'SanityImageAsset';
+          url?: string;
+          altText?: string;
+        };
+      };
+    };
+    sections?: Array<
+      | {
+          __typename?: 'SectionBlog';
+          _id?: string;
+          _type?: string;
+          _key?: string;
+          title?: string;
+          displayTitle?: string;
+          subtitle?: string;
+          background?: string;
+          maxWidth?: string;
+          showBorder?: boolean;
+          postsToShow?: number;
+          showFeaturedOnly?: boolean;
+          sortOrder?: string;
         }
       | {
-          __typename: 'SectionPricing';
-          _key?: string | null;
-          _type?: string | null;
-          title?: string | null;
-          displayTitle?: string | null;
-          subtitle?: string | null;
-          background?: string | null;
-          maxWidth?: string | null;
-          showBorder?: boolean | null;
+          __typename?: 'SectionCalendar';
+          _id?: string;
+          _type?: string;
+          _key?: string;
+          title?: string;
+          displayTitle?: string;
+          subtitle?: string;
+          background?: string;
+          maxWidth?: string;
+          showBorder?: boolean;
+          settings?: {
+            __typename?: 'CalendarSettings';
+            availableDays?: Array<string>;
+            excludedDates?: Array<string>;
+            availableTimeSlots?: Array<{
+              __typename?: 'TimeSlot';
+              startTime?: string;
+              endTime?: string;
+            }>;
+          };
+        }
+      | {
+          __typename?: 'SectionCards';
+          _id?: string;
+          _type?: string;
+          _key?: string;
+          title?: string;
+          displayTitle?: string;
+          subtitle?: string;
+          background?: string;
+          maxWidth?: string;
+          showBorder?: boolean;
+          cards?: Array<{
+            __typename?: 'Card';
+            _key?: string;
+            title?: string;
+            description?: string;
+            image?: {
+              __typename?: 'Image';
+              asset?: {
+                __typename?: 'SanityImageAsset';
+                _id?: string;
+                url?: string;
+                altText?: string;
+                metadata?: {
+                  __typename?: 'SanityImageMetadata';
+                  lqip?: string;
+                  dimensions?: {
+                    __typename?: 'SanityImageDimensions';
+                    width?: number;
+                    height?: number;
+                    aspectRatio?: number;
+                  };
+                };
+              };
+              hotspot?: {
+                __typename?: 'SanityImageHotspot';
+                x?: number;
+                y?: number;
+                height?: number;
+                width?: number;
+              };
+              crop?: {
+                __typename?: 'SanityImageCrop';
+                top?: number;
+                bottom?: number;
+                left?: number;
+                right?: number;
+              };
+            };
+            link?: { __typename?: 'Link'; text?: string; url?: string };
+          }>;
+        }
+      | {
+          __typename?: 'SectionContent';
+          _id?: string;
+          _type?: string;
+          _key?: string;
+          title?: string;
+          displayTitle?: string;
+          subtitle?: string;
+          background?: string;
+          maxWidth?: string;
+          showBorder?: boolean;
+          contentRaw?: any;
+        }
+      | {
+          __typename?: 'SectionFAQ';
+          _id?: string;
+          _type?: string;
+          _key?: string;
+          title?: string;
+          displayTitle?: string;
+          subtitle?: string;
+          background?: string;
+          maxWidth?: string;
+          showBorder?: boolean;
+          questions?: Array<{
+            __typename?: 'FaqItem';
+            _key?: string;
+            question?: string;
+            answer?: string;
+          }>;
+        }
+      | {
+          __typename?: 'SectionFeatured';
+          _id?: string;
+          _type?: string;
+          _key?: string;
+          title?: string;
+          displayTitle?: string;
+          subtitle?: string;
+          background?: string;
+          maxWidth?: string;
+          showBorder?: boolean;
+          items?: Array<{
+            __typename?: 'FeatureItem';
+            _key?: string;
+            title?: string;
+            description?: string;
+            image?: {
+              __typename?: 'Image';
+              asset?: {
+                __typename?: 'SanityImageAsset';
+                _id?: string;
+                url?: string;
+                altText?: string;
+                metadata?: {
+                  __typename?: 'SanityImageMetadata';
+                  lqip?: string;
+                  dimensions?: {
+                    __typename?: 'SanityImageDimensions';
+                    width?: number;
+                    height?: number;
+                    aspectRatio?: number;
+                  };
+                };
+              };
+              hotspot?: {
+                __typename?: 'SanityImageHotspot';
+                x?: number;
+                y?: number;
+                height?: number;
+                width?: number;
+              };
+              crop?: {
+                __typename?: 'SanityImageCrop';
+                top?: number;
+                bottom?: number;
+                left?: number;
+                right?: number;
+              };
+            };
+          }>;
+        }
+      | {
+          __typename?: 'SectionForm';
+          _id?: string;
+          _type?: string;
+          _key?: string;
+          title?: string;
+          displayTitle?: string;
+          subtitle?: string;
+          background?: string;
+          maxWidth?: string;
+          showBorder?: boolean;
+          form?: {
+            __typename?: 'FormConfiguration';
+            emailSubject?: string;
+            emailTo?: string;
+            errorMessage?: string;
+            submitLabel?: string;
+            successMessage?: string;
+          };
+        }
+      | {
+          __typename?: 'SectionHeader';
+          _id?: string;
+          _type?: string;
+          _key?: string;
+          title?: string;
+          displayTitle?: string;
+          subtitle?: string;
+          background?: string;
+          maxWidth?: string;
+          showBorder?: boolean;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+          cta?: {
+            __typename?: 'CallToAction';
+            text?: string;
+            link?: string;
+            variant?: string;
+          };
+        }
+      | {
+          __typename?: 'SectionPricing';
+          _id?: string;
+          _type?: string;
+          _key?: string;
+          title?: string;
+          displayTitle?: string;
+          subtitle?: string;
+          background?: string;
+          maxWidth?: string;
+          showBorder?: boolean;
           pricingCards?: Array<{
             __typename?: 'PricingCard';
-            _key?: string | null;
-            title?: string | null;
-            price?: string | null;
-            description?: string | null;
-            features?: Array<string | null> | null;
-            isPopular?: boolean | null;
-            variant?: string | null;
+            _key?: string;
+            title?: string;
+            description?: string;
+            price?: string;
+            features?: Array<string>;
+            isPopular?: boolean;
+            variant?: string;
             cta?: {
               __typename?: 'CallToAction';
-              text?: string | null;
-              link?: string | null;
-              variant?: string | null;
-            } | null;
-          } | null> | null;
+              text?: string;
+              link?: string;
+              variant?: string;
+            };
+          }>;
         }
-      | { __typename: 'SectionTestimonial' }
-      | { __typename: 'SectionTimeline' }
-      | null
-    > | null;
-    metadata?: {
-      __typename?: 'Metadata';
-      title?: string | null;
-      description?: string | null;
-      keywords?: Array<string | null> | null;
-      image?: {
-        __typename?: 'Image';
-        asset?: {
-          __typename?: 'SanityImageAsset';
-          url?: string | null;
-          altText?: string | null;
-        } | null;
-      } | null;
-    } | null;
+      | {
+          __typename?: 'SectionTestimonial';
+          _id?: string;
+          _type?: string;
+          _key?: string;
+          title?: string;
+          displayTitle?: string;
+          subtitle?: string;
+          background?: string;
+          maxWidth?: string;
+          showBorder?: boolean;
+          testimonials?: Array<{
+            __typename?: 'Testimonial';
+            _key?: string;
+            name?: string;
+            role?: string;
+            quote?: string;
+            image?: {
+              __typename?: 'Image';
+              asset?: {
+                __typename?: 'SanityImageAsset';
+                _id?: string;
+                url?: string;
+                altText?: string;
+                metadata?: {
+                  __typename?: 'SanityImageMetadata';
+                  lqip?: string;
+                  dimensions?: {
+                    __typename?: 'SanityImageDimensions';
+                    width?: number;
+                    height?: number;
+                    aspectRatio?: number;
+                  };
+                };
+              };
+              hotspot?: {
+                __typename?: 'SanityImageHotspot';
+                x?: number;
+                y?: number;
+                height?: number;
+                width?: number;
+              };
+              crop?: {
+                __typename?: 'SanityImageCrop';
+                top?: number;
+                bottom?: number;
+                left?: number;
+                right?: number;
+              };
+            };
+          }>;
+        }
+      | {
+          __typename?: 'SectionTimeline';
+          _id?: string;
+          _type?: string;
+          _key?: string;
+          title?: string;
+          displayTitle?: string;
+          subtitle?: string;
+          background?: string;
+          maxWidth?: string;
+          showBorder?: boolean;
+          events?: Array<{
+            __typename?: 'TimelineEvent';
+            _key?: string;
+            title?: string;
+            date?: string;
+            description?: string;
+          }>;
+        }
+    >;
+    slug?: { __typename?: 'Slug'; current?: string };
   }>;
 };
 
-export type AllPostsQueryVariables = Exact<{ [key: string]: never }>;
+export type GetGlobalDataQueryVariables = Exact<{ [key: string]: never }>;
 
-export type AllPostsQuery = {
-  __typename?: 'RootQuery';
-  allPost: Array<{
-    __typename?: 'Post';
-    _id?: string | null;
-    title?: string | null;
-    description?: string | null;
-    publishedAt?: string | null;
-    categories?: Array<string | null> | null;
-    featured?: boolean | null;
-    variant?: string | null;
-    slug?: { __typename?: 'Slug'; current?: string | null } | null;
-    image?: {
-      __typename?: 'Image';
-      asset?: {
-        __typename?: 'SanityImageAsset';
-        url?: string | null;
-        metadata?: {
-          __typename?: 'SanityImageMetadata';
-          dimensions?: {
-            __typename?: 'SanityImageDimensions';
-            width?: number | null;
-            height?: number | null;
-          } | null;
-        } | null;
-      } | null;
-    } | null;
-  }>;
-};
-
-export type PostBySlugQueryVariables = Exact<{
-  current: Scalars['String']['input'];
-}>;
-
-export type PostBySlugQuery = {
-  __typename?: 'RootQuery';
-  allPost: Array<{
-    __typename?: 'Post';
-    _id?: string | null;
-    title?: string | null;
-    description?: string | null;
-    contentRaw?: { [key: string]: any } | null;
-    publishedAt?: string | null;
-    categories?: Array<string | null> | null;
-    featured?: boolean | null;
-    variant?: string | null;
-    slug?: { __typename?: 'Slug'; current?: string | null } | null;
-    image?: {
-      __typename?: 'Image';
-      asset?: {
-        __typename?: 'SanityImageAsset';
-        url?: string | null;
-        metadata?: {
-          __typename?: 'SanityImageMetadata';
-          dimensions?: {
-            __typename?: 'SanityImageDimensions';
-            width?: number | null;
-            height?: number | null;
-          } | null;
-        } | null;
-      } | null;
-    } | null;
-    metadata?: {
-      __typename?: 'Metadata';
-      title?: string | null;
-      description?: string | null;
-      keywords?: Array<string | null> | null;
-      image?: {
-        __typename?: 'Image';
-        asset?: {
-          __typename?: 'SanityImageAsset';
-          url?: string | null;
-          altText?: string | null;
-        } | null;
-      } | null;
-    } | null;
-  }>;
-};
-
-export type SiteSettingsQueryVariables = Exact<{ [key: string]: never }>;
-
-export type SiteSettingsQuery = {
-  __typename?: 'RootQuery';
-  allSiteSettings: Array<{
-    __typename?: 'SiteSettings';
-    title?: string | null;
-    description?: string | null;
-    keywords?: Array<string | null> | null;
-    defaultMetaImage?: {
-      __typename?: 'Image';
-      asset?: {
-        __typename?: 'SanityImageAsset';
-        url?: string | null;
-        altText?: string | null;
-      } | null;
-    } | null;
-  }>;
-};
-
-export type NavigationQueryVariables = Exact<{ [key: string]: never }>;
-
-export type NavigationQuery = {
+export type GetGlobalDataQuery = {
   __typename?: 'RootQuery';
   allNavigation: Array<{
     __typename?: 'Navigation';
-    _id?: string | null;
+    _id?: string;
     items?: Array<{
       __typename?: 'NavigationItem';
-      _key?: string | null;
-      label?: string | null;
-      href?: string | null;
-    } | null> | null;
+      _key?: string;
+      label?: string;
+      href?: string;
+    }>;
   }>;
-};
-
-export type FooterQueryVariables = Exact<{ [key: string]: never }>;
-
-export type FooterQuery = {
-  __typename?: 'RootQuery';
   allFooter: Array<{
     __typename?: 'Footer';
-    _id?: string | null;
-    copyright?: string | null;
-    contact?: {
-      __typename?: 'FooterContact';
-      email?: string | null;
-      phone?: string | null;
-    } | null;
+    _id?: string;
+    copyright?: string;
+    contact?: { __typename?: 'FooterContact'; email?: string; phone?: string };
     socialLinks?: Array<{
       __typename?: 'SocialLink';
-      _key?: string | null;
-      platform?: string | null;
-      url?: string | null;
-    } | null> | null;
+      _key?: string;
+      platform?: string;
+      url?: string;
+    }>;
   }>;
-};
-
-export type MenuFooterQueryVariables = Exact<{ [key: string]: never }>;
-
-export type MenuFooterQuery = {
-  __typename?: 'RootQuery';
   allMenuFooter: Array<{
     __typename?: 'MenuFooter';
-    _id?: string | null;
+    _id?: string;
     about?: {
       __typename?: 'MenuFooterAbout';
-      title?: string | null;
-      description?: string | null;
-    } | null;
-    social?: { __typename?: 'MenuFooterSocial'; title?: string | null } | null;
+      title?: string;
+      description?: string;
+    };
+    social?: { __typename?: 'MenuFooterSocial'; title?: string };
     contact?: {
       __typename?: 'MenuFooterContact';
-      title?: string | null;
+      title?: string;
       projectEnquiry?: {
         __typename?: 'MenuFooterEnquiry';
-        label?: string | null;
-        href?: string | null;
-        linkText?: string | null;
-      } | null;
+        label?: string;
+        href?: string;
+        linkText?: string;
+      };
       generalEnquiry?: {
         __typename?: 'MenuFooterEnquiry';
-        label?: string | null;
-        href?: string | null;
-        linkText?: string | null;
-      } | null;
-    } | null;
+        label?: string;
+        href?: string;
+        linkText?: string;
+      };
+    };
   }>;
 };
-
-export const AboutPageDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'AboutPage' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'allAboutPage' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: '_id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'sections' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: '__typename' },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'SectionBlog' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_key' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_type' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'title' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'displayTitle' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'subtitle' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'background' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'maxWidth' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'showBorder' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'postsToShow' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'showFeaturedOnly' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'sortOrder' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'SectionCalendar' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_key' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_type' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'title' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'displayTitle' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'subtitle' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'background' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'maxWidth' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'showBorder' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'description' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'settings' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'availableDays',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'excludedDates',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'availableTimeSlots',
-                                    },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: '_key' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'startTime',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'endTime',
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'SectionCards' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_key' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_type' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'title' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'displayTitle' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'subtitle' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'background' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'maxWidth' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'showBorder' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'cards' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: '_key' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'title' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'description',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'image' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'asset',
-                                          },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'url',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'metadata',
-                                                },
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'dimensions',
-                                                      },
-                                                      selectionSet: {
-                                                        kind: 'SelectionSet',
-                                                        selections: [
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value: 'width',
-                                                            },
-                                                          },
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value: 'height',
-                                                            },
-                                                          },
-                                                        ],
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'link' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'text' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'url' },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'SectionContent' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_key' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_type' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'title' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'displayTitle' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'contentRaw' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'background' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'maxWidth' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'showBorder' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'SectionFAQ' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_key' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_type' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'title' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'displayTitle' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'subtitle' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'background' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'maxWidth' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'showBorder' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'questions' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: '_key' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'question' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'answer' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'SectionFeatured' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_key' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_type' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'title' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'displayTitle' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'subtitle' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'background' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'maxWidth' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'showBorder' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'items' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: '_key' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'title' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'description',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'image' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'asset',
-                                          },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'url',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'metadata',
-                                                },
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'dimensions',
-                                                      },
-                                                      selectionSet: {
-                                                        kind: 'SelectionSet',
-                                                        selections: [
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value: 'width',
-                                                            },
-                                                          },
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value: 'height',
-                                                            },
-                                                          },
-                                                        ],
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'SectionForm' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_key' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_type' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'title' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'displayTitle' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'subtitle' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'background' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'maxWidth' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'showBorder' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'form' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'submitLabel',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'successMessage',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'errorMessage',
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'SectionHeader' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_key' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_type' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'title' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'displayTitle' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'subtitle' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'background' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'maxWidth' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'showBorder' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'image' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'asset' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'url' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'metadata',
-                                          },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'dimensions',
-                                                },
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'width',
-                                                      },
-                                                    },
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'height',
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'cta' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'text' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'link' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'variant' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'SectionPricing' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_key' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_type' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'title' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'displayTitle' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'subtitle' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'background' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'maxWidth' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'showBorder' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'pricingCards' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: '_key' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'title' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'price' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'description',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'features' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'isPopular' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'variant' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'cta' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'text' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'link' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'variant',
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'metadata' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'keywords' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'image' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'asset' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'url' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'altText' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<AboutPageQuery, AboutPageQueryVariables>;
-export const AllPostsDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'AllPosts' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'allPost' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: '_id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'slug' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'current' },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'image' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'asset' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'url' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'metadata' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'dimensions' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'width',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'height',
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'publishedAt' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'categories' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'featured' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'variant' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<AllPostsQuery, AllPostsQueryVariables>;
-export const PostBySlugDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'PostBySlug' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'current' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'String' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'allPost' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'where' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'slug' },
-                      value: {
-                        kind: 'ObjectValue',
-                        fields: [
-                          {
-                            kind: 'ObjectField',
-                            name: { kind: 'Name', value: 'current' },
-                            value: {
-                              kind: 'ObjectValue',
-                              fields: [
-                                {
-                                  kind: 'ObjectField',
-                                  name: { kind: 'Name', value: 'eq' },
-                                  value: {
-                                    kind: 'Variable',
-                                    name: { kind: 'Name', value: 'current' },
-                                  },
-                                },
-                              ],
-                            },
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: '_id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'slug' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'current' },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'image' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'asset' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'url' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'metadata' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'dimensions' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'width',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'height',
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'contentRaw' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'publishedAt' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'categories' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'featured' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'variant' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'metadata' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'keywords' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'image' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'asset' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'url' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'altText' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<PostBySlugQuery, PostBySlugQueryVariables>;
-export const SiteSettingsDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'SiteSettings' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'allSiteSettings' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'keywords' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'defaultMetaImage' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'asset' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'url' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'altText' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<SiteSettingsQuery, SiteSettingsQueryVariables>;
-export const NavigationDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Navigation' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'allNavigation' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: '_id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'items' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: '_key' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'href' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<NavigationQuery, NavigationQueryVariables>;
-export const FooterDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Footer' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'allFooter' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: '_id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'copyright' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'contact' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'phone' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'socialLinks' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: '_key' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'platform' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<FooterQuery, FooterQueryVariables>;
-export const MenuFooterDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'MenuFooter' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'allMenuFooter' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: '_id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'about' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'social' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'contact' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'projectEnquiry' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'label' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'href' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'linkText' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'generalEnquiry' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'label' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'href' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'linkText' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<MenuFooterQuery, MenuFooterQueryVariables>;

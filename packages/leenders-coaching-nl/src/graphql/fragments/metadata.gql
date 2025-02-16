@@ -1,0 +1,12 @@
+fragment MetadataFields on Metadata {
+  title
+  description
+  keywords
+  noindex
+  image {
+    asset {
+      url
+      altText
+    }
+  }
+}

@@ -1,0 +1,22 @@
+#import "./image.gql"
+
+fragment SectionTestimonialFields on SectionTestimonial {
+  _id
+  _type
+  _key
+  title
+  displayTitle
+  subtitle
+  background
+  maxWidth
+  showBorder
+  testimonials {
+    _key
+    name
+    role
+    quote
+    image {
+      ...ImageFields
+    }
+  }
+}

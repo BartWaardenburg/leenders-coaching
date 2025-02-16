@@ -4,22 +4,17 @@ import { loadEnvConfig } from '@next/env';
 loadEnvConfig(process.cwd());
 
 const config: CodegenConfig = {
+  overwrite: true,
   schema: `https://${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}.api.sanity.io/v1/graphql/${process.env.NEXT_PUBLIC_SANITY_DATASET}/default`,
-  documents: ['src/**/*.{ts,tsx}'],
+  documents: 'src/**/*.gql',
   generates: {
-    './src/graphql/generated/': {
-      preset: 'client',
+    './src/generated/graphql.ts': {
+      plugins: ['typescript', 'typescript-operations'],
       config: {
-        useTypeImports: true,
-        scalars: {
-          Date: 'string',
-          DateTime: 'string',
-          JSON: '{ [key: string]: any }',
-        },
-        dedupeFragments: true,
+        maybeValue: 'T',
       },
     },
-    './src/graphql/generated/schema.json': {
+    'introspection.json': {
       plugins: ['introspection'],
     },
   },

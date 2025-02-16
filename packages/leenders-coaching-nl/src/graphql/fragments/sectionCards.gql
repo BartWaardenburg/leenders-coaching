@@ -1,0 +1,25 @@
+#import "./image.gql"
+
+fragment SectionCardsFields on SectionCards {
+  _id
+  _type
+  _key
+  title
+  displayTitle
+  subtitle
+  background
+  maxWidth
+  showBorder
+  cards {
+    _key
+    title
+    description
+    image {
+      ...ImageFields
+    }
+    link {
+      text
+      url
+    }
+  }
+}

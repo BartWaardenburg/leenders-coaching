@@ -1,0 +1,22 @@
+fragment MenuFooterFields on MenuFooter {
+  about {
+    title
+    description
+  }
+  social {
+    title
+  }
+  contact {
+    title
+    projectEnquiry {
+      label
+      href
+      linkText
+    }
+    generalEnquiry {
+      label
+      href
+      linkText
+    }
+  }
+}

@@ -1,0 +1,23 @@
+#import "./image.gql"
+#import "./metadata.gql"
+
+fragment PostFields on Post {
+  _id
+  _type
+  title
+  description
+  slug {
+    current
+  }
+  publishedAt
+  categories
+  featured
+  variant
+  image {
+    ...ImageFields
+  }
+  metadata {
+    ...MetadataFields
+  }
+  contentRaw
+}

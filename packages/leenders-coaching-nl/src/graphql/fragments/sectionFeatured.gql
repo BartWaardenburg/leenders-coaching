@@ -1,0 +1,21 @@
+#import "./image.gql"
+
+fragment SectionFeaturedFields on SectionFeatured {
+  _id
+  _type
+  _key
+  title
+  displayTitle
+  subtitle
+  background
+  maxWidth
+  showBorder
+  items {
+    _key
+    title
+    description
+    image {
+      ...ImageFields
+    }
+  }
+}

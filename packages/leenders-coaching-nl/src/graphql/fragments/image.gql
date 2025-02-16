@@ -1,0 +1,27 @@
+fragment ImageFields on Image {
+  asset {
+    _id
+    url
+    altText
+    metadata {
+      dimensions {
+        width
+        height
+        aspectRatio
+      }
+      lqip
+    }
+  }
+  hotspot {
+    x
+    y
+    height
+    width
+  }
+  crop {
+    top
+    bottom
+    left
+    right
+  }
+}

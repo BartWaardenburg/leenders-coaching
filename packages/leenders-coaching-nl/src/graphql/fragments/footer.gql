@@ -1,0 +1,12 @@
+fragment FooterFields on Footer {
+  copyright
+  contact {
+    email
+    phone
+  }
+  socialLinks {
+    _key
+    platform
+    url
+  }
+}

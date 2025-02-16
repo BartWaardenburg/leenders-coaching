@@ -1,0 +1,12 @@
+fragment SectionContentFields on SectionContent {
+  _id
+  _type
+  _key
+  title
+  displayTitle
+  subtitle
+  background
+  maxWidth
+  showBorder
+  contentRaw
+}

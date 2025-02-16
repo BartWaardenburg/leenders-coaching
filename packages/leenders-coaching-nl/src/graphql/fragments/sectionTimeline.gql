@@ -1,0 +1,17 @@
+fragment SectionTimelineFields on SectionTimeline {
+  _id
+  _type
+  _key
+  title
+  displayTitle
+  subtitle
+  background
+  maxWidth
+  showBorder
+  events {
+    _key
+    title
+    date
+    description
+  }
+}

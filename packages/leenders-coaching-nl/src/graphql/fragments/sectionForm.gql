@@ -1,0 +1,18 @@
+fragment SectionFormFields on SectionForm {
+  _id
+  _type
+  _key
+  title
+  displayTitle
+  subtitle
+  background
+  maxWidth
+  showBorder
+  form {
+    emailSubject
+    emailTo
+    errorMessage
+    submitLabel
+    successMessage
+  }
+}

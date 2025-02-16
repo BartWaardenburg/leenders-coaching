@@ -1,16 +1,16 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { graphqlClient } from '@/graphql/client';
-import { AboutPageDocument } from '@/graphql/generated/graphql';
-import type { AboutPageQuery } from '@/graphql/generated/graphql';
+import { sanityClient } from '@/utilities/sanity';
+import { GetPageQuery } from '@/generated/graphql';
+import GetPage from '@/graphql/pages/getAboutPage.gql';
 
 /**
  * Fetches about page data using the generated GraphQL client.
  * @returns Promise resolving to the about page data or null.
  */
 const getAboutPage = async () => {
-  const response = await graphqlClient.request<AboutPageQuery>(AboutPageDocument);
-  return response.allAboutPage[0] ?? null;
+  const response = await sanityClient.request<GetPageQuery>(GetPage);
+  return response.allAboutPage?.[0] ?? null;
 };
 
 /* Generate metadata from Sanity data */
@@ -28,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: metadata.title || 'About - Leenders Coaching',
     description: metadata.description || undefined,
-    keywords: metadata.keywords?.filter((keyword): keyword is string => keyword !== null) || undefined,
+    keywords: metadata.keywords?.filter((keyword: string | null): keyword is string => keyword !== null) || undefined,
     openGraph: metadata.image?.asset?.url
       ? {
         images: [{
@@ -45,17 +45,37 @@ export async function generateMetadata(): Promise<Metadata> {
  */
 export default async function AboutPage() {
   const aboutPage = await getAboutPage();
+
   if (!aboutPage) {
     notFound();
   }
 
-  console.log(aboutPage)
-
   return (
     <div>
-      {/* TODO: Implement page sections rendering */}
       <h1>{aboutPage.title}</h1>
-      {/* Add section rendering logic here */}
+      {aboutPage.sections?.map((section) => {
+        switch (section._type) {
+          case 'sectionBlog':
+          case 'sectionCalendar':
+          case 'sectionCards':
+          case 'sectionContent':
+          case 'sectionFAQ':
+          case 'sectionFeatured':
+          case 'sectionForm':
+          case 'sectionHeader':
+          case 'sectionPricing':
+          case 'sectionTestimonial':
+          case 'sectionTimeline':
+            // TODO: Implement section components
+            return (
+              <div key={section.title}>
+                <h2>{section.title}</h2>
+              </div>
+            );
+          default:
+            return null;
+        }
+      })}
     </div>
   );
 }

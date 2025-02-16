@@ -1,31 +1,14 @@
 import type { ReactNode } from 'react';
-import { getNavigation, getFooter, getMenuFooter } from '@/graphql/pages/settings';
-import type { Maybe } from '@/graphql/generated/graphql';
+import type { GetGlobalDataQuery } from '@/generated/graphql';
+import { sanityClient } from '@/utilities/sanity';
+import { transformNullable, transformNullableArray } from '@/utilities/transform';
 import { Header } from '@/components/ui/Header';
 import { Footer } from '@/components/ui/Footer';
 import { Main } from '@/components/ui/Main';
+import GetGlobalData from '@/graphql/queries/getGlobalData.gql';
 
 type GlobalDataProviderProps = {
   children: ReactNode;
-};
-
-/**
- * Helper function to transform Maybe types to a defined value
- */
-const transformMaybe = <T,>(value: Maybe<T> | undefined, defaultValue: T): T => {
-  if (value === undefined || value === null) return defaultValue;
-  return value;
-};
-
-/**
- * Helper to transform Maybe array
- */
-const transformMaybeArray = <T, R>(
-  array: Maybe<Maybe<T>[]> | undefined,
-  transform: (item: Maybe<T> | undefined) => R
-): R[] => {
-  if (!array) return [];
-  return array.map(item => transform(item));
 };
 
 /**
@@ -33,66 +16,63 @@ const transformMaybeArray = <T, R>(
  */
 export const GlobalDataProvider = async ({ children }: GlobalDataProviderProps) => {
   /* Fetch data from Sanity */
-  const [navigationData, footerData, menuFooterData] = await Promise.all([
-    getNavigation(),
-    getFooter(),
-    getMenuFooter(),
-  ]);
+  const { allNavigation: [navigation] = [], allFooter: [footer] = [], allMenuFooter: [menuFooter] = [] } =
+    await sanityClient.request<GetGlobalDataQuery>(GetGlobalData);
 
-  if (!navigationData || !footerData || !menuFooterData) {
+  if (!navigation || !footer || !menuFooter) {
     throw new Error('Failed to fetch required data from Sanity');
   }
 
   /* Transform data to match component types */
-  const navigation = {
-    items: transformMaybeArray(navigationData.items, item => ({
-      _key: item?._key || '',
-      label: transformMaybe(item?.label, ''),
-      href: transformMaybe(item?.href, '#'),
+  const navigationData = {
+    items: transformNullableArray(navigation.items, item => ({
+      _key: transformNullable(item?._key, ''),
+      label: transformNullable(item?.label, ''),
+      href: transformNullable(item?.href, '#'),
     })),
   };
 
-  const menuFooter = {
+  const menuFooterData = {
     about: {
-      title: transformMaybe(menuFooterData.about?.title, ''),
-      description: transformMaybe(menuFooterData.about?.description, ''),
+      title: transformNullable(menuFooter.about?.title, ''),
+      description: transformNullable(menuFooter.about?.description, ''),
     },
     social: {
-      title: transformMaybe(menuFooterData.social?.title, ''),
+      title: transformNullable(menuFooter.social?.title, ''),
     },
     contact: {
-      title: transformMaybe(menuFooterData.contact?.title, ''),
+      title: transformNullable(menuFooter.contact?.title, ''),
       projectEnquiry: {
-        label: transformMaybe(menuFooterData.contact?.projectEnquiry?.label, ''),
-        href: transformMaybe(menuFooterData.contact?.projectEnquiry?.href, '#'),
-        linkText: transformMaybe(menuFooterData.contact?.projectEnquiry?.linkText, ''),
+        label: transformNullable(menuFooter.contact?.projectEnquiry?.label, ''),
+        href: transformNullable(menuFooter.contact?.projectEnquiry?.href, '#'),
+        linkText: transformNullable(menuFooter.contact?.projectEnquiry?.linkText, ''),
       },
       generalEnquiry: {
-        label: transformMaybe(menuFooterData.contact?.generalEnquiry?.label, ''),
-        href: transformMaybe(menuFooterData.contact?.generalEnquiry?.href, '#'),
-        linkText: transformMaybe(menuFooterData.contact?.generalEnquiry?.linkText, ''),
+        label: transformNullable(menuFooter.contact?.generalEnquiry?.label, ''),
+        href: transformNullable(menuFooter.contact?.generalEnquiry?.href, '#'),
+        linkText: transformNullable(menuFooter.contact?.generalEnquiry?.linkText, ''),
       },
     },
   };
 
-  const footer = {
-    copyright: transformMaybe(footerData.copyright, ''),
+  const footerData = {
+    copyright: transformNullable(footer.copyright, ''),
     contact: {
-      email: transformMaybe(footerData.contact?.email, ''),
-      phone: transformMaybe(footerData.contact?.phone, ''),
+      email: transformNullable(footer.contact?.email, ''),
+      phone: transformNullable(footer.contact?.phone, ''),
     },
-    socialLinks: transformMaybeArray(footerData.socialLinks, link => ({
-      _key: link?._key || '',
-      platform: transformMaybe(link?.platform, ''),
-      url: transformMaybe(link?.url, '#'),
+    socialLinks: transformNullableArray(footer.socialLinks, link => ({
+      _key: transformNullable(link?._key, ''),
+      platform: transformNullable(link?.platform, ''),
+      url: transformNullable(link?.url, '#'),
     })),
   };
 
   return (
     <>
-      <Header navigation={navigation} menuFooter={menuFooter} socialLinks={footer.socialLinks} />
+      <Header navigation={navigationData} menuFooter={menuFooterData} socialLinks={footerData.socialLinks} />
       <Main>{children}</Main>
-      <Footer footer={footer} />
+      <Footer footer={footerData} />
     </>
   );
 }; 

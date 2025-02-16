@@ -1,0 +1,7 @@
+fragment NavigationFields on Navigation {
+  items {
+    _key
+    label
+    href
+  }
+}

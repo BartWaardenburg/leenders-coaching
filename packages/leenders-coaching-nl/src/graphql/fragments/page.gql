@@ -1,0 +1,62 @@
+#import "./metadata.gql"
+#import "./SectionBlog.gql"
+#import "./SectionCalendar.gql"
+#import "./SectionCards.gql"
+#import "./SectionContent.gql"
+#import "./SectionFAQ.gql"
+#import "./SectionFeatured.gql"
+#import "./SectionPricing.gql"
+#import "./SectionTestimonial.gql"
+#import "./SectionTimeline.gql"
+#import "./SectionForm.gql"
+#import "./SectionHeader.gql"
+
+fragment PageFields on AboutPage {
+  _id
+  _createdAt
+  _updatedAt
+  _rev
+  _type
+  title
+  metadata {
+    ...MetadataFields
+  }
+  sections {
+    ... on SectionBlog {
+      ...SectionBlogFields
+    }
+    ... on SectionCalendar {
+      ...SectionCalendarFields
+    }
+    ... on SectionCards {
+      ...SectionCardsFields
+    }
+    ... on SectionContent {
+      ...SectionContentFields
+    }
+    ... on SectionFAQ {
+      ...SectionFAQFields
+    }
+    ... on SectionFeatured {
+      ...SectionFeaturedFields
+    }
+    ... on SectionForm {
+      ...SectionFormFields
+    }
+    ... on SectionHeader {
+      ...SectionHeaderFields
+    }
+    ... on SectionPricing {
+      ...SectionPricingFields
+    }
+    ... on SectionTestimonial {
+      ...SectionTestimonialFields
+    }
+    ... on SectionTimeline {
+      ...SectionTimelineFields
+    }
+  }
+  slug {
+    current
+  }
+}
