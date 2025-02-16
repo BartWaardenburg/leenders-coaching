@@ -8,7 +8,6 @@ import { Flex } from '@/components/ui/Flex';
 import { IconButton } from '@/components/ui/IconButton';
 import { Icon } from '@/components/ui/Icon';
 import { motion, AnimatePresence } from 'motion/react';
-import { ariaConfig } from '@/config/aria.config';
 import {
   type DisabledDates,
   weekDays,
@@ -20,6 +19,7 @@ import {
   isCurrentMonthToday,
   generateCalendarWeeks,
 } from './calendarUtilities';
+import { useConfig } from '@/components/providers/ClientConfigProvider';
 
 type CalendarProps = {
   /** The initial date to display the calendar for */
@@ -47,6 +47,7 @@ export const Calendar: FC<CalendarProps> = ({
   onSelectDate,
   disabledDates,
 }: CalendarProps) => {
+  const { accessibility } = useConfig();
   const [currentDate, setCurrentDate] = useState(initialDate);
   const [direction, setDirection] = useState(0);
 
@@ -93,7 +94,7 @@ export const Calendar: FC<CalendarProps> = ({
       {/* Month and year header with navigation */}
       <Flex justify="between" items="center" className="mb-4 md:hidden">
         <IconButton
-          label={ariaConfig.calendar.previousMonth}
+          label={accessibility.calendar.previousMonth}
           onClick={!isCurrentMonthTodayValue ? handlePreviousMonth : undefined}
           disabled={isCurrentMonthTodayValue}
           variant="ghost"
@@ -132,7 +133,7 @@ export const Calendar: FC<CalendarProps> = ({
         </Box>
 
         <IconButton
-          label={ariaConfig.calendar.nextMonth}
+          label={accessibility.calendar.nextMonth}
           onClick={handleNextMonth}
           variant="ghost"
         >
@@ -163,7 +164,7 @@ export const Calendar: FC<CalendarProps> = ({
               !isCurrentMonthTodayValue && 'group-hover:border-primary',
             )}
           >
-            {ariaConfig.calendar.previousMonth}
+            {accessibility.calendar.previousMonth}
           </Text>
         </Flex>
 
@@ -313,7 +314,7 @@ export const Calendar: FC<CalendarProps> = ({
             weight="medium"
             className="border-l border-foreground/80 group-hover:border-primary transition-colors duration-200 [writing-mode:vertical-rl]"
           >
-            {ariaConfig.calendar.nextMonth}
+            {accessibility.calendar.nextMonth}
           </Text>
         </Flex>
       </Flex>

@@ -1,0 +1,7 @@
+query GetConfig {
+  allConfiguration(limit: 1) {
+    ...ConfigFields
+  }
+}
+
+#import "../fragments/config.gql"

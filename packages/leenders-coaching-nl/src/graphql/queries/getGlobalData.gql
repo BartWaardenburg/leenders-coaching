@@ -1,18 +1,19 @@
 #import "../fragments/navigation.gql"
 #import "../fragments/footer.gql"
 #import "../fragments/menuFooter.gql"
+#import "../fragments/config.gql"
 
 query GetGlobalData {
   allNavigation(limit: 1) {
-    _id
     ...NavigationFields
   }
   allFooter(limit: 1) {
-    _id
     ...FooterFields
   }
   allMenuFooter(limit: 1) {
-    _id
     ...MenuFooterFields
+  }
+  allConfiguration(limit: 1) {
+    ...ConfigFields
   }
 }

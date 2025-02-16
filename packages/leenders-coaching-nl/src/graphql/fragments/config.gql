@@ -1,0 +1,57 @@
+#import "./aria.gql"
+
+fragment ConfigFields on Configuration {
+  _id
+  _type
+  title
+  description
+  seo {
+    keywords
+    defaultMetaImage {
+      asset {
+        url
+        altText
+      }
+      hotspot {
+        x
+        y
+      }
+    }
+  }
+  accessibility {
+    ...AriaFields
+  }
+  interface {
+    mobileMenu {
+      toggleButton
+      menuLabel
+      closeButton
+    }
+    themeToggle {
+      label
+    }
+    buttons {
+      loadMore
+      readMore
+      submit
+      close
+    }
+  }
+  blog {
+    labels {
+      featured
+      readArticle
+    }
+    paths {
+      blog
+    }
+  }
+  forms {
+    messages {
+      required
+      invalid
+      success
+      error
+    }
+  }
+}

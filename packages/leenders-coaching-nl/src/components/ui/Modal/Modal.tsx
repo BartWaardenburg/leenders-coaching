@@ -6,7 +6,7 @@ import { twMerge } from 'tailwind-merge';
 import { IoClose } from 'react-icons/io5';
 import { motion, AnimatePresence, type HTMLMotionProps } from 'motion/react';
 import { Flex } from '@/components/ui/Flex';
-import { ariaConfig } from '@/config/aria.config';
+import { useConfig } from '@/components/providers/ClientConfigProvider';
 
 export type ModalVariant =
   | 'blue'
@@ -63,6 +63,7 @@ export const Modal = ({
   ...props
 }: ModalProps) => {
   const [isVisible, setIsVisible] = useState(isOpen);
+  const { accessibility } = useConfig();
 
   const handleClose = useCallback(() => {
     setIsVisible(false);
@@ -154,7 +155,7 @@ export const Modal = ({
                   'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
                   'focus-visible:ring-current focus-visible:ring-offset-inherit',
                 )}
-                aria-label={ariaConfig.modal.closeButton}
+                aria-label={accessibility.closeButtons.modal}
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{
                   opacity: 1,

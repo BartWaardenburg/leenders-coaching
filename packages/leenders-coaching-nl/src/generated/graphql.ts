@@ -79,6 +79,28 @@ export type AboutPageSorting = {
   title?: InputMaybe<SortOrder>;
 };
 
+export type Accessibility = {
+  __typename?: 'Accessibility';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  calendar?: Maybe<CalendarNavigation>;
+  closeButtons?: Maybe<CloseButtons>;
+};
+
+export type AccessibilityFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  calendar?: InputMaybe<CalendarNavigationFilter>;
+  closeButtons?: InputMaybe<CloseButtonsFilter>;
+};
+
+export type AccessibilitySorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  calendar?: InputMaybe<CalendarNavigationSorting>;
+  closeButtons?: InputMaybe<CloseButtonsSorting>;
+};
+
 export type ApproachPage = Document & {
   __typename?: 'ApproachPage';
   /** Date the document was created */
@@ -140,6 +162,43 @@ export type Block = {
 
 export type BlockOrImage = Block | Image;
 
+export type Blog = {
+  __typename?: 'Blog';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  labels?: Maybe<BlogLabels>;
+  paths?: Maybe<BlogPaths>;
+};
+
+export type BlogFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  labels?: InputMaybe<BlogLabelsFilter>;
+  paths?: InputMaybe<BlogPathsFilter>;
+};
+
+export type BlogLabels = {
+  __typename?: 'BlogLabels';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  featured?: Maybe<Scalars['String']['output']>;
+  readArticle?: Maybe<Scalars['String']['output']>;
+};
+
+export type BlogLabelsFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  featured?: InputMaybe<StringFilter>;
+  readArticle?: InputMaybe<StringFilter>;
+};
+
+export type BlogLabelsSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  featured?: InputMaybe<SortOrder>;
+  readArticle?: InputMaybe<SortOrder>;
+};
+
 export type BlogPage = Document & {
   __typename?: 'BlogPage';
   /** Date the document was created */
@@ -189,6 +248,32 @@ export type BlogPageSorting = {
   title?: InputMaybe<SortOrder>;
 };
 
+export type BlogPaths = {
+  __typename?: 'BlogPaths';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  blog?: Maybe<Scalars['String']['output']>;
+};
+
+export type BlogPathsFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  blog?: InputMaybe<StringFilter>;
+};
+
+export type BlogPathsSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  blog?: InputMaybe<SortOrder>;
+};
+
+export type BlogSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  labels?: InputMaybe<BlogLabelsSorting>;
+  paths?: InputMaybe<BlogPathsSorting>;
+};
+
 export type BooleanFilter = {
   /** Checks if the value is equal to the given input. */
   eq?: InputMaybe<Scalars['Boolean']['input']>;
@@ -196,6 +281,56 @@ export type BooleanFilter = {
   is_defined?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks if the value is not equal to the given input. */
   neq?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type ButtonLabels = {
+  __typename?: 'ButtonLabels';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  close?: Maybe<Scalars['String']['output']>;
+  loadMore?: Maybe<Scalars['String']['output']>;
+  readMore?: Maybe<Scalars['String']['output']>;
+  submit?: Maybe<Scalars['String']['output']>;
+};
+
+export type ButtonLabelsFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  close?: InputMaybe<StringFilter>;
+  loadMore?: InputMaybe<StringFilter>;
+  readMore?: InputMaybe<StringFilter>;
+  submit?: InputMaybe<StringFilter>;
+};
+
+export type ButtonLabelsSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  close?: InputMaybe<SortOrder>;
+  loadMore?: InputMaybe<SortOrder>;
+  readMore?: InputMaybe<SortOrder>;
+  submit?: InputMaybe<SortOrder>;
+};
+
+export type CalendarNavigation = {
+  __typename?: 'CalendarNavigation';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  nextMonth?: Maybe<Scalars['String']['output']>;
+  previousMonth?: Maybe<Scalars['String']['output']>;
+};
+
+export type CalendarNavigationFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  nextMonth?: InputMaybe<StringFilter>;
+  previousMonth?: InputMaybe<StringFilter>;
+};
+
+export type CalendarNavigationSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  nextMonth?: InputMaybe<SortOrder>;
+  previousMonth?: InputMaybe<SortOrder>;
 };
 
 export type CalendarSettings = {
@@ -270,6 +405,28 @@ export type CardSorting = {
   title?: InputMaybe<SortOrder>;
 };
 
+export type CloseButtons = {
+  __typename?: 'CloseButtons';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  modal?: Maybe<Scalars['String']['output']>;
+  toast?: Maybe<Scalars['String']['output']>;
+};
+
+export type CloseButtonsFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  modal?: InputMaybe<StringFilter>;
+  toast?: InputMaybe<StringFilter>;
+};
+
+export type CloseButtonsSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  modal?: InputMaybe<SortOrder>;
+  toast?: InputMaybe<SortOrder>;
+};
+
 export type CoachingPage = Document & {
   __typename?: 'CoachingPage';
   /** Date the document was created */
@@ -316,6 +473,62 @@ export type CoachingPageSorting = {
   _updatedAt?: InputMaybe<SortOrder>;
   metadata?: InputMaybe<MetadataSorting>;
   slug?: InputMaybe<SlugSorting>;
+  title?: InputMaybe<SortOrder>;
+};
+
+export type Configuration = Document & {
+  __typename?: 'Configuration';
+  /** Date the document was created */
+  _createdAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Document ID */
+  _id?: Maybe<Scalars['ID']['output']>;
+  _key?: Maybe<Scalars['String']['output']>;
+  /** Current document revision */
+  _rev?: Maybe<Scalars['String']['output']>;
+  /** Document type */
+  _type?: Maybe<Scalars['String']['output']>;
+  /** Date the document was last modified */
+  _updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  accessibility?: Maybe<Accessibility>;
+  blog?: Maybe<Blog>;
+  description?: Maybe<Scalars['String']['output']>;
+  forms?: Maybe<Forms>;
+  interface?: Maybe<UiInterface>;
+  seo?: Maybe<Seo>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+export type ConfigurationFilter = {
+  /** Apply filters on document level */
+  _?: InputMaybe<Sanity_DocumentFilter>;
+  _createdAt?: InputMaybe<DatetimeFilter>;
+  _id?: InputMaybe<IdFilter>;
+  _key?: InputMaybe<StringFilter>;
+  _rev?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  _updatedAt?: InputMaybe<DatetimeFilter>;
+  accessibility?: InputMaybe<AccessibilityFilter>;
+  blog?: InputMaybe<BlogFilter>;
+  description?: InputMaybe<StringFilter>;
+  forms?: InputMaybe<FormsFilter>;
+  interface?: InputMaybe<UiInterfaceFilter>;
+  seo?: InputMaybe<SeoFilter>;
+  title?: InputMaybe<StringFilter>;
+};
+
+export type ConfigurationSorting = {
+  _createdAt?: InputMaybe<SortOrder>;
+  _id?: InputMaybe<SortOrder>;
+  _key?: InputMaybe<SortOrder>;
+  _rev?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  _updatedAt?: InputMaybe<SortOrder>;
+  accessibility?: InputMaybe<AccessibilitySorting>;
+  blog?: InputMaybe<BlogSorting>;
+  description?: InputMaybe<SortOrder>;
+  forms?: InputMaybe<FormsSorting>;
+  interface?: InputMaybe<UiInterfaceSorting>;
+  seo?: InputMaybe<SeoSorting>;
   title?: InputMaybe<SortOrder>;
 };
 
@@ -612,11 +825,11 @@ export type FormConfiguration = {
   __typename?: 'FormConfiguration';
   _key?: Maybe<Scalars['String']['output']>;
   _type?: Maybe<Scalars['String']['output']>;
+  /** Subject line for form submission emails */
   emailSubject?: Maybe<Scalars['String']['output']>;
+  /** Email address to send form submissions to */
   emailTo?: Maybe<Scalars['String']['output']>;
-  errorMessage?: Maybe<Scalars['String']['output']>;
-  submitLabel?: Maybe<Scalars['String']['output']>;
-  successMessage?: Maybe<Scalars['String']['output']>;
+  fields?: Maybe<Array<Maybe<FormField>>>;
 };
 
 export type FormConfigurationFilter = {
@@ -624,9 +837,6 @@ export type FormConfigurationFilter = {
   _type?: InputMaybe<StringFilter>;
   emailSubject?: InputMaybe<StringFilter>;
   emailTo?: InputMaybe<StringFilter>;
-  errorMessage?: InputMaybe<StringFilter>;
-  submitLabel?: InputMaybe<StringFilter>;
-  successMessage?: InputMaybe<StringFilter>;
 };
 
 export type FormConfigurationSorting = {
@@ -634,9 +844,6 @@ export type FormConfigurationSorting = {
   _type?: InputMaybe<SortOrder>;
   emailSubject?: InputMaybe<SortOrder>;
   emailTo?: InputMaybe<SortOrder>;
-  errorMessage?: InputMaybe<SortOrder>;
-  submitLabel?: InputMaybe<SortOrder>;
-  successMessage?: InputMaybe<SortOrder>;
 };
 
 export type FormField = {
@@ -644,6 +851,8 @@ export type FormField = {
   _key?: Maybe<Scalars['String']['output']>;
   _type?: Maybe<Scalars['String']['output']>;
   label?: Maybe<Scalars['String']['output']>;
+  options?: Maybe<Array<Maybe<FormFieldOption>>>;
+  placeholder?: Maybe<Scalars['String']['output']>;
   required?: Maybe<Scalars['Boolean']['output']>;
   type?: Maybe<Scalars['String']['output']>;
 };
@@ -652,16 +861,87 @@ export type FormFieldFilter = {
   _key?: InputMaybe<StringFilter>;
   _type?: InputMaybe<StringFilter>;
   label?: InputMaybe<StringFilter>;
+  placeholder?: InputMaybe<StringFilter>;
   required?: InputMaybe<BooleanFilter>;
   type?: InputMaybe<StringFilter>;
+};
+
+export type FormFieldOption = {
+  __typename?: 'FormFieldOption';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  label?: Maybe<Scalars['String']['output']>;
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+export type FormFieldOptionFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  label?: InputMaybe<StringFilter>;
+  value?: InputMaybe<StringFilter>;
+};
+
+export type FormFieldOptionSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  label?: InputMaybe<SortOrder>;
+  value?: InputMaybe<SortOrder>;
 };
 
 export type FormFieldSorting = {
   _key?: InputMaybe<SortOrder>;
   _type?: InputMaybe<SortOrder>;
   label?: InputMaybe<SortOrder>;
+  placeholder?: InputMaybe<SortOrder>;
   required?: InputMaybe<SortOrder>;
   type?: InputMaybe<SortOrder>;
+};
+
+export type FormMessages = {
+  __typename?: 'FormMessages';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  error?: Maybe<Scalars['String']['output']>;
+  invalid?: Maybe<Scalars['String']['output']>;
+  required?: Maybe<Scalars['String']['output']>;
+  success?: Maybe<Scalars['String']['output']>;
+};
+
+export type FormMessagesFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  error?: InputMaybe<StringFilter>;
+  invalid?: InputMaybe<StringFilter>;
+  required?: InputMaybe<StringFilter>;
+  success?: InputMaybe<StringFilter>;
+};
+
+export type FormMessagesSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  error?: InputMaybe<SortOrder>;
+  invalid?: InputMaybe<SortOrder>;
+  required?: InputMaybe<SortOrder>;
+  success?: InputMaybe<SortOrder>;
+};
+
+export type Forms = {
+  __typename?: 'Forms';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  messages?: Maybe<FormMessages>;
+};
+
+export type FormsFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  messages?: InputMaybe<FormMessagesFilter>;
+};
+
+export type FormsSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  messages?: InputMaybe<FormMessagesSorting>;
 };
 
 export type Geopoint = {
@@ -687,6 +967,30 @@ export type GeopointSorting = {
   alt?: InputMaybe<SortOrder>;
   lat?: InputMaybe<SortOrder>;
   lng?: InputMaybe<SortOrder>;
+};
+
+export type GoogleBot = {
+  __typename?: 'GoogleBot';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  /** Allow Google to follow links on this page */
+  follow?: Maybe<Scalars['Boolean']['output']>;
+  /** Allow Google to index this page */
+  index?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type GoogleBotFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  follow?: InputMaybe<BooleanFilter>;
+  index?: InputMaybe<BooleanFilter>;
+};
+
+export type GoogleBotSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  follow?: InputMaybe<SortOrder>;
+  index?: InputMaybe<SortOrder>;
 };
 
 export type HomePage = Document & {
@@ -951,32 +1255,59 @@ export type Metadata = {
   __typename?: 'Metadata';
   _key?: Maybe<Scalars['String']['output']>;
   _type?: Maybe<Scalars['String']['output']>;
-  /** Description for search engines and social sharing (150-160 characters recommended) */
+  /** A brief description of the page for search engines */
   description?: Maybe<Scalars['String']['output']>;
-  image?: Maybe<Image>;
   keywords?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  /** If checked, this page will not be indexed by search engines */
-  noindex?: Maybe<Scalars['Boolean']['output']>;
-  /** Title for search engines and social sharing (50-60 characters recommended) */
+  openGraph?: Maybe<OpenGraph>;
+  robots?: Maybe<Robots>;
+  /** The title that appears in search engines and browser tabs */
   title?: Maybe<Scalars['String']['output']>;
+  twitter?: Maybe<Twitter>;
 };
 
 export type MetadataFilter = {
   _key?: InputMaybe<StringFilter>;
   _type?: InputMaybe<StringFilter>;
   description?: InputMaybe<StringFilter>;
-  image?: InputMaybe<ImageFilter>;
-  noindex?: InputMaybe<BooleanFilter>;
+  openGraph?: InputMaybe<OpenGraphFilter>;
+  robots?: InputMaybe<RobotsFilter>;
   title?: InputMaybe<StringFilter>;
+  twitter?: InputMaybe<TwitterFilter>;
 };
 
 export type MetadataSorting = {
   _key?: InputMaybe<SortOrder>;
   _type?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
-  image?: InputMaybe<ImageSorting>;
-  noindex?: InputMaybe<SortOrder>;
+  openGraph?: InputMaybe<OpenGraphSorting>;
+  robots?: InputMaybe<RobotsSorting>;
   title?: InputMaybe<SortOrder>;
+  twitter?: InputMaybe<TwitterSorting>;
+};
+
+export type MobileMenu = {
+  __typename?: 'MobileMenu';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  closeButton?: Maybe<Scalars['String']['output']>;
+  menuLabel?: Maybe<Scalars['String']['output']>;
+  toggleButton?: Maybe<Scalars['String']['output']>;
+};
+
+export type MobileMenuFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  closeButton?: InputMaybe<StringFilter>;
+  menuLabel?: InputMaybe<StringFilter>;
+  toggleButton?: InputMaybe<StringFilter>;
+};
+
+export type MobileMenuSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  closeButton?: InputMaybe<SortOrder>;
+  menuLabel?: InputMaybe<SortOrder>;
+  toggleButton?: InputMaybe<SortOrder>;
 };
 
 export type Navigation = Document & {
@@ -1035,6 +1366,76 @@ export type NavigationSorting = {
   _rev?: InputMaybe<SortOrder>;
   _type?: InputMaybe<SortOrder>;
   _updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type OpenGraph = {
+  __typename?: 'OpenGraph';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  /** Description for social media sharing */
+  description?: Maybe<Scalars['String']['output']>;
+  image?: Maybe<OpenGraphImage>;
+  /** The name of the website */
+  siteName?: Maybe<Scalars['String']['output']>;
+  /** Title for social media sharing */
+  title?: Maybe<Scalars['String']['output']>;
+  /** The type of content (e.g., website, article) */
+  type?: Maybe<Scalars['String']['output']>;
+  /** The canonical URL of the page */
+  url?: Maybe<Scalars['String']['output']>;
+};
+
+export type OpenGraphFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  description?: InputMaybe<StringFilter>;
+  image?: InputMaybe<OpenGraphImageFilter>;
+  siteName?: InputMaybe<StringFilter>;
+  title?: InputMaybe<StringFilter>;
+  type?: InputMaybe<StringFilter>;
+  url?: InputMaybe<StringFilter>;
+};
+
+export type OpenGraphImage = {
+  __typename?: 'OpenGraphImage';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  /** Alternative text for accessibility */
+  alt?: Maybe<Scalars['String']['output']>;
+  /** Height of the image in pixels */
+  height?: Maybe<Scalars['Float']['output']>;
+  url?: Maybe<Image>;
+  /** Width of the image in pixels */
+  width?: Maybe<Scalars['Float']['output']>;
+};
+
+export type OpenGraphImageFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  alt?: InputMaybe<StringFilter>;
+  height?: InputMaybe<FloatFilter>;
+  url?: InputMaybe<ImageFilter>;
+  width?: InputMaybe<FloatFilter>;
+};
+
+export type OpenGraphImageSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  alt?: InputMaybe<SortOrder>;
+  height?: InputMaybe<SortOrder>;
+  url?: InputMaybe<ImageSorting>;
+  width?: InputMaybe<SortOrder>;
+};
+
+export type OpenGraphSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  description?: InputMaybe<SortOrder>;
+  image?: InputMaybe<OpenGraphImageSorting>;
+  siteName?: InputMaybe<SortOrder>;
+  title?: InputMaybe<SortOrder>;
+  type?: InputMaybe<SortOrder>;
+  url?: InputMaybe<SortOrder>;
 };
 
 export type Post = Document & {
@@ -1133,12 +1534,40 @@ export type PricingCardSorting = {
   variant?: InputMaybe<SortOrder>;
 };
 
+export type Robots = {
+  __typename?: 'Robots';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  /** Allow search engines to follow links on this page */
+  follow?: Maybe<Scalars['Boolean']['output']>;
+  googleBot?: Maybe<GoogleBot>;
+  /** Allow search engines to index this page */
+  index?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type RobotsFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  follow?: InputMaybe<BooleanFilter>;
+  googleBot?: InputMaybe<GoogleBotFilter>;
+  index?: InputMaybe<BooleanFilter>;
+};
+
+export type RobotsSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  follow?: InputMaybe<SortOrder>;
+  googleBot?: InputMaybe<GoogleBotSorting>;
+  index?: InputMaybe<SortOrder>;
+};
+
 export type RootQuery = {
   __typename?: 'RootQuery';
   AboutPage?: Maybe<AboutPage>;
   ApproachPage?: Maybe<ApproachPage>;
   BlogPage?: Maybe<BlogPage>;
   CoachingPage?: Maybe<CoachingPage>;
+  Configuration?: Maybe<Configuration>;
   ContactPage?: Maybe<ContactPage>;
   Document?: Maybe<Document>;
   Footer?: Maybe<Footer>;
@@ -1159,11 +1588,11 @@ export type RootQuery = {
   SectionPricing?: Maybe<SectionPricing>;
   SectionTestimonial?: Maybe<SectionTestimonial>;
   SectionTimeline?: Maybe<SectionTimeline>;
-  SiteSettings?: Maybe<SiteSettings>;
   allAboutPage: Array<AboutPage>;
   allApproachPage: Array<ApproachPage>;
   allBlogPage: Array<BlogPage>;
   allCoachingPage: Array<CoachingPage>;
+  allConfiguration: Array<Configuration>;
   allContactPage: Array<ContactPage>;
   allDocument: Array<Document>;
   allFooter: Array<Footer>;
@@ -1184,7 +1613,6 @@ export type RootQuery = {
   allSectionPricing: Array<SectionPricing>;
   allSectionTestimonial: Array<SectionTestimonial>;
   allSectionTimeline: Array<SectionTimeline>;
-  allSiteSettings: Array<SiteSettings>;
 };
 
 export type RootQueryAboutPageArgs = {
@@ -1200,6 +1628,10 @@ export type RootQueryBlogPageArgs = {
 };
 
 export type RootQueryCoachingPageArgs = {
+  id: Scalars['ID']['input'];
+};
+
+export type RootQueryConfigurationArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -1283,10 +1715,6 @@ export type RootQuerySectionTimelineArgs = {
   id: Scalars['ID']['input'];
 };
 
-export type RootQuerySiteSettingsArgs = {
-  id: Scalars['ID']['input'];
-};
-
 export type RootQueryAllAboutPageArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -1313,6 +1741,13 @@ export type RootQueryAllCoachingPageArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<CoachingPageSorting>>;
   where?: InputMaybe<CoachingPageFilter>;
+};
+
+export type RootQueryAllConfigurationArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<ConfigurationSorting>>;
+  where?: InputMaybe<ConfigurationFilter>;
 };
 
 export type RootQueryAllContactPageArgs = {
@@ -1453,13 +1888,6 @@ export type RootQueryAllSectionTimelineArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<SectionTimelineSorting>>;
   where?: InputMaybe<SectionTimelineFilter>;
-};
-
-export type RootQueryAllSiteSettingsArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<SiteSettingsSorting>>;
-  where?: InputMaybe<SiteSettingsFilter>;
 };
 
 export type SanityAssetSourceData = {
@@ -2514,49 +2942,24 @@ export type SectionTimelineSorting = {
   title?: InputMaybe<SortOrder>;
 };
 
-export type SiteSettings = Document & {
-  __typename?: 'SiteSettings';
-  /** Date the document was created */
-  _createdAt?: Maybe<Scalars['DateTime']['output']>;
-  /** Document ID */
-  _id?: Maybe<Scalars['ID']['output']>;
+export type Seo = {
+  __typename?: 'Seo';
   _key?: Maybe<Scalars['String']['output']>;
-  /** Current document revision */
-  _rev?: Maybe<Scalars['String']['output']>;
-  /** Document type */
   _type?: Maybe<Scalars['String']['output']>;
-  /** Date the document was last modified */
-  _updatedAt?: Maybe<Scalars['DateTime']['output']>;
   defaultMetaImage?: Maybe<Image>;
-  description?: Maybe<Scalars['String']['output']>;
   keywords?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  title?: Maybe<Scalars['String']['output']>;
 };
 
-export type SiteSettingsFilter = {
-  /** Apply filters on document level */
-  _?: InputMaybe<Sanity_DocumentFilter>;
-  _createdAt?: InputMaybe<DatetimeFilter>;
-  _id?: InputMaybe<IdFilter>;
+export type SeoFilter = {
   _key?: InputMaybe<StringFilter>;
-  _rev?: InputMaybe<StringFilter>;
   _type?: InputMaybe<StringFilter>;
-  _updatedAt?: InputMaybe<DatetimeFilter>;
   defaultMetaImage?: InputMaybe<ImageFilter>;
-  description?: InputMaybe<StringFilter>;
-  title?: InputMaybe<StringFilter>;
 };
 
-export type SiteSettingsSorting = {
-  _createdAt?: InputMaybe<SortOrder>;
-  _id?: InputMaybe<SortOrder>;
+export type SeoSorting = {
   _key?: InputMaybe<SortOrder>;
-  _rev?: InputMaybe<SortOrder>;
   _type?: InputMaybe<SortOrder>;
-  _updatedAt?: InputMaybe<SortOrder>;
   defaultMetaImage?: InputMaybe<ImageSorting>;
-  description?: InputMaybe<SortOrder>;
-  title?: InputMaybe<SortOrder>;
 };
 
 export type Slug = {
@@ -2659,6 +3062,25 @@ export type TestimonialSorting = {
   role?: InputMaybe<SortOrder>;
 };
 
+export type ThemeToggle = {
+  __typename?: 'ThemeToggle';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  label?: Maybe<Scalars['String']['output']>;
+};
+
+export type ThemeToggleFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  label?: InputMaybe<StringFilter>;
+};
+
+export type ThemeToggleSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  label?: InputMaybe<SortOrder>;
+};
+
 export type TimeSlot = {
   __typename?: 'TimeSlot';
   _key?: Maybe<Scalars['String']['output']>;
@@ -2704,6 +3126,168 @@ export type TimelineEventSorting = {
   date?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
+};
+
+export type Twitter = {
+  __typename?: 'Twitter';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  card?: Maybe<Scalars['String']['output']>;
+  /** @username of content creator */
+  creator?: Maybe<Scalars['String']['output']>;
+  image?: Maybe<TwitterImage>;
+  /** @username of website */
+  site?: Maybe<Scalars['String']['output']>;
+};
+
+export type TwitterFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  card?: InputMaybe<StringFilter>;
+  creator?: InputMaybe<StringFilter>;
+  image?: InputMaybe<TwitterImageFilter>;
+  site?: InputMaybe<StringFilter>;
+};
+
+export type TwitterImage = {
+  __typename?: 'TwitterImage';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  /** Alternative text for accessibility */
+  alt?: Maybe<Scalars['String']['output']>;
+  url?: Maybe<Image>;
+};
+
+export type TwitterImageFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  alt?: InputMaybe<StringFilter>;
+  url?: InputMaybe<ImageFilter>;
+};
+
+export type TwitterImageSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  alt?: InputMaybe<SortOrder>;
+  url?: InputMaybe<ImageSorting>;
+};
+
+export type TwitterSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  card?: InputMaybe<SortOrder>;
+  creator?: InputMaybe<SortOrder>;
+  image?: InputMaybe<TwitterImageSorting>;
+  site?: InputMaybe<SortOrder>;
+};
+
+export type UiInterface = {
+  __typename?: 'UiInterface';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  buttons?: Maybe<ButtonLabels>;
+  mobileMenu?: Maybe<MobileMenu>;
+  themeToggle?: Maybe<ThemeToggle>;
+};
+
+export type UiInterfaceFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  buttons?: InputMaybe<ButtonLabelsFilter>;
+  mobileMenu?: InputMaybe<MobileMenuFilter>;
+  themeToggle?: InputMaybe<ThemeToggleFilter>;
+};
+
+export type UiInterfaceSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  buttons?: InputMaybe<ButtonLabelsSorting>;
+  mobileMenu?: InputMaybe<MobileMenuSorting>;
+  themeToggle?: InputMaybe<ThemeToggleSorting>;
+};
+
+export type AriaFieldsFragment = {
+  __typename?: 'Accessibility';
+  closeButtons?: {
+    __typename?: 'CloseButtons';
+    toast?: string;
+    modal?: string;
+  };
+  calendar?: {
+    __typename?: 'CalendarNavigation';
+    previousMonth?: string;
+    nextMonth?: string;
+  };
+};
+
+export type ConfigFieldsFragment = {
+  __typename?: 'Configuration';
+  _id?: string;
+  _type?: string;
+  title?: string;
+  description?: string;
+  seo?: {
+    __typename?: 'Seo';
+    keywords?: Array<string>;
+    defaultMetaImage?: {
+      __typename?: 'Image';
+      asset?: {
+        __typename?: 'SanityImageAsset';
+        url?: string;
+        altText?: string;
+      };
+      hotspot?: { __typename?: 'SanityImageHotspot'; x?: number; y?: number };
+    };
+  };
+  accessibility?: {
+    __typename?: 'Accessibility';
+    closeButtons?: {
+      __typename?: 'CloseButtons';
+      toast?: string;
+      modal?: string;
+    };
+    calendar?: {
+      __typename?: 'CalendarNavigation';
+      previousMonth?: string;
+      nextMonth?: string;
+    };
+  };
+  interface?: {
+    __typename?: 'UiInterface';
+    mobileMenu?: {
+      __typename?: 'MobileMenu';
+      toggleButton?: string;
+      menuLabel?: string;
+      closeButton?: string;
+    };
+    themeToggle?: { __typename?: 'ThemeToggle'; label?: string };
+    buttons?: {
+      __typename?: 'ButtonLabels';
+      loadMore?: string;
+      readMore?: string;
+      submit?: string;
+      close?: string;
+    };
+  };
+  blog?: {
+    __typename?: 'Blog';
+    labels?: {
+      __typename?: 'BlogLabels';
+      featured?: string;
+      readArticle?: string;
+    };
+    paths?: { __typename?: 'BlogPaths'; blog?: string };
+  };
+  forms?: {
+    __typename?: 'Forms';
+    messages?: {
+      __typename?: 'FormMessages';
+      required?: string;
+      invalid?: string;
+      success?: string;
+      error?: string;
+    };
+  };
 };
 
 export type FooterFieldsFragment = {
@@ -2783,10 +3367,45 @@ export type MetadataFieldsFragment = {
   title?: string;
   description?: string;
   keywords?: Array<string>;
-  noindex?: boolean;
-  image?: {
-    __typename?: 'Image';
-    asset?: { __typename?: 'SanityImageAsset'; url?: string; altText?: string };
+  openGraph?: {
+    __typename?: 'OpenGraph';
+    title?: string;
+    description?: string;
+    type?: string;
+    url?: string;
+    siteName?: string;
+    image?: {
+      __typename?: 'OpenGraphImage';
+      width?: number;
+      height?: number;
+      alt?: string;
+      url?: {
+        __typename?: 'Image';
+        asset?: { __typename?: 'SanityImageAsset'; url?: string };
+        hotspot?: { __typename?: 'SanityImageHotspot'; x?: number; y?: number };
+      };
+    };
+  };
+  twitter?: {
+    __typename?: 'Twitter';
+    card?: string;
+    site?: string;
+    creator?: string;
+    image?: {
+      __typename?: 'TwitterImage';
+      alt?: string;
+      url?: {
+        __typename?: 'Image';
+        asset?: { __typename?: 'SanityImageAsset'; url?: string };
+        hotspot?: { __typename?: 'SanityImageHotspot'; x?: number; y?: number };
+      };
+    };
+  };
+  robots?: {
+    __typename?: 'Robots';
+    index?: boolean;
+    follow?: boolean;
+    googleBot?: { __typename?: 'GoogleBot'; index?: boolean; follow?: boolean };
   };
 };
 
@@ -2813,13 +3432,56 @@ export type PageFieldsFragment = {
     title?: string;
     description?: string;
     keywords?: Array<string>;
-    noindex?: boolean;
-    image?: {
-      __typename?: 'Image';
-      asset?: {
-        __typename?: 'SanityImageAsset';
-        url?: string;
-        altText?: string;
+    openGraph?: {
+      __typename?: 'OpenGraph';
+      title?: string;
+      description?: string;
+      type?: string;
+      url?: string;
+      siteName?: string;
+      image?: {
+        __typename?: 'OpenGraphImage';
+        width?: number;
+        height?: number;
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    twitter?: {
+      __typename?: 'Twitter';
+      card?: string;
+      site?: string;
+      creator?: string;
+      image?: {
+        __typename?: 'TwitterImage';
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    robots?: {
+      __typename?: 'Robots';
+      index?: boolean;
+      follow?: boolean;
+      googleBot?: {
+        __typename?: 'GoogleBot';
+        index?: boolean;
+        follow?: boolean;
       };
     };
   };
@@ -3008,11 +3670,22 @@ export type PageFieldsFragment = {
         showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
-          emailSubject?: string;
           emailTo?: string;
-          errorMessage?: string;
-          submitLabel?: string;
-          successMessage?: string;
+          emailSubject?: string;
+          fields?: Array<{
+            __typename?: 'FormField';
+            _key?: string;
+            label?: string;
+            type?: string;
+            required?: boolean;
+            placeholder?: string;
+            options?: Array<{
+              __typename?: 'FormFieldOption';
+              _key?: string;
+              label?: string;
+              value?: string;
+            }>;
+          }>;
         };
       }
     | {
@@ -3219,13 +3892,56 @@ export type PostFieldsFragment = {
     title?: string;
     description?: string;
     keywords?: Array<string>;
-    noindex?: boolean;
-    image?: {
-      __typename?: 'Image';
-      asset?: {
-        __typename?: 'SanityImageAsset';
-        url?: string;
-        altText?: string;
+    openGraph?: {
+      __typename?: 'OpenGraph';
+      title?: string;
+      description?: string;
+      type?: string;
+      url?: string;
+      siteName?: string;
+      image?: {
+        __typename?: 'OpenGraphImage';
+        width?: number;
+        height?: number;
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    twitter?: {
+      __typename?: 'Twitter';
+      card?: string;
+      site?: string;
+      creator?: string;
+      image?: {
+        __typename?: 'TwitterImage';
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    robots?: {
+      __typename?: 'Robots';
+      index?: boolean;
+      follow?: boolean;
+      googleBot?: {
+        __typename?: 'GoogleBot';
+        index?: boolean;
+        follow?: boolean;
       };
     };
   };
@@ -3421,11 +4137,22 @@ export type SectionFormFieldsFragment = {
   showBorder?: boolean;
   form?: {
     __typename?: 'FormConfiguration';
-    emailSubject?: string;
     emailTo?: string;
-    errorMessage?: string;
-    submitLabel?: string;
-    successMessage?: string;
+    emailSubject?: string;
+    fields?: Array<{
+      __typename?: 'FormField';
+      _key?: string;
+      label?: string;
+      type?: string;
+      required?: boolean;
+      placeholder?: string;
+      options?: Array<{
+        __typename?: 'FormFieldOption';
+        _key?: string;
+        label?: string;
+        value?: string;
+      }>;
+    }>;
   };
 };
 
@@ -3600,13 +4327,56 @@ export type GetPageQuery = {
       title?: string;
       description?: string;
       keywords?: Array<string>;
-      noindex?: boolean;
-      image?: {
-        __typename?: 'Image';
-        asset?: {
-          __typename?: 'SanityImageAsset';
-          url?: string;
-          altText?: string;
+      openGraph?: {
+        __typename?: 'OpenGraph';
+        title?: string;
+        description?: string;
+        type?: string;
+        url?: string;
+        siteName?: string;
+        image?: {
+          __typename?: 'OpenGraphImage';
+          width?: number;
+          height?: number;
+          alt?: string;
+          url?: {
+            __typename?: 'Image';
+            asset?: { __typename?: 'SanityImageAsset'; url?: string };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+            };
+          };
+        };
+      };
+      twitter?: {
+        __typename?: 'Twitter';
+        card?: string;
+        site?: string;
+        creator?: string;
+        image?: {
+          __typename?: 'TwitterImage';
+          alt?: string;
+          url?: {
+            __typename?: 'Image';
+            asset?: { __typename?: 'SanityImageAsset'; url?: string };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+            };
+          };
+        };
+      };
+      robots?: {
+        __typename?: 'Robots';
+        index?: boolean;
+        follow?: boolean;
+        googleBot?: {
+          __typename?: 'GoogleBot';
+          index?: boolean;
+          follow?: boolean;
         };
       };
     };
@@ -3795,11 +4565,22 @@ export type GetPageQuery = {
           showBorder?: boolean;
           form?: {
             __typename?: 'FormConfiguration';
-            emailSubject?: string;
             emailTo?: string;
-            errorMessage?: string;
-            submitLabel?: string;
-            successMessage?: string;
+            emailSubject?: string;
+            fields?: Array<{
+              __typename?: 'FormField';
+              _key?: string;
+              label?: string;
+              type?: string;
+              required?: boolean;
+              placeholder?: string;
+              options?: Array<{
+                __typename?: 'FormFieldOption';
+                _key?: string;
+                label?: string;
+                value?: string;
+              }>;
+            }>;
           };
         }
       | {
@@ -3957,13 +4738,87 @@ export type GetPageQuery = {
   }>;
 };
 
+export type GetConfigQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetConfigQuery = {
+  __typename?: 'RootQuery';
+  allConfiguration: Array<{
+    __typename?: 'Configuration';
+    _id?: string;
+    _type?: string;
+    title?: string;
+    description?: string;
+    seo?: {
+      __typename?: 'Seo';
+      keywords?: Array<string>;
+      defaultMetaImage?: {
+        __typename?: 'Image';
+        asset?: {
+          __typename?: 'SanityImageAsset';
+          url?: string;
+          altText?: string;
+        };
+        hotspot?: { __typename?: 'SanityImageHotspot'; x?: number; y?: number };
+      };
+    };
+    accessibility?: {
+      __typename?: 'Accessibility';
+      closeButtons?: {
+        __typename?: 'CloseButtons';
+        toast?: string;
+        modal?: string;
+      };
+      calendar?: {
+        __typename?: 'CalendarNavigation';
+        previousMonth?: string;
+        nextMonth?: string;
+      };
+    };
+    interface?: {
+      __typename?: 'UiInterface';
+      mobileMenu?: {
+        __typename?: 'MobileMenu';
+        toggleButton?: string;
+        menuLabel?: string;
+        closeButton?: string;
+      };
+      themeToggle?: { __typename?: 'ThemeToggle'; label?: string };
+      buttons?: {
+        __typename?: 'ButtonLabels';
+        loadMore?: string;
+        readMore?: string;
+        submit?: string;
+        close?: string;
+      };
+    };
+    blog?: {
+      __typename?: 'Blog';
+      labels?: {
+        __typename?: 'BlogLabels';
+        featured?: string;
+        readArticle?: string;
+      };
+      paths?: { __typename?: 'BlogPaths'; blog?: string };
+    };
+    forms?: {
+      __typename?: 'Forms';
+      messages?: {
+        __typename?: 'FormMessages';
+        required?: string;
+        invalid?: string;
+        success?: string;
+        error?: string;
+      };
+    };
+  }>;
+};
+
 export type GetGlobalDataQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetGlobalDataQuery = {
   __typename?: 'RootQuery';
   allNavigation: Array<{
     __typename?: 'Navigation';
-    _id?: string;
     items?: Array<{
       __typename?: 'NavigationItem';
       _key?: string;
@@ -3973,7 +4828,6 @@ export type GetGlobalDataQuery = {
   }>;
   allFooter: Array<{
     __typename?: 'Footer';
-    _id?: string;
     copyright?: string;
     contact?: { __typename?: 'FooterContact'; email?: string; phone?: string };
     socialLinks?: Array<{
@@ -3985,7 +4839,6 @@ export type GetGlobalDataQuery = {
   }>;
   allMenuFooter: Array<{
     __typename?: 'MenuFooter';
-    _id?: string;
     about?: {
       __typename?: 'MenuFooterAbout';
       title?: string;
@@ -4006,6 +4859,75 @@ export type GetGlobalDataQuery = {
         label?: string;
         href?: string;
         linkText?: string;
+      };
+    };
+  }>;
+  allConfiguration: Array<{
+    __typename?: 'Configuration';
+    _id?: string;
+    _type?: string;
+    title?: string;
+    description?: string;
+    seo?: {
+      __typename?: 'Seo';
+      keywords?: Array<string>;
+      defaultMetaImage?: {
+        __typename?: 'Image';
+        asset?: {
+          __typename?: 'SanityImageAsset';
+          url?: string;
+          altText?: string;
+        };
+        hotspot?: { __typename?: 'SanityImageHotspot'; x?: number; y?: number };
+      };
+    };
+    accessibility?: {
+      __typename?: 'Accessibility';
+      closeButtons?: {
+        __typename?: 'CloseButtons';
+        toast?: string;
+        modal?: string;
+      };
+      calendar?: {
+        __typename?: 'CalendarNavigation';
+        previousMonth?: string;
+        nextMonth?: string;
+      };
+    };
+    interface?: {
+      __typename?: 'UiInterface';
+      mobileMenu?: {
+        __typename?: 'MobileMenu';
+        toggleButton?: string;
+        menuLabel?: string;
+        closeButton?: string;
+      };
+      themeToggle?: { __typename?: 'ThemeToggle'; label?: string };
+      buttons?: {
+        __typename?: 'ButtonLabels';
+        loadMore?: string;
+        readMore?: string;
+        submit?: string;
+        close?: string;
+      };
+    };
+    blog?: {
+      __typename?: 'Blog';
+      labels?: {
+        __typename?: 'BlogLabels';
+        featured?: string;
+        readArticle?: string;
+      };
+      paths?: { __typename?: 'BlogPaths'; blog?: string };
+    };
+    forms?: {
+      __typename?: 'Forms';
+      messages?: {
+        __typename?: 'FormMessages';
+        required?: string;
+        invalid?: string;
+        success?: string;
+        error?: string;
       };
     };
   }>;

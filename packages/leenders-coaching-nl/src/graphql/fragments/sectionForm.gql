@@ -9,10 +9,19 @@ fragment SectionFormFields on SectionForm {
   maxWidth
   showBorder
   form {
-    emailSubject
     emailTo
-    errorMessage
-    submitLabel
-    successMessage
+    emailSubject
+    fields {
+      _key
+      label
+      type
+      required
+      placeholder
+      options {
+        _key
+        label
+        value
+      }
+    }
   }
 }

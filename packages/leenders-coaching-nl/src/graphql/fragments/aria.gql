@@ -1,0 +1,10 @@
+fragment AriaFields on Accessibility {
+  closeButtons {
+    toast
+    modal
+  }
+  calendar {
+    previousMonth
+    nextMonth
+  }
+}

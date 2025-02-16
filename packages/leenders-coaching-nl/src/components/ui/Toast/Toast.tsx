@@ -7,7 +7,7 @@ import { IoClose } from 'react-icons/io5';
 import { motion, AnimatePresence, type HTMLMotionProps } from 'motion/react';
 import { Flex } from '@/components/ui/Flex';
 import { modalStyles, type ModalVariant } from '../Modal/Modal';
-import { ariaConfig } from '@/config/aria.config';
+import { useConfig } from '@/components/providers/ClientConfigProvider';
 
 /**
  * Props for the Toast component
@@ -65,6 +65,7 @@ export const Toast = ({
   className,
   ...props
 }: ToastProps) => {
+  const { accessibility } = useConfig();
   const [isVisible, setIsVisible] = useState(true);
   const [progress, setProgress] = useState(100);
   const progressInterval = useRef<number | undefined>(undefined);
@@ -181,7 +182,7 @@ export const Toast = ({
                   scale: 1.1,
                   transition: { duration: 0.2 },
                 }}
-                aria-label={ariaConfig.toast.closeButton}
+                aria-label={accessibility.closeButtons.toast}
               >
                 <IoClose className="h-5 w-5" />
               </motion.button>
