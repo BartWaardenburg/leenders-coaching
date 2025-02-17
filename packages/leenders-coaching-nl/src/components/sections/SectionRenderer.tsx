@@ -22,9 +22,6 @@ export const SectionRenderer: FC<SectionRendererProps> = ({ type, data }) => {
     const Component = sectionRegistry[type];
     const transform = sectionTransformers[type];
 
-    // Transform the data and render the component
-    // We use a type assertion here because we know the transformer returns the correct props
-    // for each section type, but TypeScript can't infer this correctly at runtime
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return <Component {...(transform(data) as any)} />;
   } catch (error) {

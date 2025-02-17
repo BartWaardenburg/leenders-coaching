@@ -36,16 +36,16 @@ type SectionTestimonialProps = {
   showBorder?: boolean;
   /** Maximum width of the content */
   maxWidth?:
-    | 'sm'
-    | 'md'
-    | 'lg'
-    | 'xl'
-    | '2xl'
-    | '3xl'
-    | '4xl'
-    | '5xl'
-    | '6xl'
-    | '7xl';
+  | 'sm'
+  | 'md'
+  | 'lg'
+  | 'xl'
+  | '2xl'
+  | '3xl'
+  | '4xl'
+  | '5xl'
+  | '6xl'
+  | '7xl';
 } & ComponentPropsWithoutRef<'section'>;
 
 const TestimonialSlide = ({ quote, name, role, image }: Testimonial) => (

@@ -7,6 +7,7 @@ import type { FAQItem } from '@/components/ui/FAQ';
 export interface SanityFAQSection extends Record<string, unknown> {
   _type: 'sectionFAQ';
   title?: string;
+  displayTitle?: string;
   description?: string;
   items: FAQItem[];
   background?: PastelColor;
@@ -45,7 +46,7 @@ export const transformFAQSection = (
   }
 
   return {
-    title: data.title,
+    title: data.displayTitle || undefined,
     description: data.description,
     items: data.items,
     background: data.background,

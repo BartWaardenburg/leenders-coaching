@@ -7,6 +7,7 @@ import type { TimelineStep } from '@/components/ui/Timeline';
 export interface SanityTimelineSection extends Record<string, unknown> {
   _type: 'sectionTimeline';
   title?: string;
+  displayTitle?: string;
   description?: string;
   steps: TimelineStep[];
   background?: PastelColor;
@@ -45,7 +46,7 @@ export const transformTimelineSection = (
   }
 
   return {
-    title: data.title,
+    title: data.displayTitle || undefined,
     description: data.description,
     steps: data.steps,
     background: data.background,

@@ -6,6 +6,7 @@ import type { PastelColor } from '@/components/ui/Section';
 export interface SanityFormSection extends Record<string, unknown> {
   _type: 'sectionForm';
   title?: string;
+  displayTitle?: string;
   description?: string;
   submitLabel?: string;
   showBorder?: boolean;
@@ -44,7 +45,7 @@ export const transformFormSection = (
   }
 
   return {
-    title: data.title,
+    title: data.displayTitle || undefined,
     description: data.description,
     submitLabel: data.submitLabel,
     showBorder: data.showBorder,

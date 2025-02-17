@@ -14,9 +14,10 @@ interface SanityImage {
 /* Sanity data type */
 export interface SanityFeaturedSection extends Record<string, unknown> {
   _type: 'sectionFeatured';
-  title: string;
-  description: string;
-  image?: SanityImage | null;
+  title?: string;
+  displayTitle?: string;
+  description?: string;
+  image?: SanityImage;
   imageAlt?: string;
   cta?: {
     href: string;
@@ -59,11 +60,7 @@ const isSanityImage = (image: unknown): image is SanityImage => {
 export const isFeaturedSection = (
   data: Record<string, unknown>,
 ): data is SanityFeaturedSection => {
-  return (
-    data._type === 'sectionFeatured' &&
-    typeof data.title === 'string' &&
-    typeof data.description === 'string'
-  );
+  return data._type === 'sectionFeatured';
 };
 
 /**
@@ -87,10 +84,10 @@ export const transformFeaturedSection = (
   }
 
   return {
-    title: data.title,
+    title: data.displayTitle || undefined,
     description: data.description,
     image: imageUrl,
-    imageAlt: data.imageAlt || data.title, // Fallback to title if alt text is missing
+    imageAlt: data.imageAlt || data.title || '',
     cta: data.cta,
     background: data.background,
     border: data.border,

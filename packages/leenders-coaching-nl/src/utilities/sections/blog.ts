@@ -5,6 +5,7 @@ import type { SectionBlog } from '@/components/sections/SectionBlog';
 export interface SanityBlogSection extends Record<string, unknown> {
   _type: 'sectionBlog';
   title: string;
+  displayTitle?: string;
   description?: string;
   posts: Array<{
     title: string;
@@ -39,7 +40,7 @@ export const transformBlogSection = (
   }
 
   return {
-    title: data.title,
+    title: data.displayTitle || undefined,
     description: data.description || '',
     posts: data.posts,
     postsPerPage: data.postsPerPage,

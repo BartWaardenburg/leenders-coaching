@@ -47,7 +47,7 @@ interface PricingCardProps {
   features: PricingFeature[]
   isPopular?: boolean
   ctaLabel: string
-  onCtaClick: () => void
+  onCtaClick?: () => void
   variant?: PricingCardVariant
 }
 
@@ -150,16 +150,18 @@ export const PricingCard = ({
               </Box>
             </Box>
 
-            <Flex className="mt-auto" justify="end">
-              <Button
-                onClick={onCtaClick}
-                variant={variant}
-                className="transition-theme"
-                fullWidthOnContainer
-              >
-                {ctaLabel}
-              </Button>
-            </Flex>
+            {onCtaClick && (
+              <Flex className="mt-auto" justify="end">
+                <Button
+                  onClick={onCtaClick}
+                  variant={variant}
+                  className="transition-theme"
+                  fullWidthOnContainer
+                >
+                  {ctaLabel}
+                </Button>
+              </Flex>
+            )}
           </Flex>
         </Box>
       </Flex>

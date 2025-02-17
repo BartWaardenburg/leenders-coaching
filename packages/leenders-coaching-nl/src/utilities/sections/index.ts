@@ -1,4 +1,9 @@
 import type { ComponentProps } from 'react';
+import type { SectionBlogOrSectionCalendarOrSectionCardsOrSectionContentOrSectionFaqOrSectionFeaturedOrSectionFormOrSectionHeaderOrSectionPricingOrSectionTestimonialOrSectionTimeline } from '@/generated/graphql';
+
+/* Type alias for the section union type to improve code readability */
+export type Section =
+  SectionBlogOrSectionCalendarOrSectionCardsOrSectionContentOrSectionFaqOrSectionFeaturedOrSectionFormOrSectionHeaderOrSectionPricingOrSectionTestimonialOrSectionTimeline;
 
 import { transformHeaderSection } from './header';
 import { transformBlogSection } from './blog';

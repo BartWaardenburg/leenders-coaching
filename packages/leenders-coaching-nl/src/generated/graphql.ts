@@ -3363,7 +3363,7 @@ export type MetadataFieldsFragment = {
   };
 };
 
-export type PageFieldsFragment = {
+type PageFields_AboutPage_Fragment = {
   __typename?: 'AboutPage';
   _id?: string;
   _createdAt?: any;
@@ -3433,8 +3433,8 @@ export type PageFieldsFragment = {
     | {
         __typename?: 'SectionBlog';
         _id?: string;
-        _type?: string;
         _key?: string;
+        _type?: string;
         title?: string;
         displayTitle?: string;
         subtitle?: string;
@@ -3448,8 +3448,8 @@ export type PageFieldsFragment = {
     | {
         __typename?: 'SectionCalendar';
         _id?: string;
-        _type?: string;
         _key?: string;
+        _type?: string;
         title?: string;
         displayTitle?: string;
         subtitle?: string;
@@ -3470,8 +3470,8 @@ export type PageFieldsFragment = {
     | {
         __typename?: 'SectionCards';
         _id?: string;
-        _type?: string;
         _key?: string;
+        _type?: string;
         title?: string;
         displayTitle?: string;
         subtitle?: string;
@@ -3522,8 +3522,8 @@ export type PageFieldsFragment = {
     | {
         __typename?: 'SectionContent';
         _id?: string;
-        _type?: string;
         _key?: string;
+        _type?: string;
         title?: string;
         displayTitle?: string;
         subtitle?: string;
@@ -3535,8 +3535,8 @@ export type PageFieldsFragment = {
     | {
         __typename?: 'SectionFAQ';
         _id?: string;
-        _type?: string;
         _key?: string;
+        _type?: string;
         title?: string;
         displayTitle?: string;
         subtitle?: string;
@@ -3553,8 +3553,8 @@ export type PageFieldsFragment = {
     | {
         __typename?: 'SectionFeatured';
         _id?: string;
-        _type?: string;
         _key?: string;
+        _type?: string;
         title?: string;
         displayTitle?: string;
         subtitle?: string;
@@ -3604,8 +3604,8 @@ export type PageFieldsFragment = {
     | {
         __typename?: 'SectionForm';
         _id?: string;
-        _type?: string;
         _key?: string;
+        _type?: string;
         title?: string;
         displayTitle?: string;
         subtitle?: string;
@@ -3635,8 +3635,8 @@ export type PageFieldsFragment = {
     | {
         __typename?: 'SectionHeader';
         _id?: string;
-        _type?: string;
         _key?: string;
+        _type?: string;
         title?: string;
         displayTitle?: string;
         subtitle?: string;
@@ -3686,8 +3686,8 @@ export type PageFieldsFragment = {
     | {
         __typename?: 'SectionPricing';
         _id?: string;
-        _type?: string;
         _key?: string;
+        _type?: string;
         title?: string;
         displayTitle?: string;
         subtitle?: string;
@@ -3714,8 +3714,8 @@ export type PageFieldsFragment = {
     | {
         __typename?: 'SectionTestimonial';
         _id?: string;
-        _type?: string;
         _key?: string;
+        _type?: string;
         title?: string;
         displayTitle?: string;
         subtitle?: string;
@@ -3766,8 +3766,8 @@ export type PageFieldsFragment = {
     | {
         __typename?: 'SectionTimeline';
         _id?: string;
-        _type?: string;
         _key?: string;
+        _type?: string;
         title?: string;
         displayTitle?: string;
         subtitle?: string;
@@ -3785,6 +3785,4886 @@ export type PageFieldsFragment = {
   >;
   slug?: { __typename?: 'Slug'; current?: string };
 };
+
+type PageFields_ApproachPage_Fragment = {
+  __typename?: 'ApproachPage';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+  title?: string;
+  metadata?: {
+    __typename?: 'Metadata';
+    title?: string;
+    description?: string;
+    keywords?: Array<string>;
+    openGraph?: {
+      __typename?: 'OpenGraph';
+      title?: string;
+      description?: string;
+      type?: string;
+      url?: string;
+      siteName?: string;
+      image?: {
+        __typename?: 'OpenGraphImage';
+        width?: number;
+        height?: number;
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    twitter?: {
+      __typename?: 'Twitter';
+      card?: string;
+      site?: string;
+      creator?: string;
+      image?: {
+        __typename?: 'TwitterImage';
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    robots?: {
+      __typename?: 'Robots';
+      index?: boolean;
+      follow?: boolean;
+      googleBot?: {
+        __typename?: 'GoogleBot';
+        index?: boolean;
+        follow?: boolean;
+      };
+    };
+  };
+  sections?: Array<
+    | {
+        __typename?: 'SectionBlog';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        postsToShow?: number;
+        showFeaturedOnly?: boolean;
+        sortOrder?: string;
+      }
+    | {
+        __typename?: 'SectionCalendar';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        settings?: {
+          __typename?: 'CalendarSettings';
+          availableDays?: Array<string>;
+          excludedDates?: Array<string>;
+          availableTimeSlots?: Array<{
+            __typename?: 'TimeSlot';
+            startTime?: string;
+            endTime?: string;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionCards';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        cards?: Array<{
+          __typename?: 'Card';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+          link?: { __typename?: 'Link'; text?: string; url?: string };
+        }>;
+      }
+    | {
+        __typename?: 'SectionContent';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        contentRaw?: any;
+      }
+    | {
+        __typename?: 'SectionFAQ';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        questions?: Array<{
+          __typename?: 'FaqItem';
+          _key?: string;
+          question?: string;
+          answer?: string;
+        }>;
+      }
+    | {
+        __typename?: 'SectionFeatured';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        items?: Array<{
+          __typename?: 'FeatureItem';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionForm';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        form?: {
+          __typename?: 'FormConfiguration';
+          emailTo?: string;
+          emailSubject?: string;
+          fields?: Array<{
+            __typename?: 'FormField';
+            _key?: string;
+            label?: string;
+            type?: string;
+            required?: boolean;
+            placeholder?: string;
+            options?: Array<{
+              __typename?: 'FormFieldOption';
+              _key?: string;
+              label?: string;
+              value?: string;
+            }>;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionHeader';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        image?: {
+          __typename?: 'Image';
+          asset?: {
+            __typename?: 'SanityImageAsset';
+            _id?: string;
+            url?: string;
+            altText?: string;
+            metadata?: {
+              __typename?: 'SanityImageMetadata';
+              lqip?: string;
+              dimensions?: {
+                __typename?: 'SanityImageDimensions';
+                width?: number;
+                height?: number;
+                aspectRatio?: number;
+              };
+            };
+          };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+            height?: number;
+            width?: number;
+          };
+          crop?: {
+            __typename?: 'SanityImageCrop';
+            top?: number;
+            bottom?: number;
+            left?: number;
+            right?: number;
+          };
+        };
+        cta?: {
+          __typename?: 'CallToAction';
+          text?: string;
+          link?: string;
+          variant?: string;
+        };
+      }
+    | {
+        __typename?: 'SectionPricing';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        pricingCards?: Array<{
+          __typename?: 'PricingCard';
+          _key?: string;
+          title?: string;
+          description?: string;
+          price?: string;
+          features?: Array<string>;
+          isPopular?: boolean;
+          variant?: string;
+          cta?: {
+            __typename?: 'CallToAction';
+            text?: string;
+            link?: string;
+            variant?: string;
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTestimonial';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        testimonials?: Array<{
+          __typename?: 'Testimonial';
+          _key?: string;
+          name?: string;
+          role?: string;
+          quote?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTimeline';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        events?: Array<{
+          __typename?: 'TimelineEvent';
+          _key?: string;
+          title?: string;
+          date?: string;
+          description?: string;
+        }>;
+      }
+  >;
+  slug?: { __typename?: 'Slug'; current?: string };
+};
+
+type PageFields_BlogPage_Fragment = {
+  __typename?: 'BlogPage';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+  title?: string;
+  metadata?: {
+    __typename?: 'Metadata';
+    title?: string;
+    description?: string;
+    keywords?: Array<string>;
+    openGraph?: {
+      __typename?: 'OpenGraph';
+      title?: string;
+      description?: string;
+      type?: string;
+      url?: string;
+      siteName?: string;
+      image?: {
+        __typename?: 'OpenGraphImage';
+        width?: number;
+        height?: number;
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    twitter?: {
+      __typename?: 'Twitter';
+      card?: string;
+      site?: string;
+      creator?: string;
+      image?: {
+        __typename?: 'TwitterImage';
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    robots?: {
+      __typename?: 'Robots';
+      index?: boolean;
+      follow?: boolean;
+      googleBot?: {
+        __typename?: 'GoogleBot';
+        index?: boolean;
+        follow?: boolean;
+      };
+    };
+  };
+  sections?: Array<
+    | {
+        __typename?: 'SectionBlog';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        postsToShow?: number;
+        showFeaturedOnly?: boolean;
+        sortOrder?: string;
+      }
+    | {
+        __typename?: 'SectionCalendar';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        settings?: {
+          __typename?: 'CalendarSettings';
+          availableDays?: Array<string>;
+          excludedDates?: Array<string>;
+          availableTimeSlots?: Array<{
+            __typename?: 'TimeSlot';
+            startTime?: string;
+            endTime?: string;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionCards';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        cards?: Array<{
+          __typename?: 'Card';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+          link?: { __typename?: 'Link'; text?: string; url?: string };
+        }>;
+      }
+    | {
+        __typename?: 'SectionContent';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        contentRaw?: any;
+      }
+    | {
+        __typename?: 'SectionFAQ';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        questions?: Array<{
+          __typename?: 'FaqItem';
+          _key?: string;
+          question?: string;
+          answer?: string;
+        }>;
+      }
+    | {
+        __typename?: 'SectionFeatured';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        items?: Array<{
+          __typename?: 'FeatureItem';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionForm';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        form?: {
+          __typename?: 'FormConfiguration';
+          emailTo?: string;
+          emailSubject?: string;
+          fields?: Array<{
+            __typename?: 'FormField';
+            _key?: string;
+            label?: string;
+            type?: string;
+            required?: boolean;
+            placeholder?: string;
+            options?: Array<{
+              __typename?: 'FormFieldOption';
+              _key?: string;
+              label?: string;
+              value?: string;
+            }>;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionHeader';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        image?: {
+          __typename?: 'Image';
+          asset?: {
+            __typename?: 'SanityImageAsset';
+            _id?: string;
+            url?: string;
+            altText?: string;
+            metadata?: {
+              __typename?: 'SanityImageMetadata';
+              lqip?: string;
+              dimensions?: {
+                __typename?: 'SanityImageDimensions';
+                width?: number;
+                height?: number;
+                aspectRatio?: number;
+              };
+            };
+          };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+            height?: number;
+            width?: number;
+          };
+          crop?: {
+            __typename?: 'SanityImageCrop';
+            top?: number;
+            bottom?: number;
+            left?: number;
+            right?: number;
+          };
+        };
+        cta?: {
+          __typename?: 'CallToAction';
+          text?: string;
+          link?: string;
+          variant?: string;
+        };
+      }
+    | {
+        __typename?: 'SectionPricing';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        pricingCards?: Array<{
+          __typename?: 'PricingCard';
+          _key?: string;
+          title?: string;
+          description?: string;
+          price?: string;
+          features?: Array<string>;
+          isPopular?: boolean;
+          variant?: string;
+          cta?: {
+            __typename?: 'CallToAction';
+            text?: string;
+            link?: string;
+            variant?: string;
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTestimonial';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        testimonials?: Array<{
+          __typename?: 'Testimonial';
+          _key?: string;
+          name?: string;
+          role?: string;
+          quote?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTimeline';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        events?: Array<{
+          __typename?: 'TimelineEvent';
+          _key?: string;
+          title?: string;
+          date?: string;
+          description?: string;
+        }>;
+      }
+  >;
+  slug?: { __typename?: 'Slug'; current?: string };
+};
+
+type PageFields_CoachingPage_Fragment = {
+  __typename?: 'CoachingPage';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+  title?: string;
+  metadata?: {
+    __typename?: 'Metadata';
+    title?: string;
+    description?: string;
+    keywords?: Array<string>;
+    openGraph?: {
+      __typename?: 'OpenGraph';
+      title?: string;
+      description?: string;
+      type?: string;
+      url?: string;
+      siteName?: string;
+      image?: {
+        __typename?: 'OpenGraphImage';
+        width?: number;
+        height?: number;
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    twitter?: {
+      __typename?: 'Twitter';
+      card?: string;
+      site?: string;
+      creator?: string;
+      image?: {
+        __typename?: 'TwitterImage';
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    robots?: {
+      __typename?: 'Robots';
+      index?: boolean;
+      follow?: boolean;
+      googleBot?: {
+        __typename?: 'GoogleBot';
+        index?: boolean;
+        follow?: boolean;
+      };
+    };
+  };
+  sections?: Array<
+    | {
+        __typename?: 'SectionBlog';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        postsToShow?: number;
+        showFeaturedOnly?: boolean;
+        sortOrder?: string;
+      }
+    | {
+        __typename?: 'SectionCalendar';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        settings?: {
+          __typename?: 'CalendarSettings';
+          availableDays?: Array<string>;
+          excludedDates?: Array<string>;
+          availableTimeSlots?: Array<{
+            __typename?: 'TimeSlot';
+            startTime?: string;
+            endTime?: string;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionCards';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        cards?: Array<{
+          __typename?: 'Card';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+          link?: { __typename?: 'Link'; text?: string; url?: string };
+        }>;
+      }
+    | {
+        __typename?: 'SectionContent';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        contentRaw?: any;
+      }
+    | {
+        __typename?: 'SectionFAQ';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        questions?: Array<{
+          __typename?: 'FaqItem';
+          _key?: string;
+          question?: string;
+          answer?: string;
+        }>;
+      }
+    | {
+        __typename?: 'SectionFeatured';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        items?: Array<{
+          __typename?: 'FeatureItem';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionForm';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        form?: {
+          __typename?: 'FormConfiguration';
+          emailTo?: string;
+          emailSubject?: string;
+          fields?: Array<{
+            __typename?: 'FormField';
+            _key?: string;
+            label?: string;
+            type?: string;
+            required?: boolean;
+            placeholder?: string;
+            options?: Array<{
+              __typename?: 'FormFieldOption';
+              _key?: string;
+              label?: string;
+              value?: string;
+            }>;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionHeader';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        image?: {
+          __typename?: 'Image';
+          asset?: {
+            __typename?: 'SanityImageAsset';
+            _id?: string;
+            url?: string;
+            altText?: string;
+            metadata?: {
+              __typename?: 'SanityImageMetadata';
+              lqip?: string;
+              dimensions?: {
+                __typename?: 'SanityImageDimensions';
+                width?: number;
+                height?: number;
+                aspectRatio?: number;
+              };
+            };
+          };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+            height?: number;
+            width?: number;
+          };
+          crop?: {
+            __typename?: 'SanityImageCrop';
+            top?: number;
+            bottom?: number;
+            left?: number;
+            right?: number;
+          };
+        };
+        cta?: {
+          __typename?: 'CallToAction';
+          text?: string;
+          link?: string;
+          variant?: string;
+        };
+      }
+    | {
+        __typename?: 'SectionPricing';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        pricingCards?: Array<{
+          __typename?: 'PricingCard';
+          _key?: string;
+          title?: string;
+          description?: string;
+          price?: string;
+          features?: Array<string>;
+          isPopular?: boolean;
+          variant?: string;
+          cta?: {
+            __typename?: 'CallToAction';
+            text?: string;
+            link?: string;
+            variant?: string;
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTestimonial';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        testimonials?: Array<{
+          __typename?: 'Testimonial';
+          _key?: string;
+          name?: string;
+          role?: string;
+          quote?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTimeline';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        events?: Array<{
+          __typename?: 'TimelineEvent';
+          _key?: string;
+          title?: string;
+          date?: string;
+          description?: string;
+        }>;
+      }
+  >;
+  slug?: { __typename?: 'Slug'; current?: string };
+};
+
+type PageFields_Configuration_Fragment = {
+  __typename?: 'Configuration';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+};
+
+type PageFields_ContactPage_Fragment = {
+  __typename?: 'ContactPage';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+  title?: string;
+  metadata?: {
+    __typename?: 'Metadata';
+    title?: string;
+    description?: string;
+    keywords?: Array<string>;
+    openGraph?: {
+      __typename?: 'OpenGraph';
+      title?: string;
+      description?: string;
+      type?: string;
+      url?: string;
+      siteName?: string;
+      image?: {
+        __typename?: 'OpenGraphImage';
+        width?: number;
+        height?: number;
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    twitter?: {
+      __typename?: 'Twitter';
+      card?: string;
+      site?: string;
+      creator?: string;
+      image?: {
+        __typename?: 'TwitterImage';
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    robots?: {
+      __typename?: 'Robots';
+      index?: boolean;
+      follow?: boolean;
+      googleBot?: {
+        __typename?: 'GoogleBot';
+        index?: boolean;
+        follow?: boolean;
+      };
+    };
+  };
+  sections?: Array<
+    | {
+        __typename?: 'SectionBlog';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        postsToShow?: number;
+        showFeaturedOnly?: boolean;
+        sortOrder?: string;
+      }
+    | {
+        __typename?: 'SectionCalendar';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        settings?: {
+          __typename?: 'CalendarSettings';
+          availableDays?: Array<string>;
+          excludedDates?: Array<string>;
+          availableTimeSlots?: Array<{
+            __typename?: 'TimeSlot';
+            startTime?: string;
+            endTime?: string;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionCards';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        cards?: Array<{
+          __typename?: 'Card';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+          link?: { __typename?: 'Link'; text?: string; url?: string };
+        }>;
+      }
+    | {
+        __typename?: 'SectionContent';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        contentRaw?: any;
+      }
+    | {
+        __typename?: 'SectionFAQ';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        questions?: Array<{
+          __typename?: 'FaqItem';
+          _key?: string;
+          question?: string;
+          answer?: string;
+        }>;
+      }
+    | {
+        __typename?: 'SectionFeatured';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        items?: Array<{
+          __typename?: 'FeatureItem';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionForm';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        form?: {
+          __typename?: 'FormConfiguration';
+          emailTo?: string;
+          emailSubject?: string;
+          fields?: Array<{
+            __typename?: 'FormField';
+            _key?: string;
+            label?: string;
+            type?: string;
+            required?: boolean;
+            placeholder?: string;
+            options?: Array<{
+              __typename?: 'FormFieldOption';
+              _key?: string;
+              label?: string;
+              value?: string;
+            }>;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionHeader';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        image?: {
+          __typename?: 'Image';
+          asset?: {
+            __typename?: 'SanityImageAsset';
+            _id?: string;
+            url?: string;
+            altText?: string;
+            metadata?: {
+              __typename?: 'SanityImageMetadata';
+              lqip?: string;
+              dimensions?: {
+                __typename?: 'SanityImageDimensions';
+                width?: number;
+                height?: number;
+                aspectRatio?: number;
+              };
+            };
+          };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+            height?: number;
+            width?: number;
+          };
+          crop?: {
+            __typename?: 'SanityImageCrop';
+            top?: number;
+            bottom?: number;
+            left?: number;
+            right?: number;
+          };
+        };
+        cta?: {
+          __typename?: 'CallToAction';
+          text?: string;
+          link?: string;
+          variant?: string;
+        };
+      }
+    | {
+        __typename?: 'SectionPricing';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        pricingCards?: Array<{
+          __typename?: 'PricingCard';
+          _key?: string;
+          title?: string;
+          description?: string;
+          price?: string;
+          features?: Array<string>;
+          isPopular?: boolean;
+          variant?: string;
+          cta?: {
+            __typename?: 'CallToAction';
+            text?: string;
+            link?: string;
+            variant?: string;
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTestimonial';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        testimonials?: Array<{
+          __typename?: 'Testimonial';
+          _key?: string;
+          name?: string;
+          role?: string;
+          quote?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTimeline';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        events?: Array<{
+          __typename?: 'TimelineEvent';
+          _key?: string;
+          title?: string;
+          date?: string;
+          description?: string;
+        }>;
+      }
+  >;
+  slug?: { __typename?: 'Slug'; current?: string };
+};
+
+type PageFields_Footer_Fragment = {
+  __typename?: 'Footer';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+};
+
+type PageFields_Header_Fragment = {
+  __typename?: 'Header';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+};
+
+type PageFields_HomePage_Fragment = {
+  __typename?: 'HomePage';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+  title?: string;
+  metadata?: {
+    __typename?: 'Metadata';
+    title?: string;
+    description?: string;
+    keywords?: Array<string>;
+    openGraph?: {
+      __typename?: 'OpenGraph';
+      title?: string;
+      description?: string;
+      type?: string;
+      url?: string;
+      siteName?: string;
+      image?: {
+        __typename?: 'OpenGraphImage';
+        width?: number;
+        height?: number;
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    twitter?: {
+      __typename?: 'Twitter';
+      card?: string;
+      site?: string;
+      creator?: string;
+      image?: {
+        __typename?: 'TwitterImage';
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    robots?: {
+      __typename?: 'Robots';
+      index?: boolean;
+      follow?: boolean;
+      googleBot?: {
+        __typename?: 'GoogleBot';
+        index?: boolean;
+        follow?: boolean;
+      };
+    };
+  };
+  sections?: Array<
+    | {
+        __typename?: 'SectionBlog';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        postsToShow?: number;
+        showFeaturedOnly?: boolean;
+        sortOrder?: string;
+      }
+    | {
+        __typename?: 'SectionCalendar';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        settings?: {
+          __typename?: 'CalendarSettings';
+          availableDays?: Array<string>;
+          excludedDates?: Array<string>;
+          availableTimeSlots?: Array<{
+            __typename?: 'TimeSlot';
+            startTime?: string;
+            endTime?: string;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionCards';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        cards?: Array<{
+          __typename?: 'Card';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+          link?: { __typename?: 'Link'; text?: string; url?: string };
+        }>;
+      }
+    | {
+        __typename?: 'SectionContent';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        contentRaw?: any;
+      }
+    | {
+        __typename?: 'SectionFAQ';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        questions?: Array<{
+          __typename?: 'FaqItem';
+          _key?: string;
+          question?: string;
+          answer?: string;
+        }>;
+      }
+    | {
+        __typename?: 'SectionFeatured';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        items?: Array<{
+          __typename?: 'FeatureItem';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionForm';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        form?: {
+          __typename?: 'FormConfiguration';
+          emailTo?: string;
+          emailSubject?: string;
+          fields?: Array<{
+            __typename?: 'FormField';
+            _key?: string;
+            label?: string;
+            type?: string;
+            required?: boolean;
+            placeholder?: string;
+            options?: Array<{
+              __typename?: 'FormFieldOption';
+              _key?: string;
+              label?: string;
+              value?: string;
+            }>;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionHeader';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        image?: {
+          __typename?: 'Image';
+          asset?: {
+            __typename?: 'SanityImageAsset';
+            _id?: string;
+            url?: string;
+            altText?: string;
+            metadata?: {
+              __typename?: 'SanityImageMetadata';
+              lqip?: string;
+              dimensions?: {
+                __typename?: 'SanityImageDimensions';
+                width?: number;
+                height?: number;
+                aspectRatio?: number;
+              };
+            };
+          };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+            height?: number;
+            width?: number;
+          };
+          crop?: {
+            __typename?: 'SanityImageCrop';
+            top?: number;
+            bottom?: number;
+            left?: number;
+            right?: number;
+          };
+        };
+        cta?: {
+          __typename?: 'CallToAction';
+          text?: string;
+          link?: string;
+          variant?: string;
+        };
+      }
+    | {
+        __typename?: 'SectionPricing';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        pricingCards?: Array<{
+          __typename?: 'PricingCard';
+          _key?: string;
+          title?: string;
+          description?: string;
+          price?: string;
+          features?: Array<string>;
+          isPopular?: boolean;
+          variant?: string;
+          cta?: {
+            __typename?: 'CallToAction';
+            text?: string;
+            link?: string;
+            variant?: string;
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTestimonial';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        testimonials?: Array<{
+          __typename?: 'Testimonial';
+          _key?: string;
+          name?: string;
+          role?: string;
+          quote?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTimeline';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        events?: Array<{
+          __typename?: 'TimelineEvent';
+          _key?: string;
+          title?: string;
+          date?: string;
+          description?: string;
+        }>;
+      }
+  >;
+  slug?: { __typename?: 'Slug'; current?: string };
+};
+
+type PageFields_Post_Fragment = {
+  __typename?: 'Post';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+};
+
+type PageFields_SanityFileAsset_Fragment = {
+  __typename?: 'SanityFileAsset';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+};
+
+type PageFields_SanityImageAsset_Fragment = {
+  __typename?: 'SanityImageAsset';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+};
+
+type PageFields_SectionBlog_Fragment = {
+  __typename?: 'SectionBlog';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+};
+
+type PageFields_SectionCalendar_Fragment = {
+  __typename?: 'SectionCalendar';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+};
+
+type PageFields_SectionCards_Fragment = {
+  __typename?: 'SectionCards';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+};
+
+type PageFields_SectionContent_Fragment = {
+  __typename?: 'SectionContent';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+};
+
+type PageFields_SectionFaq_Fragment = {
+  __typename?: 'SectionFAQ';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+};
+
+type PageFields_SectionFeatured_Fragment = {
+  __typename?: 'SectionFeatured';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+};
+
+type PageFields_SectionForm_Fragment = {
+  __typename?: 'SectionForm';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+};
+
+type PageFields_SectionHeader_Fragment = {
+  __typename?: 'SectionHeader';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+};
+
+type PageFields_SectionPricing_Fragment = {
+  __typename?: 'SectionPricing';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+};
+
+type PageFields_SectionTestimonial_Fragment = {
+  __typename?: 'SectionTestimonial';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+};
+
+type PageFields_SectionTimeline_Fragment = {
+  __typename?: 'SectionTimeline';
+  _id?: string;
+  _createdAt?: any;
+  _updatedAt?: any;
+  _rev?: string;
+  _type?: string;
+};
+
+export type PageFieldsFragment =
+  | PageFields_AboutPage_Fragment
+  | PageFields_ApproachPage_Fragment
+  | PageFields_BlogPage_Fragment
+  | PageFields_CoachingPage_Fragment
+  | PageFields_Configuration_Fragment
+  | PageFields_ContactPage_Fragment
+  | PageFields_Footer_Fragment
+  | PageFields_Header_Fragment
+  | PageFields_HomePage_Fragment
+  | PageFields_Post_Fragment
+  | PageFields_SanityFileAsset_Fragment
+  | PageFields_SanityImageAsset_Fragment
+  | PageFields_SectionBlog_Fragment
+  | PageFields_SectionCalendar_Fragment
+  | PageFields_SectionCards_Fragment
+  | PageFields_SectionContent_Fragment
+  | PageFields_SectionFaq_Fragment
+  | PageFields_SectionFeatured_Fragment
+  | PageFields_SectionForm_Fragment
+  | PageFields_SectionHeader_Fragment
+  | PageFields_SectionPricing_Fragment
+  | PageFields_SectionTestimonial_Fragment
+  | PageFields_SectionTimeline_Fragment;
+
+type CommonPageContent_AboutPage_Fragment = {
+  __typename?: 'AboutPage';
+  title?: string;
+  metadata?: {
+    __typename?: 'Metadata';
+    title?: string;
+    description?: string;
+    keywords?: Array<string>;
+    openGraph?: {
+      __typename?: 'OpenGraph';
+      title?: string;
+      description?: string;
+      type?: string;
+      url?: string;
+      siteName?: string;
+      image?: {
+        __typename?: 'OpenGraphImage';
+        width?: number;
+        height?: number;
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    twitter?: {
+      __typename?: 'Twitter';
+      card?: string;
+      site?: string;
+      creator?: string;
+      image?: {
+        __typename?: 'TwitterImage';
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    robots?: {
+      __typename?: 'Robots';
+      index?: boolean;
+      follow?: boolean;
+      googleBot?: {
+        __typename?: 'GoogleBot';
+        index?: boolean;
+        follow?: boolean;
+      };
+    };
+  };
+  sections?: Array<
+    | {
+        __typename?: 'SectionBlog';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        postsToShow?: number;
+        showFeaturedOnly?: boolean;
+        sortOrder?: string;
+      }
+    | {
+        __typename?: 'SectionCalendar';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        settings?: {
+          __typename?: 'CalendarSettings';
+          availableDays?: Array<string>;
+          excludedDates?: Array<string>;
+          availableTimeSlots?: Array<{
+            __typename?: 'TimeSlot';
+            startTime?: string;
+            endTime?: string;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionCards';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        cards?: Array<{
+          __typename?: 'Card';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+          link?: { __typename?: 'Link'; text?: string; url?: string };
+        }>;
+      }
+    | {
+        __typename?: 'SectionContent';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        contentRaw?: any;
+      }
+    | {
+        __typename?: 'SectionFAQ';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        questions?: Array<{
+          __typename?: 'FaqItem';
+          _key?: string;
+          question?: string;
+          answer?: string;
+        }>;
+      }
+    | {
+        __typename?: 'SectionFeatured';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        items?: Array<{
+          __typename?: 'FeatureItem';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionForm';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        form?: {
+          __typename?: 'FormConfiguration';
+          emailTo?: string;
+          emailSubject?: string;
+          fields?: Array<{
+            __typename?: 'FormField';
+            _key?: string;
+            label?: string;
+            type?: string;
+            required?: boolean;
+            placeholder?: string;
+            options?: Array<{
+              __typename?: 'FormFieldOption';
+              _key?: string;
+              label?: string;
+              value?: string;
+            }>;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionHeader';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        image?: {
+          __typename?: 'Image';
+          asset?: {
+            __typename?: 'SanityImageAsset';
+            _id?: string;
+            url?: string;
+            altText?: string;
+            metadata?: {
+              __typename?: 'SanityImageMetadata';
+              lqip?: string;
+              dimensions?: {
+                __typename?: 'SanityImageDimensions';
+                width?: number;
+                height?: number;
+                aspectRatio?: number;
+              };
+            };
+          };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+            height?: number;
+            width?: number;
+          };
+          crop?: {
+            __typename?: 'SanityImageCrop';
+            top?: number;
+            bottom?: number;
+            left?: number;
+            right?: number;
+          };
+        };
+        cta?: {
+          __typename?: 'CallToAction';
+          text?: string;
+          link?: string;
+          variant?: string;
+        };
+      }
+    | {
+        __typename?: 'SectionPricing';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        pricingCards?: Array<{
+          __typename?: 'PricingCard';
+          _key?: string;
+          title?: string;
+          description?: string;
+          price?: string;
+          features?: Array<string>;
+          isPopular?: boolean;
+          variant?: string;
+          cta?: {
+            __typename?: 'CallToAction';
+            text?: string;
+            link?: string;
+            variant?: string;
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTestimonial';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        testimonials?: Array<{
+          __typename?: 'Testimonial';
+          _key?: string;
+          name?: string;
+          role?: string;
+          quote?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTimeline';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        events?: Array<{
+          __typename?: 'TimelineEvent';
+          _key?: string;
+          title?: string;
+          date?: string;
+          description?: string;
+        }>;
+      }
+  >;
+  slug?: { __typename?: 'Slug'; current?: string };
+};
+
+type CommonPageContent_ApproachPage_Fragment = {
+  __typename?: 'ApproachPage';
+  title?: string;
+  metadata?: {
+    __typename?: 'Metadata';
+    title?: string;
+    description?: string;
+    keywords?: Array<string>;
+    openGraph?: {
+      __typename?: 'OpenGraph';
+      title?: string;
+      description?: string;
+      type?: string;
+      url?: string;
+      siteName?: string;
+      image?: {
+        __typename?: 'OpenGraphImage';
+        width?: number;
+        height?: number;
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    twitter?: {
+      __typename?: 'Twitter';
+      card?: string;
+      site?: string;
+      creator?: string;
+      image?: {
+        __typename?: 'TwitterImage';
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    robots?: {
+      __typename?: 'Robots';
+      index?: boolean;
+      follow?: boolean;
+      googleBot?: {
+        __typename?: 'GoogleBot';
+        index?: boolean;
+        follow?: boolean;
+      };
+    };
+  };
+  sections?: Array<
+    | {
+        __typename?: 'SectionBlog';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        postsToShow?: number;
+        showFeaturedOnly?: boolean;
+        sortOrder?: string;
+      }
+    | {
+        __typename?: 'SectionCalendar';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        settings?: {
+          __typename?: 'CalendarSettings';
+          availableDays?: Array<string>;
+          excludedDates?: Array<string>;
+          availableTimeSlots?: Array<{
+            __typename?: 'TimeSlot';
+            startTime?: string;
+            endTime?: string;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionCards';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        cards?: Array<{
+          __typename?: 'Card';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+          link?: { __typename?: 'Link'; text?: string; url?: string };
+        }>;
+      }
+    | {
+        __typename?: 'SectionContent';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        contentRaw?: any;
+      }
+    | {
+        __typename?: 'SectionFAQ';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        questions?: Array<{
+          __typename?: 'FaqItem';
+          _key?: string;
+          question?: string;
+          answer?: string;
+        }>;
+      }
+    | {
+        __typename?: 'SectionFeatured';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        items?: Array<{
+          __typename?: 'FeatureItem';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionForm';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        form?: {
+          __typename?: 'FormConfiguration';
+          emailTo?: string;
+          emailSubject?: string;
+          fields?: Array<{
+            __typename?: 'FormField';
+            _key?: string;
+            label?: string;
+            type?: string;
+            required?: boolean;
+            placeholder?: string;
+            options?: Array<{
+              __typename?: 'FormFieldOption';
+              _key?: string;
+              label?: string;
+              value?: string;
+            }>;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionHeader';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        image?: {
+          __typename?: 'Image';
+          asset?: {
+            __typename?: 'SanityImageAsset';
+            _id?: string;
+            url?: string;
+            altText?: string;
+            metadata?: {
+              __typename?: 'SanityImageMetadata';
+              lqip?: string;
+              dimensions?: {
+                __typename?: 'SanityImageDimensions';
+                width?: number;
+                height?: number;
+                aspectRatio?: number;
+              };
+            };
+          };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+            height?: number;
+            width?: number;
+          };
+          crop?: {
+            __typename?: 'SanityImageCrop';
+            top?: number;
+            bottom?: number;
+            left?: number;
+            right?: number;
+          };
+        };
+        cta?: {
+          __typename?: 'CallToAction';
+          text?: string;
+          link?: string;
+          variant?: string;
+        };
+      }
+    | {
+        __typename?: 'SectionPricing';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        pricingCards?: Array<{
+          __typename?: 'PricingCard';
+          _key?: string;
+          title?: string;
+          description?: string;
+          price?: string;
+          features?: Array<string>;
+          isPopular?: boolean;
+          variant?: string;
+          cta?: {
+            __typename?: 'CallToAction';
+            text?: string;
+            link?: string;
+            variant?: string;
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTestimonial';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        testimonials?: Array<{
+          __typename?: 'Testimonial';
+          _key?: string;
+          name?: string;
+          role?: string;
+          quote?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTimeline';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        events?: Array<{
+          __typename?: 'TimelineEvent';
+          _key?: string;
+          title?: string;
+          date?: string;
+          description?: string;
+        }>;
+      }
+  >;
+  slug?: { __typename?: 'Slug'; current?: string };
+};
+
+type CommonPageContent_BlogPage_Fragment = {
+  __typename?: 'BlogPage';
+  title?: string;
+  metadata?: {
+    __typename?: 'Metadata';
+    title?: string;
+    description?: string;
+    keywords?: Array<string>;
+    openGraph?: {
+      __typename?: 'OpenGraph';
+      title?: string;
+      description?: string;
+      type?: string;
+      url?: string;
+      siteName?: string;
+      image?: {
+        __typename?: 'OpenGraphImage';
+        width?: number;
+        height?: number;
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    twitter?: {
+      __typename?: 'Twitter';
+      card?: string;
+      site?: string;
+      creator?: string;
+      image?: {
+        __typename?: 'TwitterImage';
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    robots?: {
+      __typename?: 'Robots';
+      index?: boolean;
+      follow?: boolean;
+      googleBot?: {
+        __typename?: 'GoogleBot';
+        index?: boolean;
+        follow?: boolean;
+      };
+    };
+  };
+  sections?: Array<
+    | {
+        __typename?: 'SectionBlog';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        postsToShow?: number;
+        showFeaturedOnly?: boolean;
+        sortOrder?: string;
+      }
+    | {
+        __typename?: 'SectionCalendar';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        settings?: {
+          __typename?: 'CalendarSettings';
+          availableDays?: Array<string>;
+          excludedDates?: Array<string>;
+          availableTimeSlots?: Array<{
+            __typename?: 'TimeSlot';
+            startTime?: string;
+            endTime?: string;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionCards';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        cards?: Array<{
+          __typename?: 'Card';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+          link?: { __typename?: 'Link'; text?: string; url?: string };
+        }>;
+      }
+    | {
+        __typename?: 'SectionContent';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        contentRaw?: any;
+      }
+    | {
+        __typename?: 'SectionFAQ';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        questions?: Array<{
+          __typename?: 'FaqItem';
+          _key?: string;
+          question?: string;
+          answer?: string;
+        }>;
+      }
+    | {
+        __typename?: 'SectionFeatured';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        items?: Array<{
+          __typename?: 'FeatureItem';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionForm';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        form?: {
+          __typename?: 'FormConfiguration';
+          emailTo?: string;
+          emailSubject?: string;
+          fields?: Array<{
+            __typename?: 'FormField';
+            _key?: string;
+            label?: string;
+            type?: string;
+            required?: boolean;
+            placeholder?: string;
+            options?: Array<{
+              __typename?: 'FormFieldOption';
+              _key?: string;
+              label?: string;
+              value?: string;
+            }>;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionHeader';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        image?: {
+          __typename?: 'Image';
+          asset?: {
+            __typename?: 'SanityImageAsset';
+            _id?: string;
+            url?: string;
+            altText?: string;
+            metadata?: {
+              __typename?: 'SanityImageMetadata';
+              lqip?: string;
+              dimensions?: {
+                __typename?: 'SanityImageDimensions';
+                width?: number;
+                height?: number;
+                aspectRatio?: number;
+              };
+            };
+          };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+            height?: number;
+            width?: number;
+          };
+          crop?: {
+            __typename?: 'SanityImageCrop';
+            top?: number;
+            bottom?: number;
+            left?: number;
+            right?: number;
+          };
+        };
+        cta?: {
+          __typename?: 'CallToAction';
+          text?: string;
+          link?: string;
+          variant?: string;
+        };
+      }
+    | {
+        __typename?: 'SectionPricing';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        pricingCards?: Array<{
+          __typename?: 'PricingCard';
+          _key?: string;
+          title?: string;
+          description?: string;
+          price?: string;
+          features?: Array<string>;
+          isPopular?: boolean;
+          variant?: string;
+          cta?: {
+            __typename?: 'CallToAction';
+            text?: string;
+            link?: string;
+            variant?: string;
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTestimonial';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        testimonials?: Array<{
+          __typename?: 'Testimonial';
+          _key?: string;
+          name?: string;
+          role?: string;
+          quote?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTimeline';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        events?: Array<{
+          __typename?: 'TimelineEvent';
+          _key?: string;
+          title?: string;
+          date?: string;
+          description?: string;
+        }>;
+      }
+  >;
+  slug?: { __typename?: 'Slug'; current?: string };
+};
+
+type CommonPageContent_CoachingPage_Fragment = {
+  __typename?: 'CoachingPage';
+  title?: string;
+  metadata?: {
+    __typename?: 'Metadata';
+    title?: string;
+    description?: string;
+    keywords?: Array<string>;
+    openGraph?: {
+      __typename?: 'OpenGraph';
+      title?: string;
+      description?: string;
+      type?: string;
+      url?: string;
+      siteName?: string;
+      image?: {
+        __typename?: 'OpenGraphImage';
+        width?: number;
+        height?: number;
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    twitter?: {
+      __typename?: 'Twitter';
+      card?: string;
+      site?: string;
+      creator?: string;
+      image?: {
+        __typename?: 'TwitterImage';
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    robots?: {
+      __typename?: 'Robots';
+      index?: boolean;
+      follow?: boolean;
+      googleBot?: {
+        __typename?: 'GoogleBot';
+        index?: boolean;
+        follow?: boolean;
+      };
+    };
+  };
+  sections?: Array<
+    | {
+        __typename?: 'SectionBlog';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        postsToShow?: number;
+        showFeaturedOnly?: boolean;
+        sortOrder?: string;
+      }
+    | {
+        __typename?: 'SectionCalendar';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        settings?: {
+          __typename?: 'CalendarSettings';
+          availableDays?: Array<string>;
+          excludedDates?: Array<string>;
+          availableTimeSlots?: Array<{
+            __typename?: 'TimeSlot';
+            startTime?: string;
+            endTime?: string;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionCards';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        cards?: Array<{
+          __typename?: 'Card';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+          link?: { __typename?: 'Link'; text?: string; url?: string };
+        }>;
+      }
+    | {
+        __typename?: 'SectionContent';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        contentRaw?: any;
+      }
+    | {
+        __typename?: 'SectionFAQ';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        questions?: Array<{
+          __typename?: 'FaqItem';
+          _key?: string;
+          question?: string;
+          answer?: string;
+        }>;
+      }
+    | {
+        __typename?: 'SectionFeatured';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        items?: Array<{
+          __typename?: 'FeatureItem';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionForm';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        form?: {
+          __typename?: 'FormConfiguration';
+          emailTo?: string;
+          emailSubject?: string;
+          fields?: Array<{
+            __typename?: 'FormField';
+            _key?: string;
+            label?: string;
+            type?: string;
+            required?: boolean;
+            placeholder?: string;
+            options?: Array<{
+              __typename?: 'FormFieldOption';
+              _key?: string;
+              label?: string;
+              value?: string;
+            }>;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionHeader';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        image?: {
+          __typename?: 'Image';
+          asset?: {
+            __typename?: 'SanityImageAsset';
+            _id?: string;
+            url?: string;
+            altText?: string;
+            metadata?: {
+              __typename?: 'SanityImageMetadata';
+              lqip?: string;
+              dimensions?: {
+                __typename?: 'SanityImageDimensions';
+                width?: number;
+                height?: number;
+                aspectRatio?: number;
+              };
+            };
+          };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+            height?: number;
+            width?: number;
+          };
+          crop?: {
+            __typename?: 'SanityImageCrop';
+            top?: number;
+            bottom?: number;
+            left?: number;
+            right?: number;
+          };
+        };
+        cta?: {
+          __typename?: 'CallToAction';
+          text?: string;
+          link?: string;
+          variant?: string;
+        };
+      }
+    | {
+        __typename?: 'SectionPricing';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        pricingCards?: Array<{
+          __typename?: 'PricingCard';
+          _key?: string;
+          title?: string;
+          description?: string;
+          price?: string;
+          features?: Array<string>;
+          isPopular?: boolean;
+          variant?: string;
+          cta?: {
+            __typename?: 'CallToAction';
+            text?: string;
+            link?: string;
+            variant?: string;
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTestimonial';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        testimonials?: Array<{
+          __typename?: 'Testimonial';
+          _key?: string;
+          name?: string;
+          role?: string;
+          quote?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTimeline';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        events?: Array<{
+          __typename?: 'TimelineEvent';
+          _key?: string;
+          title?: string;
+          date?: string;
+          description?: string;
+        }>;
+      }
+  >;
+  slug?: { __typename?: 'Slug'; current?: string };
+};
+
+type CommonPageContent_Configuration_Fragment = {
+  __typename?: 'Configuration';
+};
+
+type CommonPageContent_ContactPage_Fragment = {
+  __typename?: 'ContactPage';
+  title?: string;
+  metadata?: {
+    __typename?: 'Metadata';
+    title?: string;
+    description?: string;
+    keywords?: Array<string>;
+    openGraph?: {
+      __typename?: 'OpenGraph';
+      title?: string;
+      description?: string;
+      type?: string;
+      url?: string;
+      siteName?: string;
+      image?: {
+        __typename?: 'OpenGraphImage';
+        width?: number;
+        height?: number;
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    twitter?: {
+      __typename?: 'Twitter';
+      card?: string;
+      site?: string;
+      creator?: string;
+      image?: {
+        __typename?: 'TwitterImage';
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    robots?: {
+      __typename?: 'Robots';
+      index?: boolean;
+      follow?: boolean;
+      googleBot?: {
+        __typename?: 'GoogleBot';
+        index?: boolean;
+        follow?: boolean;
+      };
+    };
+  };
+  sections?: Array<
+    | {
+        __typename?: 'SectionBlog';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        postsToShow?: number;
+        showFeaturedOnly?: boolean;
+        sortOrder?: string;
+      }
+    | {
+        __typename?: 'SectionCalendar';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        settings?: {
+          __typename?: 'CalendarSettings';
+          availableDays?: Array<string>;
+          excludedDates?: Array<string>;
+          availableTimeSlots?: Array<{
+            __typename?: 'TimeSlot';
+            startTime?: string;
+            endTime?: string;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionCards';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        cards?: Array<{
+          __typename?: 'Card';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+          link?: { __typename?: 'Link'; text?: string; url?: string };
+        }>;
+      }
+    | {
+        __typename?: 'SectionContent';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        contentRaw?: any;
+      }
+    | {
+        __typename?: 'SectionFAQ';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        questions?: Array<{
+          __typename?: 'FaqItem';
+          _key?: string;
+          question?: string;
+          answer?: string;
+        }>;
+      }
+    | {
+        __typename?: 'SectionFeatured';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        items?: Array<{
+          __typename?: 'FeatureItem';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionForm';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        form?: {
+          __typename?: 'FormConfiguration';
+          emailTo?: string;
+          emailSubject?: string;
+          fields?: Array<{
+            __typename?: 'FormField';
+            _key?: string;
+            label?: string;
+            type?: string;
+            required?: boolean;
+            placeholder?: string;
+            options?: Array<{
+              __typename?: 'FormFieldOption';
+              _key?: string;
+              label?: string;
+              value?: string;
+            }>;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionHeader';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        image?: {
+          __typename?: 'Image';
+          asset?: {
+            __typename?: 'SanityImageAsset';
+            _id?: string;
+            url?: string;
+            altText?: string;
+            metadata?: {
+              __typename?: 'SanityImageMetadata';
+              lqip?: string;
+              dimensions?: {
+                __typename?: 'SanityImageDimensions';
+                width?: number;
+                height?: number;
+                aspectRatio?: number;
+              };
+            };
+          };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+            height?: number;
+            width?: number;
+          };
+          crop?: {
+            __typename?: 'SanityImageCrop';
+            top?: number;
+            bottom?: number;
+            left?: number;
+            right?: number;
+          };
+        };
+        cta?: {
+          __typename?: 'CallToAction';
+          text?: string;
+          link?: string;
+          variant?: string;
+        };
+      }
+    | {
+        __typename?: 'SectionPricing';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        pricingCards?: Array<{
+          __typename?: 'PricingCard';
+          _key?: string;
+          title?: string;
+          description?: string;
+          price?: string;
+          features?: Array<string>;
+          isPopular?: boolean;
+          variant?: string;
+          cta?: {
+            __typename?: 'CallToAction';
+            text?: string;
+            link?: string;
+            variant?: string;
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTestimonial';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        testimonials?: Array<{
+          __typename?: 'Testimonial';
+          _key?: string;
+          name?: string;
+          role?: string;
+          quote?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTimeline';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        events?: Array<{
+          __typename?: 'TimelineEvent';
+          _key?: string;
+          title?: string;
+          date?: string;
+          description?: string;
+        }>;
+      }
+  >;
+  slug?: { __typename?: 'Slug'; current?: string };
+};
+
+type CommonPageContent_Footer_Fragment = { __typename?: 'Footer' };
+
+type CommonPageContent_Header_Fragment = { __typename?: 'Header' };
+
+type CommonPageContent_HomePage_Fragment = {
+  __typename?: 'HomePage';
+  title?: string;
+  metadata?: {
+    __typename?: 'Metadata';
+    title?: string;
+    description?: string;
+    keywords?: Array<string>;
+    openGraph?: {
+      __typename?: 'OpenGraph';
+      title?: string;
+      description?: string;
+      type?: string;
+      url?: string;
+      siteName?: string;
+      image?: {
+        __typename?: 'OpenGraphImage';
+        width?: number;
+        height?: number;
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    twitter?: {
+      __typename?: 'Twitter';
+      card?: string;
+      site?: string;
+      creator?: string;
+      image?: {
+        __typename?: 'TwitterImage';
+        alt?: string;
+        url?: {
+          __typename?: 'Image';
+          asset?: { __typename?: 'SanityImageAsset'; url?: string };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+          };
+        };
+      };
+    };
+    robots?: {
+      __typename?: 'Robots';
+      index?: boolean;
+      follow?: boolean;
+      googleBot?: {
+        __typename?: 'GoogleBot';
+        index?: boolean;
+        follow?: boolean;
+      };
+    };
+  };
+  sections?: Array<
+    | {
+        __typename?: 'SectionBlog';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        postsToShow?: number;
+        showFeaturedOnly?: boolean;
+        sortOrder?: string;
+      }
+    | {
+        __typename?: 'SectionCalendar';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        settings?: {
+          __typename?: 'CalendarSettings';
+          availableDays?: Array<string>;
+          excludedDates?: Array<string>;
+          availableTimeSlots?: Array<{
+            __typename?: 'TimeSlot';
+            startTime?: string;
+            endTime?: string;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionCards';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        cards?: Array<{
+          __typename?: 'Card';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+          link?: { __typename?: 'Link'; text?: string; url?: string };
+        }>;
+      }
+    | {
+        __typename?: 'SectionContent';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        contentRaw?: any;
+      }
+    | {
+        __typename?: 'SectionFAQ';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        questions?: Array<{
+          __typename?: 'FaqItem';
+          _key?: string;
+          question?: string;
+          answer?: string;
+        }>;
+      }
+    | {
+        __typename?: 'SectionFeatured';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        items?: Array<{
+          __typename?: 'FeatureItem';
+          _key?: string;
+          title?: string;
+          description?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionForm';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        form?: {
+          __typename?: 'FormConfiguration';
+          emailTo?: string;
+          emailSubject?: string;
+          fields?: Array<{
+            __typename?: 'FormField';
+            _key?: string;
+            label?: string;
+            type?: string;
+            required?: boolean;
+            placeholder?: string;
+            options?: Array<{
+              __typename?: 'FormFieldOption';
+              _key?: string;
+              label?: string;
+              value?: string;
+            }>;
+          }>;
+        };
+      }
+    | {
+        __typename?: 'SectionHeader';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        image?: {
+          __typename?: 'Image';
+          asset?: {
+            __typename?: 'SanityImageAsset';
+            _id?: string;
+            url?: string;
+            altText?: string;
+            metadata?: {
+              __typename?: 'SanityImageMetadata';
+              lqip?: string;
+              dimensions?: {
+                __typename?: 'SanityImageDimensions';
+                width?: number;
+                height?: number;
+                aspectRatio?: number;
+              };
+            };
+          };
+          hotspot?: {
+            __typename?: 'SanityImageHotspot';
+            x?: number;
+            y?: number;
+            height?: number;
+            width?: number;
+          };
+          crop?: {
+            __typename?: 'SanityImageCrop';
+            top?: number;
+            bottom?: number;
+            left?: number;
+            right?: number;
+          };
+        };
+        cta?: {
+          __typename?: 'CallToAction';
+          text?: string;
+          link?: string;
+          variant?: string;
+        };
+      }
+    | {
+        __typename?: 'SectionPricing';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        pricingCards?: Array<{
+          __typename?: 'PricingCard';
+          _key?: string;
+          title?: string;
+          description?: string;
+          price?: string;
+          features?: Array<string>;
+          isPopular?: boolean;
+          variant?: string;
+          cta?: {
+            __typename?: 'CallToAction';
+            text?: string;
+            link?: string;
+            variant?: string;
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTestimonial';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        testimonials?: Array<{
+          __typename?: 'Testimonial';
+          _key?: string;
+          name?: string;
+          role?: string;
+          quote?: string;
+          image?: {
+            __typename?: 'Image';
+            asset?: {
+              __typename?: 'SanityImageAsset';
+              _id?: string;
+              url?: string;
+              altText?: string;
+              metadata?: {
+                __typename?: 'SanityImageMetadata';
+                lqip?: string;
+                dimensions?: {
+                  __typename?: 'SanityImageDimensions';
+                  width?: number;
+                  height?: number;
+                  aspectRatio?: number;
+                };
+              };
+            };
+            hotspot?: {
+              __typename?: 'SanityImageHotspot';
+              x?: number;
+              y?: number;
+              height?: number;
+              width?: number;
+            };
+            crop?: {
+              __typename?: 'SanityImageCrop';
+              top?: number;
+              bottom?: number;
+              left?: number;
+              right?: number;
+            };
+          };
+        }>;
+      }
+    | {
+        __typename?: 'SectionTimeline';
+        _id?: string;
+        _key?: string;
+        _type?: string;
+        title?: string;
+        displayTitle?: string;
+        subtitle?: string;
+        background?: string;
+        maxWidth?: string;
+        showBorder?: boolean;
+        events?: Array<{
+          __typename?: 'TimelineEvent';
+          _key?: string;
+          title?: string;
+          date?: string;
+          description?: string;
+        }>;
+      }
+  >;
+  slug?: { __typename?: 'Slug'; current?: string };
+};
+
+type CommonPageContent_Post_Fragment = { __typename?: 'Post' };
+
+type CommonPageContent_SanityFileAsset_Fragment = {
+  __typename?: 'SanityFileAsset';
+};
+
+type CommonPageContent_SanityImageAsset_Fragment = {
+  __typename?: 'SanityImageAsset';
+};
+
+type CommonPageContent_SectionBlog_Fragment = { __typename?: 'SectionBlog' };
+
+type CommonPageContent_SectionCalendar_Fragment = {
+  __typename?: 'SectionCalendar';
+};
+
+type CommonPageContent_SectionCards_Fragment = { __typename?: 'SectionCards' };
+
+type CommonPageContent_SectionContent_Fragment = {
+  __typename?: 'SectionContent';
+};
+
+type CommonPageContent_SectionFaq_Fragment = { __typename?: 'SectionFAQ' };
+
+type CommonPageContent_SectionFeatured_Fragment = {
+  __typename?: 'SectionFeatured';
+};
+
+type CommonPageContent_SectionForm_Fragment = { __typename?: 'SectionForm' };
+
+type CommonPageContent_SectionHeader_Fragment = {
+  __typename?: 'SectionHeader';
+};
+
+type CommonPageContent_SectionPricing_Fragment = {
+  __typename?: 'SectionPricing';
+};
+
+type CommonPageContent_SectionTestimonial_Fragment = {
+  __typename?: 'SectionTestimonial';
+};
+
+type CommonPageContent_SectionTimeline_Fragment = {
+  __typename?: 'SectionTimeline';
+};
+
+export type CommonPageContentFragment =
+  | CommonPageContent_AboutPage_Fragment
+  | CommonPageContent_ApproachPage_Fragment
+  | CommonPageContent_BlogPage_Fragment
+  | CommonPageContent_CoachingPage_Fragment
+  | CommonPageContent_Configuration_Fragment
+  | CommonPageContent_ContactPage_Fragment
+  | CommonPageContent_Footer_Fragment
+  | CommonPageContent_Header_Fragment
+  | CommonPageContent_HomePage_Fragment
+  | CommonPageContent_Post_Fragment
+  | CommonPageContent_SanityFileAsset_Fragment
+  | CommonPageContent_SanityImageAsset_Fragment
+  | CommonPageContent_SectionBlog_Fragment
+  | CommonPageContent_SectionCalendar_Fragment
+  | CommonPageContent_SectionCards_Fragment
+  | CommonPageContent_SectionContent_Fragment
+  | CommonPageContent_SectionFaq_Fragment
+  | CommonPageContent_SectionFeatured_Fragment
+  | CommonPageContent_SectionForm_Fragment
+  | CommonPageContent_SectionHeader_Fragment
+  | CommonPageContent_SectionPricing_Fragment
+  | CommonPageContent_SectionTestimonial_Fragment
+  | CommonPageContent_SectionTimeline_Fragment;
 
 export type PostFieldsFragment = {
   __typename?: 'Post';
@@ -4068,6 +8948,382 @@ export type SectionFeaturedFieldsFragment = {
   }>;
 };
 
+type CommonSectionFields_SectionBlog_Fragment = {
+  __typename?: 'SectionBlog';
+  _id?: string;
+  _key?: string;
+  _type?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  postsToShow?: number;
+  showFeaturedOnly?: boolean;
+  sortOrder?: string;
+};
+
+type CommonSectionFields_SectionCalendar_Fragment = {
+  __typename?: 'SectionCalendar';
+  _id?: string;
+  _key?: string;
+  _type?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  settings?: {
+    __typename?: 'CalendarSettings';
+    availableDays?: Array<string>;
+    excludedDates?: Array<string>;
+    availableTimeSlots?: Array<{
+      __typename?: 'TimeSlot';
+      startTime?: string;
+      endTime?: string;
+    }>;
+  };
+};
+
+type CommonSectionFields_SectionCards_Fragment = {
+  __typename?: 'SectionCards';
+  _id?: string;
+  _key?: string;
+  _type?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  cards?: Array<{
+    __typename?: 'Card';
+    _key?: string;
+    title?: string;
+    description?: string;
+    image?: {
+      __typename?: 'Image';
+      asset?: {
+        __typename?: 'SanityImageAsset';
+        _id?: string;
+        url?: string;
+        altText?: string;
+        metadata?: {
+          __typename?: 'SanityImageMetadata';
+          lqip?: string;
+          dimensions?: {
+            __typename?: 'SanityImageDimensions';
+            width?: number;
+            height?: number;
+            aspectRatio?: number;
+          };
+        };
+      };
+      hotspot?: {
+        __typename?: 'SanityImageHotspot';
+        x?: number;
+        y?: number;
+        height?: number;
+        width?: number;
+      };
+      crop?: {
+        __typename?: 'SanityImageCrop';
+        top?: number;
+        bottom?: number;
+        left?: number;
+        right?: number;
+      };
+    };
+    link?: { __typename?: 'Link'; text?: string; url?: string };
+  }>;
+};
+
+type CommonSectionFields_SectionContent_Fragment = {
+  __typename?: 'SectionContent';
+  _id?: string;
+  _key?: string;
+  _type?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  contentRaw?: any;
+};
+
+type CommonSectionFields_SectionFaq_Fragment = {
+  __typename?: 'SectionFAQ';
+  _id?: string;
+  _key?: string;
+  _type?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  questions?: Array<{
+    __typename?: 'FaqItem';
+    _key?: string;
+    question?: string;
+    answer?: string;
+  }>;
+};
+
+type CommonSectionFields_SectionFeatured_Fragment = {
+  __typename?: 'SectionFeatured';
+  _id?: string;
+  _key?: string;
+  _type?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  items?: Array<{
+    __typename?: 'FeatureItem';
+    _key?: string;
+    title?: string;
+    description?: string;
+    image?: {
+      __typename?: 'Image';
+      asset?: {
+        __typename?: 'SanityImageAsset';
+        _id?: string;
+        url?: string;
+        altText?: string;
+        metadata?: {
+          __typename?: 'SanityImageMetadata';
+          lqip?: string;
+          dimensions?: {
+            __typename?: 'SanityImageDimensions';
+            width?: number;
+            height?: number;
+            aspectRatio?: number;
+          };
+        };
+      };
+      hotspot?: {
+        __typename?: 'SanityImageHotspot';
+        x?: number;
+        y?: number;
+        height?: number;
+        width?: number;
+      };
+      crop?: {
+        __typename?: 'SanityImageCrop';
+        top?: number;
+        bottom?: number;
+        left?: number;
+        right?: number;
+      };
+    };
+  }>;
+};
+
+type CommonSectionFields_SectionForm_Fragment = {
+  __typename?: 'SectionForm';
+  _id?: string;
+  _key?: string;
+  _type?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  form?: {
+    __typename?: 'FormConfiguration';
+    emailTo?: string;
+    emailSubject?: string;
+    fields?: Array<{
+      __typename?: 'FormField';
+      _key?: string;
+      label?: string;
+      type?: string;
+      required?: boolean;
+      placeholder?: string;
+      options?: Array<{
+        __typename?: 'FormFieldOption';
+        _key?: string;
+        label?: string;
+        value?: string;
+      }>;
+    }>;
+  };
+};
+
+type CommonSectionFields_SectionHeader_Fragment = {
+  __typename?: 'SectionHeader';
+  _id?: string;
+  _key?: string;
+  _type?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  image?: {
+    __typename?: 'Image';
+    asset?: {
+      __typename?: 'SanityImageAsset';
+      _id?: string;
+      url?: string;
+      altText?: string;
+      metadata?: {
+        __typename?: 'SanityImageMetadata';
+        lqip?: string;
+        dimensions?: {
+          __typename?: 'SanityImageDimensions';
+          width?: number;
+          height?: number;
+          aspectRatio?: number;
+        };
+      };
+    };
+    hotspot?: {
+      __typename?: 'SanityImageHotspot';
+      x?: number;
+      y?: number;
+      height?: number;
+      width?: number;
+    };
+    crop?: {
+      __typename?: 'SanityImageCrop';
+      top?: number;
+      bottom?: number;
+      left?: number;
+      right?: number;
+    };
+  };
+  cta?: {
+    __typename?: 'CallToAction';
+    text?: string;
+    link?: string;
+    variant?: string;
+  };
+};
+
+type CommonSectionFields_SectionPricing_Fragment = {
+  __typename?: 'SectionPricing';
+  _id?: string;
+  _key?: string;
+  _type?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  pricingCards?: Array<{
+    __typename?: 'PricingCard';
+    _key?: string;
+    title?: string;
+    description?: string;
+    price?: string;
+    features?: Array<string>;
+    isPopular?: boolean;
+    variant?: string;
+    cta?: {
+      __typename?: 'CallToAction';
+      text?: string;
+      link?: string;
+      variant?: string;
+    };
+  }>;
+};
+
+type CommonSectionFields_SectionTestimonial_Fragment = {
+  __typename?: 'SectionTestimonial';
+  _id?: string;
+  _key?: string;
+  _type?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  testimonials?: Array<{
+    __typename?: 'Testimonial';
+    _key?: string;
+    name?: string;
+    role?: string;
+    quote?: string;
+    image?: {
+      __typename?: 'Image';
+      asset?: {
+        __typename?: 'SanityImageAsset';
+        _id?: string;
+        url?: string;
+        altText?: string;
+        metadata?: {
+          __typename?: 'SanityImageMetadata';
+          lqip?: string;
+          dimensions?: {
+            __typename?: 'SanityImageDimensions';
+            width?: number;
+            height?: number;
+            aspectRatio?: number;
+          };
+        };
+      };
+      hotspot?: {
+        __typename?: 'SanityImageHotspot';
+        x?: number;
+        y?: number;
+        height?: number;
+        width?: number;
+      };
+      crop?: {
+        __typename?: 'SanityImageCrop';
+        top?: number;
+        bottom?: number;
+        left?: number;
+        right?: number;
+      };
+    };
+  }>;
+};
+
+type CommonSectionFields_SectionTimeline_Fragment = {
+  __typename?: 'SectionTimeline';
+  _id?: string;
+  _key?: string;
+  _type?: string;
+  title?: string;
+  displayTitle?: string;
+  subtitle?: string;
+  background?: string;
+  maxWidth?: string;
+  showBorder?: boolean;
+  events?: Array<{
+    __typename?: 'TimelineEvent';
+    _key?: string;
+    title?: string;
+    date?: string;
+    description?: string;
+  }>;
+};
+
+export type CommonSectionFieldsFragment =
+  | CommonSectionFields_SectionBlog_Fragment
+  | CommonSectionFields_SectionCalendar_Fragment
+  | CommonSectionFields_SectionCards_Fragment
+  | CommonSectionFields_SectionContent_Fragment
+  | CommonSectionFields_SectionFaq_Fragment
+  | CommonSectionFields_SectionFeatured_Fragment
+  | CommonSectionFields_SectionForm_Fragment
+  | CommonSectionFields_SectionHeader_Fragment
+  | CommonSectionFields_SectionPricing_Fragment
+  | CommonSectionFields_SectionTestimonial_Fragment
+  | CommonSectionFields_SectionTimeline_Fragment;
+
 export type SectionFormFieldsFragment = {
   __typename?: 'SectionForm';
   _id?: string;
@@ -4254,434 +9510,6 @@ export type SectionTimelineFieldsFragment = {
   }>;
 };
 
-export type GetPageQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetPageQuery = {
-  __typename?: 'RootQuery';
-  allAboutPage: Array<{
-    __typename?: 'AboutPage';
-    _id?: string;
-    _createdAt?: any;
-    _updatedAt?: any;
-    _rev?: string;
-    _type?: string;
-    title?: string;
-    metadata?: {
-      __typename?: 'Metadata';
-      title?: string;
-      description?: string;
-      keywords?: Array<string>;
-      openGraph?: {
-        __typename?: 'OpenGraph';
-        title?: string;
-        description?: string;
-        type?: string;
-        url?: string;
-        siteName?: string;
-        image?: {
-          __typename?: 'OpenGraphImage';
-          width?: number;
-          height?: number;
-          alt?: string;
-          url?: {
-            __typename?: 'Image';
-            asset?: { __typename?: 'SanityImageAsset'; url?: string };
-            hotspot?: {
-              __typename?: 'SanityImageHotspot';
-              x?: number;
-              y?: number;
-            };
-          };
-        };
-      };
-      twitter?: {
-        __typename?: 'Twitter';
-        card?: string;
-        site?: string;
-        creator?: string;
-        image?: {
-          __typename?: 'TwitterImage';
-          alt?: string;
-          url?: {
-            __typename?: 'Image';
-            asset?: { __typename?: 'SanityImageAsset'; url?: string };
-            hotspot?: {
-              __typename?: 'SanityImageHotspot';
-              x?: number;
-              y?: number;
-            };
-          };
-        };
-      };
-      robots?: {
-        __typename?: 'Robots';
-        index?: boolean;
-        follow?: boolean;
-        googleBot?: {
-          __typename?: 'GoogleBot';
-          index?: boolean;
-          follow?: boolean;
-        };
-      };
-    };
-    sections?: Array<
-      | {
-          __typename?: 'SectionBlog';
-          _id?: string;
-          _type?: string;
-          _key?: string;
-          title?: string;
-          displayTitle?: string;
-          subtitle?: string;
-          background?: string;
-          maxWidth?: string;
-          showBorder?: boolean;
-          postsToShow?: number;
-          showFeaturedOnly?: boolean;
-          sortOrder?: string;
-        }
-      | {
-          __typename?: 'SectionCalendar';
-          _id?: string;
-          _type?: string;
-          _key?: string;
-          title?: string;
-          displayTitle?: string;
-          subtitle?: string;
-          background?: string;
-          maxWidth?: string;
-          showBorder?: boolean;
-          settings?: {
-            __typename?: 'CalendarSettings';
-            availableDays?: Array<string>;
-            excludedDates?: Array<string>;
-            availableTimeSlots?: Array<{
-              __typename?: 'TimeSlot';
-              startTime?: string;
-              endTime?: string;
-            }>;
-          };
-        }
-      | {
-          __typename?: 'SectionCards';
-          _id?: string;
-          _type?: string;
-          _key?: string;
-          title?: string;
-          displayTitle?: string;
-          subtitle?: string;
-          background?: string;
-          maxWidth?: string;
-          showBorder?: boolean;
-          cards?: Array<{
-            __typename?: 'Card';
-            _key?: string;
-            title?: string;
-            description?: string;
-            image?: {
-              __typename?: 'Image';
-              asset?: {
-                __typename?: 'SanityImageAsset';
-                _id?: string;
-                url?: string;
-                altText?: string;
-                metadata?: {
-                  __typename?: 'SanityImageMetadata';
-                  lqip?: string;
-                  dimensions?: {
-                    __typename?: 'SanityImageDimensions';
-                    width?: number;
-                    height?: number;
-                    aspectRatio?: number;
-                  };
-                };
-              };
-              hotspot?: {
-                __typename?: 'SanityImageHotspot';
-                x?: number;
-                y?: number;
-                height?: number;
-                width?: number;
-              };
-              crop?: {
-                __typename?: 'SanityImageCrop';
-                top?: number;
-                bottom?: number;
-                left?: number;
-                right?: number;
-              };
-            };
-            link?: { __typename?: 'Link'; text?: string; url?: string };
-          }>;
-        }
-      | {
-          __typename?: 'SectionContent';
-          _id?: string;
-          _type?: string;
-          _key?: string;
-          title?: string;
-          displayTitle?: string;
-          subtitle?: string;
-          background?: string;
-          maxWidth?: string;
-          showBorder?: boolean;
-          contentRaw?: any;
-        }
-      | {
-          __typename?: 'SectionFAQ';
-          _id?: string;
-          _type?: string;
-          _key?: string;
-          title?: string;
-          displayTitle?: string;
-          subtitle?: string;
-          background?: string;
-          maxWidth?: string;
-          showBorder?: boolean;
-          questions?: Array<{
-            __typename?: 'FaqItem';
-            _key?: string;
-            question?: string;
-            answer?: string;
-          }>;
-        }
-      | {
-          __typename?: 'SectionFeatured';
-          _id?: string;
-          _type?: string;
-          _key?: string;
-          title?: string;
-          displayTitle?: string;
-          subtitle?: string;
-          background?: string;
-          maxWidth?: string;
-          showBorder?: boolean;
-          items?: Array<{
-            __typename?: 'FeatureItem';
-            _key?: string;
-            title?: string;
-            description?: string;
-            image?: {
-              __typename?: 'Image';
-              asset?: {
-                __typename?: 'SanityImageAsset';
-                _id?: string;
-                url?: string;
-                altText?: string;
-                metadata?: {
-                  __typename?: 'SanityImageMetadata';
-                  lqip?: string;
-                  dimensions?: {
-                    __typename?: 'SanityImageDimensions';
-                    width?: number;
-                    height?: number;
-                    aspectRatio?: number;
-                  };
-                };
-              };
-              hotspot?: {
-                __typename?: 'SanityImageHotspot';
-                x?: number;
-                y?: number;
-                height?: number;
-                width?: number;
-              };
-              crop?: {
-                __typename?: 'SanityImageCrop';
-                top?: number;
-                bottom?: number;
-                left?: number;
-                right?: number;
-              };
-            };
-          }>;
-        }
-      | {
-          __typename?: 'SectionForm';
-          _id?: string;
-          _type?: string;
-          _key?: string;
-          title?: string;
-          displayTitle?: string;
-          subtitle?: string;
-          background?: string;
-          maxWidth?: string;
-          showBorder?: boolean;
-          form?: {
-            __typename?: 'FormConfiguration';
-            emailTo?: string;
-            emailSubject?: string;
-            fields?: Array<{
-              __typename?: 'FormField';
-              _key?: string;
-              label?: string;
-              type?: string;
-              required?: boolean;
-              placeholder?: string;
-              options?: Array<{
-                __typename?: 'FormFieldOption';
-                _key?: string;
-                label?: string;
-                value?: string;
-              }>;
-            }>;
-          };
-        }
-      | {
-          __typename?: 'SectionHeader';
-          _id?: string;
-          _type?: string;
-          _key?: string;
-          title?: string;
-          displayTitle?: string;
-          subtitle?: string;
-          background?: string;
-          maxWidth?: string;
-          showBorder?: boolean;
-          image?: {
-            __typename?: 'Image';
-            asset?: {
-              __typename?: 'SanityImageAsset';
-              _id?: string;
-              url?: string;
-              altText?: string;
-              metadata?: {
-                __typename?: 'SanityImageMetadata';
-                lqip?: string;
-                dimensions?: {
-                  __typename?: 'SanityImageDimensions';
-                  width?: number;
-                  height?: number;
-                  aspectRatio?: number;
-                };
-              };
-            };
-            hotspot?: {
-              __typename?: 'SanityImageHotspot';
-              x?: number;
-              y?: number;
-              height?: number;
-              width?: number;
-            };
-            crop?: {
-              __typename?: 'SanityImageCrop';
-              top?: number;
-              bottom?: number;
-              left?: number;
-              right?: number;
-            };
-          };
-          cta?: {
-            __typename?: 'CallToAction';
-            text?: string;
-            link?: string;
-            variant?: string;
-          };
-        }
-      | {
-          __typename?: 'SectionPricing';
-          _id?: string;
-          _type?: string;
-          _key?: string;
-          title?: string;
-          displayTitle?: string;
-          subtitle?: string;
-          background?: string;
-          maxWidth?: string;
-          showBorder?: boolean;
-          pricingCards?: Array<{
-            __typename?: 'PricingCard';
-            _key?: string;
-            title?: string;
-            description?: string;
-            price?: string;
-            features?: Array<string>;
-            isPopular?: boolean;
-            variant?: string;
-            cta?: {
-              __typename?: 'CallToAction';
-              text?: string;
-              link?: string;
-              variant?: string;
-            };
-          }>;
-        }
-      | {
-          __typename?: 'SectionTestimonial';
-          _id?: string;
-          _type?: string;
-          _key?: string;
-          title?: string;
-          displayTitle?: string;
-          subtitle?: string;
-          background?: string;
-          maxWidth?: string;
-          showBorder?: boolean;
-          testimonials?: Array<{
-            __typename?: 'Testimonial';
-            _key?: string;
-            name?: string;
-            role?: string;
-            quote?: string;
-            image?: {
-              __typename?: 'Image';
-              asset?: {
-                __typename?: 'SanityImageAsset';
-                _id?: string;
-                url?: string;
-                altText?: string;
-                metadata?: {
-                  __typename?: 'SanityImageMetadata';
-                  lqip?: string;
-                  dimensions?: {
-                    __typename?: 'SanityImageDimensions';
-                    width?: number;
-                    height?: number;
-                    aspectRatio?: number;
-                  };
-                };
-              };
-              hotspot?: {
-                __typename?: 'SanityImageHotspot';
-                x?: number;
-                y?: number;
-                height?: number;
-                width?: number;
-              };
-              crop?: {
-                __typename?: 'SanityImageCrop';
-                top?: number;
-                bottom?: number;
-                left?: number;
-                right?: number;
-              };
-            };
-          }>;
-        }
-      | {
-          __typename?: 'SectionTimeline';
-          _id?: string;
-          _type?: string;
-          _key?: string;
-          title?: string;
-          displayTitle?: string;
-          subtitle?: string;
-          background?: string;
-          maxWidth?: string;
-          showBorder?: boolean;
-          events?: Array<{
-            __typename?: 'TimelineEvent';
-            _key?: string;
-            title?: string;
-            date?: string;
-            description?: string;
-          }>;
-        }
-    >;
-    slug?: { __typename?: 'Slug'; current?: string };
-  }>;
-};
-
 export type GetGlobalDataQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetGlobalDataQuery = {
@@ -4797,4 +9625,2682 @@ export type GetGlobalDataQuery = {
       };
     };
   }>;
+};
+
+export type GetPageQueryVariables = Exact<{
+  type: Scalars['String']['input'];
+}>;
+
+export type GetPageQuery = {
+  __typename?: 'RootQuery';
+  allDocument: Array<
+    | {
+        __typename?: 'AboutPage';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+        title?: string;
+        metadata?: {
+          __typename?: 'Metadata';
+          title?: string;
+          description?: string;
+          keywords?: Array<string>;
+          openGraph?: {
+            __typename?: 'OpenGraph';
+            title?: string;
+            description?: string;
+            type?: string;
+            url?: string;
+            siteName?: string;
+            image?: {
+              __typename?: 'OpenGraphImage';
+              width?: number;
+              height?: number;
+              alt?: string;
+              url?: {
+                __typename?: 'Image';
+                asset?: { __typename?: 'SanityImageAsset'; url?: string };
+                hotspot?: {
+                  __typename?: 'SanityImageHotspot';
+                  x?: number;
+                  y?: number;
+                };
+              };
+            };
+          };
+          twitter?: {
+            __typename?: 'Twitter';
+            card?: string;
+            site?: string;
+            creator?: string;
+            image?: {
+              __typename?: 'TwitterImage';
+              alt?: string;
+              url?: {
+                __typename?: 'Image';
+                asset?: { __typename?: 'SanityImageAsset'; url?: string };
+                hotspot?: {
+                  __typename?: 'SanityImageHotspot';
+                  x?: number;
+                  y?: number;
+                };
+              };
+            };
+          };
+          robots?: {
+            __typename?: 'Robots';
+            index?: boolean;
+            follow?: boolean;
+            googleBot?: {
+              __typename?: 'GoogleBot';
+              index?: boolean;
+              follow?: boolean;
+            };
+          };
+        };
+        sections?: Array<
+          | {
+              __typename?: 'SectionBlog';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              postsToShow?: number;
+              showFeaturedOnly?: boolean;
+              sortOrder?: string;
+            }
+          | {
+              __typename?: 'SectionCalendar';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              settings?: {
+                __typename?: 'CalendarSettings';
+                availableDays?: Array<string>;
+                excludedDates?: Array<string>;
+                availableTimeSlots?: Array<{
+                  __typename?: 'TimeSlot';
+                  startTime?: string;
+                  endTime?: string;
+                }>;
+              };
+            }
+          | {
+              __typename?: 'SectionCards';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              cards?: Array<{
+                __typename?: 'Card';
+                _key?: string;
+                title?: string;
+                description?: string;
+                image?: {
+                  __typename?: 'Image';
+                  asset?: {
+                    __typename?: 'SanityImageAsset';
+                    _id?: string;
+                    url?: string;
+                    altText?: string;
+                    metadata?: {
+                      __typename?: 'SanityImageMetadata';
+                      lqip?: string;
+                      dimensions?: {
+                        __typename?: 'SanityImageDimensions';
+                        width?: number;
+                        height?: number;
+                        aspectRatio?: number;
+                      };
+                    };
+                  };
+                  hotspot?: {
+                    __typename?: 'SanityImageHotspot';
+                    x?: number;
+                    y?: number;
+                    height?: number;
+                    width?: number;
+                  };
+                  crop?: {
+                    __typename?: 'SanityImageCrop';
+                    top?: number;
+                    bottom?: number;
+                    left?: number;
+                    right?: number;
+                  };
+                };
+                link?: { __typename?: 'Link'; text?: string; url?: string };
+              }>;
+            }
+          | {
+              __typename?: 'SectionContent';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              contentRaw?: any;
+            }
+          | {
+              __typename?: 'SectionFAQ';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              questions?: Array<{
+                __typename?: 'FaqItem';
+                _key?: string;
+                question?: string;
+                answer?: string;
+              }>;
+            }
+          | {
+              __typename?: 'SectionFeatured';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              items?: Array<{
+                __typename?: 'FeatureItem';
+                _key?: string;
+                title?: string;
+                description?: string;
+                image?: {
+                  __typename?: 'Image';
+                  asset?: {
+                    __typename?: 'SanityImageAsset';
+                    _id?: string;
+                    url?: string;
+                    altText?: string;
+                    metadata?: {
+                      __typename?: 'SanityImageMetadata';
+                      lqip?: string;
+                      dimensions?: {
+                        __typename?: 'SanityImageDimensions';
+                        width?: number;
+                        height?: number;
+                        aspectRatio?: number;
+                      };
+                    };
+                  };
+                  hotspot?: {
+                    __typename?: 'SanityImageHotspot';
+                    x?: number;
+                    y?: number;
+                    height?: number;
+                    width?: number;
+                  };
+                  crop?: {
+                    __typename?: 'SanityImageCrop';
+                    top?: number;
+                    bottom?: number;
+                    left?: number;
+                    right?: number;
+                  };
+                };
+              }>;
+            }
+          | {
+              __typename?: 'SectionForm';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              form?: {
+                __typename?: 'FormConfiguration';
+                emailTo?: string;
+                emailSubject?: string;
+                fields?: Array<{
+                  __typename?: 'FormField';
+                  _key?: string;
+                  label?: string;
+                  type?: string;
+                  required?: boolean;
+                  placeholder?: string;
+                  options?: Array<{
+                    __typename?: 'FormFieldOption';
+                    _key?: string;
+                    label?: string;
+                    value?: string;
+                  }>;
+                }>;
+              };
+            }
+          | {
+              __typename?: 'SectionHeader';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              image?: {
+                __typename?: 'Image';
+                asset?: {
+                  __typename?: 'SanityImageAsset';
+                  _id?: string;
+                  url?: string;
+                  altText?: string;
+                  metadata?: {
+                    __typename?: 'SanityImageMetadata';
+                    lqip?: string;
+                    dimensions?: {
+                      __typename?: 'SanityImageDimensions';
+                      width?: number;
+                      height?: number;
+                      aspectRatio?: number;
+                    };
+                  };
+                };
+                hotspot?: {
+                  __typename?: 'SanityImageHotspot';
+                  x?: number;
+                  y?: number;
+                  height?: number;
+                  width?: number;
+                };
+                crop?: {
+                  __typename?: 'SanityImageCrop';
+                  top?: number;
+                  bottom?: number;
+                  left?: number;
+                  right?: number;
+                };
+              };
+              cta?: {
+                __typename?: 'CallToAction';
+                text?: string;
+                link?: string;
+                variant?: string;
+              };
+            }
+          | {
+              __typename?: 'SectionPricing';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              pricingCards?: Array<{
+                __typename?: 'PricingCard';
+                _key?: string;
+                title?: string;
+                description?: string;
+                price?: string;
+                features?: Array<string>;
+                isPopular?: boolean;
+                variant?: string;
+                cta?: {
+                  __typename?: 'CallToAction';
+                  text?: string;
+                  link?: string;
+                  variant?: string;
+                };
+              }>;
+            }
+          | {
+              __typename?: 'SectionTestimonial';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              testimonials?: Array<{
+                __typename?: 'Testimonial';
+                _key?: string;
+                name?: string;
+                role?: string;
+                quote?: string;
+                image?: {
+                  __typename?: 'Image';
+                  asset?: {
+                    __typename?: 'SanityImageAsset';
+                    _id?: string;
+                    url?: string;
+                    altText?: string;
+                    metadata?: {
+                      __typename?: 'SanityImageMetadata';
+                      lqip?: string;
+                      dimensions?: {
+                        __typename?: 'SanityImageDimensions';
+                        width?: number;
+                        height?: number;
+                        aspectRatio?: number;
+                      };
+                    };
+                  };
+                  hotspot?: {
+                    __typename?: 'SanityImageHotspot';
+                    x?: number;
+                    y?: number;
+                    height?: number;
+                    width?: number;
+                  };
+                  crop?: {
+                    __typename?: 'SanityImageCrop';
+                    top?: number;
+                    bottom?: number;
+                    left?: number;
+                    right?: number;
+                  };
+                };
+              }>;
+            }
+          | {
+              __typename?: 'SectionTimeline';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              events?: Array<{
+                __typename?: 'TimelineEvent';
+                _key?: string;
+                title?: string;
+                date?: string;
+                description?: string;
+              }>;
+            }
+        >;
+        slug?: { __typename?: 'Slug'; current?: string };
+      }
+    | {
+        __typename?: 'ApproachPage';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+        title?: string;
+        metadata?: {
+          __typename?: 'Metadata';
+          title?: string;
+          description?: string;
+          keywords?: Array<string>;
+          openGraph?: {
+            __typename?: 'OpenGraph';
+            title?: string;
+            description?: string;
+            type?: string;
+            url?: string;
+            siteName?: string;
+            image?: {
+              __typename?: 'OpenGraphImage';
+              width?: number;
+              height?: number;
+              alt?: string;
+              url?: {
+                __typename?: 'Image';
+                asset?: { __typename?: 'SanityImageAsset'; url?: string };
+                hotspot?: {
+                  __typename?: 'SanityImageHotspot';
+                  x?: number;
+                  y?: number;
+                };
+              };
+            };
+          };
+          twitter?: {
+            __typename?: 'Twitter';
+            card?: string;
+            site?: string;
+            creator?: string;
+            image?: {
+              __typename?: 'TwitterImage';
+              alt?: string;
+              url?: {
+                __typename?: 'Image';
+                asset?: { __typename?: 'SanityImageAsset'; url?: string };
+                hotspot?: {
+                  __typename?: 'SanityImageHotspot';
+                  x?: number;
+                  y?: number;
+                };
+              };
+            };
+          };
+          robots?: {
+            __typename?: 'Robots';
+            index?: boolean;
+            follow?: boolean;
+            googleBot?: {
+              __typename?: 'GoogleBot';
+              index?: boolean;
+              follow?: boolean;
+            };
+          };
+        };
+        sections?: Array<
+          | {
+              __typename?: 'SectionBlog';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              postsToShow?: number;
+              showFeaturedOnly?: boolean;
+              sortOrder?: string;
+            }
+          | {
+              __typename?: 'SectionCalendar';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              settings?: {
+                __typename?: 'CalendarSettings';
+                availableDays?: Array<string>;
+                excludedDates?: Array<string>;
+                availableTimeSlots?: Array<{
+                  __typename?: 'TimeSlot';
+                  startTime?: string;
+                  endTime?: string;
+                }>;
+              };
+            }
+          | {
+              __typename?: 'SectionCards';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              cards?: Array<{
+                __typename?: 'Card';
+                _key?: string;
+                title?: string;
+                description?: string;
+                image?: {
+                  __typename?: 'Image';
+                  asset?: {
+                    __typename?: 'SanityImageAsset';
+                    _id?: string;
+                    url?: string;
+                    altText?: string;
+                    metadata?: {
+                      __typename?: 'SanityImageMetadata';
+                      lqip?: string;
+                      dimensions?: {
+                        __typename?: 'SanityImageDimensions';
+                        width?: number;
+                        height?: number;
+                        aspectRatio?: number;
+                      };
+                    };
+                  };
+                  hotspot?: {
+                    __typename?: 'SanityImageHotspot';
+                    x?: number;
+                    y?: number;
+                    height?: number;
+                    width?: number;
+                  };
+                  crop?: {
+                    __typename?: 'SanityImageCrop';
+                    top?: number;
+                    bottom?: number;
+                    left?: number;
+                    right?: number;
+                  };
+                };
+                link?: { __typename?: 'Link'; text?: string; url?: string };
+              }>;
+            }
+          | {
+              __typename?: 'SectionContent';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              contentRaw?: any;
+            }
+          | {
+              __typename?: 'SectionFAQ';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              questions?: Array<{
+                __typename?: 'FaqItem';
+                _key?: string;
+                question?: string;
+                answer?: string;
+              }>;
+            }
+          | {
+              __typename?: 'SectionFeatured';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              items?: Array<{
+                __typename?: 'FeatureItem';
+                _key?: string;
+                title?: string;
+                description?: string;
+                image?: {
+                  __typename?: 'Image';
+                  asset?: {
+                    __typename?: 'SanityImageAsset';
+                    _id?: string;
+                    url?: string;
+                    altText?: string;
+                    metadata?: {
+                      __typename?: 'SanityImageMetadata';
+                      lqip?: string;
+                      dimensions?: {
+                        __typename?: 'SanityImageDimensions';
+                        width?: number;
+                        height?: number;
+                        aspectRatio?: number;
+                      };
+                    };
+                  };
+                  hotspot?: {
+                    __typename?: 'SanityImageHotspot';
+                    x?: number;
+                    y?: number;
+                    height?: number;
+                    width?: number;
+                  };
+                  crop?: {
+                    __typename?: 'SanityImageCrop';
+                    top?: number;
+                    bottom?: number;
+                    left?: number;
+                    right?: number;
+                  };
+                };
+              }>;
+            }
+          | {
+              __typename?: 'SectionForm';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              form?: {
+                __typename?: 'FormConfiguration';
+                emailTo?: string;
+                emailSubject?: string;
+                fields?: Array<{
+                  __typename?: 'FormField';
+                  _key?: string;
+                  label?: string;
+                  type?: string;
+                  required?: boolean;
+                  placeholder?: string;
+                  options?: Array<{
+                    __typename?: 'FormFieldOption';
+                    _key?: string;
+                    label?: string;
+                    value?: string;
+                  }>;
+                }>;
+              };
+            }
+          | {
+              __typename?: 'SectionHeader';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              image?: {
+                __typename?: 'Image';
+                asset?: {
+                  __typename?: 'SanityImageAsset';
+                  _id?: string;
+                  url?: string;
+                  altText?: string;
+                  metadata?: {
+                    __typename?: 'SanityImageMetadata';
+                    lqip?: string;
+                    dimensions?: {
+                      __typename?: 'SanityImageDimensions';
+                      width?: number;
+                      height?: number;
+                      aspectRatio?: number;
+                    };
+                  };
+                };
+                hotspot?: {
+                  __typename?: 'SanityImageHotspot';
+                  x?: number;
+                  y?: number;
+                  height?: number;
+                  width?: number;
+                };
+                crop?: {
+                  __typename?: 'SanityImageCrop';
+                  top?: number;
+                  bottom?: number;
+                  left?: number;
+                  right?: number;
+                };
+              };
+              cta?: {
+                __typename?: 'CallToAction';
+                text?: string;
+                link?: string;
+                variant?: string;
+              };
+            }
+          | {
+              __typename?: 'SectionPricing';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              pricingCards?: Array<{
+                __typename?: 'PricingCard';
+                _key?: string;
+                title?: string;
+                description?: string;
+                price?: string;
+                features?: Array<string>;
+                isPopular?: boolean;
+                variant?: string;
+                cta?: {
+                  __typename?: 'CallToAction';
+                  text?: string;
+                  link?: string;
+                  variant?: string;
+                };
+              }>;
+            }
+          | {
+              __typename?: 'SectionTestimonial';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              testimonials?: Array<{
+                __typename?: 'Testimonial';
+                _key?: string;
+                name?: string;
+                role?: string;
+                quote?: string;
+                image?: {
+                  __typename?: 'Image';
+                  asset?: {
+                    __typename?: 'SanityImageAsset';
+                    _id?: string;
+                    url?: string;
+                    altText?: string;
+                    metadata?: {
+                      __typename?: 'SanityImageMetadata';
+                      lqip?: string;
+                      dimensions?: {
+                        __typename?: 'SanityImageDimensions';
+                        width?: number;
+                        height?: number;
+                        aspectRatio?: number;
+                      };
+                    };
+                  };
+                  hotspot?: {
+                    __typename?: 'SanityImageHotspot';
+                    x?: number;
+                    y?: number;
+                    height?: number;
+                    width?: number;
+                  };
+                  crop?: {
+                    __typename?: 'SanityImageCrop';
+                    top?: number;
+                    bottom?: number;
+                    left?: number;
+                    right?: number;
+                  };
+                };
+              }>;
+            }
+          | {
+              __typename?: 'SectionTimeline';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              events?: Array<{
+                __typename?: 'TimelineEvent';
+                _key?: string;
+                title?: string;
+                date?: string;
+                description?: string;
+              }>;
+            }
+        >;
+        slug?: { __typename?: 'Slug'; current?: string };
+      }
+    | {
+        __typename?: 'BlogPage';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+        title?: string;
+        metadata?: {
+          __typename?: 'Metadata';
+          title?: string;
+          description?: string;
+          keywords?: Array<string>;
+          openGraph?: {
+            __typename?: 'OpenGraph';
+            title?: string;
+            description?: string;
+            type?: string;
+            url?: string;
+            siteName?: string;
+            image?: {
+              __typename?: 'OpenGraphImage';
+              width?: number;
+              height?: number;
+              alt?: string;
+              url?: {
+                __typename?: 'Image';
+                asset?: { __typename?: 'SanityImageAsset'; url?: string };
+                hotspot?: {
+                  __typename?: 'SanityImageHotspot';
+                  x?: number;
+                  y?: number;
+                };
+              };
+            };
+          };
+          twitter?: {
+            __typename?: 'Twitter';
+            card?: string;
+            site?: string;
+            creator?: string;
+            image?: {
+              __typename?: 'TwitterImage';
+              alt?: string;
+              url?: {
+                __typename?: 'Image';
+                asset?: { __typename?: 'SanityImageAsset'; url?: string };
+                hotspot?: {
+                  __typename?: 'SanityImageHotspot';
+                  x?: number;
+                  y?: number;
+                };
+              };
+            };
+          };
+          robots?: {
+            __typename?: 'Robots';
+            index?: boolean;
+            follow?: boolean;
+            googleBot?: {
+              __typename?: 'GoogleBot';
+              index?: boolean;
+              follow?: boolean;
+            };
+          };
+        };
+        sections?: Array<
+          | {
+              __typename?: 'SectionBlog';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              postsToShow?: number;
+              showFeaturedOnly?: boolean;
+              sortOrder?: string;
+            }
+          | {
+              __typename?: 'SectionCalendar';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              settings?: {
+                __typename?: 'CalendarSettings';
+                availableDays?: Array<string>;
+                excludedDates?: Array<string>;
+                availableTimeSlots?: Array<{
+                  __typename?: 'TimeSlot';
+                  startTime?: string;
+                  endTime?: string;
+                }>;
+              };
+            }
+          | {
+              __typename?: 'SectionCards';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              cards?: Array<{
+                __typename?: 'Card';
+                _key?: string;
+                title?: string;
+                description?: string;
+                image?: {
+                  __typename?: 'Image';
+                  asset?: {
+                    __typename?: 'SanityImageAsset';
+                    _id?: string;
+                    url?: string;
+                    altText?: string;
+                    metadata?: {
+                      __typename?: 'SanityImageMetadata';
+                      lqip?: string;
+                      dimensions?: {
+                        __typename?: 'SanityImageDimensions';
+                        width?: number;
+                        height?: number;
+                        aspectRatio?: number;
+                      };
+                    };
+                  };
+                  hotspot?: {
+                    __typename?: 'SanityImageHotspot';
+                    x?: number;
+                    y?: number;
+                    height?: number;
+                    width?: number;
+                  };
+                  crop?: {
+                    __typename?: 'SanityImageCrop';
+                    top?: number;
+                    bottom?: number;
+                    left?: number;
+                    right?: number;
+                  };
+                };
+                link?: { __typename?: 'Link'; text?: string; url?: string };
+              }>;
+            }
+          | {
+              __typename?: 'SectionContent';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              contentRaw?: any;
+            }
+          | {
+              __typename?: 'SectionFAQ';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              questions?: Array<{
+                __typename?: 'FaqItem';
+                _key?: string;
+                question?: string;
+                answer?: string;
+              }>;
+            }
+          | {
+              __typename?: 'SectionFeatured';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              items?: Array<{
+                __typename?: 'FeatureItem';
+                _key?: string;
+                title?: string;
+                description?: string;
+                image?: {
+                  __typename?: 'Image';
+                  asset?: {
+                    __typename?: 'SanityImageAsset';
+                    _id?: string;
+                    url?: string;
+                    altText?: string;
+                    metadata?: {
+                      __typename?: 'SanityImageMetadata';
+                      lqip?: string;
+                      dimensions?: {
+                        __typename?: 'SanityImageDimensions';
+                        width?: number;
+                        height?: number;
+                        aspectRatio?: number;
+                      };
+                    };
+                  };
+                  hotspot?: {
+                    __typename?: 'SanityImageHotspot';
+                    x?: number;
+                    y?: number;
+                    height?: number;
+                    width?: number;
+                  };
+                  crop?: {
+                    __typename?: 'SanityImageCrop';
+                    top?: number;
+                    bottom?: number;
+                    left?: number;
+                    right?: number;
+                  };
+                };
+              }>;
+            }
+          | {
+              __typename?: 'SectionForm';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              form?: {
+                __typename?: 'FormConfiguration';
+                emailTo?: string;
+                emailSubject?: string;
+                fields?: Array<{
+                  __typename?: 'FormField';
+                  _key?: string;
+                  label?: string;
+                  type?: string;
+                  required?: boolean;
+                  placeholder?: string;
+                  options?: Array<{
+                    __typename?: 'FormFieldOption';
+                    _key?: string;
+                    label?: string;
+                    value?: string;
+                  }>;
+                }>;
+              };
+            }
+          | {
+              __typename?: 'SectionHeader';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              image?: {
+                __typename?: 'Image';
+                asset?: {
+                  __typename?: 'SanityImageAsset';
+                  _id?: string;
+                  url?: string;
+                  altText?: string;
+                  metadata?: {
+                    __typename?: 'SanityImageMetadata';
+                    lqip?: string;
+                    dimensions?: {
+                      __typename?: 'SanityImageDimensions';
+                      width?: number;
+                      height?: number;
+                      aspectRatio?: number;
+                    };
+                  };
+                };
+                hotspot?: {
+                  __typename?: 'SanityImageHotspot';
+                  x?: number;
+                  y?: number;
+                  height?: number;
+                  width?: number;
+                };
+                crop?: {
+                  __typename?: 'SanityImageCrop';
+                  top?: number;
+                  bottom?: number;
+                  left?: number;
+                  right?: number;
+                };
+              };
+              cta?: {
+                __typename?: 'CallToAction';
+                text?: string;
+                link?: string;
+                variant?: string;
+              };
+            }
+          | {
+              __typename?: 'SectionPricing';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              pricingCards?: Array<{
+                __typename?: 'PricingCard';
+                _key?: string;
+                title?: string;
+                description?: string;
+                price?: string;
+                features?: Array<string>;
+                isPopular?: boolean;
+                variant?: string;
+                cta?: {
+                  __typename?: 'CallToAction';
+                  text?: string;
+                  link?: string;
+                  variant?: string;
+                };
+              }>;
+            }
+          | {
+              __typename?: 'SectionTestimonial';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              testimonials?: Array<{
+                __typename?: 'Testimonial';
+                _key?: string;
+                name?: string;
+                role?: string;
+                quote?: string;
+                image?: {
+                  __typename?: 'Image';
+                  asset?: {
+                    __typename?: 'SanityImageAsset';
+                    _id?: string;
+                    url?: string;
+                    altText?: string;
+                    metadata?: {
+                      __typename?: 'SanityImageMetadata';
+                      lqip?: string;
+                      dimensions?: {
+                        __typename?: 'SanityImageDimensions';
+                        width?: number;
+                        height?: number;
+                        aspectRatio?: number;
+                      };
+                    };
+                  };
+                  hotspot?: {
+                    __typename?: 'SanityImageHotspot';
+                    x?: number;
+                    y?: number;
+                    height?: number;
+                    width?: number;
+                  };
+                  crop?: {
+                    __typename?: 'SanityImageCrop';
+                    top?: number;
+                    bottom?: number;
+                    left?: number;
+                    right?: number;
+                  };
+                };
+              }>;
+            }
+          | {
+              __typename?: 'SectionTimeline';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              events?: Array<{
+                __typename?: 'TimelineEvent';
+                _key?: string;
+                title?: string;
+                date?: string;
+                description?: string;
+              }>;
+            }
+        >;
+        slug?: { __typename?: 'Slug'; current?: string };
+      }
+    | {
+        __typename?: 'CoachingPage';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+        title?: string;
+        metadata?: {
+          __typename?: 'Metadata';
+          title?: string;
+          description?: string;
+          keywords?: Array<string>;
+          openGraph?: {
+            __typename?: 'OpenGraph';
+            title?: string;
+            description?: string;
+            type?: string;
+            url?: string;
+            siteName?: string;
+            image?: {
+              __typename?: 'OpenGraphImage';
+              width?: number;
+              height?: number;
+              alt?: string;
+              url?: {
+                __typename?: 'Image';
+                asset?: { __typename?: 'SanityImageAsset'; url?: string };
+                hotspot?: {
+                  __typename?: 'SanityImageHotspot';
+                  x?: number;
+                  y?: number;
+                };
+              };
+            };
+          };
+          twitter?: {
+            __typename?: 'Twitter';
+            card?: string;
+            site?: string;
+            creator?: string;
+            image?: {
+              __typename?: 'TwitterImage';
+              alt?: string;
+              url?: {
+                __typename?: 'Image';
+                asset?: { __typename?: 'SanityImageAsset'; url?: string };
+                hotspot?: {
+                  __typename?: 'SanityImageHotspot';
+                  x?: number;
+                  y?: number;
+                };
+              };
+            };
+          };
+          robots?: {
+            __typename?: 'Robots';
+            index?: boolean;
+            follow?: boolean;
+            googleBot?: {
+              __typename?: 'GoogleBot';
+              index?: boolean;
+              follow?: boolean;
+            };
+          };
+        };
+        sections?: Array<
+          | {
+              __typename?: 'SectionBlog';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              postsToShow?: number;
+              showFeaturedOnly?: boolean;
+              sortOrder?: string;
+            }
+          | {
+              __typename?: 'SectionCalendar';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              settings?: {
+                __typename?: 'CalendarSettings';
+                availableDays?: Array<string>;
+                excludedDates?: Array<string>;
+                availableTimeSlots?: Array<{
+                  __typename?: 'TimeSlot';
+                  startTime?: string;
+                  endTime?: string;
+                }>;
+              };
+            }
+          | {
+              __typename?: 'SectionCards';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              cards?: Array<{
+                __typename?: 'Card';
+                _key?: string;
+                title?: string;
+                description?: string;
+                image?: {
+                  __typename?: 'Image';
+                  asset?: {
+                    __typename?: 'SanityImageAsset';
+                    _id?: string;
+                    url?: string;
+                    altText?: string;
+                    metadata?: {
+                      __typename?: 'SanityImageMetadata';
+                      lqip?: string;
+                      dimensions?: {
+                        __typename?: 'SanityImageDimensions';
+                        width?: number;
+                        height?: number;
+                        aspectRatio?: number;
+                      };
+                    };
+                  };
+                  hotspot?: {
+                    __typename?: 'SanityImageHotspot';
+                    x?: number;
+                    y?: number;
+                    height?: number;
+                    width?: number;
+                  };
+                  crop?: {
+                    __typename?: 'SanityImageCrop';
+                    top?: number;
+                    bottom?: number;
+                    left?: number;
+                    right?: number;
+                  };
+                };
+                link?: { __typename?: 'Link'; text?: string; url?: string };
+              }>;
+            }
+          | {
+              __typename?: 'SectionContent';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              contentRaw?: any;
+            }
+          | {
+              __typename?: 'SectionFAQ';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              questions?: Array<{
+                __typename?: 'FaqItem';
+                _key?: string;
+                question?: string;
+                answer?: string;
+              }>;
+            }
+          | {
+              __typename?: 'SectionFeatured';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              items?: Array<{
+                __typename?: 'FeatureItem';
+                _key?: string;
+                title?: string;
+                description?: string;
+                image?: {
+                  __typename?: 'Image';
+                  asset?: {
+                    __typename?: 'SanityImageAsset';
+                    _id?: string;
+                    url?: string;
+                    altText?: string;
+                    metadata?: {
+                      __typename?: 'SanityImageMetadata';
+                      lqip?: string;
+                      dimensions?: {
+                        __typename?: 'SanityImageDimensions';
+                        width?: number;
+                        height?: number;
+                        aspectRatio?: number;
+                      };
+                    };
+                  };
+                  hotspot?: {
+                    __typename?: 'SanityImageHotspot';
+                    x?: number;
+                    y?: number;
+                    height?: number;
+                    width?: number;
+                  };
+                  crop?: {
+                    __typename?: 'SanityImageCrop';
+                    top?: number;
+                    bottom?: number;
+                    left?: number;
+                    right?: number;
+                  };
+                };
+              }>;
+            }
+          | {
+              __typename?: 'SectionForm';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              form?: {
+                __typename?: 'FormConfiguration';
+                emailTo?: string;
+                emailSubject?: string;
+                fields?: Array<{
+                  __typename?: 'FormField';
+                  _key?: string;
+                  label?: string;
+                  type?: string;
+                  required?: boolean;
+                  placeholder?: string;
+                  options?: Array<{
+                    __typename?: 'FormFieldOption';
+                    _key?: string;
+                    label?: string;
+                    value?: string;
+                  }>;
+                }>;
+              };
+            }
+          | {
+              __typename?: 'SectionHeader';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              image?: {
+                __typename?: 'Image';
+                asset?: {
+                  __typename?: 'SanityImageAsset';
+                  _id?: string;
+                  url?: string;
+                  altText?: string;
+                  metadata?: {
+                    __typename?: 'SanityImageMetadata';
+                    lqip?: string;
+                    dimensions?: {
+                      __typename?: 'SanityImageDimensions';
+                      width?: number;
+                      height?: number;
+                      aspectRatio?: number;
+                    };
+                  };
+                };
+                hotspot?: {
+                  __typename?: 'SanityImageHotspot';
+                  x?: number;
+                  y?: number;
+                  height?: number;
+                  width?: number;
+                };
+                crop?: {
+                  __typename?: 'SanityImageCrop';
+                  top?: number;
+                  bottom?: number;
+                  left?: number;
+                  right?: number;
+                };
+              };
+              cta?: {
+                __typename?: 'CallToAction';
+                text?: string;
+                link?: string;
+                variant?: string;
+              };
+            }
+          | {
+              __typename?: 'SectionPricing';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              pricingCards?: Array<{
+                __typename?: 'PricingCard';
+                _key?: string;
+                title?: string;
+                description?: string;
+                price?: string;
+                features?: Array<string>;
+                isPopular?: boolean;
+                variant?: string;
+                cta?: {
+                  __typename?: 'CallToAction';
+                  text?: string;
+                  link?: string;
+                  variant?: string;
+                };
+              }>;
+            }
+          | {
+              __typename?: 'SectionTestimonial';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              testimonials?: Array<{
+                __typename?: 'Testimonial';
+                _key?: string;
+                name?: string;
+                role?: string;
+                quote?: string;
+                image?: {
+                  __typename?: 'Image';
+                  asset?: {
+                    __typename?: 'SanityImageAsset';
+                    _id?: string;
+                    url?: string;
+                    altText?: string;
+                    metadata?: {
+                      __typename?: 'SanityImageMetadata';
+                      lqip?: string;
+                      dimensions?: {
+                        __typename?: 'SanityImageDimensions';
+                        width?: number;
+                        height?: number;
+                        aspectRatio?: number;
+                      };
+                    };
+                  };
+                  hotspot?: {
+                    __typename?: 'SanityImageHotspot';
+                    x?: number;
+                    y?: number;
+                    height?: number;
+                    width?: number;
+                  };
+                  crop?: {
+                    __typename?: 'SanityImageCrop';
+                    top?: number;
+                    bottom?: number;
+                    left?: number;
+                    right?: number;
+                  };
+                };
+              }>;
+            }
+          | {
+              __typename?: 'SectionTimeline';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              events?: Array<{
+                __typename?: 'TimelineEvent';
+                _key?: string;
+                title?: string;
+                date?: string;
+                description?: string;
+              }>;
+            }
+        >;
+        slug?: { __typename?: 'Slug'; current?: string };
+      }
+    | {
+        __typename?: 'Configuration';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+      }
+    | {
+        __typename?: 'ContactPage';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+        title?: string;
+        metadata?: {
+          __typename?: 'Metadata';
+          title?: string;
+          description?: string;
+          keywords?: Array<string>;
+          openGraph?: {
+            __typename?: 'OpenGraph';
+            title?: string;
+            description?: string;
+            type?: string;
+            url?: string;
+            siteName?: string;
+            image?: {
+              __typename?: 'OpenGraphImage';
+              width?: number;
+              height?: number;
+              alt?: string;
+              url?: {
+                __typename?: 'Image';
+                asset?: { __typename?: 'SanityImageAsset'; url?: string };
+                hotspot?: {
+                  __typename?: 'SanityImageHotspot';
+                  x?: number;
+                  y?: number;
+                };
+              };
+            };
+          };
+          twitter?: {
+            __typename?: 'Twitter';
+            card?: string;
+            site?: string;
+            creator?: string;
+            image?: {
+              __typename?: 'TwitterImage';
+              alt?: string;
+              url?: {
+                __typename?: 'Image';
+                asset?: { __typename?: 'SanityImageAsset'; url?: string };
+                hotspot?: {
+                  __typename?: 'SanityImageHotspot';
+                  x?: number;
+                  y?: number;
+                };
+              };
+            };
+          };
+          robots?: {
+            __typename?: 'Robots';
+            index?: boolean;
+            follow?: boolean;
+            googleBot?: {
+              __typename?: 'GoogleBot';
+              index?: boolean;
+              follow?: boolean;
+            };
+          };
+        };
+        sections?: Array<
+          | {
+              __typename?: 'SectionBlog';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              postsToShow?: number;
+              showFeaturedOnly?: boolean;
+              sortOrder?: string;
+            }
+          | {
+              __typename?: 'SectionCalendar';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              settings?: {
+                __typename?: 'CalendarSettings';
+                availableDays?: Array<string>;
+                excludedDates?: Array<string>;
+                availableTimeSlots?: Array<{
+                  __typename?: 'TimeSlot';
+                  startTime?: string;
+                  endTime?: string;
+                }>;
+              };
+            }
+          | {
+              __typename?: 'SectionCards';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              cards?: Array<{
+                __typename?: 'Card';
+                _key?: string;
+                title?: string;
+                description?: string;
+                image?: {
+                  __typename?: 'Image';
+                  asset?: {
+                    __typename?: 'SanityImageAsset';
+                    _id?: string;
+                    url?: string;
+                    altText?: string;
+                    metadata?: {
+                      __typename?: 'SanityImageMetadata';
+                      lqip?: string;
+                      dimensions?: {
+                        __typename?: 'SanityImageDimensions';
+                        width?: number;
+                        height?: number;
+                        aspectRatio?: number;
+                      };
+                    };
+                  };
+                  hotspot?: {
+                    __typename?: 'SanityImageHotspot';
+                    x?: number;
+                    y?: number;
+                    height?: number;
+                    width?: number;
+                  };
+                  crop?: {
+                    __typename?: 'SanityImageCrop';
+                    top?: number;
+                    bottom?: number;
+                    left?: number;
+                    right?: number;
+                  };
+                };
+                link?: { __typename?: 'Link'; text?: string; url?: string };
+              }>;
+            }
+          | {
+              __typename?: 'SectionContent';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              contentRaw?: any;
+            }
+          | {
+              __typename?: 'SectionFAQ';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              questions?: Array<{
+                __typename?: 'FaqItem';
+                _key?: string;
+                question?: string;
+                answer?: string;
+              }>;
+            }
+          | {
+              __typename?: 'SectionFeatured';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              items?: Array<{
+                __typename?: 'FeatureItem';
+                _key?: string;
+                title?: string;
+                description?: string;
+                image?: {
+                  __typename?: 'Image';
+                  asset?: {
+                    __typename?: 'SanityImageAsset';
+                    _id?: string;
+                    url?: string;
+                    altText?: string;
+                    metadata?: {
+                      __typename?: 'SanityImageMetadata';
+                      lqip?: string;
+                      dimensions?: {
+                        __typename?: 'SanityImageDimensions';
+                        width?: number;
+                        height?: number;
+                        aspectRatio?: number;
+                      };
+                    };
+                  };
+                  hotspot?: {
+                    __typename?: 'SanityImageHotspot';
+                    x?: number;
+                    y?: number;
+                    height?: number;
+                    width?: number;
+                  };
+                  crop?: {
+                    __typename?: 'SanityImageCrop';
+                    top?: number;
+                    bottom?: number;
+                    left?: number;
+                    right?: number;
+                  };
+                };
+              }>;
+            }
+          | {
+              __typename?: 'SectionForm';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              form?: {
+                __typename?: 'FormConfiguration';
+                emailTo?: string;
+                emailSubject?: string;
+                fields?: Array<{
+                  __typename?: 'FormField';
+                  _key?: string;
+                  label?: string;
+                  type?: string;
+                  required?: boolean;
+                  placeholder?: string;
+                  options?: Array<{
+                    __typename?: 'FormFieldOption';
+                    _key?: string;
+                    label?: string;
+                    value?: string;
+                  }>;
+                }>;
+              };
+            }
+          | {
+              __typename?: 'SectionHeader';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              image?: {
+                __typename?: 'Image';
+                asset?: {
+                  __typename?: 'SanityImageAsset';
+                  _id?: string;
+                  url?: string;
+                  altText?: string;
+                  metadata?: {
+                    __typename?: 'SanityImageMetadata';
+                    lqip?: string;
+                    dimensions?: {
+                      __typename?: 'SanityImageDimensions';
+                      width?: number;
+                      height?: number;
+                      aspectRatio?: number;
+                    };
+                  };
+                };
+                hotspot?: {
+                  __typename?: 'SanityImageHotspot';
+                  x?: number;
+                  y?: number;
+                  height?: number;
+                  width?: number;
+                };
+                crop?: {
+                  __typename?: 'SanityImageCrop';
+                  top?: number;
+                  bottom?: number;
+                  left?: number;
+                  right?: number;
+                };
+              };
+              cta?: {
+                __typename?: 'CallToAction';
+                text?: string;
+                link?: string;
+                variant?: string;
+              };
+            }
+          | {
+              __typename?: 'SectionPricing';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              pricingCards?: Array<{
+                __typename?: 'PricingCard';
+                _key?: string;
+                title?: string;
+                description?: string;
+                price?: string;
+                features?: Array<string>;
+                isPopular?: boolean;
+                variant?: string;
+                cta?: {
+                  __typename?: 'CallToAction';
+                  text?: string;
+                  link?: string;
+                  variant?: string;
+                };
+              }>;
+            }
+          | {
+              __typename?: 'SectionTestimonial';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              testimonials?: Array<{
+                __typename?: 'Testimonial';
+                _key?: string;
+                name?: string;
+                role?: string;
+                quote?: string;
+                image?: {
+                  __typename?: 'Image';
+                  asset?: {
+                    __typename?: 'SanityImageAsset';
+                    _id?: string;
+                    url?: string;
+                    altText?: string;
+                    metadata?: {
+                      __typename?: 'SanityImageMetadata';
+                      lqip?: string;
+                      dimensions?: {
+                        __typename?: 'SanityImageDimensions';
+                        width?: number;
+                        height?: number;
+                        aspectRatio?: number;
+                      };
+                    };
+                  };
+                  hotspot?: {
+                    __typename?: 'SanityImageHotspot';
+                    x?: number;
+                    y?: number;
+                    height?: number;
+                    width?: number;
+                  };
+                  crop?: {
+                    __typename?: 'SanityImageCrop';
+                    top?: number;
+                    bottom?: number;
+                    left?: number;
+                    right?: number;
+                  };
+                };
+              }>;
+            }
+          | {
+              __typename?: 'SectionTimeline';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              events?: Array<{
+                __typename?: 'TimelineEvent';
+                _key?: string;
+                title?: string;
+                date?: string;
+                description?: string;
+              }>;
+            }
+        >;
+        slug?: { __typename?: 'Slug'; current?: string };
+      }
+    | {
+        __typename?: 'Footer';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+      }
+    | {
+        __typename?: 'Header';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+      }
+    | {
+        __typename?: 'HomePage';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+        title?: string;
+        metadata?: {
+          __typename?: 'Metadata';
+          title?: string;
+          description?: string;
+          keywords?: Array<string>;
+          openGraph?: {
+            __typename?: 'OpenGraph';
+            title?: string;
+            description?: string;
+            type?: string;
+            url?: string;
+            siteName?: string;
+            image?: {
+              __typename?: 'OpenGraphImage';
+              width?: number;
+              height?: number;
+              alt?: string;
+              url?: {
+                __typename?: 'Image';
+                asset?: { __typename?: 'SanityImageAsset'; url?: string };
+                hotspot?: {
+                  __typename?: 'SanityImageHotspot';
+                  x?: number;
+                  y?: number;
+                };
+              };
+            };
+          };
+          twitter?: {
+            __typename?: 'Twitter';
+            card?: string;
+            site?: string;
+            creator?: string;
+            image?: {
+              __typename?: 'TwitterImage';
+              alt?: string;
+              url?: {
+                __typename?: 'Image';
+                asset?: { __typename?: 'SanityImageAsset'; url?: string };
+                hotspot?: {
+                  __typename?: 'SanityImageHotspot';
+                  x?: number;
+                  y?: number;
+                };
+              };
+            };
+          };
+          robots?: {
+            __typename?: 'Robots';
+            index?: boolean;
+            follow?: boolean;
+            googleBot?: {
+              __typename?: 'GoogleBot';
+              index?: boolean;
+              follow?: boolean;
+            };
+          };
+        };
+        sections?: Array<
+          | {
+              __typename?: 'SectionBlog';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              postsToShow?: number;
+              showFeaturedOnly?: boolean;
+              sortOrder?: string;
+            }
+          | {
+              __typename?: 'SectionCalendar';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              settings?: {
+                __typename?: 'CalendarSettings';
+                availableDays?: Array<string>;
+                excludedDates?: Array<string>;
+                availableTimeSlots?: Array<{
+                  __typename?: 'TimeSlot';
+                  startTime?: string;
+                  endTime?: string;
+                }>;
+              };
+            }
+          | {
+              __typename?: 'SectionCards';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              cards?: Array<{
+                __typename?: 'Card';
+                _key?: string;
+                title?: string;
+                description?: string;
+                image?: {
+                  __typename?: 'Image';
+                  asset?: {
+                    __typename?: 'SanityImageAsset';
+                    _id?: string;
+                    url?: string;
+                    altText?: string;
+                    metadata?: {
+                      __typename?: 'SanityImageMetadata';
+                      lqip?: string;
+                      dimensions?: {
+                        __typename?: 'SanityImageDimensions';
+                        width?: number;
+                        height?: number;
+                        aspectRatio?: number;
+                      };
+                    };
+                  };
+                  hotspot?: {
+                    __typename?: 'SanityImageHotspot';
+                    x?: number;
+                    y?: number;
+                    height?: number;
+                    width?: number;
+                  };
+                  crop?: {
+                    __typename?: 'SanityImageCrop';
+                    top?: number;
+                    bottom?: number;
+                    left?: number;
+                    right?: number;
+                  };
+                };
+                link?: { __typename?: 'Link'; text?: string; url?: string };
+              }>;
+            }
+          | {
+              __typename?: 'SectionContent';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              contentRaw?: any;
+            }
+          | {
+              __typename?: 'SectionFAQ';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              questions?: Array<{
+                __typename?: 'FaqItem';
+                _key?: string;
+                question?: string;
+                answer?: string;
+              }>;
+            }
+          | {
+              __typename?: 'SectionFeatured';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              items?: Array<{
+                __typename?: 'FeatureItem';
+                _key?: string;
+                title?: string;
+                description?: string;
+                image?: {
+                  __typename?: 'Image';
+                  asset?: {
+                    __typename?: 'SanityImageAsset';
+                    _id?: string;
+                    url?: string;
+                    altText?: string;
+                    metadata?: {
+                      __typename?: 'SanityImageMetadata';
+                      lqip?: string;
+                      dimensions?: {
+                        __typename?: 'SanityImageDimensions';
+                        width?: number;
+                        height?: number;
+                        aspectRatio?: number;
+                      };
+                    };
+                  };
+                  hotspot?: {
+                    __typename?: 'SanityImageHotspot';
+                    x?: number;
+                    y?: number;
+                    height?: number;
+                    width?: number;
+                  };
+                  crop?: {
+                    __typename?: 'SanityImageCrop';
+                    top?: number;
+                    bottom?: number;
+                    left?: number;
+                    right?: number;
+                  };
+                };
+              }>;
+            }
+          | {
+              __typename?: 'SectionForm';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              form?: {
+                __typename?: 'FormConfiguration';
+                emailTo?: string;
+                emailSubject?: string;
+                fields?: Array<{
+                  __typename?: 'FormField';
+                  _key?: string;
+                  label?: string;
+                  type?: string;
+                  required?: boolean;
+                  placeholder?: string;
+                  options?: Array<{
+                    __typename?: 'FormFieldOption';
+                    _key?: string;
+                    label?: string;
+                    value?: string;
+                  }>;
+                }>;
+              };
+            }
+          | {
+              __typename?: 'SectionHeader';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              image?: {
+                __typename?: 'Image';
+                asset?: {
+                  __typename?: 'SanityImageAsset';
+                  _id?: string;
+                  url?: string;
+                  altText?: string;
+                  metadata?: {
+                    __typename?: 'SanityImageMetadata';
+                    lqip?: string;
+                    dimensions?: {
+                      __typename?: 'SanityImageDimensions';
+                      width?: number;
+                      height?: number;
+                      aspectRatio?: number;
+                    };
+                  };
+                };
+                hotspot?: {
+                  __typename?: 'SanityImageHotspot';
+                  x?: number;
+                  y?: number;
+                  height?: number;
+                  width?: number;
+                };
+                crop?: {
+                  __typename?: 'SanityImageCrop';
+                  top?: number;
+                  bottom?: number;
+                  left?: number;
+                  right?: number;
+                };
+              };
+              cta?: {
+                __typename?: 'CallToAction';
+                text?: string;
+                link?: string;
+                variant?: string;
+              };
+            }
+          | {
+              __typename?: 'SectionPricing';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              pricingCards?: Array<{
+                __typename?: 'PricingCard';
+                _key?: string;
+                title?: string;
+                description?: string;
+                price?: string;
+                features?: Array<string>;
+                isPopular?: boolean;
+                variant?: string;
+                cta?: {
+                  __typename?: 'CallToAction';
+                  text?: string;
+                  link?: string;
+                  variant?: string;
+                };
+              }>;
+            }
+          | {
+              __typename?: 'SectionTestimonial';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              testimonials?: Array<{
+                __typename?: 'Testimonial';
+                _key?: string;
+                name?: string;
+                role?: string;
+                quote?: string;
+                image?: {
+                  __typename?: 'Image';
+                  asset?: {
+                    __typename?: 'SanityImageAsset';
+                    _id?: string;
+                    url?: string;
+                    altText?: string;
+                    metadata?: {
+                      __typename?: 'SanityImageMetadata';
+                      lqip?: string;
+                      dimensions?: {
+                        __typename?: 'SanityImageDimensions';
+                        width?: number;
+                        height?: number;
+                        aspectRatio?: number;
+                      };
+                    };
+                  };
+                  hotspot?: {
+                    __typename?: 'SanityImageHotspot';
+                    x?: number;
+                    y?: number;
+                    height?: number;
+                    width?: number;
+                  };
+                  crop?: {
+                    __typename?: 'SanityImageCrop';
+                    top?: number;
+                    bottom?: number;
+                    left?: number;
+                    right?: number;
+                  };
+                };
+              }>;
+            }
+          | {
+              __typename?: 'SectionTimeline';
+              _id?: string;
+              _key?: string;
+              _type?: string;
+              title?: string;
+              displayTitle?: string;
+              subtitle?: string;
+              background?: string;
+              maxWidth?: string;
+              showBorder?: boolean;
+              events?: Array<{
+                __typename?: 'TimelineEvent';
+                _key?: string;
+                title?: string;
+                date?: string;
+                description?: string;
+              }>;
+            }
+        >;
+        slug?: { __typename?: 'Slug'; current?: string };
+      }
+    | {
+        __typename?: 'Post';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+      }
+    | {
+        __typename?: 'SanityFileAsset';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+      }
+    | {
+        __typename?: 'SanityImageAsset';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+      }
+    | {
+        __typename?: 'SectionBlog';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+      }
+    | {
+        __typename?: 'SectionCalendar';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+      }
+    | {
+        __typename?: 'SectionCards';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+      }
+    | {
+        __typename?: 'SectionContent';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+      }
+    | {
+        __typename?: 'SectionFAQ';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+      }
+    | {
+        __typename?: 'SectionFeatured';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+      }
+    | {
+        __typename?: 'SectionForm';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+      }
+    | {
+        __typename?: 'SectionHeader';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+      }
+    | {
+        __typename?: 'SectionPricing';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+      }
+    | {
+        __typename?: 'SectionTestimonial';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+      }
+    | {
+        __typename?: 'SectionTimeline';
+        _id?: string;
+        _createdAt?: any;
+        _updatedAt?: any;
+        _rev?: string;
+        _type?: string;
+      }
+  >;
 };

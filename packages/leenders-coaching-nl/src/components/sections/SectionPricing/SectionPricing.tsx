@@ -21,10 +21,10 @@ interface PricingPackage {
 }
 
 interface SectionPricingProps {
-  title: string
-  description: string
+  title?: string
+  description?: string
   packages: PricingPackage[]
-  onBooking: () => void
+  onBooking?: () => void
 }
 
 /**
@@ -39,15 +39,20 @@ export const SectionPricing = ({
   return (
     <Section className="py-16 md:py-24">
       <Container>
-        <Flex direction="column" items="center" className="mb-16">
-          <Heading level="h2" variant="large" className="mb-6" textAlign="center">
-            {title}
-          </Heading>
-          <Text className="text-muted-foreground text-center max-w-2xl">
-            {description}
-          </Text>
-        </Flex>
-
+        {(title || description) && (
+          <Flex direction="column" items="center" className="mb-16">
+            {title && (
+              <Heading level="h2" variant="large" className="mb-6" textAlign="center">
+                {title}
+              </Heading>
+            )}
+            {description && (
+              <Text className="text-muted-foreground text-center max-w-2xl">
+                {description}
+              </Text>
+            )}
+          </Flex>
+        )}
         <Grid
           columns={{
             default: 1,
@@ -64,8 +69,8 @@ export const SectionPricing = ({
               features={pkg.features}
               isPopular={pkg.isPopular}
               ctaLabel={pkg.ctaLabel}
-              onCtaClick={onBooking}
               variant={pkg.variant}
+              {...(onBooking && { onCtaClick: onBooking })}
             />
           ))}
         </Grid>

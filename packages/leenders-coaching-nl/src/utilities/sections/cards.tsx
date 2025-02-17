@@ -8,6 +8,7 @@ import { Card } from '@/components/ui/Card';
 export interface SanityCardsSection extends Record<string, unknown> {
   _type: 'sectionCards';
   title?: string;
+  displayTitle?: string;
   description?: string;
   background?: PastelColor;
   border?: boolean;
@@ -43,7 +44,7 @@ export const transformCardsSection = (
   }
 
   return {
-    title: data.title,
+    title: data.displayTitle || undefined,
     description: data.description,
     background: data.background,
     border: data.border,

@@ -1,0 +1,7 @@
+#import "../fragments/page.gql"
+
+query GetPage($type: String!) {
+  allDocument(where: { _type: { eq: $type } }) {
+    ...PageFields
+  }
+}

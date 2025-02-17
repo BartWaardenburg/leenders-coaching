@@ -25,9 +25,9 @@ type CallToAction = {
 
 type SectionFeaturedProps = {
   /** The title of the section */
-  title: ReactNode;
+  title?: ReactNode;
   /** The description text */
-  description: ReactNode;
+  description?: ReactNode;
   /** The image source URL */
   image: string;
   /** Alt text for the image */
@@ -60,10 +60,14 @@ export const SectionFeatured = ({
 }: SectionFeaturedProps) => {
   const Content = (
     <Stack gap={6} className="justify-center p-4 sm:p-6 md:px-8 md:pl-0">
-      <Heading level="h2" variant="medium">
-        {title}
-      </Heading>
-      <Text className="text-lg">{description}</Text>
+      {title && (
+        <Heading level="h2" variant="medium">
+          {title}
+        </Heading>
+      )}
+      {description && (
+        <Text className="text-lg">{description}</Text>
+      )}
       {cta && (
         <Box className="mt-2 flex justify-end">
           <Button href={cta.href} variant={cta.variant} size="lg">
@@ -111,7 +115,7 @@ export const SectionFeatured = ({
           className={`justify-center p-4 sm:p-6 md:px-8 ${reverse ? 'sm:order-1 md:pr-0' : 'md:pl-0'
             }`}
         >
-          {Content}
+          {title || description ? Content : null}
         </Stack>
       </Grid>
     </Section>

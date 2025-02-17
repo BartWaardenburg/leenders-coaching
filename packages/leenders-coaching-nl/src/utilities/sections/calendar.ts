@@ -7,6 +7,7 @@ import type { DisabledDates } from '@/components/ui/Calendar/calendarUtilities';
 export interface SanityCalendarSection extends Record<string, unknown> {
   _type: 'sectionCalendar';
   title?: string;
+  displayTitle?: string;
   description?: string;
   initialDate?: string; // ISO date string
   disabledDates?: DisabledDates;
@@ -46,7 +47,7 @@ export const transformCalendarSection = (
   }
 
   return {
-    title: data.title,
+    title: data.displayTitle || undefined,
     description: data.description,
     initialDate: data.initialDate ? new Date(data.initialDate) : undefined,
     disabledDates: data.disabledDates,

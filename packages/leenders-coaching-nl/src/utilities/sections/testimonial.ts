@@ -6,12 +6,13 @@ import type { PastelColor } from '@/components/ui/Section';
 export interface SanityTestimonialSection extends Record<string, unknown> {
   _type: 'sectionTestimonial';
   title?: string;
+  displayTitle?: string;
   description?: string;
   testimonials: Array<{
     quote: string;
     name: string;
     role?: string;
-    image: {
+    image?: {
       asset?: {
         url?: string;
       };
@@ -53,13 +54,13 @@ export const transformTestimonialSection = (
   }
 
   return {
-    title: data.title,
+    title: data.displayTitle || undefined,
     description: data.description,
     testimonials: data.testimonials.map((testimonial) => ({
       quote: testimonial.quote,
       name: testimonial.name,
       role: testimonial.role,
-      image: testimonial.image.asset?.url || '',
+      image: testimonial.image?.asset?.url || '',
     })),
     background: data.background,
     border: data.border,

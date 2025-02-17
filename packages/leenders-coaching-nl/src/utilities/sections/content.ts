@@ -7,6 +7,7 @@ import type { PortableTextBlock } from '@portabletext/react';
 export interface SanityContentSection extends Record<string, unknown> {
   _type: 'sectionContent';
   title?: string;
+  displayTitle?: string;
   showBorder?: boolean;
   background?: PastelColor;
   border?: boolean;
@@ -44,7 +45,7 @@ export const transformContentSection = (
   }
 
   return {
-    title: data.title,
+    title: data.displayTitle || undefined,
     showBorder: data.showBorder,
     background: data.background,
     border: data.border,

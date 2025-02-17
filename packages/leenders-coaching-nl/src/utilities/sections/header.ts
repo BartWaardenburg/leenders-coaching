@@ -45,7 +45,7 @@ export const transformHeaderSection = (
   }
 
   return {
-    title: data.displayTitle || data.title || '',
+    title: data.displayTitle || undefined,
     description: data.subtitle,
     background: data.background,
     showBorder: data.showBorder,

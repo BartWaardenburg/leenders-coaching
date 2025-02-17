@@ -1,0 +1,77 @@
+#import "./metadata.gql"
+#import "./sectionFields.gql"
+
+fragment CommonPageContent on Document {
+  ... on AboutPage {
+    title
+    metadata {
+      ...MetadataFields
+    }
+    sections {
+      ...CommonSectionFields
+    }
+    slug {
+      current
+    }
+  }
+  ... on BlogPage {
+    title
+    metadata {
+      ...MetadataFields
+    }
+    sections {
+      ...CommonSectionFields
+    }
+    slug {
+      current
+    }
+  }
+  ... on HomePage {
+    title
+    metadata {
+      ...MetadataFields
+    }
+    sections {
+      ...CommonSectionFields
+    }
+    slug {
+      current
+    }
+  }
+  ... on ApproachPage {
+    title
+    metadata {
+      ...MetadataFields
+    }
+    sections {
+      ...CommonSectionFields
+    }
+    slug {
+      current
+    }
+  }
+  ... on CoachingPage {
+    title
+    metadata {
+      ...MetadataFields
+    }
+    sections {
+      ...CommonSectionFields
+    }
+    slug {
+      current
+    }
+  }
+  ... on ContactPage {
+    title
+    metadata {
+      ...MetadataFields
+    }
+    sections {
+      ...CommonSectionFields
+    }
+    slug {
+      current
+    }
+  }
+}

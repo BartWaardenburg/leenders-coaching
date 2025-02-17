@@ -24,7 +24,7 @@ type CallToAction = {
 };
 
 type SectionHeaderProps = {
-  title: string;
+  title?: string;
   description?: string;
   primaryCta?: CallToAction;
   secondaryCta?: CallToAction;
@@ -56,16 +56,22 @@ export const SectionHeader = ({
     >
       <Stack gap={8} className="md:items-center">
         <Box className="w-full md:text-center">
-          <Heading
-            level="h2"
-            variant="large"
-            showBorder={showBorder}
-            borderColor={background}
-          >
-            {title}
-          </Heading>
-          {description && (
-            <Text className="mt-6 text-lg md:text-xl">{description}</Text>
+          {(title || description) && (
+            <>
+              {title && (
+                <Heading
+                  level="h2"
+                  variant="large"
+                  showBorder={showBorder}
+                  borderColor={background}
+                >
+                  {title}
+                </Heading>
+              )}
+              {description && (
+                <Text className="mt-6 text-lg md:text-xl">{description}</Text>
+              )}
+            </>
           )}
         </Box>
         {(primaryCta || secondaryCta) && (

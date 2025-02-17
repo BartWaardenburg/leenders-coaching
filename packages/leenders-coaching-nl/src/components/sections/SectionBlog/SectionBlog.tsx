@@ -23,14 +23,17 @@ interface BlogPost {
 }
 
 interface SectionBlogProps {
-  title: string
-  description: string
-  posts: BlogPost[]
+  /** The title of the section */
+  title?: string;
+  /** The description text */
+  description: string;
+  /** Array of blog posts to display */
+  posts: BlogPost[];
   /**
    * Number of posts per page
    * @default 6
    */
-  postsPerPage?: number
+  postsPerPage?: number;
 }
 
 /**
@@ -77,14 +80,20 @@ export const SectionBlog = ({
   return (
     <Section className="py-16 md:py-24">
       <Container>
-        <Flex direction="column" items="center" className="mb-16">
-          <Heading level="h2" variant="large" className="mb-6" textAlign="center">
-            {title}
-          </Heading>
-          <Text className="text-muted-foreground text-center max-w-2xl">
-            {description}
-          </Text>
-        </Flex>
+        {(title || description) && (
+          <Flex direction="column" items="center" className="mb-16">
+            {title && (
+              <Heading level="h2" variant="large" className="mb-6" textAlign="center">
+                {title}
+              </Heading>
+            )}
+            {description && (
+              <Text className="text-muted-foreground text-center max-w-2xl">
+                {description}
+              </Text>
+            )}
+          </Flex>
+        )}
 
         <Box className="w-full">
           <Grid

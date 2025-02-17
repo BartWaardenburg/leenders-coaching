@@ -4,8 +4,9 @@ import type { SectionPricing } from '@/components/sections/SectionPricing';
 /* Sanity data type */
 export interface SanityPricingSection extends Record<string, unknown> {
   _type: 'sectionPricing';
-  title: string;
-  description: string;
+  title?: string;
+  displayTitle?: string;
+  description?: string;
   packages: Array<{
     title: string;
     description: string;
@@ -37,7 +38,7 @@ export const transformPricingSection = (
   }
 
   return {
-    title: data.title,
+    title: data.displayTitle || undefined,
     description: data.description,
     packages: data.packages,
     onBooking: () => {

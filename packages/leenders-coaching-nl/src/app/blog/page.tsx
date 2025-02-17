@@ -1,36 +1,36 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { sanityClient } from '@/utilities/sanity';
-import type { GetPageQuery, CoachingPage } from '@/generated/graphql';
+import type { GetPageQuery, BlogPage } from '@/generated/graphql';
 import GetPage from '@/graphql/queries/getPage.gql';
 import { SectionRenderer } from '@/components/sections/SectionRenderer';
 import type { Section } from '@/utilities/sections/index';
 
 /**
- * Fetches coaching page data using the generated GraphQL client.
- * @returns Promise resolving to the coaching page data or null.
+ * Fetches blog page data using the generated GraphQL client.
+ * @returns Promise resolving to the blog page data or null.
  */
-const getCoachingPage = async (): Promise<CoachingPage | null> => {
+const getBlogPage = async (): Promise<BlogPage | null> => {
   const response = await sanityClient.request<GetPageQuery>(GetPage, {
-    type: 'coachingPage'
+    type: 'blogPage'
   });
-  return response.allDocument?.[0] as CoachingPage ?? null;
+  return response.allDocument?.[0] as BlogPage ?? null;
 };
 
 /* Generate metadata from Sanity data */
 export async function generateMetadata(): Promise<Metadata> {
-  const coachingPage = await getCoachingPage();
+  const blogPage = await getBlogPage();
 
-  if (!coachingPage?.metadata) {
+  if (!blogPage?.metadata) {
     return {
-      title: 'Coaching - Leenders Coaching',
-      description: 'Ontdek mijn coaching diensten en hoe ik je kan helpen met jouw persoonlijke en professionele ontwikkeling.',
+      title: 'Blog - Leenders Coaching',
+      description: 'Lees meer over coaching, persoonlijke ontwikkeling en professionele groei in mijn blog.',
     };
   }
 
-  const { metadata } = coachingPage;
+  const { metadata } = blogPage;
   return {
-    title: metadata.title || 'Coaching - Leenders Coaching',
+    title: metadata.title || 'Blog - Leenders Coaching',
     description: metadata.description || undefined,
     keywords: metadata.keywords?.filter((keyword: string | null): keyword is string => keyword !== null) || undefined,
     openGraph: metadata.openGraph?.image?.url?.asset?.url
@@ -45,17 +45,17 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * CoachingPage component
+ * BlogPage component
  */
-export default async function CoachingPage() {
-  const coachingPage = await getCoachingPage();
+export default async function BlogPage() {
+  const blogPage = await getBlogPage();
 
-  if (!coachingPage) {
+  if (!blogPage) {
     notFound();
   }
 
   return (
-    <>{coachingPage.sections?.map((section: Section) => {
+    <>{blogPage.sections?.map((section: Section) => {
       // Skip sections without a type
       if (!section._type) return null;
 

@@ -1,62 +1,27 @@
-#import "./metadata.gql"
-#import "./SectionBlog.gql"
-#import "./SectionCalendar.gql"
-#import "./SectionCards.gql"
-#import "./SectionContent.gql"
-#import "./SectionFAQ.gql"
-#import "./SectionFeatured.gql"
-#import "./SectionPricing.gql"
-#import "./SectionTestimonial.gql"
-#import "./SectionTimeline.gql"
-#import "./SectionForm.gql"
-#import "./SectionHeader.gql"
+#import "./pageContent.gql"
 
-fragment PageFields on AboutPage {
+fragment PageFields on Document {
   _id
   _createdAt
   _updatedAt
   _rev
   _type
-  title
-  metadata {
-    ...MetadataFields
+  ... on AboutPage {
+    ...CommonPageContent
   }
-  sections {
-    ... on SectionBlog {
-      ...SectionBlogFields
-    }
-    ... on SectionCalendar {
-      ...SectionCalendarFields
-    }
-    ... on SectionCards {
-      ...SectionCardsFields
-    }
-    ... on SectionContent {
-      ...SectionContentFields
-    }
-    ... on SectionFAQ {
-      ...SectionFAQFields
-    }
-    ... on SectionFeatured {
-      ...SectionFeaturedFields
-    }
-    ... on SectionForm {
-      ...SectionFormFields
-    }
-    ... on SectionHeader {
-      ...SectionHeaderFields
-    }
-    ... on SectionPricing {
-      ...SectionPricingFields
-    }
-    ... on SectionTestimonial {
-      ...SectionTestimonialFields
-    }
-    ... on SectionTimeline {
-      ...SectionTimelineFields
-    }
+  ... on BlogPage {
+    ...CommonPageContent
   }
-  slug {
-    current
+  ... on HomePage {
+    ...CommonPageContent
+  }
+  ... on ApproachPage {
+    ...CommonPageContent
+  }
+  ... on CoachingPage {
+    ...CommonPageContent
+  }
+  ... on ContactPage {
+    ...CommonPageContent
   }
 }
