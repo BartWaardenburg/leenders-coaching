@@ -4,8 +4,7 @@
     "outDir": "",
     "noEmit": true,
     "module": "ESNext",
-    "moduleResolution": "bundler",
-    "types": ["node"]
+    "moduleResolution": "bundler"
   },
   "include": ["*.ts", "*.tsx"]
 }

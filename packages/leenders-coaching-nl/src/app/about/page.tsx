@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { sanityClient } from '@/utilities/sanity';
 import { GetPageQuery } from '@/generated/graphql';
 import GetPage from '@/graphql/pages/getAboutPage.gql';
+import { SectionRenderer } from '@/components/sections/SectionRenderer';
 
 /**
  * Fetches about page data using the generated GraphQL client.
@@ -54,27 +55,16 @@ export default async function AboutPage() {
     <div>
       <h1>{aboutPage.title}</h1>
       {aboutPage.sections?.map((section) => {
-        switch (section._type) {
-          case 'sectionBlog':
-          case 'sectionCalendar':
-          case 'sectionCards':
-          case 'sectionContent':
-          case 'sectionFAQ':
-          case 'sectionFeatured':
-          case 'sectionForm':
-          case 'sectionHeader':
-          case 'sectionPricing':
-          case 'sectionTestimonial':
-          case 'sectionTimeline':
-            // TODO: Implement section components
-            return (
-              <div key={section.title}>
-                <h2>{section.title}</h2>
-              </div>
-            );
-          default:
-            return null;
-        }
+        // Skip sections without a type
+        if (!section._type) return null;
+
+        return (
+          <SectionRenderer
+            key={section._key || section._id || section._type}
+            type={section._type}
+            data={section}
+          />
+        );
       })}
     </div>
   );

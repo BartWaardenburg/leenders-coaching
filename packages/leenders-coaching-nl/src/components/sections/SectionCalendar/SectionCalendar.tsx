@@ -15,7 +15,7 @@ type SectionCalendarProps = {
   /** Optional description text */
   description?: ReactNode;
   /** The initial date to display the calendar for */
-  initialDate: Date;
+  initialDate?: Date;
   /** Optional render prop for day content */
   renderDay?: (date: Date) => ReactNode;
   /** Callback when a day is clicked */
@@ -30,16 +30,16 @@ type SectionCalendarProps = {
   showBorder?: boolean;
   /** Maximum width of the content */
   maxWidth?:
-    | 'sm'
-    | 'md'
-    | 'lg'
-    | 'xl'
-    | '2xl'
-    | '3xl'
-    | '4xl'
-    | '5xl'
-    | '6xl'
-    | '7xl';
+  | 'sm'
+  | 'md'
+  | 'lg'
+  | 'xl'
+  | '2xl'
+  | '3xl'
+  | '4xl'
+  | '5xl'
+  | '6xl'
+  | '7xl';
 } & ComponentPropsWithoutRef<'section'>;
 
 /**
@@ -48,7 +48,7 @@ type SectionCalendarProps = {
 export const SectionCalendar = ({
   title,
   description,
-  initialDate,
+  initialDate = new Date(),
   renderDay,
   onSelectDate,
   disabledDates,

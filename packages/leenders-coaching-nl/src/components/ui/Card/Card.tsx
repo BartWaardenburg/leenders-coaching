@@ -92,7 +92,7 @@ export const Card: FC<CardProps> = ({
     'group relative h-full transition-theme block @container border',
     cardBackgrounds[variant],
     border ? cardBordersDark[variant] : cardBordersLight[variant],
-    border ? cardBordersHoverLight[variant] : cardBordersHoverDark[variant],
+    slug && (border ? cardBordersHoverLight[variant] : cardBordersHoverDark[variant]),
     slug && 'cursor-pointer',
   );
 
@@ -110,19 +110,21 @@ export const Card: FC<CardProps> = ({
       y: 0,
       transition: {
         duration: 0.4,
-        ease: [0.2, 0.65, 0.3, 0.9], // Custom easing curve for quick start, smooth end
+        ease: [0.2, 0.65, 0.3, 0.9],
         when: "beforeChildren",
         staggerChildren: 0.08,
         delayChildren: 0.1
       }
     },
-    hover: {
-      y: -5,
-      transition: {
-        duration: 0.2,
-        ease: "easeInOut"
+    ...(slug && {
+      hover: {
+        y: -5,
+        transition: {
+          duration: 0.2,
+          ease: "easeInOut"
+        }
       }
-    }
+    })
   };
 
   const childVariants = {
@@ -147,13 +149,15 @@ export const Card: FC<CardProps> = ({
         ease: [0.2, 0.65, 0.3, 0.9]
       }
     },
-    hover: {
-      scale: 1.05,
-      transition: {
-        duration: 0.3,
-        ease: "easeInOut"
+    ...(slug && {
+      hover: {
+        scale: 1.05,
+        transition: {
+          duration: 0.3,
+          ease: "easeInOut"
+        }
       }
-    }
+    })
   };
 
   const content = (
@@ -161,7 +165,7 @@ export const Card: FC<CardProps> = ({
       variants={cardVariants}
       initial="hidden"
       whileInView="visible"
-      whileHover="hover"
+      whileHover={slug ? "hover" : undefined}
       viewport={{ once: true, margin: "-100px" }}
     >
       <Flex className="h-full flex-col @lg:flex-row">

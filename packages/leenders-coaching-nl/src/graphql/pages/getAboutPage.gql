@@ -1,6 +1,6 @@
 #import "../fragments/page.gql"
 
-query getPage {
+query GetPage {
   allAboutPage {
     ...PageFields
   }

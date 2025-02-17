@@ -1,4 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
+import { createClient } from 'next-sanity';
+import imageUrlBuilder from '@sanity/image-url';
+import { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
 /* Validate required environment variables */
 const validateEnv = () => {
@@ -15,19 +18,20 @@ const validateEnv = () => {
   }
 };
 
+/* Initialize environment */
+validateEnv();
+
 /* Sanity configuration */
 export const sanityConfig = {
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID as string,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET as string,
   apiToken: process.env.SANITY_API_TOKEN as string,
   apiVersion: '2024-02-14', // Current API version
+  useCdn: true,
 };
 
 /* Construct the Sanity GraphQL API URL */
 const apiUrl = `https://${sanityConfig.projectId}.api.sanity.io/v1/graphql/${sanityConfig.dataset}/default`;
-
-/* Initialize environment */
-validateEnv();
 
 /* Create a GraphQL client instance for Sanity */
 export const sanityClient = new GraphQLClient(apiUrl, {
@@ -35,3 +39,21 @@ export const sanityClient = new GraphQLClient(apiUrl, {
     authorization: `Bearer ${sanityConfig.apiToken}`,
   },
 });
+
+/* Create a Sanity client for image handling */
+export const client = createClient({
+  projectId: sanityConfig.projectId,
+  dataset: sanityConfig.dataset,
+  apiVersion: sanityConfig.apiVersion,
+  useCdn: sanityConfig.useCdn,
+});
+
+/* Create an image URL builder */
+const builder = imageUrlBuilder(client);
+
+/**
+ * Helper function to build image URLs from Sanity image references
+ */
+export const urlFor = (source: SanityImageSource) => {
+  return builder.image(source);
+};

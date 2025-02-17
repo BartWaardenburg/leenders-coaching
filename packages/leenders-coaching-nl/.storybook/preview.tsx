@@ -2,6 +2,7 @@ import React from 'react';
 import type { Preview } from '@storybook/react';
 import { ThemeProvider } from 'next-themes';
 import { useDarkMode } from 'storybook-dark-mode';
+import { ConfigProvider, defaultConfig as baseConfig } from '../src/components/providers/ConfigProvider';
 import '../src/app/globals.css';
 
 const preview: Preview = {
@@ -33,7 +34,9 @@ const preview: Preview = {
           enableSystem={false}
           forcedTheme={isDarkMode ? 'dark' : 'light'}
         >
-          <Story />
+          <ConfigProvider config={baseConfig}>
+            <Story />
+          </ConfigProvider>
         </ThemeProvider>
       );
     },

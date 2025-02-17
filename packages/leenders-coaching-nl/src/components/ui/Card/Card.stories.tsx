@@ -158,6 +158,62 @@ export const AllVariants: Story = {
   },
 };
 
+export const AllVariantsNonClickable: Story = {
+  parameters: {
+    layout: 'padded',
+  },
+  render: () => (
+    <Grid>
+      <Card
+        image={exampleImage}
+        variant="blue"
+        title="Blauwe Variant"
+      >
+        <Text>Voorbeeldinhoud voor blauwe variant</Text>
+      </Card>
+      <Card
+        image={exampleImage}
+        variant="purple"
+        title="Paarse Variant"
+      >
+        <Text>Voorbeeldinhoud voor paarse variant</Text>
+      </Card>
+      <Card
+        image={exampleImage}
+        variant="green"
+        title="Groene Variant"
+      >
+        <Text>Voorbeeldinhoud voor groene variant</Text>
+      </Card>
+      <Card
+        image={exampleImage}
+        variant="pink"
+        title="Roze Variant"
+      >
+        <Text>Voorbeeldinhoud voor roze variant</Text>
+      </Card>
+      <Card
+        image={exampleImage}
+        variant="yellow"
+        title="Gele Variant"
+      >
+        <Text>Voorbeeldinhoud voor gele variant</Text>
+      </Card>
+      <Card
+        image={exampleImage}
+        variant="teal"
+        title="Turquoise Variant"
+      >
+        <Text>Voorbeeldinhoud voor turquoise variant</Text>
+      </Card>
+    </Grid>
+  ),
+  args: {
+    title: 'Kleur Variant',
+    border: true,
+  },
+};
+
 export const FullExample: Story = {
   args: {
     ...defaultArgs,
@@ -187,5 +243,28 @@ export const OnlyTitle: Story = {
   args: {
     title: 'Minimaal Kaart Voorbeeld',
     slug: 'minimaal',
+  },
+};
+
+export const NonClickable: Story = {
+  args: {
+    title: 'Non-Clickable Card',
+    image: exampleImage,
+    date: '15 maart 2024',
+    categories: ['Informatie'],
+    variant: 'blue',
+    border: true,
+    children: (
+      <Text>
+        Dit is een informatieve kaart zonder link. De kaart heeft geen hover effecten omdat deze niet klikbaar is.
+      </Text>
+    ),
+  },
+};
+
+export const NonClickableWithBorder: Story = {
+  args: {
+    ...NonClickable.args,
+    border: true,
   },
 };

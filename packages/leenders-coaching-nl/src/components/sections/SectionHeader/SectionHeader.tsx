@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { Button } from '@/components/ui/Button';
@@ -24,8 +24,8 @@ type CallToAction = {
 };
 
 type SectionHeaderProps = {
-  title: ReactNode;
-  description?: ReactNode;
+  title: string;
+  description?: string;
   primaryCta?: CallToAction;
   secondaryCta?: CallToAction;
   showBorder?: boolean;

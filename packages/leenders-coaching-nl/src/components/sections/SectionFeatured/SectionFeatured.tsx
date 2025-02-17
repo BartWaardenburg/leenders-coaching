@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
-import Image, { StaticImageData } from 'next/image';
+import Image from 'next/image';
 
 import { Section, type PastelColor } from '@/components/ui/Section';
 import { Grid } from '@/components/ui/Grid';
@@ -29,7 +29,7 @@ type SectionFeaturedProps = {
   /** The description text */
   description: ReactNode;
   /** The image source URL */
-  image: string | StaticImageData;
+  image: string;
   /** Alt text for the image */
   imageAlt: string;
   /** Optional call-to-action button */
@@ -74,7 +74,7 @@ export const SectionFeatured = ({
     </Stack>
   );
 
-  const ImageContainer = (
+  const ImageContainer = image ? (
     <Box className="relative h-[300px] sm:h-full w-full">
       <Image
         src={image}
@@ -82,8 +82,12 @@ export const SectionFeatured = ({
         fill
         className="object-cover"
         sizes="(max-width: 640px) 100vw, 50vw"
+        quality={80}
+        priority={true}
       />
     </Box>
+  ) : (
+    <Box className="relative h-[300px] sm:h-full w-full bg-gray-100" />
   );
 
   return (
@@ -97,26 +101,18 @@ export const SectionFeatured = ({
       <Grid
         columns={{
           default: 1,
-          '@sm': 2,
+          'sm': 2,
         }}
         gap={8}
       >
-        {reverse ? (
-          <>
-            <Stack
-              gap={6}
-              className="justify-center p-4 sm:p-6 md:px-8 md:pr-0"
-            >
-              {Content}
-            </Stack>
-            {ImageContainer}
-          </>
-        ) : (
-          <>
-            {ImageContainer}
-            {Content}
-          </>
-        )}
+        <Box className={reverse ? 'sm:order-2' : ''}>{ImageContainer}</Box>
+        <Stack
+          gap={6}
+          className={`justify-center p-4 sm:p-6 md:px-8 ${reverse ? 'sm:order-1 md:pr-0' : 'md:pl-0'
+            }`}
+        >
+          {Content}
+        </Stack>
       </Grid>
     </Section>
   );
