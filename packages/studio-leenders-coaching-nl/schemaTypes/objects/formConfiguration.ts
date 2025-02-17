@@ -1,4 +1,4 @@
-import { defineType } from 'sanity';
+import { defineType, defineField } from 'sanity';
 
 /* Form Configuration Object */
 export const formConfiguration = defineType({
@@ -6,25 +6,26 @@ export const formConfiguration = defineType({
   title: 'Form Configuration',
   type: 'object',
   fields: [
-    {
-      name: 'submitLabel',
+    defineField({
+      name: 'emailTo',
+      title: 'Email To',
       type: 'string',
-      title: 'Submit Button Label',
-      initialValue: 'Verstuur bericht',
-    },
-    {
-      name: 'successMessage',
-      type: 'text',
-      title: 'Success Message',
-      initialValue:
-        'Bedankt voor je bericht. Ik neem zo snel mogelijk contact met je op.',
-    },
-    {
-      name: 'errorMessage',
-      type: 'text',
-      title: 'Error Message',
-      initialValue:
-        'Er is iets misgegaan. Probeer het later opnieuw of neem contact op via email.',
-    },
+      description: 'Email address to send form submissions to',
+      validation: (Rule) => Rule.required().email(),
+    }),
+    defineField({
+      name: 'emailSubject',
+      title: 'Email Subject',
+      type: 'string',
+      description: 'Subject line for form submission emails',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'fields',
+      title: 'Form Fields',
+      type: 'array',
+      of: [{ type: 'formField' }],
+      validation: (Rule) => Rule.required(),
+    }),
   ],
 });

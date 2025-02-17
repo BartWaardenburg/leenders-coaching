@@ -1,11 +1,10 @@
 import type { StructureBuilder } from 'sanity/structure';
+import { CogIcon } from '@sanity/icons';
 
 /* Define singleton document types */
 const singletons = [
-  'navigation',
+  'header',
   'footer',
-  'menuFooter',
-  'siteSettings',
   'homePage',
   'aboutPage',
   'coachingPage',
@@ -24,6 +23,7 @@ const singletons = [
   'sectionContent',
   'sectionCards',
   'sectionTestimonial',
+  'configuration',
 ];
 
 export const structure = (S: StructureBuilder) =>
@@ -137,53 +137,34 @@ export const structure = (S: StructureBuilder) =>
             ]),
         ),
 
-      /* Navigation & Menus Section */
+      /* Navigation & Layout Section */
       S.listItem()
-        .title('Navigation & Menus')
+        .title('Navigation & Layout')
         .child(
           S.list()
-            .title('Navigation & Menus')
+            .title('Navigation & Layout')
             .items([
               S.listItem()
-                .title('Main Navigation')
-                .id('navigation')
-                .child(
-                  S.document()
-                    .schemaType('navigation')
-                    .documentId('navigation'),
-                ),
+                .title('Header')
+                .id('header')
+                .child(S.document().schemaType('header').documentId('header')),
               S.listItem()
                 .title('Footer')
                 .id('footer')
                 .child(S.document().schemaType('footer').documentId('footer')),
-              S.listItem()
-                .title('Menu Footer')
-                .id('menuFooter')
-                .child(
-                  S.document()
-                    .schemaType('menuFooter')
-                    .documentId('menuFooter'),
-                ),
             ]),
         ),
 
-      /* Settings Section */
+      /* Configuration Section */
       S.listItem()
-        .title('Settings')
+        .title('Configuration')
+        .id('siteConfiguration')
+        .icon(CogIcon)
         .child(
-          S.list()
-            .title('Settings')
-            .items([
-              S.listItem()
-                .title('Site Settings')
-                .id('siteSettings')
-                .child(
-                  S.document()
-                    .schemaType('siteSettings')
-                    .documentId('siteSettings'),
-                ),
-              // Add more settings here as needed
-            ]),
+          S.document()
+            .schemaType('configuration')
+            .documentId('configuration')
+            .title('Site Configuration'),
         ),
 
       /* Filter out singletons from remaining types */

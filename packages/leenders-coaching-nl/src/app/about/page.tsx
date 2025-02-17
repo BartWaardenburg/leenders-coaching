@@ -29,11 +29,11 @@ export async function generateMetadata(): Promise<Metadata> {
     title: metadata.title || 'About - Leenders Coaching',
     description: metadata.description || undefined,
     keywords: metadata.keywords?.filter((keyword: string | null): keyword is string => keyword !== null) || undefined,
-    openGraph: metadata.image?.asset?.url
+    openGraph: metadata.openGraph?.image?.url?.asset?.url
       ? {
         images: [{
-          url: metadata.image.asset.url,
-          alt: metadata.image.asset.altText || ''
+          url: metadata.openGraph.image.url.asset.url,
+          alt: metadata.openGraph.image.alt || ''
         }],
       }
       : undefined,

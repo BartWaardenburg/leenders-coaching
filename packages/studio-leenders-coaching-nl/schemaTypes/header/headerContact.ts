@@ -1,8 +1,8 @@
 import { defineType } from 'sanity';
 
-export const menuFooterContact = defineType({
-  name: 'menuFooterContact',
-  title: 'Menu Footer Contact',
+export const headerContact = defineType({
+  name: 'headerContact',
+  title: 'Header Contact',
   type: 'object',
   fields: [
     {
@@ -13,12 +13,12 @@ export const menuFooterContact = defineType({
     {
       name: 'projectEnquiry',
       title: 'Project Enquiry',
-      type: 'menuFooterEnquiry',
+      type: 'headerEnquiry',
     },
     {
       name: 'generalEnquiry',
       title: 'General Enquiry',
-      type: 'menuFooterEnquiry',
+      type: 'headerEnquiry',
     },
   ],
 });

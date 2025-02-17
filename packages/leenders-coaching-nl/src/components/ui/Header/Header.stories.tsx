@@ -15,39 +15,31 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    navigation: {
-      items: [
-        { _key: '1', label: 'Home', href: '/' },
-        { _key: '2', label: 'About', href: '/about' },
-        { _key: '3', label: 'Services', href: '/services' },
-        { _key: '4', label: 'Contact', href: '/contact' },
-      ],
-    },
-    menuFooter: {
-      about: {
-        title: 'About',
-        description: 'Learn more about our services',
-      },
-      social: {
-        title: 'Follow Us',
-      },
-      contact: {
-        title: 'Contact Us',
-        projectEnquiry: {
-          label: 'Project Enquiry',
-          href: '/contact',
-          linkText: 'Contact Us',
-        },
-        generalEnquiry: {
-          label: 'General Enquiry',
-          href: '/contact',
-          linkText: 'Contact Us',
-        },
-      },
-    },
-    socialLinks: [
-      { _key: '1', platform: 'Facebook', url: 'https://www.facebook.com' },
-      { _key: '2', platform: 'Twitter', url: 'https://www.twitter.com' },
+    navigation: [
+      { _key: '1', label: 'Home', href: '/' },
+      { _key: '2', label: 'About', href: '/about' },
+      { _key: '3', label: 'Services', href: '/services' },
+      { _key: '4', label: 'Contact', href: '/contact' },
     ],
+    about: {
+      title: 'About',
+      description: 'Learn more about our services',
+    },
+    social: {
+      title: 'Follow Us',
+    },
+    contact: {
+      title: 'Contact Us',
+      projectEnquiry: {
+        label: 'Project Enquiry',
+        href: '/contact',
+        linkText: 'Contact Us',
+      },
+      generalEnquiry: {
+        label: 'General Enquiry',
+        href: '/contact',
+        linkText: 'Contact Us',
+      },
+    },
   },
 };

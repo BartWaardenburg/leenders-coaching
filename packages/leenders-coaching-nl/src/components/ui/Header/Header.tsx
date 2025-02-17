@@ -23,12 +23,6 @@ type NavigationItem = {
   href: string;
 };
 
-type SocialLink = {
-  _key: string;
-  platform: string;
-  url: string;
-};
-
 type HeaderProps = Omit<ComponentPropsWithoutRef<'header'>, 'about'> & {
   navigation: NavigationItem[];
   about: {

@@ -32,26 +32,45 @@ import {
   faqItem,
   timelineEvent,
   formField,
+  formFieldOption,
   formConfiguration,
   timeSlot,
   calendarSettings,
   testimonial,
+  metadata,
+  openGraph,
+  openGraphImage,
+  twitter,
+  twitterImage,
+  robots,
+  googleBot,
+  seo,
+  accessibility,
+  closeButtons,
+  calendarNavigation,
+  uiInterface,
+  mobileMenu,
+  themeToggle,
+  buttonLabels,
+  blog,
+  blogLabels,
+  blogPaths,
+  forms,
+  formMessages,
 } from './objects';
 
-import { navigation, navigationItem } from './navigation';
+import { footer, footerContact, socialLink } from './footer';
+
+import configuration from './configuration';
 
 import {
-  footer,
-  footerContact,
-  socialLink,
-  menuFooter,
-  menuFooterAbout,
-  menuFooterContact,
-  menuFooterEnquiry,
-  menuFooterSocial,
-} from './footer';
-
-import { siteSettings, metadata } from './settings';
+  header,
+  headerAbout,
+  headerSocial,
+  headerContact,
+  headerEnquiry,
+  navigationItem,
+} from './header';
 
 export const schemaTypes = [
   // Pages
@@ -87,32 +106,51 @@ export const schemaTypes = [
   faqItem,
   timelineEvent,
   formField,
+  formFieldOption,
   formConfiguration,
   timeSlot,
   calendarSettings,
   testimonial,
+  metadata,
+  openGraph,
+  openGraphImage,
+  twitter,
+  twitterImage,
+  robots,
+  googleBot,
+  seo,
+  accessibility,
+  closeButtons,
+  calendarNavigation,
+  uiInterface,
+  mobileMenu,
+  themeToggle,
+  buttonLabels,
+  blog,
+  blogLabels,
+  blogPaths,
+  forms,
+  formMessages,
 
-  // Navigation & Menus
-  navigation,
-  navigationItem,
+  // Footer
   footer,
   footerContact,
   socialLink,
-  menuFooter,
-  menuFooterAbout,
-  menuFooterContact,
-  menuFooterEnquiry,
-  menuFooterSocial,
 
-  // Settings & Metadata
-  siteSettings,
-  metadata,
+  // Configuration
+  configuration,
+
+  // Header
+  header,
+  headerAbout,
+  headerSocial,
+  headerContact,
+  headerEnquiry,
+  navigationItem,
 ];
 
 export * from './sections';
 export * from './pages';
-export * from './navigation';
 export * from './footer';
-export * from './settings';
 export * from './objects';
 export * from './documents';

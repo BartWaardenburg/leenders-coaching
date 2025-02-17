@@ -1,8 +1,8 @@
 import { defineType } from 'sanity';
 
-export const menuFooterAbout = defineType({
-  name: 'menuFooterAbout',
-  title: 'Menu Footer About',
+export const headerAbout = defineType({
+  name: 'headerAbout',
+  title: 'Header About',
   type: 'object',
   fields: [
     {
