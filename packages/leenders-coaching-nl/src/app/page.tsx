@@ -4,7 +4,7 @@ import { sanityClient } from '@/utilities/sanity';
 import type { GetPageQuery, HomePage } from '@/generated/graphql';
 import GetPage from '@/graphql/queries/getPage.gql';
 import { SectionRenderer } from '@/components/sections/SectionRenderer';
-import type { SectionBlogOrSectionCalendarOrSectionCardsOrSectionContentOrSectionFaqOrSectionFeaturedOrSectionFormOrSectionHeaderOrSectionPricingOrSectionTestimonialOrSectionTimeline } from '@/generated/graphql';
+import type { Section } from '@/utilities/sections/index';
 
 /**
  * Fetches home page data using the generated GraphQL client.
@@ -55,20 +55,17 @@ export default async function HomePage() {
   }
 
   return (
-    <div>
-      <h1>{homePage.title}</h1>
-      {homePage.sections?.map((section: SectionBlogOrSectionCalendarOrSectionCardsOrSectionContentOrSectionFaqOrSectionFeaturedOrSectionFormOrSectionHeaderOrSectionPricingOrSectionTestimonialOrSectionTimeline) => {
-        // Skip sections without a type
-        if (!section._type) return null;
+    <>{homePage.sections?.map((section: Section) => {
+      // Skip sections without a type
+      if (!section._type) return null;
 
-        return (
-          <SectionRenderer
-            key={section._key || section._id || section._type}
-            type={section._type}
-            data={section}
-          />
-        );
-      })}
-    </div>
+      return (
+        <SectionRenderer
+          key={section._key || section._id || section._type}
+          type={section._type}
+          data={section}
+        />
+      );
+    })}</>
   );
 }
