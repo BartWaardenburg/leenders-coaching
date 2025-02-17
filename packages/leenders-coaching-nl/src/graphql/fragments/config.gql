@@ -1,6 +1,6 @@
 #import "./aria.gql"
 
-fragment ConfigFields on Configuration {
+fragment ConfigurationFields on Configuration {
   _id
   _type
   title

@@ -19,51 +19,38 @@ import { MenuFooter as HeaderMenuFooter } from './MenuFooter';
 
 type NavigationItem = {
   _key: string;
-  label: string | null;
-  href: string | null;
-};
-
-type Navigation = {
-  items: NavigationItem[];
-};
-
-type MenuFooterSection = {
-  title: string | null;
-  description: string | null;
-};
-
-type MenuFooterEnquiry = {
-  label: string | null;
-  href: string | null;
-  linkText: string | null;
-};
-
-type MenuFooterContact = {
-  title: string | null;
-  projectEnquiry: MenuFooterEnquiry;
-  generalEnquiry: MenuFooterEnquiry;
-};
-
-type MenuFooterSocial = {
-  title: string | null;
-};
-
-type MenuFooter = {
-  about: MenuFooterSection;
-  social: MenuFooterSocial;
-  contact: MenuFooterContact;
+  label: string;
+  href: string;
 };
 
 type SocialLink = {
   _key: string;
-  platform: string | null;
-  url: string | null;
+  platform: string;
+  url: string;
 };
 
-type HeaderProps = ComponentPropsWithoutRef<'header'> & {
-  navigation: Navigation;
-  menuFooter: MenuFooter;
-  socialLinks: SocialLink[];
+type HeaderProps = Omit<ComponentPropsWithoutRef<'header'>, 'about'> & {
+  navigation: NavigationItem[];
+  about: {
+    title: string;
+    description: string;
+  };
+  social: {
+    title: string;
+  };
+  contact: {
+    title: string;
+    projectEnquiry: {
+      label: string;
+      href: string;
+      linkText: string;
+    };
+    generalEnquiry: {
+      label: string;
+      href: string;
+      linkText: string;
+    };
+  };
 };
 
 /* Animation variants for the menu overlay */
@@ -106,7 +93,7 @@ const contentVariants = {
 /**
  * Header component with hamburger menu and full-screen overlay
  */
-export const Header = ({ className, navigation, menuFooter, socialLinks, ...props }: HeaderProps) => {
+export const Header = ({ className, navigation, about, social, contact, ...props }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -118,19 +105,23 @@ export const Header = ({ className, navigation, menuFooter, socialLinks, ...prop
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
+  console.log(navigation);
+
+  const menuFooter = {
+    about,
+    social,
+    contact,
+  };
+
   return (
     <>
       <Box
         as="header"
         className={twMerge(
           'fixed top-0 z-50 w-full transition-theme bg-background',
+          isMenuOpen && 'bg-menu',
           className,
         )}
-        style={
-          isMenuOpen
-            ? { backgroundColor: 'hsl(var(--menu-background))' }
-            : undefined
-        }
         {...props}
       >
         <Container>
@@ -149,7 +140,10 @@ export const Header = ({ className, navigation, menuFooter, socialLinks, ...prop
             </Flex>
           </Flex>
           <Box
-            className={`h-px transition-theme ${isMenuOpen ? 'bg-foreground/80' : 'bg-foreground/10'}`}
+            className={twMerge(
+              'h-px transition-theme',
+              isMenuOpen ? 'bg-foreground/80' : 'bg-foreground/10'
+            )}
           />
         </Container>
       </Box>
@@ -174,11 +168,11 @@ export const Header = ({ className, navigation, menuFooter, socialLinks, ...prop
                   <Flex direction="column" className="h-full">
                     <Box as="nav" className="mb-16 text-left md:text-right">
                       <NavigationItems
-                        links={navigation.items}
+                        links={navigation}
                         onItemClick={() => setIsMenuOpen(false)}
                       />
                     </Box>
-                    <HeaderMenuFooter sections={menuFooter} socialLinks={socialLinks} />
+                    <HeaderMenuFooter sections={menuFooter} socialLinks={[]} />
                   </Flex>
                 </motion.div>
               </Container>

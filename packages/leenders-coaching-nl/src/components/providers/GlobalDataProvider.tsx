@@ -14,65 +14,95 @@ type GlobalDataProviderProps = {
   children: ReactNode;
 };
 
+/* Default data */
+const defaultHeader = {
+  navigation: [],
+  about: {
+    title: 'Over ons',
+    description: 'Welkom bij Leenders Coaching',
+  },
+  social: {
+    title: 'Social media',
+  },
+  contact: {
+    title: 'Contact',
+    projectEnquiry: {
+      label: 'Project aanvraag',
+      href: '/contact',
+      linkText: 'Neem contact op',
+    },
+    generalEnquiry: {
+      label: 'Algemene vragen',
+      href: '/contact',
+      linkText: 'Contact',
+    },
+  },
+};
+
+const defaultFooter = {
+  copyright: '© 2024 Leenders Coaching. Alle rechten voorbehouden.',
+  contact: {
+    email: 'info@leenderscoaching.nl',
+    phone: null,
+  },
+  socialLinks: [],
+};
+
 /**
  * Provider component that fetches and manages global data
  */
 export const GlobalDataProvider = async ({ children }: GlobalDataProviderProps) => {
   /* Fetch data from Sanity */
   const {
-    allNavigation: [navigation] = [],
+    allHeader: [header] = [],
     allFooter: [footer] = [],
-    allMenuFooter: [menuFooter] = [],
     allConfiguration: [configuration] = [],
   } = await sanityClient.request<GetGlobalDataQuery>(GetGlobalData);
 
-  if (!navigation || !footer || !menuFooter) {
+  if (!header || !footer) {
     throw new Error('Failed to fetch required data from Sanity');
   }
 
   /* Transform data to match component types */
-  const navigationData = {
-    items: transformNullableArray(navigation.items, item => ({
+  const headerData = {
+    navigation: transformNullableArray(header?.navigation, item => ({
       _key: transformNullable(item?._key, ''),
       label: transformNullable(item?.label, ''),
       href: transformNullable(item?.href, '#'),
-    })),
-  };
-
-  const menuFooterData = {
+    })) || defaultHeader.navigation,
     about: {
-      title: transformNullable(menuFooter.about?.title, ''),
-      description: transformNullable(menuFooter.about?.description, ''),
+      title: transformNullable(header?.about?.title, defaultHeader.about.title),
+      description: transformNullable(header?.about?.description, defaultHeader.about.description),
     },
     social: {
-      title: transformNullable(menuFooter.social?.title, ''),
+      title: transformNullable(header?.social?.title, defaultHeader.social.title),
     },
     contact: {
-      title: transformNullable(menuFooter.contact?.title, ''),
+      title: transformNullable(header?.contact?.title, defaultHeader.contact.title),
       projectEnquiry: {
-        label: transformNullable(menuFooter.contact?.projectEnquiry?.label, ''),
-        href: transformNullable(menuFooter.contact?.projectEnquiry?.href, '#'),
-        linkText: transformNullable(menuFooter.contact?.projectEnquiry?.linkText, ''),
+        label: transformNullable(header?.contact?.projectEnquiry?.label, defaultHeader.contact.projectEnquiry.label),
+        href: transformNullable(header?.contact?.projectEnquiry?.href, defaultHeader.contact.projectEnquiry.href),
+        linkText: transformNullable(header?.contact?.projectEnquiry?.linkText, defaultHeader.contact.projectEnquiry.linkText),
       },
       generalEnquiry: {
-        label: transformNullable(menuFooter.contact?.generalEnquiry?.label, ''),
-        href: transformNullable(menuFooter.contact?.generalEnquiry?.href, '#'),
-        linkText: transformNullable(menuFooter.contact?.generalEnquiry?.linkText, ''),
+        label: transformNullable(header?.contact?.generalEnquiry?.label, defaultHeader.contact.generalEnquiry.label),
+        href: transformNullable(header?.contact?.generalEnquiry?.href, defaultHeader.contact.generalEnquiry.href),
+        linkText: transformNullable(header?.contact?.generalEnquiry?.linkText, defaultHeader.contact.generalEnquiry.linkText),
       },
     },
   };
 
   const footerData = {
-    copyright: transformNullable(footer.copyright, ''),
+    copyright: transformNullable(footer?.copyright, defaultFooter.copyright),
     contact: {
-      email: transformNullable(footer.contact?.email, ''),
-      phone: transformNullable(footer.contact?.phone, ''),
+      email: transformNullable(footer?.contact?.email, defaultFooter.contact.email),
+      phone: transformNullable(footer?.contact?.phone, defaultFooter.contact.phone),
     },
-    socialLinks: transformNullableArray(footer.socialLinks, link => ({
+    socialLinks: transformNullableArray(footer?.socialLinks, link => ({
       _key: transformNullable(link?._key, ''),
       platform: transformNullable(link?.platform, ''),
       url: transformNullable(link?.url, '#'),
-    })),
+    })) || defaultFooter.socialLinks,
   };
 
   /* Transform configuration data */
@@ -124,9 +154,9 @@ export const GlobalDataProvider = async ({ children }: GlobalDataProviderProps) 
 
   return (
     <ConfigProvider config={configData}>
-      <Header navigation={navigationData} menuFooter={menuFooterData} socialLinks={footerData.socialLinks} />
+      <Header {...headerData} />
       <Main>{children}</Main>
-      <Footer footer={footerData} />
+      <Footer {...footerData} />
     </ConfigProvider>
   );
 }; 

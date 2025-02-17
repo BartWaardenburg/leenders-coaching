@@ -18,21 +18,17 @@ type SocialLink = {
   url: string | null;
 };
 
-type Footer = {
+type FooterProps = ComponentPropsWithoutRef<'footer'> & {
   copyright: string | null;
   contact: FooterContact;
   socialLinks: SocialLink[];
 };
 
-type FooterProps = ComponentPropsWithoutRef<'footer'> & {
-  footer: Footer;
-};
-
 /**
  * Footer component using Sanity data
  */
-export const Footer = ({ className, footer, ...props }: FooterProps) => {
-  const instagramLink = footer.socialLinks?.find(
+export const Footer = ({ className, copyright, contact, socialLinks, ...props }: FooterProps) => {
+  const instagramLink = socialLinks?.find(
     (link) => link.platform?.toLowerCase() === 'instagram'
   );
 
@@ -55,9 +51,9 @@ export const Footer = ({ className, footer, ...props }: FooterProps) => {
           className="py-6 md:flex-row md:items-center"
         >
           {/* Copyright - first on desktop, second on mobile */}
-          {footer.copyright && (
+          {copyright && (
             <Text variant="muted" className="text-sm order-2 md:order-1">
-              {footer.copyright}
+              {copyright}
             </Text>
           )}
 
@@ -82,29 +78,35 @@ export const Footer = ({ className, footer, ...props }: FooterProps) => {
           {/* Contact - first on mobile, last on desktop */}
           <Flex
             direction="column"
+            items="start"
             gap={2}
-            className="md:flex-row md:gap-4 order-1 md:order-3"
+            className="order-1 md:order-3"
           >
-            {footer.contact?.email && (
+            {contact.email && (
               <Link
-                href={`mailto:${footer.contact.email}`}
+                href={`mailto:${contact.email}`}
                 variant="subtle"
+                className="text-sm"
               >
                 <Text
                   variant="muted"
-                  className="text-sm hover:text-primary transition-theme"
+                  className="hover:text-primary transition-theme"
                 >
-                  {footer.contact.email}
+                  {contact.email}
                 </Text>
               </Link>
             )}
-            {footer.contact?.phone && (
-              <Link href={`tel:${footer.contact.phone}`} variant="subtle">
+            {contact.phone && (
+              <Link
+                href={`tel:${contact.phone}`}
+                variant="subtle"
+                className="text-sm"
+              >
                 <Text
                   variant="muted"
-                  className="text-sm hover:text-primary transition-theme"
+                  className="hover:text-primary transition-theme"
                 >
-                  {footer.contact.phone}
+                  {contact.phone}
                 </Text>
               </Link>
             )}

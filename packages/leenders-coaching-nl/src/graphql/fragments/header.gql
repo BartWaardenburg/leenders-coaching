@@ -1,4 +1,9 @@
-fragment MenuFooterFields on MenuFooter {
+fragment HeaderFields on Header {
+  navigation {
+    _key
+    label
+    href
+  }
   about {
     title
     description

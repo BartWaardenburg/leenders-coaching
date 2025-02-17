@@ -993,6 +993,142 @@ export type GoogleBotSorting = {
   index?: InputMaybe<SortOrder>;
 };
 
+export type Header = Document & {
+  __typename?: 'Header';
+  /** Date the document was created */
+  _createdAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Document ID */
+  _id?: Maybe<Scalars['ID']['output']>;
+  _key?: Maybe<Scalars['String']['output']>;
+  /** Current document revision */
+  _rev?: Maybe<Scalars['String']['output']>;
+  /** Document type */
+  _type?: Maybe<Scalars['String']['output']>;
+  /** Date the document was last modified */
+  _updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  about?: Maybe<HeaderAbout>;
+  contact?: Maybe<HeaderContact>;
+  navigation?: Maybe<Array<Maybe<NavigationItem>>>;
+  social?: Maybe<HeaderSocial>;
+};
+
+export type HeaderAbout = {
+  __typename?: 'HeaderAbout';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+export type HeaderAboutFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  description?: InputMaybe<StringFilter>;
+  title?: InputMaybe<StringFilter>;
+};
+
+export type HeaderAboutSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  description?: InputMaybe<SortOrder>;
+  title?: InputMaybe<SortOrder>;
+};
+
+export type HeaderContact = {
+  __typename?: 'HeaderContact';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  generalEnquiry?: Maybe<HeaderEnquiry>;
+  projectEnquiry?: Maybe<HeaderEnquiry>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+export type HeaderContactFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  generalEnquiry?: InputMaybe<HeaderEnquiryFilter>;
+  projectEnquiry?: InputMaybe<HeaderEnquiryFilter>;
+  title?: InputMaybe<StringFilter>;
+};
+
+export type HeaderContactSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  generalEnquiry?: InputMaybe<HeaderEnquirySorting>;
+  projectEnquiry?: InputMaybe<HeaderEnquirySorting>;
+  title?: InputMaybe<SortOrder>;
+};
+
+export type HeaderEnquiry = {
+  __typename?: 'HeaderEnquiry';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  href?: Maybe<Scalars['String']['output']>;
+  label?: Maybe<Scalars['String']['output']>;
+  linkText?: Maybe<Scalars['String']['output']>;
+};
+
+export type HeaderEnquiryFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  href?: InputMaybe<StringFilter>;
+  label?: InputMaybe<StringFilter>;
+  linkText?: InputMaybe<StringFilter>;
+};
+
+export type HeaderEnquirySorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  href?: InputMaybe<SortOrder>;
+  label?: InputMaybe<SortOrder>;
+  linkText?: InputMaybe<SortOrder>;
+};
+
+export type HeaderFilter = {
+  /** Apply filters on document level */
+  _?: InputMaybe<Sanity_DocumentFilter>;
+  _createdAt?: InputMaybe<DatetimeFilter>;
+  _id?: InputMaybe<IdFilter>;
+  _key?: InputMaybe<StringFilter>;
+  _rev?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  _updatedAt?: InputMaybe<DatetimeFilter>;
+  about?: InputMaybe<HeaderAboutFilter>;
+  contact?: InputMaybe<HeaderContactFilter>;
+  social?: InputMaybe<HeaderSocialFilter>;
+};
+
+export type HeaderSocial = {
+  __typename?: 'HeaderSocial';
+  _key?: Maybe<Scalars['String']['output']>;
+  _type?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+export type HeaderSocialFilter = {
+  _key?: InputMaybe<StringFilter>;
+  _type?: InputMaybe<StringFilter>;
+  title?: InputMaybe<StringFilter>;
+};
+
+export type HeaderSocialSorting = {
+  _key?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  title?: InputMaybe<SortOrder>;
+};
+
+export type HeaderSorting = {
+  _createdAt?: InputMaybe<SortOrder>;
+  _id?: InputMaybe<SortOrder>;
+  _key?: InputMaybe<SortOrder>;
+  _rev?: InputMaybe<SortOrder>;
+  _type?: InputMaybe<SortOrder>;
+  _updatedAt?: InputMaybe<SortOrder>;
+  about?: InputMaybe<HeaderAboutSorting>;
+  contact?: InputMaybe<HeaderContactSorting>;
+  social?: InputMaybe<HeaderSocialSorting>;
+};
+
 export type HomePage = Document & {
   __typename?: 'HomePage';
   /** Date the document was created */
@@ -1116,141 +1252,6 @@ export type LinkSorting = {
   url?: InputMaybe<SortOrder>;
 };
 
-export type MenuFooter = Document & {
-  __typename?: 'MenuFooter';
-  /** Date the document was created */
-  _createdAt?: Maybe<Scalars['DateTime']['output']>;
-  /** Document ID */
-  _id?: Maybe<Scalars['ID']['output']>;
-  _key?: Maybe<Scalars['String']['output']>;
-  /** Current document revision */
-  _rev?: Maybe<Scalars['String']['output']>;
-  /** Document type */
-  _type?: Maybe<Scalars['String']['output']>;
-  /** Date the document was last modified */
-  _updatedAt?: Maybe<Scalars['DateTime']['output']>;
-  about?: Maybe<MenuFooterAbout>;
-  contact?: Maybe<MenuFooterContact>;
-  social?: Maybe<MenuFooterSocial>;
-};
-
-export type MenuFooterAbout = {
-  __typename?: 'MenuFooterAbout';
-  _key?: Maybe<Scalars['String']['output']>;
-  _type?: Maybe<Scalars['String']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
-};
-
-export type MenuFooterAboutFilter = {
-  _key?: InputMaybe<StringFilter>;
-  _type?: InputMaybe<StringFilter>;
-  description?: InputMaybe<StringFilter>;
-  title?: InputMaybe<StringFilter>;
-};
-
-export type MenuFooterAboutSorting = {
-  _key?: InputMaybe<SortOrder>;
-  _type?: InputMaybe<SortOrder>;
-  description?: InputMaybe<SortOrder>;
-  title?: InputMaybe<SortOrder>;
-};
-
-export type MenuFooterContact = {
-  __typename?: 'MenuFooterContact';
-  _key?: Maybe<Scalars['String']['output']>;
-  _type?: Maybe<Scalars['String']['output']>;
-  generalEnquiry?: Maybe<MenuFooterEnquiry>;
-  projectEnquiry?: Maybe<MenuFooterEnquiry>;
-  title?: Maybe<Scalars['String']['output']>;
-};
-
-export type MenuFooterContactFilter = {
-  _key?: InputMaybe<StringFilter>;
-  _type?: InputMaybe<StringFilter>;
-  generalEnquiry?: InputMaybe<MenuFooterEnquiryFilter>;
-  projectEnquiry?: InputMaybe<MenuFooterEnquiryFilter>;
-  title?: InputMaybe<StringFilter>;
-};
-
-export type MenuFooterContactSorting = {
-  _key?: InputMaybe<SortOrder>;
-  _type?: InputMaybe<SortOrder>;
-  generalEnquiry?: InputMaybe<MenuFooterEnquirySorting>;
-  projectEnquiry?: InputMaybe<MenuFooterEnquirySorting>;
-  title?: InputMaybe<SortOrder>;
-};
-
-export type MenuFooterEnquiry = {
-  __typename?: 'MenuFooterEnquiry';
-  _key?: Maybe<Scalars['String']['output']>;
-  _type?: Maybe<Scalars['String']['output']>;
-  href?: Maybe<Scalars['String']['output']>;
-  label?: Maybe<Scalars['String']['output']>;
-  linkText?: Maybe<Scalars['String']['output']>;
-};
-
-export type MenuFooterEnquiryFilter = {
-  _key?: InputMaybe<StringFilter>;
-  _type?: InputMaybe<StringFilter>;
-  href?: InputMaybe<StringFilter>;
-  label?: InputMaybe<StringFilter>;
-  linkText?: InputMaybe<StringFilter>;
-};
-
-export type MenuFooterEnquirySorting = {
-  _key?: InputMaybe<SortOrder>;
-  _type?: InputMaybe<SortOrder>;
-  href?: InputMaybe<SortOrder>;
-  label?: InputMaybe<SortOrder>;
-  linkText?: InputMaybe<SortOrder>;
-};
-
-export type MenuFooterFilter = {
-  /** Apply filters on document level */
-  _?: InputMaybe<Sanity_DocumentFilter>;
-  _createdAt?: InputMaybe<DatetimeFilter>;
-  _id?: InputMaybe<IdFilter>;
-  _key?: InputMaybe<StringFilter>;
-  _rev?: InputMaybe<StringFilter>;
-  _type?: InputMaybe<StringFilter>;
-  _updatedAt?: InputMaybe<DatetimeFilter>;
-  about?: InputMaybe<MenuFooterAboutFilter>;
-  contact?: InputMaybe<MenuFooterContactFilter>;
-  social?: InputMaybe<MenuFooterSocialFilter>;
-};
-
-export type MenuFooterSocial = {
-  __typename?: 'MenuFooterSocial';
-  _key?: Maybe<Scalars['String']['output']>;
-  _type?: Maybe<Scalars['String']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
-};
-
-export type MenuFooterSocialFilter = {
-  _key?: InputMaybe<StringFilter>;
-  _type?: InputMaybe<StringFilter>;
-  title?: InputMaybe<StringFilter>;
-};
-
-export type MenuFooterSocialSorting = {
-  _key?: InputMaybe<SortOrder>;
-  _type?: InputMaybe<SortOrder>;
-  title?: InputMaybe<SortOrder>;
-};
-
-export type MenuFooterSorting = {
-  _createdAt?: InputMaybe<SortOrder>;
-  _id?: InputMaybe<SortOrder>;
-  _key?: InputMaybe<SortOrder>;
-  _rev?: InputMaybe<SortOrder>;
-  _type?: InputMaybe<SortOrder>;
-  _updatedAt?: InputMaybe<SortOrder>;
-  about?: InputMaybe<MenuFooterAboutSorting>;
-  contact?: InputMaybe<MenuFooterContactSorting>;
-  social?: InputMaybe<MenuFooterSocialSorting>;
-};
-
 export type Metadata = {
   __typename?: 'Metadata';
   _key?: Maybe<Scalars['String']['output']>;
@@ -1310,33 +1311,6 @@ export type MobileMenuSorting = {
   toggleButton?: InputMaybe<SortOrder>;
 };
 
-export type Navigation = Document & {
-  __typename?: 'Navigation';
-  /** Date the document was created */
-  _createdAt?: Maybe<Scalars['DateTime']['output']>;
-  /** Document ID */
-  _id?: Maybe<Scalars['ID']['output']>;
-  _key?: Maybe<Scalars['String']['output']>;
-  /** Current document revision */
-  _rev?: Maybe<Scalars['String']['output']>;
-  /** Document type */
-  _type?: Maybe<Scalars['String']['output']>;
-  /** Date the document was last modified */
-  _updatedAt?: Maybe<Scalars['DateTime']['output']>;
-  items?: Maybe<Array<Maybe<NavigationItem>>>;
-};
-
-export type NavigationFilter = {
-  /** Apply filters on document level */
-  _?: InputMaybe<Sanity_DocumentFilter>;
-  _createdAt?: InputMaybe<DatetimeFilter>;
-  _id?: InputMaybe<IdFilter>;
-  _key?: InputMaybe<StringFilter>;
-  _rev?: InputMaybe<StringFilter>;
-  _type?: InputMaybe<StringFilter>;
-  _updatedAt?: InputMaybe<DatetimeFilter>;
-};
-
 export type NavigationItem = {
   __typename?: 'NavigationItem';
   _key?: Maybe<Scalars['String']['output']>;
@@ -1357,15 +1331,6 @@ export type NavigationItemSorting = {
   _type?: InputMaybe<SortOrder>;
   href?: InputMaybe<SortOrder>;
   label?: InputMaybe<SortOrder>;
-};
-
-export type NavigationSorting = {
-  _createdAt?: InputMaybe<SortOrder>;
-  _id?: InputMaybe<SortOrder>;
-  _key?: InputMaybe<SortOrder>;
-  _rev?: InputMaybe<SortOrder>;
-  _type?: InputMaybe<SortOrder>;
-  _updatedAt?: InputMaybe<SortOrder>;
 };
 
 export type OpenGraph = {
@@ -1571,9 +1536,8 @@ export type RootQuery = {
   ContactPage?: Maybe<ContactPage>;
   Document?: Maybe<Document>;
   Footer?: Maybe<Footer>;
+  Header?: Maybe<Header>;
   HomePage?: Maybe<HomePage>;
-  MenuFooter?: Maybe<MenuFooter>;
-  Navigation?: Maybe<Navigation>;
   Post?: Maybe<Post>;
   SanityFileAsset?: Maybe<SanityFileAsset>;
   SanityImageAsset?: Maybe<SanityImageAsset>;
@@ -1596,9 +1560,8 @@ export type RootQuery = {
   allContactPage: Array<ContactPage>;
   allDocument: Array<Document>;
   allFooter: Array<Footer>;
+  allHeader: Array<Header>;
   allHomePage: Array<HomePage>;
-  allMenuFooter: Array<MenuFooter>;
-  allNavigation: Array<Navigation>;
   allPost: Array<Post>;
   allSanityFileAsset: Array<SanityFileAsset>;
   allSanityImageAsset: Array<SanityImageAsset>;
@@ -1647,15 +1610,11 @@ export type RootQueryFooterArgs = {
   id: Scalars['ID']['input'];
 };
 
+export type RootQueryHeaderArgs = {
+  id: Scalars['ID']['input'];
+};
+
 export type RootQueryHomePageArgs = {
-  id: Scalars['ID']['input'];
-};
-
-export type RootQueryMenuFooterArgs = {
-  id: Scalars['ID']['input'];
-};
-
-export type RootQueryNavigationArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -1771,25 +1730,18 @@ export type RootQueryAllFooterArgs = {
   where?: InputMaybe<FooterFilter>;
 };
 
+export type RootQueryAllHeaderArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<HeaderSorting>>;
+  where?: InputMaybe<HeaderFilter>;
+};
+
 export type RootQueryAllHomePageArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<HomePageSorting>>;
   where?: InputMaybe<HomePageFilter>;
-};
-
-export type RootQueryAllMenuFooterArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<MenuFooterSorting>>;
-  where?: InputMaybe<MenuFooterFilter>;
-};
-
-export type RootQueryAllNavigationArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<NavigationSorting>>;
-  where?: InputMaybe<NavigationFilter>;
 };
 
 export type RootQueryAllPostArgs = {
@@ -3220,7 +3172,7 @@ export type AriaFieldsFragment = {
   };
 };
 
-export type ConfigFieldsFragment = {
+export type ConfigurationFieldsFragment = {
   __typename?: 'Configuration';
   _id?: string;
   _type?: string;
@@ -3302,6 +3254,34 @@ export type FooterFieldsFragment = {
   }>;
 };
 
+export type HeaderFieldsFragment = {
+  __typename?: 'Header';
+  navigation?: Array<{
+    __typename?: 'NavigationItem';
+    _key?: string;
+    label?: string;
+    href?: string;
+  }>;
+  about?: { __typename?: 'HeaderAbout'; title?: string; description?: string };
+  social?: { __typename?: 'HeaderSocial'; title?: string };
+  contact?: {
+    __typename?: 'HeaderContact';
+    title?: string;
+    projectEnquiry?: {
+      __typename?: 'HeaderEnquiry';
+      label?: string;
+      href?: string;
+      linkText?: string;
+    };
+    generalEnquiry?: {
+      __typename?: 'HeaderEnquiry';
+      label?: string;
+      href?: string;
+      linkText?: string;
+    };
+  };
+};
+
 export type ImageFieldsFragment = {
   __typename?: 'Image';
   asset?: {
@@ -3333,32 +3313,6 @@ export type ImageFieldsFragment = {
     bottom?: number;
     left?: number;
     right?: number;
-  };
-};
-
-export type MenuFooterFieldsFragment = {
-  __typename?: 'MenuFooter';
-  about?: {
-    __typename?: 'MenuFooterAbout';
-    title?: string;
-    description?: string;
-  };
-  social?: { __typename?: 'MenuFooterSocial'; title?: string };
-  contact?: {
-    __typename?: 'MenuFooterContact';
-    title?: string;
-    projectEnquiry?: {
-      __typename?: 'MenuFooterEnquiry';
-      label?: string;
-      href?: string;
-      linkText?: string;
-    };
-    generalEnquiry?: {
-      __typename?: 'MenuFooterEnquiry';
-      label?: string;
-      href?: string;
-      linkText?: string;
-    };
   };
 };
 
@@ -3407,16 +3361,6 @@ export type MetadataFieldsFragment = {
     follow?: boolean;
     googleBot?: { __typename?: 'GoogleBot'; index?: boolean; follow?: boolean };
   };
-};
-
-export type NavigationFieldsFragment = {
-  __typename?: 'Navigation';
-  items?: Array<{
-    __typename?: 'NavigationItem';
-    _key?: string;
-    label?: string;
-    href?: string;
-  }>;
 };
 
 export type PageFieldsFragment = {
@@ -4738,93 +4682,40 @@ export type GetPageQuery = {
   }>;
 };
 
-export type GetConfigQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetConfigQuery = {
-  __typename?: 'RootQuery';
-  allConfiguration: Array<{
-    __typename?: 'Configuration';
-    _id?: string;
-    _type?: string;
-    title?: string;
-    description?: string;
-    seo?: {
-      __typename?: 'Seo';
-      keywords?: Array<string>;
-      defaultMetaImage?: {
-        __typename?: 'Image';
-        asset?: {
-          __typename?: 'SanityImageAsset';
-          url?: string;
-          altText?: string;
-        };
-        hotspot?: { __typename?: 'SanityImageHotspot'; x?: number; y?: number };
-      };
-    };
-    accessibility?: {
-      __typename?: 'Accessibility';
-      closeButtons?: {
-        __typename?: 'CloseButtons';
-        toast?: string;
-        modal?: string;
-      };
-      calendar?: {
-        __typename?: 'CalendarNavigation';
-        previousMonth?: string;
-        nextMonth?: string;
-      };
-    };
-    interface?: {
-      __typename?: 'UiInterface';
-      mobileMenu?: {
-        __typename?: 'MobileMenu';
-        toggleButton?: string;
-        menuLabel?: string;
-        closeButton?: string;
-      };
-      themeToggle?: { __typename?: 'ThemeToggle'; label?: string };
-      buttons?: {
-        __typename?: 'ButtonLabels';
-        loadMore?: string;
-        readMore?: string;
-        submit?: string;
-        close?: string;
-      };
-    };
-    blog?: {
-      __typename?: 'Blog';
-      labels?: {
-        __typename?: 'BlogLabels';
-        featured?: string;
-        readArticle?: string;
-      };
-      paths?: { __typename?: 'BlogPaths'; blog?: string };
-    };
-    forms?: {
-      __typename?: 'Forms';
-      messages?: {
-        __typename?: 'FormMessages';
-        required?: string;
-        invalid?: string;
-        success?: string;
-        error?: string;
-      };
-    };
-  }>;
-};
-
 export type GetGlobalDataQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetGlobalDataQuery = {
   __typename?: 'RootQuery';
-  allNavigation: Array<{
-    __typename?: 'Navigation';
-    items?: Array<{
+  allHeader: Array<{
+    __typename?: 'Header';
+    navigation?: Array<{
       __typename?: 'NavigationItem';
       _key?: string;
       label?: string;
       href?: string;
     }>;
+    about?: {
+      __typename?: 'HeaderAbout';
+      title?: string;
+      description?: string;
+    };
+    social?: { __typename?: 'HeaderSocial'; title?: string };
+    contact?: {
+      __typename?: 'HeaderContact';
+      title?: string;
+      projectEnquiry?: {
+        __typename?: 'HeaderEnquiry';
+        label?: string;
+        href?: string;
+        linkText?: string;
+      };
+      generalEnquiry?: {
+        __typename?: 'HeaderEnquiry';
+        label?: string;
+        href?: string;
+        linkText?: string;
+      };
+    };
   }>;
   allFooter: Array<{
     __typename?: 'Footer';
@@ -4836,31 +4727,6 @@ export type GetGlobalDataQuery = {
       platform?: string;
       url?: string;
     }>;
-  }>;
-  allMenuFooter: Array<{
-    __typename?: 'MenuFooter';
-    about?: {
-      __typename?: 'MenuFooterAbout';
-      title?: string;
-      description?: string;
-    };
-    social?: { __typename?: 'MenuFooterSocial'; title?: string };
-    contact?: {
-      __typename?: 'MenuFooterContact';
-      title?: string;
-      projectEnquiry?: {
-        __typename?: 'MenuFooterEnquiry';
-        label?: string;
-        href?: string;
-        linkText?: string;
-      };
-      generalEnquiry?: {
-        __typename?: 'MenuFooterEnquiry';
-        label?: string;
-        href?: string;
-        linkText?: string;
-      };
-    };
   }>;
   allConfiguration: Array<{
     __typename?: 'Configuration';
