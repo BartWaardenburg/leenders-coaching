@@ -99,7 +99,7 @@ export const SectionFeatured = ({
       background={background}
       border={border}
       noPadding
-      className={className}
+      className={`pb-8 sm:pb-0 ${className}`}
       {...props}
     >
       <Grid

@@ -33,6 +33,34 @@ type TimelineProps = {
 
 const MotionBox = motion.create(Box);
 
+/* Centralized animation configurations */
+const transitions = {
+  mainLine: {
+    duration: 1.5,
+    ease: [0.65, 0, 0.35, 1],
+  },
+  content: {
+    duration: 0.4,
+    ease: [0.32, 0.72, 0, 1],
+  },
+  dot: {
+    duration: 0.3,
+    ease: 'easeOut',
+  },
+  connector: {
+    duration: 0.2,
+    ease: 'easeOut',
+  }
+} as const;
+
+/* Animation sequence timing */
+const sequence = {
+  mainLine: 0,
+  content: 0.8,
+  dot: 1.2,
+  connector: 1.2,
+} as const;
+
 /**
  * Timeline component for displaying a vertical process flow with alternating sides
  */
@@ -92,16 +120,13 @@ export const Timeline = ({
           {/* Main line */}
           <MotionBox
             className={twMerge(
-              'absolute left-4 md:left-1/2 top-0 h-full w-px -translate-x-[0.5px]',
+              'absolute left-4 md:left-1/2 top-0 h-full w-px -translate-x-[0.5px] origin-top',
               colorClasses[color].line,
             )}
-            initial={{ height: 0 }}
-            whileInView={{ height: '100%' }}
+            initial={{ scaleY: 0 }}
+            whileInView={{ scaleY: 1 }}
             viewport={{ once: true }}
-            transition={{
-              duration: 1,
-              ease: 'easeOut',
-            }}
+            transition={transitions.mainLine}
           />
 
           {/* End dot */}
@@ -125,108 +150,80 @@ export const Timeline = ({
               {/* Mobile view */}
               <Box className="flex md:hidden">
                 {/* Center marker */}
-                <MotionBox
-                  className="flex justify-center w-8 relative"
-                  initial={{ opacity: 0, scale: 0 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, margin: '-100px' }}
-                  transition={{
-                    duration: 0.3,
-                    delay: 0.6,
-                    ease: 'easeOut',
-                  }}
-                >
+                <Box className="flex justify-center w-8 relative">
                   {/* Horizontal connector line */}
                   <MotionBox
                     className={twMerge(
-                      'absolute top-1/2 h-px',
-                      'left-4',
+                      'absolute top-1/2 left-4 h-px',
                       colorClasses[stepColor].line,
                     )}
-                    initial={{ width: 0, opacity: 0 }}
-                    whileInView={{ width: '32px', opacity: 1 }}
-                    viewport={{ once: true, margin: '-100px' }}
+                    initial={{ width: 0 }}
+                    whileInView={{ width: '32px' }}
+                    viewport={{ once: true }}
                     transition={{
-                      duration: 0.2,
-                      delay: 0.9,
-                      ease: 'easeOut',
+                      ...transitions.connector,
+                      delay: sequence.connector,
                     }}
                   />
-                  <Box
+                  {/* Dot */}
+                  <MotionBox
                     className={twMerge(
                       'w-4 h-4 rounded-full border z-10',
                       'bg-background dark:bg-background-dark',
                       colorClasses[stepColor].border,
                     )}
-                  />
-                </MotionBox>
-              </Box>
-
-              {/* Mobile content */}
-              <Box className="flex flex-col md:hidden">
-                <Box className="relative">
-                  <Box className="overflow-hidden">
-                    <MotionBox
-                      initial={{ x: '-100%', opacity: 0 }}
-                      whileInView={{ x: 0, opacity: 1 }}
-                      viewport={{ once: true, margin: '-100px' }}
-                      transition={{
-                        duration: 0.4,
-                        delay: 0.1,
-                        ease: [0.32, 0.72, 0, 1],
-                      }}
-                    >
-                      <Box className="pl-4">
-                        <Box className="mb-2">
-                          <Text variant="small" color="muted">
-                            {step.date}
-                          </Text>
-                        </Box>
-
-                        <Stack
-                          gap={2}
-                          className={twMerge(
-                            'p-6 border',
-                            colorClasses[stepColor].bg,
-                            colorClasses[stepColor].border,
-                            'text-left',
-                          )}
-                        >
-                          <Heading
-                            level="h3"
-                            variant="small"
-                            className="font-medium"
-                          >
-                            {step.title}
-                          </Heading>
-                          <Text variant="default" color="muted">
-                            {step.description}
-                          </Text>
-                          {step.content && (
-                            <Box className="mt-2 flex justify-start">
-                              {step.content}
-                            </Box>
-                          )}
-                        </Stack>
-                      </Box>
-                    </MotionBox>
-                  </Box>
-                  <MotionBox
-                    className={twMerge(
-                      'absolute left-0 top-[50%] h-px z-10',
-                      colorClasses[stepColor].line,
-                    )}
-                    initial={{ width: 0, opacity: 0 }}
-                    whileInView={{ width: '16px', opacity: 1 }}
-                    viewport={{ once: true, margin: '-100px' }}
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: 1 }}
+                    viewport={{ once: true }}
                     transition={{
-                      duration: 0.2,
-                      delay: 0.9,
-                      ease: 'easeOut',
+                      ...transitions.dot,
+                      delay: sequence.dot,
                     }}
                   />
                 </Box>
               </Box>
+
+              {/* Mobile content */}
+              <MotionBox
+                className="flex flex-col md:hidden pl-4"
+                initial={{ x: -100, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{
+                  ...transitions.content,
+                  delay: sequence.content,
+                }}
+              >
+                {step.date && (
+                  <Box className="mb-2">
+                    <Text variant="small" color="muted">
+                      {step.date}
+                    </Text>
+                  </Box>
+                )}
+
+                <Stack
+                  gap={2}
+                  className={twMerge(
+                    'p-6 border',
+                    colorClasses[stepColor].bg,
+                    colorClasses[stepColor].border,
+                    'text-left',
+                  )}
+                >
+                  <Heading level="h3" variant="small" className="font-medium">
+                    {step.title}
+                  </Heading>
+                  <Text variant="default" color="muted">
+                    {step.description}
+                  </Text>
+                  {step.content && (
+                    <Box className="mt-2 flex justify-start">
+                      {step.content}
+                    </Box>
+                  )}
+                </Stack>
+              </MotionBox>
 
               {/* Desktop view */}
               <>
@@ -240,9 +237,8 @@ export const Timeline = ({
                         whileInView={{ x: 0, opacity: 1 }}
                         viewport={{ once: true, margin: '-100px' }}
                         transition={{
-                          duration: 0.4,
-                          delay: 0.1,
-                          ease: [0.32, 0.72, 0, 1],
+                          ...transitions.content,
+                          delay: sequence.content,
                         }}
                       >
                         <Box className="pr-8 relative">
@@ -255,9 +251,8 @@ export const Timeline = ({
                             whileInView={{ width: '32px' }}
                             viewport={{ once: true, margin: '-100px' }}
                             transition={{
-                              duration: 0.2,
-                              delay: 0.1 + 0.9,
-                              ease: 'easeOut',
+                              ...transitions.connector,
+                              delay: sequence.connector,
                             }}
                           />
                           <Stack
@@ -308,9 +303,8 @@ export const Timeline = ({
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true, margin: '-100px' }}
                   transition={{
-                    duration: 0.3,
-                    delay: 0.6,
-                    ease: 'easeOut',
+                    ...transitions.dot,
+                    delay: sequence.dot,
                   }}
                 >
                   <Box
@@ -332,9 +326,8 @@ export const Timeline = ({
                         whileInView={{ x: 0, opacity: 1 }}
                         viewport={{ once: true, margin: '-100px' }}
                         transition={{
-                          duration: 0.4,
-                          delay: 0.1,
-                          ease: [0.32, 0.72, 0, 1],
+                          ...transitions.content,
+                          delay: sequence.content,
                         }}
                       >
                         <Box className="pl-8 relative">
@@ -347,9 +340,8 @@ export const Timeline = ({
                             whileInView={{ width: '32px' }}
                             viewport={{ once: true, margin: '-100px' }}
                             transition={{
-                              duration: 0.2,
-                              delay: 0.9,
-                              ease: 'easeOut',
+                              ...transitions.connector,
+                              delay: sequence.connector,
                             }}
                           />
                           <Stack
