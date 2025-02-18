@@ -7,17 +7,6 @@ import { PortableText } from '@/components/ui/PortableText';
 
 type ArticleProps = {
   content: PortableTextBlock[];
-  maxWidth?:
-    | 'sm'
-    | 'md'
-    | 'lg'
-    | 'xl'
-    | '2xl'
-    | '3xl'
-    | '4xl'
-    | '5xl'
-    | '6xl'
-    | '7xl';
 } & ComponentPropsWithoutRef<'article'>;
 
 /**
@@ -25,14 +14,13 @@ type ArticleProps = {
  */
 export const Article = ({
   content,
-  maxWidth = '3xl',
   className,
   ...props
 }: ArticleProps) => {
   return (
     <Box
       as="article"
-      className={twMerge('mx-auto', `max-w-${maxWidth}`, className)}
+      className={twMerge('mx-auto max-w-3xl', className)}
       {...props}
     >
       <PortableText content={content} />

@@ -12,17 +12,6 @@ export interface SanityFormSection extends Record<string, unknown> {
   showBorder?: boolean;
   background?: PastelColor;
   border?: boolean;
-  maxWidth?:
-    | 'sm'
-    | 'md'
-    | 'lg'
-    | 'xl'
-    | '2xl'
-    | '3xl'
-    | '4xl'
-    | '5xl'
-    | '6xl'
-    | '7xl';
 }
 
 /**
@@ -51,10 +40,27 @@ export const transformFormSection = (
     showBorder: data.showBorder,
     background: data.background,
     border: data.border,
-    maxWidth: data.maxWidth,
     onSubmit: async (formData) => {
       // Handle form submission here
       console.log('Form submitted:', formData);
     },
+  };
+};
+
+type FormSectionData = {
+  title?: string;
+  description?: string;
+  showBorder?: boolean;
+  background?: PastelColor;
+  border?: boolean;
+};
+
+export const mapFormSection = (data: FormSectionData) => {
+  return {
+    title: data.title,
+    description: data.description,
+    showBorder: data.showBorder,
+    background: data.background,
+    border: data.border,
   };
 };

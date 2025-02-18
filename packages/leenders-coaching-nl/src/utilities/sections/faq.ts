@@ -13,17 +13,6 @@ export interface SanityFAQSection extends Record<string, unknown> {
   background?: PastelColor;
   border?: boolean;
   showBorder?: boolean;
-  maxWidth?:
-    | 'sm'
-    | 'md'
-    | 'lg'
-    | 'xl'
-    | '2xl'
-    | '3xl'
-    | '4xl'
-    | '5xl'
-    | '6xl'
-    | '7xl';
 }
 
 /**
@@ -52,6 +41,25 @@ export const transformFAQSection = (
     background: data.background,
     border: data.border,
     showBorder: data.showBorder,
-    maxWidth: data.maxWidth,
+  };
+};
+
+type FAQSectionData = {
+  title?: string;
+  description?: string;
+  items: FAQItem[];
+  background?: PastelColor;
+  border?: boolean;
+  showBorder?: boolean;
+};
+
+export const mapFAQSection = (data: FAQSectionData) => {
+  return {
+    title: data.title,
+    description: data.description,
+    items: data.items,
+    background: data.background,
+    border: data.border,
+    showBorder: data.showBorder,
   };
 };

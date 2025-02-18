@@ -8,7 +8,6 @@ fragment SectionHeaderFields on SectionHeader {
   displayTitle
   subtitle
   background
-  maxWidth
   showBorder
   image {
     ...ImageFields

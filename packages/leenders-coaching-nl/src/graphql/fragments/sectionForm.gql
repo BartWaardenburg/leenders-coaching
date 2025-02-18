@@ -6,7 +6,6 @@ fragment SectionFormFields on SectionForm {
   displayTitle
   subtitle
   background
-  maxWidth
   showBorder
   form {
     emailTo

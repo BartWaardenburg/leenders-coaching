@@ -6,7 +6,6 @@ fragment SectionTimelineFields on SectionTimeline {
   displayTitle
   subtitle
   background
-  maxWidth
   showBorder
   events {
     _key

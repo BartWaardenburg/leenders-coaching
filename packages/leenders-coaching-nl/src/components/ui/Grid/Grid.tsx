@@ -270,7 +270,7 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>(({
   columns,
   gap = 8,
   className,
-  maxWidth = '7xl',
+  maxWidth,
 }, ref) => {
   const childCount = countChildren(children);
 

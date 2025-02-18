@@ -8,21 +8,10 @@ export interface SanityContentSection extends Record<string, unknown> {
   _type: 'sectionContent';
   title?: string;
   displayTitle?: string;
-  showBorder?: boolean;
+  contentRaw?: PortableTextBlock[];
   background?: PastelColor;
   border?: boolean;
-  contentRaw?: PortableTextBlock[];
-  maxWidth?:
-    | 'sm'
-    | 'md'
-    | 'lg'
-    | 'xl'
-    | '2xl'
-    | '3xl'
-    | '4xl'
-    | '5xl'
-    | '6xl'
-    | '7xl';
+  showBorder?: boolean;
 }
 
 /**
@@ -46,10 +35,27 @@ export const transformContentSection = (
 
   return {
     title: data.displayTitle || undefined,
+    contentRaw: data.contentRaw,
+    background: data.background,
+    border: data.border,
+    showBorder: data.showBorder,
+  };
+};
+
+type ContentSectionData = {
+  title?: string;
+  showBorder?: boolean;
+  background?: PastelColor;
+  border?: boolean;
+  contentRaw?: PortableTextBlock[];
+};
+
+export const mapContentSection = (data: ContentSectionData) => {
+  return {
+    title: data.title,
     showBorder: data.showBorder,
     background: data.background,
     border: data.border,
     contentRaw: data.contentRaw,
-    maxWidth: data.maxWidth,
   };
 };

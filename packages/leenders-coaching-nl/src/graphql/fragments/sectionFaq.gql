@@ -6,7 +6,6 @@ fragment SectionFAQFields on SectionFAQ {
   displayTitle
   subtitle
   background
-  maxWidth
   showBorder
   questions {
     _key

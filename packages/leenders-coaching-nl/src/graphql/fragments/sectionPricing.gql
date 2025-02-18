@@ -6,7 +6,6 @@ fragment SectionPricingFields on SectionPricing {
   displayTitle
   subtitle
   background
-  maxWidth
   showBorder
   pricingCards {
     _key

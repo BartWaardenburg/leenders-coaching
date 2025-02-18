@@ -1,5 +1,4 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
-import { twMerge } from 'tailwind-merge';
 
 import { Section, type PastelColor } from '@/components/ui/Section';
 import { Stack } from '@/components/ui/Stack';
@@ -34,18 +33,6 @@ type SectionTestimonialProps = {
   border?: boolean;
   /** Whether to show a border under the title */
   showBorder?: boolean;
-  /** Maximum width of the content */
-  maxWidth?:
-  | 'sm'
-  | 'md'
-  | 'lg'
-  | 'xl'
-  | '2xl'
-  | '3xl'
-  | '4xl'
-  | '5xl'
-  | '6xl'
-  | '7xl';
 } & ComponentPropsWithoutRef<'section'>;
 
 const TestimonialSlide = ({ quote, name, role, image }: Testimonial) => (
@@ -75,7 +62,6 @@ export const SectionTestimonial = ({
   background,
   border = false,
   showBorder = false,
-  maxWidth = '3xl',
   className,
   ...props
 }: SectionTestimonialProps) => {
@@ -83,10 +69,10 @@ export const SectionTestimonial = ({
     <Section
       background={background}
       border={border}
-      className={twMerge('py-12', className)}
+      className={className}
       {...props}
     >
-      <Box className={twMerge('mx-auto', `max-w-${maxWidth}`)}>
+      <Box className="mx-auto max-w-3xl">
         <Stack gap={12}>
           {(title || description) && (
             <Stack space={4} className="text-center">

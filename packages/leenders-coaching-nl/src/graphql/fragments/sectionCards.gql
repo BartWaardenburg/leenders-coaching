@@ -8,7 +8,6 @@ fragment SectionCardsFields on SectionCards {
   displayTitle
   subtitle
   background
-  maxWidth
   showBorder
   cards {
     _key

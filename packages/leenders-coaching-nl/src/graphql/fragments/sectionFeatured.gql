@@ -8,7 +8,6 @@ fragment SectionFeaturedFields on SectionFeatured {
   displayTitle
   subtitle
   background
-  maxWidth
   showBorder
   items {
     _key

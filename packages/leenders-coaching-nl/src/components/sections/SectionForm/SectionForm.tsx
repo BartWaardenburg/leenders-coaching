@@ -1,7 +1,6 @@
 "use client";
 
 import type { ComponentPropsWithoutRef } from 'react';
-import { twMerge } from 'tailwind-merge';
 import { useForm } from 'react-hook-form';
 
 import { Section, type PastelColor } from '@/components/ui/Section';
@@ -27,17 +26,6 @@ type SectionFormProps = {
   showBorder?: boolean;
   background?: PastelColor;
   border?: boolean;
-  maxWidth?:
-  | 'sm'
-  | 'md'
-  | 'lg'
-  | 'xl'
-  | '2xl'
-  | '3xl'
-  | '4xl'
-  | '5xl'
-  | '6xl'
-  | '7xl';
 } & Omit<ComponentPropsWithoutRef<'section'>, 'onSubmit'>;
 
 /**
@@ -51,7 +39,6 @@ export const SectionForm = ({
   showBorder = false,
   background,
   border = false,
-  maxWidth = '2xl',
   className,
   ...props
 }: SectionFormProps) => {
@@ -71,10 +58,10 @@ export const SectionForm = ({
     <Section
       background={background}
       border={border}
-      className={twMerge('py-12', className)}
+      className={className}
       {...props}
     >
-      <Box className={twMerge('mx-auto', `max-w-${maxWidth}`)}>
+      <Box className="mx-auto @container max-w-2xl">
         <Stack gap={8}>
           {(title || description) && (
             <Stack space={4} className="text-center">
@@ -123,14 +110,16 @@ export const SectionForm = ({
                 error={errors.message?.message}
                 {...register('message', { required: 'Bericht is verplicht' })}
               />
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                isLoading={isSubmitting}
-                className="w-full"
-              >
-                {submitLabel}
-              </Button>
+              <Box className="flex w-full @md:justify-end">
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  isLoading={isSubmitting}
+                  fullWidthOnContainer="form"
+                >
+                  {submitLabel}
+                </Button>
+              </Box>
             </Stack>
           </Form>
         </Stack>

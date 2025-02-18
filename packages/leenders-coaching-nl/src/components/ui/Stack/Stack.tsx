@@ -41,7 +41,7 @@ export const Stack = ({
     <Component
       className={twMerge(
         direction === 'col' ? 'flex-col' : 'flex-row',
-        'flex',
+        'flex w-full',
         gap && `gap-${gap}`,
         space && `space-${direction === 'col' ? 'y' : 'x'}-${space}`,
         justify && `justify-${justify}`,

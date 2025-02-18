@@ -1,5 +1,4 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
-import { twMerge } from 'tailwind-merge';
 
 import { Section, type PastelColor } from '@/components/ui/Section';
 import { Stack } from '@/components/ui/Stack';
@@ -14,17 +13,6 @@ type SectionContentProps = {
   background?: PastelColor;
   border?: boolean;
   contentRaw?: PortableTextBlock[];
-  maxWidth?:
-  | 'sm'
-  | 'md'
-  | 'lg'
-  | 'xl'
-  | '2xl'
-  | '3xl'
-  | '4xl'
-  | '5xl'
-  | '6xl'
-  | '7xl';
 } & ComponentPropsWithoutRef<'section'>;
 
 /**
@@ -36,7 +24,6 @@ export const SectionContent = ({
   showBorder = false,
   background,
   border = false,
-  maxWidth = '3xl',
   className,
   ...props
 }: SectionContentProps) => {
@@ -44,29 +31,30 @@ export const SectionContent = ({
     <Section
       background={background}
       border={border}
-      className={twMerge('py-12', className)}
+      className={className}
+      maxWidth="7xl"
       {...props}
     >
-      <Box className={twMerge('mx-auto', `max-w-${maxWidth}`)}>
-        <Stack gap={8}>
-          {title && (
-            <Box className="w-full">
-              <Heading
-                level="h2"
-                variant="large"
-                showBorder={showBorder}
-                borderColor={background}
-                textAlign="center"
-              >
-                {title}
-              </Heading>
-            </Box>
-          )}
-          <Box className="pt-6">
+      <Stack gap={8}>
+        {title && (
+          <Box className="w-full">
+            <Heading
+              level="h2"
+              variant="large"
+              showBorder={showBorder}
+              borderColor={background}
+              textAlign="center"
+            >
+              {title}
+            </Heading>
+          </Box>
+        )}
+        <Box className="mx-auto">
+          <Box className="pt-6 max-w-3xl">
             {contentRaw && <PortableText content={contentRaw} />}
           </Box>
-        </Stack>
-      </Box>
-    </Section>
+        </Box>
+      </Stack>
+    </Section >
   );
 };

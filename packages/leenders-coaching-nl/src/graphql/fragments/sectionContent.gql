@@ -6,7 +6,6 @@ fragment SectionContentFields on SectionContent {
   displayTitle
   subtitle
   background
-  maxWidth
   showBorder
   contentRaw
 }

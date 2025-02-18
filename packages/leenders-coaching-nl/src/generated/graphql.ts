@@ -2234,7 +2234,6 @@ export type SectionBlog = Document & {
   description?: Maybe<Scalars['String']['output']>;
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
-  maxWidth?: Maybe<Scalars['String']['output']>;
   postsToShow?: Maybe<Scalars['Float']['output']>;
   showBorder?: Maybe<Scalars['Boolean']['output']>;
   showFeaturedOnly?: Maybe<Scalars['Boolean']['output']>;
@@ -2256,7 +2255,6 @@ export type SectionBlogFilter = {
   background?: InputMaybe<StringFilter>;
   description?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
-  maxWidth?: InputMaybe<StringFilter>;
   postsToShow?: InputMaybe<FloatFilter>;
   showBorder?: InputMaybe<BooleanFilter>;
   showFeaturedOnly?: InputMaybe<BooleanFilter>;
@@ -2289,7 +2287,6 @@ export type SectionBlogSorting = {
   background?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
-  maxWidth?: InputMaybe<SortOrder>;
   postsToShow?: InputMaybe<SortOrder>;
   showBorder?: InputMaybe<SortOrder>;
   showFeaturedOnly?: InputMaybe<SortOrder>;
@@ -2315,7 +2312,6 @@ export type SectionCalendar = Document & {
   description?: Maybe<Scalars['String']['output']>;
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
-  maxWidth?: Maybe<Scalars['String']['output']>;
   settings?: Maybe<CalendarSettings>;
   showBorder?: Maybe<Scalars['Boolean']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
@@ -2335,7 +2331,6 @@ export type SectionCalendarFilter = {
   background?: InputMaybe<StringFilter>;
   description?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
-  maxWidth?: InputMaybe<StringFilter>;
   settings?: InputMaybe<CalendarSettingsFilter>;
   showBorder?: InputMaybe<BooleanFilter>;
   subtitle?: InputMaybe<StringFilter>;
@@ -2352,7 +2347,6 @@ export type SectionCalendarSorting = {
   background?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
-  maxWidth?: InputMaybe<SortOrder>;
   settings?: InputMaybe<CalendarSettingsSorting>;
   showBorder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
@@ -2377,7 +2371,6 @@ export type SectionCards = Document & {
   description?: Maybe<Scalars['String']['output']>;
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
-  maxWidth?: Maybe<Scalars['String']['output']>;
   showBorder?: Maybe<Scalars['Boolean']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
   /** Title for internal reference only */
@@ -2396,7 +2389,6 @@ export type SectionCardsFilter = {
   background?: InputMaybe<StringFilter>;
   description?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
-  maxWidth?: InputMaybe<StringFilter>;
   showBorder?: InputMaybe<BooleanFilter>;
   subtitle?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
@@ -2412,7 +2404,6 @@ export type SectionCardsSorting = {
   background?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
-  maxWidth?: InputMaybe<SortOrder>;
   showBorder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
@@ -2435,7 +2426,6 @@ export type SectionContent = Document & {
   contentRaw?: Maybe<Scalars['JSON']['output']>;
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
-  maxWidth?: Maybe<Scalars['String']['output']>;
   showBorder?: Maybe<Scalars['Boolean']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
   /** Title for internal reference only */
@@ -2453,7 +2443,6 @@ export type SectionContentFilter = {
   _updatedAt?: InputMaybe<DatetimeFilter>;
   background?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
-  maxWidth?: InputMaybe<StringFilter>;
   showBorder?: InputMaybe<BooleanFilter>;
   subtitle?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
@@ -2468,7 +2457,6 @@ export type SectionContentSorting = {
   _updatedAt?: InputMaybe<SortOrder>;
   background?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
-  maxWidth?: InputMaybe<SortOrder>;
   showBorder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
@@ -2491,7 +2479,6 @@ export type SectionFaq = Document & {
   description?: Maybe<Scalars['String']['output']>;
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
-  maxWidth?: Maybe<Scalars['String']['output']>;
   questions?: Maybe<Array<Maybe<FaqItem>>>;
   showBorder?: Maybe<Scalars['Boolean']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
@@ -2511,7 +2498,6 @@ export type SectionFaqFilter = {
   background?: InputMaybe<StringFilter>;
   description?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
-  maxWidth?: InputMaybe<StringFilter>;
   showBorder?: InputMaybe<BooleanFilter>;
   subtitle?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
@@ -2527,7 +2513,6 @@ export type SectionFaqSorting = {
   background?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
-  maxWidth?: InputMaybe<SortOrder>;
   showBorder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
@@ -2551,7 +2536,6 @@ export type SectionFeatured = Document & {
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
   items?: Maybe<Array<Maybe<FeatureItem>>>;
-  maxWidth?: Maybe<Scalars['String']['output']>;
   showBorder?: Maybe<Scalars['Boolean']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
   /** Title for internal reference only */
@@ -2570,7 +2554,6 @@ export type SectionFeaturedFilter = {
   background?: InputMaybe<StringFilter>;
   description?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
-  maxWidth?: InputMaybe<StringFilter>;
   showBorder?: InputMaybe<BooleanFilter>;
   subtitle?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
@@ -2586,7 +2569,6 @@ export type SectionFeaturedSorting = {
   background?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
-  maxWidth?: InputMaybe<SortOrder>;
   showBorder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
@@ -2610,7 +2592,6 @@ export type SectionForm = Document & {
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
   form?: Maybe<FormConfiguration>;
-  maxWidth?: Maybe<Scalars['String']['output']>;
   showBorder?: Maybe<Scalars['Boolean']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
   /** Title for internal reference only */
@@ -2630,7 +2611,6 @@ export type SectionFormFilter = {
   description?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
   form?: InputMaybe<FormConfigurationFilter>;
-  maxWidth?: InputMaybe<StringFilter>;
   showBorder?: InputMaybe<BooleanFilter>;
   subtitle?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
@@ -2647,7 +2627,6 @@ export type SectionFormSorting = {
   description?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
   form?: InputMaybe<FormConfigurationSorting>;
-  maxWidth?: InputMaybe<SortOrder>;
   showBorder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
@@ -2672,7 +2651,6 @@ export type SectionHeader = Document & {
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
   image?: Maybe<Image>;
-  maxWidth?: Maybe<Scalars['String']['output']>;
   showBorder?: Maybe<Scalars['Boolean']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
   /** Title for internal reference only */
@@ -2693,7 +2671,6 @@ export type SectionHeaderFilter = {
   description?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
   image?: InputMaybe<ImageFilter>;
-  maxWidth?: InputMaybe<StringFilter>;
   showBorder?: InputMaybe<BooleanFilter>;
   subtitle?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
@@ -2711,7 +2688,6 @@ export type SectionHeaderSorting = {
   description?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
   image?: InputMaybe<ImageSorting>;
-  maxWidth?: InputMaybe<SortOrder>;
   showBorder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
@@ -2734,7 +2710,6 @@ export type SectionPricing = Document & {
   description?: Maybe<Scalars['String']['output']>;
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
-  maxWidth?: Maybe<Scalars['String']['output']>;
   pricingCards?: Maybe<Array<Maybe<PricingCard>>>;
   showBorder?: Maybe<Scalars['Boolean']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
@@ -2754,7 +2729,6 @@ export type SectionPricingFilter = {
   background?: InputMaybe<StringFilter>;
   description?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
-  maxWidth?: InputMaybe<StringFilter>;
   showBorder?: InputMaybe<BooleanFilter>;
   subtitle?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
@@ -2770,7 +2744,6 @@ export type SectionPricingSorting = {
   background?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
-  maxWidth?: InputMaybe<SortOrder>;
   showBorder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
@@ -2793,7 +2766,6 @@ export type SectionTestimonial = Document & {
   description?: Maybe<Scalars['String']['output']>;
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
-  maxWidth?: Maybe<Scalars['String']['output']>;
   showBorder?: Maybe<Scalars['Boolean']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
   testimonials?: Maybe<Array<Maybe<Testimonial>>>;
@@ -2813,7 +2785,6 @@ export type SectionTestimonialFilter = {
   background?: InputMaybe<StringFilter>;
   description?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
-  maxWidth?: InputMaybe<StringFilter>;
   showBorder?: InputMaybe<BooleanFilter>;
   subtitle?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
@@ -2829,7 +2800,6 @@ export type SectionTestimonialSorting = {
   background?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
-  maxWidth?: InputMaybe<SortOrder>;
   showBorder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
@@ -2853,7 +2823,6 @@ export type SectionTimeline = Document & {
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
   events?: Maybe<Array<Maybe<TimelineEvent>>>;
-  maxWidth?: Maybe<Scalars['String']['output']>;
   showBorder?: Maybe<Scalars['Boolean']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
   /** Title for internal reference only */
@@ -2872,7 +2841,6 @@ export type SectionTimelineFilter = {
   background?: InputMaybe<StringFilter>;
   description?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
-  maxWidth?: InputMaybe<StringFilter>;
   showBorder?: InputMaybe<BooleanFilter>;
   subtitle?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
@@ -2888,7 +2856,6 @@ export type SectionTimelineSorting = {
   background?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
-  maxWidth?: InputMaybe<SortOrder>;
   showBorder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
@@ -3439,7 +3406,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
@@ -3454,7 +3420,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
@@ -3476,7 +3441,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
@@ -3528,7 +3492,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         contentRaw?: any;
       }
@@ -3541,7 +3504,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
@@ -3559,7 +3521,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
@@ -3610,7 +3571,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
@@ -3641,7 +3601,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         image?: {
           __typename?: 'Image';
@@ -3692,7 +3651,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
@@ -3720,7 +3678,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
@@ -3772,7 +3729,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
@@ -3862,7 +3818,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
@@ -3877,7 +3832,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
@@ -3899,7 +3853,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
@@ -3951,7 +3904,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         contentRaw?: any;
       }
@@ -3964,7 +3916,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
@@ -3982,7 +3933,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
@@ -4033,7 +3983,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
@@ -4064,7 +4013,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         image?: {
           __typename?: 'Image';
@@ -4115,7 +4063,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
@@ -4143,7 +4090,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
@@ -4195,7 +4141,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
@@ -4285,7 +4230,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
@@ -4300,7 +4244,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
@@ -4322,7 +4265,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
@@ -4374,7 +4316,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         contentRaw?: any;
       }
@@ -4387,7 +4328,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
@@ -4405,7 +4345,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
@@ -4456,7 +4395,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
@@ -4487,7 +4425,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         image?: {
           __typename?: 'Image';
@@ -4538,7 +4475,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
@@ -4566,7 +4502,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
@@ -4618,7 +4553,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
@@ -4708,7 +4642,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
@@ -4723,7 +4656,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
@@ -4745,7 +4677,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
@@ -4797,7 +4728,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         contentRaw?: any;
       }
@@ -4810,7 +4740,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
@@ -4828,7 +4757,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
@@ -4879,7 +4807,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
@@ -4910,7 +4837,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         image?: {
           __typename?: 'Image';
@@ -4961,7 +4887,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
@@ -4989,7 +4914,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
@@ -5041,7 +4965,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
@@ -5140,7 +5063,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
@@ -5155,7 +5077,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
@@ -5177,7 +5098,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
@@ -5229,7 +5149,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         contentRaw?: any;
       }
@@ -5242,7 +5161,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
@@ -5260,7 +5178,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
@@ -5311,7 +5228,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
@@ -5342,7 +5258,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         image?: {
           __typename?: 'Image';
@@ -5393,7 +5308,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
@@ -5421,7 +5335,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
@@ -5473,7 +5386,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
@@ -5581,7 +5493,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
@@ -5596,7 +5507,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
@@ -5618,7 +5528,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
@@ -5670,7 +5579,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         contentRaw?: any;
       }
@@ -5683,7 +5591,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
@@ -5701,7 +5608,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
@@ -5752,7 +5658,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
@@ -5783,7 +5688,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         image?: {
           __typename?: 'Image';
@@ -5834,7 +5738,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
@@ -5862,7 +5765,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
@@ -5914,7 +5816,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
@@ -6150,7 +6051,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
@@ -6165,7 +6065,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
@@ -6187,7 +6086,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
@@ -6239,7 +6137,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         contentRaw?: any;
       }
@@ -6252,7 +6149,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
@@ -6270,7 +6166,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
@@ -6321,7 +6216,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
@@ -6352,7 +6246,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         image?: {
           __typename?: 'Image';
@@ -6403,7 +6296,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
@@ -6431,7 +6323,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
@@ -6483,7 +6374,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
@@ -6568,7 +6458,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
@@ -6583,7 +6472,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
@@ -6605,7 +6493,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
@@ -6657,7 +6544,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         contentRaw?: any;
       }
@@ -6670,7 +6556,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
@@ -6688,7 +6573,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
@@ -6739,7 +6623,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
@@ -6770,7 +6653,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         image?: {
           __typename?: 'Image';
@@ -6821,7 +6703,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
@@ -6849,7 +6730,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
@@ -6901,7 +6781,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
@@ -6986,7 +6865,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
@@ -7001,7 +6879,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
@@ -7023,7 +6900,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
@@ -7075,7 +6951,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         contentRaw?: any;
       }
@@ -7088,7 +6963,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
@@ -7106,7 +6980,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
@@ -7157,7 +7030,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
@@ -7188,7 +7060,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         image?: {
           __typename?: 'Image';
@@ -7239,7 +7110,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
@@ -7267,7 +7137,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
@@ -7319,7 +7188,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
@@ -7404,7 +7272,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
@@ -7419,7 +7286,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
@@ -7441,7 +7307,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
@@ -7493,7 +7358,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         contentRaw?: any;
       }
@@ -7506,7 +7370,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
@@ -7524,7 +7387,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
@@ -7575,7 +7437,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
@@ -7606,7 +7467,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         image?: {
           __typename?: 'Image';
@@ -7657,7 +7517,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
@@ -7685,7 +7544,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
@@ -7737,7 +7595,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
@@ -7826,7 +7683,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
@@ -7841,7 +7697,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
@@ -7863,7 +7718,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
@@ -7915,7 +7769,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         contentRaw?: any;
       }
@@ -7928,7 +7781,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
@@ -7946,7 +7798,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
@@ -7997,7 +7848,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
@@ -8028,7 +7878,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         image?: {
           __typename?: 'Image';
@@ -8079,7 +7928,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
@@ -8107,7 +7955,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
@@ -8159,7 +8006,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
@@ -8248,7 +8094,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
@@ -8263,7 +8108,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
@@ -8285,7 +8129,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
@@ -8337,7 +8180,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         contentRaw?: any;
       }
@@ -8350,7 +8192,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
@@ -8368,7 +8209,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
@@ -8419,7 +8259,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
@@ -8450,7 +8289,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         image?: {
           __typename?: 'Image';
@@ -8501,7 +8339,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
@@ -8529,7 +8366,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
@@ -8581,7 +8417,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        maxWidth?: string;
         showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
@@ -8780,7 +8615,6 @@ export type SectionBlogFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   postsToShow?: number;
   showFeaturedOnly?: boolean;
@@ -8796,7 +8630,6 @@ export type SectionCalendarFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   settings?: {
     __typename?: 'CalendarSettings';
@@ -8819,7 +8652,6 @@ export type SectionCardsFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   cards?: Array<{
     __typename?: 'Card';
@@ -8872,7 +8704,6 @@ export type SectionContentFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   contentRaw?: any;
 };
@@ -8886,7 +8717,6 @@ export type SectionFaqFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   questions?: Array<{
     __typename?: 'FaqItem';
@@ -8905,7 +8735,6 @@ export type SectionFeaturedFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   items?: Array<{
     __typename?: 'FeatureItem';
@@ -8957,7 +8786,6 @@ type CommonSectionFields_SectionBlog_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   postsToShow?: number;
   showFeaturedOnly?: boolean;
@@ -8973,7 +8801,6 @@ type CommonSectionFields_SectionCalendar_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   settings?: {
     __typename?: 'CalendarSettings';
@@ -8996,7 +8823,6 @@ type CommonSectionFields_SectionCards_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   cards?: Array<{
     __typename?: 'Card';
@@ -9049,7 +8875,6 @@ type CommonSectionFields_SectionContent_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   contentRaw?: any;
 };
@@ -9063,7 +8888,6 @@ type CommonSectionFields_SectionFaq_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   questions?: Array<{
     __typename?: 'FaqItem';
@@ -9082,7 +8906,6 @@ type CommonSectionFields_SectionFeatured_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   items?: Array<{
     __typename?: 'FeatureItem';
@@ -9134,7 +8957,6 @@ type CommonSectionFields_SectionForm_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   form?: {
     __typename?: 'FormConfiguration';
@@ -9166,7 +8988,6 @@ type CommonSectionFields_SectionHeader_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   image?: {
     __typename?: 'Image';
@@ -9218,7 +9039,6 @@ type CommonSectionFields_SectionPricing_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   pricingCards?: Array<{
     __typename?: 'PricingCard';
@@ -9247,7 +9067,6 @@ type CommonSectionFields_SectionTestimonial_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   testimonials?: Array<{
     __typename?: 'Testimonial';
@@ -9300,7 +9119,6 @@ type CommonSectionFields_SectionTimeline_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   events?: Array<{
     __typename?: 'TimelineEvent';
@@ -9333,7 +9151,6 @@ export type SectionFormFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   form?: {
     __typename?: 'FormConfiguration';
@@ -9365,7 +9182,6 @@ export type SectionHeaderFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   image?: {
     __typename?: 'Image';
@@ -9417,7 +9233,6 @@ export type SectionPricingFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   pricingCards?: Array<{
     __typename?: 'PricingCard';
@@ -9446,7 +9261,6 @@ export type SectionTestimonialFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   testimonials?: Array<{
     __typename?: 'Testimonial';
@@ -9499,7 +9313,6 @@ export type SectionTimelineFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  maxWidth?: string;
   showBorder?: boolean;
   events?: Array<{
     __typename?: 'TimelineEvent';
@@ -9710,7 +9523,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               postsToShow?: number;
               showFeaturedOnly?: boolean;
@@ -9725,7 +9537,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               settings?: {
                 __typename?: 'CalendarSettings';
@@ -9747,7 +9558,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               cards?: Array<{
                 __typename?: 'Card';
@@ -9799,7 +9609,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               contentRaw?: any;
             }
@@ -9812,7 +9621,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               questions?: Array<{
                 __typename?: 'FaqItem';
@@ -9830,7 +9638,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               items?: Array<{
                 __typename?: 'FeatureItem';
@@ -9881,7 +9688,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               form?: {
                 __typename?: 'FormConfiguration';
@@ -9912,7 +9718,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               image?: {
                 __typename?: 'Image';
@@ -9963,7 +9768,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               pricingCards?: Array<{
                 __typename?: 'PricingCard';
@@ -9991,7 +9795,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               testimonials?: Array<{
                 __typename?: 'Testimonial';
@@ -10043,7 +9846,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               events?: Array<{
                 __typename?: 'TimelineEvent';
@@ -10132,7 +9934,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               postsToShow?: number;
               showFeaturedOnly?: boolean;
@@ -10147,7 +9948,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               settings?: {
                 __typename?: 'CalendarSettings';
@@ -10169,7 +9969,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               cards?: Array<{
                 __typename?: 'Card';
@@ -10221,7 +10020,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               contentRaw?: any;
             }
@@ -10234,7 +10032,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               questions?: Array<{
                 __typename?: 'FaqItem';
@@ -10252,7 +10049,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               items?: Array<{
                 __typename?: 'FeatureItem';
@@ -10303,7 +10099,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               form?: {
                 __typename?: 'FormConfiguration';
@@ -10334,7 +10129,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               image?: {
                 __typename?: 'Image';
@@ -10385,7 +10179,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               pricingCards?: Array<{
                 __typename?: 'PricingCard';
@@ -10413,7 +10206,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               testimonials?: Array<{
                 __typename?: 'Testimonial';
@@ -10465,7 +10257,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               events?: Array<{
                 __typename?: 'TimelineEvent';
@@ -10554,7 +10345,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               postsToShow?: number;
               showFeaturedOnly?: boolean;
@@ -10569,7 +10359,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               settings?: {
                 __typename?: 'CalendarSettings';
@@ -10591,7 +10380,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               cards?: Array<{
                 __typename?: 'Card';
@@ -10643,7 +10431,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               contentRaw?: any;
             }
@@ -10656,7 +10443,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               questions?: Array<{
                 __typename?: 'FaqItem';
@@ -10674,7 +10460,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               items?: Array<{
                 __typename?: 'FeatureItem';
@@ -10725,7 +10510,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               form?: {
                 __typename?: 'FormConfiguration';
@@ -10756,7 +10540,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               image?: {
                 __typename?: 'Image';
@@ -10807,7 +10590,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               pricingCards?: Array<{
                 __typename?: 'PricingCard';
@@ -10835,7 +10617,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               testimonials?: Array<{
                 __typename?: 'Testimonial';
@@ -10887,7 +10668,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               events?: Array<{
                 __typename?: 'TimelineEvent';
@@ -10976,7 +10756,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               postsToShow?: number;
               showFeaturedOnly?: boolean;
@@ -10991,7 +10770,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               settings?: {
                 __typename?: 'CalendarSettings';
@@ -11013,7 +10791,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               cards?: Array<{
                 __typename?: 'Card';
@@ -11065,7 +10842,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               contentRaw?: any;
             }
@@ -11078,7 +10854,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               questions?: Array<{
                 __typename?: 'FaqItem';
@@ -11096,7 +10871,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               items?: Array<{
                 __typename?: 'FeatureItem';
@@ -11147,7 +10921,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               form?: {
                 __typename?: 'FormConfiguration';
@@ -11178,7 +10951,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               image?: {
                 __typename?: 'Image';
@@ -11229,7 +11001,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               pricingCards?: Array<{
                 __typename?: 'PricingCard';
@@ -11257,7 +11028,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               testimonials?: Array<{
                 __typename?: 'Testimonial';
@@ -11309,7 +11079,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               events?: Array<{
                 __typename?: 'TimelineEvent';
@@ -11406,7 +11175,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               postsToShow?: number;
               showFeaturedOnly?: boolean;
@@ -11421,7 +11189,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               settings?: {
                 __typename?: 'CalendarSettings';
@@ -11443,7 +11210,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               cards?: Array<{
                 __typename?: 'Card';
@@ -11495,7 +11261,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               contentRaw?: any;
             }
@@ -11508,7 +11273,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               questions?: Array<{
                 __typename?: 'FaqItem';
@@ -11526,7 +11290,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               items?: Array<{
                 __typename?: 'FeatureItem';
@@ -11577,7 +11340,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               form?: {
                 __typename?: 'FormConfiguration';
@@ -11608,7 +11370,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               image?: {
                 __typename?: 'Image';
@@ -11659,7 +11420,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               pricingCards?: Array<{
                 __typename?: 'PricingCard';
@@ -11687,7 +11447,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               testimonials?: Array<{
                 __typename?: 'Testimonial';
@@ -11739,7 +11498,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               events?: Array<{
                 __typename?: 'TimelineEvent';
@@ -11844,7 +11602,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               postsToShow?: number;
               showFeaturedOnly?: boolean;
@@ -11859,7 +11616,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               settings?: {
                 __typename?: 'CalendarSettings';
@@ -11881,7 +11637,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               cards?: Array<{
                 __typename?: 'Card';
@@ -11933,7 +11688,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               contentRaw?: any;
             }
@@ -11946,7 +11700,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               questions?: Array<{
                 __typename?: 'FaqItem';
@@ -11964,7 +11717,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               items?: Array<{
                 __typename?: 'FeatureItem';
@@ -12015,7 +11767,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               form?: {
                 __typename?: 'FormConfiguration';
@@ -12046,7 +11797,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               image?: {
                 __typename?: 'Image';
@@ -12097,7 +11847,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               pricingCards?: Array<{
                 __typename?: 'PricingCard';
@@ -12125,7 +11874,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               testimonials?: Array<{
                 __typename?: 'Testimonial';
@@ -12177,7 +11925,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              maxWidth?: string;
               showBorder?: boolean;
               events?: Array<{
                 __typename?: 'TimelineEvent';

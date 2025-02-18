@@ -1,10 +1,11 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "outDir": "",
-    "noEmit": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler"
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "skipLibCheck": true,
+    "strict": true
   },
   "include": ["*.ts", "*.tsx"]
 }

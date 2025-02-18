@@ -13,17 +13,6 @@ export interface SanityTimelineSection extends Record<string, unknown> {
   background?: PastelColor;
   border?: boolean;
   showBorder?: boolean;
-  maxWidth?:
-    | 'sm'
-    | 'md'
-    | 'lg'
-    | 'xl'
-    | '2xl'
-    | '3xl'
-    | '4xl'
-    | '5xl'
-    | '6xl'
-    | '7xl';
 }
 
 /**
@@ -52,6 +41,25 @@ export const transformTimelineSection = (
     background: data.background,
     border: data.border,
     showBorder: data.showBorder,
-    maxWidth: data.maxWidth,
+  };
+};
+
+type TimelineSectionData = {
+  title?: string;
+  description?: string;
+  steps: TimelineStep[];
+  background?: PastelColor;
+  border?: boolean;
+  showBorder?: boolean;
+};
+
+export const mapTimelineSection = (data: TimelineSectionData) => {
+  return {
+    title: data.title,
+    description: data.description,
+    steps: data.steps,
+    background: data.background,
+    border: data.border,
+    showBorder: data.showBorder,
   };
 };

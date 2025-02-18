@@ -14,7 +14,7 @@ type ButtonBaseProps = {
   | 'teal';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
-  fullWidthOnContainer?: boolean;
+  fullWidthOnContainer?: boolean | string;
   disabled?: boolean;
 };
 

@@ -59,7 +59,7 @@ export const SectionFeatured = ({
   ...props
 }: SectionFeaturedProps) => {
   const Content = (
-    <Stack gap={6} className="justify-center p-4 sm:p-6 md:px-8 md:pl-0">
+    <Stack gap={6} className="justify-center max-w-lg">
       {title && (
         <Heading level="h2" variant="medium">
           {title}
@@ -79,7 +79,7 @@ export const SectionFeatured = ({
   );
 
   const ImageContainer = image ? (
-    <Box className="relative h-[300px] sm:h-full w-full">
+    <Box className="relative aspect-[4/3] sm:aspect-[16/9] w-full h-full">
       <Image
         src={image}
         alt={imageAlt}
@@ -91,7 +91,7 @@ export const SectionFeatured = ({
       />
     </Box>
   ) : (
-    <Box className="relative h-[300px] sm:h-full w-full bg-gray-100" />
+    <Box className="relative aspect-[4/3] sm:aspect-[16/9] w-full h-full bg-gray-100" />
   );
 
   return (
@@ -107,12 +107,13 @@ export const SectionFeatured = ({
           default: 1,
           'sm': 2,
         }}
-        gap={8}
+        className="overflow-hidden"
+        gap={0}
       >
-        <Box className={reverse ? 'sm:order-2' : ''}>{ImageContainer}</Box>
+        <Box className={`${reverse ? 'sm:order-2' : ''} -ml-4 sm:-ml-6 lg:-ml-12`}>{ImageContainer}</Box>
         <Stack
           gap={6}
-          className={`justify-center p-4 sm:p-6 md:px-8 ${reverse ? 'sm:order-1 md:pr-0' : 'md:pl-0'
+          className={`justify-center p-4 sm:p-8 md:p-12 lg:p-16 ${reverse ? 'sm:order-1' : ''
             }`}
         >
           {title || description ? Content : null}

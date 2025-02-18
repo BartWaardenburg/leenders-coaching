@@ -6,7 +6,6 @@ fragment SectionBlogFields on SectionBlog {
   displayTitle
   subtitle
   background
-  maxWidth
   showBorder
   postsToShow
   showFeaturedOnly

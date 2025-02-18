@@ -2,7 +2,6 @@
 
 import { useState, useRef } from 'react'
 import { Section } from '@/components/ui/Section'
-import { Container } from '@/components/ui/Container'
 import { Heading } from '@/components/ui/Heading'
 import { Text } from '@/components/ui/Text'
 import { Box } from '@/components/ui/Box'
@@ -34,6 +33,7 @@ interface SectionBlogProps {
    * @default 6
    */
   postsPerPage?: number;
+  className?: string;
 }
 
 /**
@@ -44,6 +44,7 @@ export const SectionBlog = ({
   description,
   posts,
   postsPerPage = 6,
+  className,
 }: SectionBlogProps) => {
   const [currentPage, setCurrentPage] = useState(1)
   const gridRef = useRef<HTMLDivElement>(null)
@@ -78,61 +79,59 @@ export const SectionBlog = ({
   }
 
   return (
-    <Section className="py-16 md:py-24">
-      <Container>
-        {(title || description) && (
-          <Flex direction="column" items="center" className="mb-16">
-            {title && (
-              <Heading level="h2" variant="large" className="mb-6" textAlign="center">
-                {title}
-              </Heading>
-            )}
-            {description && (
-              <Text className="text-muted-foreground text-center max-w-2xl">
-                {description}
-              </Text>
-            )}
-          </Flex>
-        )}
-
-        <Box className="w-full">
-          <Grid
-            ref={gridRef}
-            columns={{
-              default: 1,
-              '@2xl': 2,
-            }}
-            gap={6}
-            className="mb-12"
-          >
-            {currentPosts.map((post, index) => (
-              <Card
-                key={post.slug}
-                title={post.title}
-                date={post.date}
-                categories={post.categories}
-                slug={post.slug}
-                image={post.image}
-                variant={post.variant || 'blue'}
-                featured={post.featured}
-                border
-                reverse={index % 2 === 1}
-              >
-                <Text className="text-muted-foreground">{post.description}</Text>
-              </Card>
-            ))}
-          </Grid>
-
-          {totalPages > 1 && (
-            <Pagination
-              totalPages={totalPages}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-              className="mt-8"
-            />
+    <Section className={className} maxWidth="7xl">
+      {(title || description) && (
+        <Flex direction="column" items="center" className="mb-16">
+          {title && (
+            <Heading level="h2" variant="large" className="mb-6" textAlign="center">
+              {title}
+            </Heading>
           )}
-        </Box>
-      </Container>
+          {description && (
+            <Text className="text-muted-foreground text-center max-w-2xl">
+              {description}
+            </Text>
+          )}
+        </Flex>
+      )}
+
+      <Box className="w-full">
+        <Grid
+          ref={gridRef}
+          columns={{
+            default: 1,
+            '@2xl': 2,
+          }}
+          gap={6}
+          className="mb-12"
+        >
+          {currentPosts.map((post, index) => (
+            <Card
+              key={post.slug}
+              title={post.title}
+              date={post.date}
+              categories={post.categories}
+              slug={post.slug}
+              image={post.image}
+              variant={post.variant || 'blue'}
+              featured={post.featured}
+              border
+              reverse={index % 2 === 1}
+            >
+              <Text className="text-muted-foreground">{post.description}</Text>
+            </Card>
+          ))}
+        </Grid>
+
+        {totalPages > 1 && (
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+            className="mt-8"
+          />
+        )}
+      </Box>
     </Section>
   )
 } 

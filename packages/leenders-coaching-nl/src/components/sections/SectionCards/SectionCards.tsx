@@ -1,11 +1,11 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
-import { twMerge } from 'tailwind-merge';
 
 import { Section, type PastelColor } from '@/components/ui/Section';
 import { Stack } from '@/components/ui/Stack';
 import { Heading } from '@/components/ui/Heading';
 import { Text } from '@/components/ui/Text';
 import { Grid } from '@/components/ui/Grid';
+import { Box } from '@/components/ui/Box';
 
 type SectionCardsProps = {
   title?: ReactNode;
@@ -31,7 +31,8 @@ export const SectionCards = ({
     <Section
       background={background}
       border={border}
-      className={twMerge('py-12', className)}
+      className={className}
+      maxWidth="7xl"
       {...props}
     >
       <Stack gap={8}>
@@ -49,16 +50,15 @@ export const SectionCards = ({
             )}
           </Stack>
         )}
-        <div className="flex justify-center w-full">
+        <Box className="flex justify-center w-full">
           <Grid
             columns={{ default: 1, '@md': 2, '@lg': 3 }}
             gap={6}
-            maxWidth="7xl"
             className="w-full"
           >
             {children}
           </Grid>
-        </div>
+        </Box>
       </Stack>
     </Section>
   );

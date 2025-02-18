@@ -8,7 +8,6 @@ fragment SectionTestimonialFields on SectionTestimonial {
   displayTitle
   subtitle
   background
-  maxWidth
   showBorder
   testimonials {
     _key

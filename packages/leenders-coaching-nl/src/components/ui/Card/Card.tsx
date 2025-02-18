@@ -167,6 +167,7 @@ export const Card: FC<CardProps> = ({
       whileInView="visible"
       whileHover={slug ? "hover" : undefined}
       viewport={{ once: true, margin: "-100px" }}
+      className="h-full"
     >
       <Flex className="h-full flex-col @lg:flex-row">
         {image && (
@@ -183,9 +184,9 @@ export const Card: FC<CardProps> = ({
           </Box>
         )}
 
-        <Box className="flex-1 p-4 @md:p-8">
+        <Box className="flex-1 p-4 @md:p-8 h-full">
           <Flex direction="column" className="h-full">
-            <motion.div variants={childVariants}>
+            <motion.div variants={childVariants} className="flex flex-col h-full">
               {featured && (
                 <Box className="relative mb-6">
                   <Text variant="card-meta" weight="medium" className="mb-2">
@@ -238,7 +239,7 @@ export const Card: FC<CardProps> = ({
                 </Box>
               )}
 
-              {children && <Box className="py-6">{children}</Box>}
+              {children && <Box className="py-6 flex-1">{children}</Box>}
             </motion.div>
 
             {slug && (

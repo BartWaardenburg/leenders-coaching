@@ -29,12 +29,29 @@ const borderStyles: Record<PastelColor, string> = {
   teal: 'border-pastel-teal-dark dark:border-pastel-teal',
 };
 
+type MaxWidth = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl';
+
+const maxWidthStyles: Record<MaxWidth, string> = {
+  sm: 'max-w-sm',
+  md: 'max-w-md',
+  lg: 'max-w-lg',
+  xl: 'max-w-xl',
+  '2xl': 'max-w-2xl',
+  '3xl': 'max-w-3xl',
+  '4xl': 'max-w-4xl',
+  '5xl': 'max-w-5xl',
+  '6xl': 'max-w-6xl',
+  '7xl': 'max-w-7xl',
+};
+
 type SectionProps = {
   children: React.ReactNode;
   background?: PastelColor;
   border?: boolean;
   /** Whether to disable the default padding */
   noPadding?: boolean;
+  /** Maximum width constraint of the section */
+  maxWidth?: MaxWidth;
 } & ComponentPropsWithoutRef<'section'>;
 
 /**
@@ -45,6 +62,7 @@ export const Section = ({
   background,
   border = false,
   noPadding = false,
+  maxWidth,
   className,
   ...props
 }: SectionProps) => {
@@ -52,7 +70,7 @@ export const Section = ({
     <Box
       as="section"
       className={twMerge(
-        !noPadding && 'py-12',
+        !noPadding && 'py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24',
         'transition-theme bg-background',
         background && backgroundStyles[background],
         border && background && ['border-y', borderStyles[background]],
@@ -60,7 +78,11 @@ export const Section = ({
       )}
       {...props}
     >
-      {!noPadding ? <Container>{children}</Container> : children}
+      {!noPadding ? (
+        <Container className={maxWidth ? maxWidthStyles[maxWidth] : undefined}>
+          {children}
+        </Container>
+      ) : children}
     </Box>
   );
 };

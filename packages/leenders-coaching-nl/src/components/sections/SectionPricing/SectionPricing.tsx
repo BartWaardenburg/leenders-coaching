@@ -1,5 +1,4 @@
 import { Section } from '@/components/ui/Section'
-import { Container } from '@/components/ui/Container'
 import { Heading } from '@/components/ui/Heading'
 import { Text } from '@/components/ui/Text'
 import { Flex } from '@/components/ui/Flex'
@@ -25,6 +24,7 @@ interface SectionPricingProps {
   description?: string
   packages: PricingPackage[]
   onBooking?: () => void
+  className?: string
 }
 
 /**
@@ -34,47 +34,46 @@ export const SectionPricing = ({
   title,
   description,
   packages,
+  className,
   onBooking
 }: SectionPricingProps) => {
   return (
-    <Section className="py-16 md:py-24">
-      <Container>
-        {(title || description) && (
-          <Flex direction="column" items="center" className="mb-16">
-            {title && (
-              <Heading level="h2" variant="large" className="mb-6" textAlign="center">
-                {title}
-              </Heading>
-            )}
-            {description && (
-              <Text className="text-muted-foreground text-center max-w-2xl">
-                {description}
-              </Text>
-            )}
-          </Flex>
-        )}
-        <Grid
-          columns={{
-            default: 1,
-            '@2xl': 3,
-          }}
-          gap={6}
-        >
-          {packages.map((pkg, index) => (
-            <PricingCard
-              key={index}
-              title={pkg.title}
-              description={pkg.description}
-              price={pkg.price}
-              features={pkg.features}
-              isPopular={pkg.isPopular}
-              ctaLabel={pkg.ctaLabel}
-              variant={pkg.variant}
-              {...(onBooking && { onCtaClick: onBooking })}
-            />
-          ))}
-        </Grid>
-      </Container>
+    <Section className={className}>
+      {(title || description) && (
+        <Flex direction="column" items="center" className="mb-16">
+          {title && (
+            <Heading level="h2" variant="large" className="mb-6" textAlign="center">
+              {title}
+            </Heading>
+          )}
+          {description && (
+            <Text className="text-muted-foreground text-center max-w-2xl">
+              {description}
+            </Text>
+          )}
+        </Flex>
+      )}
+      <Grid
+        columns={{
+          default: 1,
+          '@2xl': 3,
+        }}
+        gap={6}
+      >
+        {packages.map((pkg, index) => (
+          <PricingCard
+            key={index}
+            title={pkg.title}
+            description={pkg.description}
+            price={pkg.price}
+            features={pkg.features}
+            isPopular={pkg.isPopular}
+            ctaLabel={pkg.ctaLabel}
+            variant={pkg.variant}
+            {...(onBooking && { onCtaClick: onBooking })}
+          />
+        ))}
+      </Grid>
     </Section>
   )
 } 

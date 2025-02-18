@@ -22,22 +22,6 @@ const meta = {
       control: 'boolean',
       description: 'Show border under heading',
     },
-    maxWidth: {
-      control: 'select',
-      options: [
-        'sm',
-        'md',
-        'lg',
-        'xl',
-        '2xl',
-        '3xl',
-        '4xl',
-        '5xl',
-        '6xl',
-        '7xl',
-      ],
-      description: 'Maximum width of the content',
-    },
   },
 } satisfies Meta<typeof SectionTestimonial>;
 
@@ -98,9 +82,3 @@ export const WithPurpleBackground: Story = {
   },
 };
 
-export const Narrow: Story = {
-  args: {
-    ...Default.args,
-    maxWidth: 'xl',
-  },
-};

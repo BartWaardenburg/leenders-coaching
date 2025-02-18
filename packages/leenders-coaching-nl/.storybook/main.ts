@@ -1,3 +1,5 @@
+/// <reference types="node" />
+
 import type { StorybookConfig } from '@storybook/nextjs';
 import path from 'path';
 

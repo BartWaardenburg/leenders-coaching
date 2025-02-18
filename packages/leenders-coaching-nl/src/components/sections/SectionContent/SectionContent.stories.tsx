@@ -31,22 +31,6 @@ const meta = {
       control: 'boolean',
       description: 'Whether to show a border around the section',
     },
-    maxWidth: {
-      control: 'select',
-      options: [
-        'sm',
-        'md',
-        'lg',
-        'xl',
-        '2xl',
-        '3xl',
-        '4xl',
-        '5xl',
-        '6xl',
-        '7xl',
-      ],
-      description: 'Maximum width of the content',
-    },
   },
 } satisfies Meta<typeof SectionContent>;
 
@@ -239,12 +223,5 @@ export const WithBackgroundAndBorder: Story = {
 export const NoTitle: Story = {
   args: {
     contentRaw: defaultContent,
-  },
-};
-
-export const CustomMaxWidth: Story = {
-  args: {
-    ...Default.args,
-    maxWidth: 'xl',
   },
 };

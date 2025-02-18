@@ -1,5 +1,4 @@
 import type { ComponentPropsWithoutRef } from 'react';
-import { twMerge } from 'tailwind-merge';
 
 import { Button } from '@/components/ui/Button';
 import { ButtonGroup } from '@/components/ui/ButtonGroup';
@@ -51,11 +50,12 @@ export const SectionHeader = ({
     <Section
       background={background}
       border={border}
-      className={twMerge('py-8 md:py-12', className)}
+      className={className}
+      maxWidth="5xl"
       {...props}
     >
       <Stack gap={8} className="md:items-center">
-        <Box className="w-full md:text-center">
+        <Box className="w-full text-center">
           {(title || description) && (
             <>
               {title && (

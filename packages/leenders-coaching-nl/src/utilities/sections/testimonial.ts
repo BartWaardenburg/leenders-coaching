@@ -21,17 +21,6 @@ export interface SanityTestimonialSection extends Record<string, unknown> {
   background?: PastelColor;
   border?: boolean;
   showBorder?: boolean;
-  maxWidth?:
-    | 'sm'
-    | 'md'
-    | 'lg'
-    | 'xl'
-    | '2xl'
-    | '3xl'
-    | '4xl'
-    | '5xl'
-    | '6xl'
-    | '7xl';
 }
 
 /**
@@ -65,6 +54,32 @@ export const transformTestimonialSection = (
     background: data.background,
     border: data.border,
     showBorder: data.showBorder,
-    maxWidth: data.maxWidth,
+  };
+};
+
+export type Testimonial = {
+  name: string;
+  role?: string;
+  quote: string;
+  image?: string;
+};
+
+type TestimonialSectionData = {
+  title?: string;
+  description?: string;
+  testimonials: Testimonial[];
+  background?: PastelColor;
+  border?: boolean;
+  showBorder?: boolean;
+};
+
+export const mapTestimonialSection = (data: TestimonialSectionData) => {
+  return {
+    title: data.title,
+    description: data.description,
+    testimonials: data.testimonials,
+    background: data.background,
+    border: data.border,
+    showBorder: data.showBorder,
   };
 };

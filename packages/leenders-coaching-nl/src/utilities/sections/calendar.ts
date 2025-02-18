@@ -14,17 +14,6 @@ export interface SanityCalendarSection extends Record<string, unknown> {
   background?: PastelColor;
   border?: boolean;
   showBorder?: boolean;
-  maxWidth?:
-    | 'sm'
-    | 'md'
-    | 'lg'
-    | 'xl'
-    | '2xl'
-    | '3xl'
-    | '4xl'
-    | '5xl'
-    | '6xl'
-    | '7xl';
 }
 
 /**
@@ -54,6 +43,27 @@ export const transformCalendarSection = (
     background: data.background,
     border: data.border,
     showBorder: data.showBorder,
-    maxWidth: data.maxWidth,
+  };
+};
+
+type CalendarSectionData = {
+  title?: string;
+  description?: string;
+  showBorder?: boolean;
+  background?: PastelColor;
+  border?: boolean;
+  initialDate?: string;
+  disabledDates?: DisabledDates;
+};
+
+export const mapCalendarSection = (data: CalendarSectionData) => {
+  return {
+    title: data.title,
+    description: data.description,
+    showBorder: data.showBorder,
+    background: data.background,
+    border: data.border,
+    initialDate: data.initialDate ? new Date(data.initialDate) : undefined,
+    disabledDates: data.disabledDates,
   };
 };
