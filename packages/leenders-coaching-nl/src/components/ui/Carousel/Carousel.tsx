@@ -102,7 +102,7 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
   );
 
   return (
-    <Box className={twMerge('relative group', className)}>
+    <Box className={twMerge('relative group px-4 sm:px-8', className)}>
       {/* Main carousel area */}
       <Box className="relative">
         <Flex className="relative items-center">
@@ -113,12 +113,15 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
               onClick={() => paginate(-1)}
               disabled={page === 0}
               variant="ghost"
+              shape="square"
+              bordered
               className={twMerge(
-                'opacity-0 group-hover:opacity-100 transition-opacity duration-200',
+                'h-10 w-10 min-w-[2.5rem] p-0',
+                'disabled:opacity-0',
                 page === 0 && 'hidden',
               )}
             >
-              <IoChevronBack className="h-6 w-6" />
+              <IoChevronBack className="h-4 w-4" />
             </IconButton>
           </Box>
 
@@ -167,12 +170,15 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
               onClick={() => paginate(1)}
               disabled={page === slides.length - 1}
               variant="ghost"
+              shape="square"
+              bordered
               className={twMerge(
-                'opacity-0 group-hover:opacity-100 transition-opacity duration-200',
+                'h-10 w-10 min-w-[2.5rem] p-0',
+                'disabled:opacity-0',
                 page === slides.length - 1 && 'hidden',
               )}
             >
-              <IoChevronForward className="h-6 w-6" />
+              <IoChevronForward className="h-4 w-4" />
             </IconButton>
           </Box>
         </Flex>
@@ -184,12 +190,13 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
               key={index}
               onClick={() => goToSlide(index)}
               className={twMerge(
-                'w-2 h-2 rounded-full',
+                'w-2 h-2 rounded-full transition-colors duration-200',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-                'focus-visible:ring-current focus-visible:ring-offset-inherit',
+                'focus-visible:ring-pastel-blue dark:focus-visible:ring-pastel-blue-dark',
+                'focus-visible:ring-offset-background',
                 index === page
-                  ? 'bg-foreground'
-                  : 'bg-foreground/30 hover:bg-foreground/50',
+                  ? 'bg-pastel-blue dark:bg-pastel-blue-dark'
+                  : 'bg-pastel-blue/30 dark:bg-pastel-blue-dark/30 hover:bg-pastel-blue/50 dark:hover:bg-pastel-blue-dark/50',
               )}
               whileHover={{ scale: 1.2 }}
               whileTap={{ scale: 0.9 }}
