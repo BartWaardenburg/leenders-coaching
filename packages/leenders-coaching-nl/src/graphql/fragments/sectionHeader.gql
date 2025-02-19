@@ -8,7 +8,7 @@ fragment SectionHeaderFields on SectionHeader {
   displayTitle
   subtitle
   background
-  showBorder
+
   image {
     ...ImageFields
   }

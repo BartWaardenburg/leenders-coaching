@@ -18,10 +18,6 @@ const meta = {
       control: 'object',
       description: 'Portable Text content blocks',
     },
-    showBorder: {
-      control: 'boolean',
-      description: 'Whether to show a border under the title',
-    },
     background: {
       control: 'select',
       options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
@@ -195,13 +191,6 @@ export const Default: Story = {
   args: {
     title: 'Section Title',
     contentRaw: defaultContent,
-  },
-};
-
-export const WithBorder: Story = {
-  args: {
-    ...Default.args,
-    showBorder: true,
   },
 };
 

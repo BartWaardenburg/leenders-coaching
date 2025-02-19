@@ -18,10 +18,6 @@ const meta = {
       control: 'boolean',
       description: 'Show top and bottom borders',
     },
-    showBorder: {
-      control: 'boolean',
-      description: 'Show border under heading',
-    },
   },
 } satisfies Meta<typeof SectionFAQ>;
 
@@ -127,7 +123,6 @@ export const WithBorder: Story = {
   args: {
     ...Default.args,
     border: true,
-    showBorder: true,
   },
 };
 
@@ -136,6 +131,5 @@ export const WithPurpleBackground: Story = {
     ...Default.args,
     background: 'purple',
     border: true,
-    showBorder: true,
   },
 };

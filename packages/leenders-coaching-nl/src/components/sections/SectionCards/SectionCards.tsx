@@ -39,7 +39,7 @@ export const SectionCards = ({
         {(title || description) && (
           <Stack space={4} className="text-center">
             {title && (
-              <Heading level="h2" variant="large">
+              <Heading level="h2" variant="large" showBorder borderColor={background} textAlign="center">
                 {title}
               </Heading>
             )}

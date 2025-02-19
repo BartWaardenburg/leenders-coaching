@@ -6,7 +6,7 @@ fragment SectionFAQFields on SectionFAQ {
   displayTitle
   subtitle
   background
-  showBorder
+
   questions {
     _key
     question

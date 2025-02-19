@@ -13,7 +13,6 @@ export interface SanityCalendarSection extends Record<string, unknown> {
   disabledDates?: DisabledDates;
   background?: PastelColor;
   border?: boolean;
-  showBorder?: boolean;
 }
 
 /**
@@ -42,14 +41,13 @@ export const transformCalendarSection = (
     disabledDates: data.disabledDates,
     background: data.background,
     border: data.border,
-    showBorder: data.showBorder,
   };
 };
 
 type CalendarSectionData = {
   title?: string;
   description?: string;
-  showBorder?: boolean;
+
   background?: PastelColor;
   border?: boolean;
   initialDate?: string;
@@ -60,7 +58,7 @@ export const mapCalendarSection = (data: CalendarSectionData) => {
   return {
     title: data.title,
     description: data.description,
-    showBorder: data.showBorder,
+
     background: data.background,
     border: data.border,
     initialDate: data.initialDate ? new Date(data.initialDate) : undefined,

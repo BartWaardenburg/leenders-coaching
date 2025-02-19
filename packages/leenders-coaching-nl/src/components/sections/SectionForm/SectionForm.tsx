@@ -23,7 +23,6 @@ type SectionFormProps = {
   description?: string;
   submitLabel?: string;
   onSubmit?: (data: ContactFormData) => Promise<void>;
-  showBorder?: boolean;
   background?: PastelColor;
   border?: boolean;
 } & Omit<ComponentPropsWithoutRef<'section'>, 'onSubmit'>;
@@ -36,7 +35,6 @@ export const SectionForm = ({
   description,
   submitLabel = 'Verstuur bericht',
   onSubmit,
-  showBorder = false,
   background,
   border = false,
   className,
@@ -69,8 +67,9 @@ export const SectionForm = ({
                 <Heading
                   level="h2"
                   variant="large"
-                  showBorder={showBorder}
+                  showBorder
                   borderColor={background}
+                  textAlign="center"
                 >
                   {title}
                 </Heading>

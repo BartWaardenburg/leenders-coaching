@@ -25,8 +25,6 @@ type SectionCalendarProps = {
   background?: PastelColor;
   /** Whether to show a border */
   border?: boolean;
-  /** Whether to show a border under the title */
-  showBorder?: boolean;
 } & ComponentPropsWithoutRef<'section'>;
 
 /**
@@ -41,7 +39,6 @@ export const SectionCalendar = ({
   disabledDates,
   background,
   border = false,
-  showBorder = false,
   className,
   ...props
 }: SectionCalendarProps) => {
@@ -61,8 +58,9 @@ export const SectionCalendar = ({
                 <Heading
                   level="h2"
                   variant="large"
-                  showBorder={showBorder}
+                  showBorder
                   borderColor={background}
+                  textAlign="center"
                 >
                   {title}
                 </Heading>

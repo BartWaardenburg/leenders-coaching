@@ -11,7 +11,6 @@ export interface SanityContentSection extends Record<string, unknown> {
   contentRaw?: PortableTextBlock[];
   background?: PastelColor;
   border?: boolean;
-  showBorder?: boolean;
 }
 
 /**
@@ -38,13 +37,12 @@ export const transformContentSection = (
     contentRaw: data.contentRaw,
     background: data.background,
     border: data.border,
-    showBorder: data.showBorder,
   };
 };
 
 type ContentSectionData = {
   title?: string;
-  showBorder?: boolean;
+
   background?: PastelColor;
   border?: boolean;
   contentRaw?: PortableTextBlock[];
@@ -53,7 +51,7 @@ type ContentSectionData = {
 export const mapContentSection = (data: ContentSectionData) => {
   return {
     title: data.title,
-    showBorder: data.showBorder,
+
     background: data.background,
     border: data.border,
     contentRaw: data.contentRaw,

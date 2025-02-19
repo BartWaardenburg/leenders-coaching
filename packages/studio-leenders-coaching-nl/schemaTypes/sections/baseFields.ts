@@ -35,10 +35,4 @@ export const baseSectionFields = [
       ],
     },
   },
-  {
-    name: 'showBorder',
-    title: 'Show Border Under Title',
-    type: 'boolean',
-    initialValue: false,
-  },
 ];

@@ -9,7 +9,7 @@ export interface SanityHeaderSection extends Record<string, unknown> {
   displayTitle?: string;
   subtitle?: string;
   background?: PastelColor;
-  showBorder?: boolean;
+
   cta?: {
     text: string;
     link: string;
@@ -48,7 +48,7 @@ export const transformHeaderSection = (
     title: data.displayTitle || undefined,
     description: data.subtitle,
     background: data.background,
-    showBorder: data.showBorder,
+
     primaryCta: data.cta
       ? {
           href: data.cta.link,

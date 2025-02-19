@@ -6,7 +6,7 @@ fragment SectionFormFields on SectionForm {
   displayTitle
   subtitle
   background
-  showBorder
+
   form {
     emailTo
     emailSubject

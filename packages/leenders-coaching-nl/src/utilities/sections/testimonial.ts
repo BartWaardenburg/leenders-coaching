@@ -20,7 +20,6 @@ export interface SanityTestimonialSection extends Record<string, unknown> {
   }>;
   background?: PastelColor;
   border?: boolean;
-  showBorder?: boolean;
 }
 
 /**
@@ -53,7 +52,6 @@ export const transformTestimonialSection = (
     })),
     background: data.background,
     border: data.border,
-    showBorder: data.showBorder,
   };
 };
 
@@ -70,7 +68,6 @@ type TestimonialSectionData = {
   testimonials: Testimonial[];
   background?: PastelColor;
   border?: boolean;
-  showBorder?: boolean;
 };
 
 export const mapTestimonialSection = (data: TestimonialSectionData) => {
@@ -80,6 +77,5 @@ export const mapTestimonialSection = (data: TestimonialSectionData) => {
     testimonials: data.testimonials,
     background: data.background,
     border: data.border,
-    showBorder: data.showBorder,
   };
 };

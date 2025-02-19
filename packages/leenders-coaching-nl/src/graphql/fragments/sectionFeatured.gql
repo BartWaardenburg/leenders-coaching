@@ -8,7 +8,7 @@ fragment SectionFeaturedFields on SectionFeatured {
   displayTitle
   subtitle
   background
-  showBorder
+
   items {
     _key
     title

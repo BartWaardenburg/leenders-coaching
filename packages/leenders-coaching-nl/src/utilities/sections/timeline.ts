@@ -12,7 +12,6 @@ export interface SanityTimelineSection extends Record<string, unknown> {
   steps: TimelineStep[];
   background?: PastelColor;
   border?: boolean;
-  showBorder?: boolean;
 }
 
 /**
@@ -40,7 +39,6 @@ export const transformTimelineSection = (
     steps: data.steps,
     background: data.background,
     border: data.border,
-    showBorder: data.showBorder,
   };
 };
 
@@ -50,7 +48,6 @@ type TimelineSectionData = {
   steps: TimelineStep[];
   background?: PastelColor;
   border?: boolean;
-  showBorder?: boolean;
 };
 
 export const mapTimelineSection = (data: TimelineSectionData) => {
@@ -60,6 +57,5 @@ export const mapTimelineSection = (data: TimelineSectionData) => {
     steps: data.steps,
     background: data.background,
     border: data.border,
-    showBorder: data.showBorder,
   };
 };

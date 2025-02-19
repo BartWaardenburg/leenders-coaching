@@ -18877,18 +18877,6 @@
             "deprecationReason": null
           },
           {
-            "name": "showBorder",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "showFeaturedOnly",
             "description": null,
             "args": [],
@@ -19081,18 +19069,6 @@
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "FloatFilter",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "showBorder",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "BooleanFilter",
               "ofType": null
             },
             "defaultValue": null,
@@ -19347,18 +19323,6 @@
             "deprecationReason": null
           },
           {
-            "name": "showBorder",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "SortOrder",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "showFeaturedOnly",
             "description": null,
             "type": {
@@ -19532,18 +19496,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "CalendarSettings",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "showBorder",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
               "ofType": null
             },
             "isDeprecated": false,
@@ -19725,18 +19677,6 @@
             "deprecationReason": null
           },
           {
-            "name": "showBorder",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "BooleanFilter",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "subtitle",
             "description": null,
             "type": {
@@ -19886,18 +19826,6 @@
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "CalendarSettingsSorting",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "showBorder",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "SortOrder",
               "ofType": null
             },
             "defaultValue": null,
@@ -20058,18 +19986,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "showBorder",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
               "ofType": null
             },
             "isDeprecated": false,
@@ -20239,18 +20155,6 @@
             "deprecationReason": null
           },
           {
-            "name": "showBorder",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "BooleanFilter",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "subtitle",
             "description": null,
             "type": {
@@ -20384,18 +20288,6 @@
           },
           {
             "name": "displayTitle",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "SortOrder",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "showBorder",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -20544,18 +20436,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "showBorder",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
               "ofType": null
             },
             "isDeprecated": false,
@@ -20713,18 +20593,6 @@
             "deprecationReason": null
           },
           {
-            "name": "showBorder",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "BooleanFilter",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "subtitle",
             "description": null,
             "type": {
@@ -20846,18 +20714,6 @@
           },
           {
             "name": "displayTitle",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "SortOrder",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "showBorder",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -21028,18 +20884,6 @@
             "deprecationReason": null
           },
           {
-            "name": "showBorder",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "subtitle",
             "description": null,
             "args": [],
@@ -21203,18 +21047,6 @@
             "deprecationReason": null
           },
           {
-            "name": "showBorder",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "BooleanFilter",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "subtitle",
             "description": null,
             "type": {
@@ -21348,18 +21180,6 @@
           },
           {
             "name": "displayTitle",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "SortOrder",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "showBorder",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -21530,18 +21350,6 @@
             "deprecationReason": null
           },
           {
-            "name": "showBorder",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "subtitle",
             "description": null,
             "args": [],
@@ -21705,18 +21513,6 @@
             "deprecationReason": null
           },
           {
-            "name": "showBorder",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "BooleanFilter",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "subtitle",
             "description": null,
             "type": {
@@ -21850,18 +21646,6 @@
           },
           {
             "name": "displayTitle",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "SortOrder",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "showBorder",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -22022,18 +21806,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "FormConfiguration",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "showBorder",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
               "ofType": null
             },
             "isDeprecated": false,
@@ -22215,18 +21987,6 @@
             "deprecationReason": null
           },
           {
-            "name": "showBorder",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "BooleanFilter",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "subtitle",
             "description": null,
             "type": {
@@ -22376,18 +22136,6 @@
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "FormConfigurationSorting",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "showBorder",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "SortOrder",
               "ofType": null
             },
             "defaultValue": null,
@@ -22556,18 +22304,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "Image",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "showBorder",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
               "ofType": null
             },
             "isDeprecated": false,
@@ -22761,18 +22497,6 @@
             "deprecationReason": null
           },
           {
-            "name": "showBorder",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "BooleanFilter",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "subtitle",
             "description": null,
             "type": {
@@ -22941,18 +22665,6 @@
             "deprecationReason": null
           },
           {
-            "name": "showBorder",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "SortOrder",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "subtitle",
             "description": null,
             "type": {
@@ -23107,18 +22819,6 @@
                 "name": "PricingCard",
                 "ofType": null
               }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "showBorder",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -23287,18 +22987,6 @@
             "deprecationReason": null
           },
           {
-            "name": "showBorder",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "BooleanFilter",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "subtitle",
             "description": null,
             "type": {
@@ -23432,18 +23120,6 @@
           },
           {
             "name": "displayTitle",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "SortOrder",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "showBorder",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -23592,18 +23268,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "showBorder",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
               "ofType": null
             },
             "isDeprecated": false,
@@ -23789,18 +23453,6 @@
             "deprecationReason": null
           },
           {
-            "name": "showBorder",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "BooleanFilter",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "subtitle",
             "description": null,
             "type": {
@@ -23934,18 +23586,6 @@
           },
           {
             "name": "displayTitle",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "SortOrder",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "showBorder",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -24116,18 +23756,6 @@
             "deprecationReason": null
           },
           {
-            "name": "showBorder",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "subtitle",
             "description": null,
             "args": [],
@@ -24291,18 +23919,6 @@
             "deprecationReason": null
           },
           {
-            "name": "showBorder",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "BooleanFilter",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "subtitle",
             "description": null,
             "type": {
@@ -24436,18 +24052,6 @@
           },
           {
             "name": "displayTitle",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "SortOrder",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "showBorder",
             "description": null,
             "type": {
               "kind": "ENUM",

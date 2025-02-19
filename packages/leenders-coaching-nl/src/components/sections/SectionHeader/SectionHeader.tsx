@@ -27,7 +27,6 @@ type SectionHeaderProps = {
   description?: string;
   primaryCta?: CallToAction;
   secondaryCta?: CallToAction;
-  showBorder?: boolean;
   border?: boolean;
   background?: PastelColor;
 } & ComponentPropsWithoutRef<'section'>;
@@ -40,7 +39,6 @@ export const SectionHeader = ({
   description,
   primaryCta,
   secondaryCta,
-  showBorder = false,
   border = false,
   background,
   className,
@@ -62,8 +60,9 @@ export const SectionHeader = ({
                 <Heading
                   level="h2"
                   variant="large"
-                  showBorder={showBorder}
+                  showBorder
                   borderColor={background}
+                  textAlign="center"
                 >
                   {title}
                 </Heading>

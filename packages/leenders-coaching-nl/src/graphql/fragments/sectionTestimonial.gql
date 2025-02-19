@@ -8,7 +8,7 @@ fragment SectionTestimonialFields on SectionTestimonial {
   displayTitle
   subtitle
   background
-  showBorder
+
   testimonials {
     _key
     name

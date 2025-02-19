@@ -2235,7 +2235,6 @@ export type SectionBlog = Document & {
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
   postsToShow?: Maybe<Scalars['Float']['output']>;
-  showBorder?: Maybe<Scalars['Boolean']['output']>;
   showFeaturedOnly?: Maybe<Scalars['Boolean']['output']>;
   sortOrder?: Maybe<Scalars['String']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
@@ -2256,7 +2255,6 @@ export type SectionBlogFilter = {
   description?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
   postsToShow?: InputMaybe<FloatFilter>;
-  showBorder?: InputMaybe<BooleanFilter>;
   showFeaturedOnly?: InputMaybe<BooleanFilter>;
   sortOrder?: InputMaybe<StringFilter>;
   subtitle?: InputMaybe<StringFilter>;
@@ -2288,7 +2286,6 @@ export type SectionBlogSorting = {
   description?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
   postsToShow?: InputMaybe<SortOrder>;
-  showBorder?: InputMaybe<SortOrder>;
   showFeaturedOnly?: InputMaybe<SortOrder>;
   sortOrder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
@@ -2313,7 +2310,6 @@ export type SectionCalendar = Document & {
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
   settings?: Maybe<CalendarSettings>;
-  showBorder?: Maybe<Scalars['Boolean']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
   /** Title for internal reference only */
   title?: Maybe<Scalars['String']['output']>;
@@ -2332,7 +2328,6 @@ export type SectionCalendarFilter = {
   description?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
   settings?: InputMaybe<CalendarSettingsFilter>;
-  showBorder?: InputMaybe<BooleanFilter>;
   subtitle?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
 };
@@ -2348,7 +2343,6 @@ export type SectionCalendarSorting = {
   description?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
   settings?: InputMaybe<CalendarSettingsSorting>;
-  showBorder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
 };
@@ -2371,7 +2365,6 @@ export type SectionCards = Document & {
   description?: Maybe<Scalars['String']['output']>;
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
-  showBorder?: Maybe<Scalars['Boolean']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
   /** Title for internal reference only */
   title?: Maybe<Scalars['String']['output']>;
@@ -2389,7 +2382,6 @@ export type SectionCardsFilter = {
   background?: InputMaybe<StringFilter>;
   description?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
-  showBorder?: InputMaybe<BooleanFilter>;
   subtitle?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
 };
@@ -2404,7 +2396,6 @@ export type SectionCardsSorting = {
   background?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
-  showBorder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
 };
@@ -2426,7 +2417,6 @@ export type SectionContent = Document & {
   contentRaw?: Maybe<Scalars['JSON']['output']>;
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
-  showBorder?: Maybe<Scalars['Boolean']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
   /** Title for internal reference only */
   title?: Maybe<Scalars['String']['output']>;
@@ -2443,7 +2433,6 @@ export type SectionContentFilter = {
   _updatedAt?: InputMaybe<DatetimeFilter>;
   background?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
-  showBorder?: InputMaybe<BooleanFilter>;
   subtitle?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
 };
@@ -2457,7 +2446,6 @@ export type SectionContentSorting = {
   _updatedAt?: InputMaybe<SortOrder>;
   background?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
-  showBorder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
 };
@@ -2480,7 +2468,6 @@ export type SectionFaq = Document & {
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
   questions?: Maybe<Array<Maybe<FaqItem>>>;
-  showBorder?: Maybe<Scalars['Boolean']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
   /** Title for internal reference only */
   title?: Maybe<Scalars['String']['output']>;
@@ -2498,7 +2485,6 @@ export type SectionFaqFilter = {
   background?: InputMaybe<StringFilter>;
   description?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
-  showBorder?: InputMaybe<BooleanFilter>;
   subtitle?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
 };
@@ -2513,7 +2499,6 @@ export type SectionFaqSorting = {
   background?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
-  showBorder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
 };
@@ -2536,7 +2521,6 @@ export type SectionFeatured = Document & {
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
   items?: Maybe<Array<Maybe<FeatureItem>>>;
-  showBorder?: Maybe<Scalars['Boolean']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
   /** Title for internal reference only */
   title?: Maybe<Scalars['String']['output']>;
@@ -2554,7 +2538,6 @@ export type SectionFeaturedFilter = {
   background?: InputMaybe<StringFilter>;
   description?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
-  showBorder?: InputMaybe<BooleanFilter>;
   subtitle?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
 };
@@ -2569,7 +2552,6 @@ export type SectionFeaturedSorting = {
   background?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
-  showBorder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
 };
@@ -2592,7 +2574,6 @@ export type SectionForm = Document & {
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
   form?: Maybe<FormConfiguration>;
-  showBorder?: Maybe<Scalars['Boolean']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
   /** Title for internal reference only */
   title?: Maybe<Scalars['String']['output']>;
@@ -2611,7 +2592,6 @@ export type SectionFormFilter = {
   description?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
   form?: InputMaybe<FormConfigurationFilter>;
-  showBorder?: InputMaybe<BooleanFilter>;
   subtitle?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
 };
@@ -2627,7 +2607,6 @@ export type SectionFormSorting = {
   description?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
   form?: InputMaybe<FormConfigurationSorting>;
-  showBorder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
 };
@@ -2651,7 +2630,6 @@ export type SectionHeader = Document & {
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
   image?: Maybe<Image>;
-  showBorder?: Maybe<Scalars['Boolean']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
   /** Title for internal reference only */
   title?: Maybe<Scalars['String']['output']>;
@@ -2671,7 +2649,6 @@ export type SectionHeaderFilter = {
   description?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
   image?: InputMaybe<ImageFilter>;
-  showBorder?: InputMaybe<BooleanFilter>;
   subtitle?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
 };
@@ -2688,7 +2665,6 @@ export type SectionHeaderSorting = {
   description?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
   image?: InputMaybe<ImageSorting>;
-  showBorder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
 };
@@ -2711,7 +2687,6 @@ export type SectionPricing = Document & {
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
   pricingCards?: Maybe<Array<Maybe<PricingCard>>>;
-  showBorder?: Maybe<Scalars['Boolean']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
   /** Title for internal reference only */
   title?: Maybe<Scalars['String']['output']>;
@@ -2729,7 +2704,6 @@ export type SectionPricingFilter = {
   background?: InputMaybe<StringFilter>;
   description?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
-  showBorder?: InputMaybe<BooleanFilter>;
   subtitle?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
 };
@@ -2744,7 +2718,6 @@ export type SectionPricingSorting = {
   background?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
-  showBorder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
 };
@@ -2766,7 +2739,6 @@ export type SectionTestimonial = Document & {
   description?: Maybe<Scalars['String']['output']>;
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
-  showBorder?: Maybe<Scalars['Boolean']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
   testimonials?: Maybe<Array<Maybe<Testimonial>>>;
   /** Title for internal reference only */
@@ -2785,7 +2757,6 @@ export type SectionTestimonialFilter = {
   background?: InputMaybe<StringFilter>;
   description?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
-  showBorder?: InputMaybe<BooleanFilter>;
   subtitle?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
 };
@@ -2800,7 +2771,6 @@ export type SectionTestimonialSorting = {
   background?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
-  showBorder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
 };
@@ -2823,7 +2793,6 @@ export type SectionTimeline = Document & {
   /** Title that will be displayed on the website (optional) */
   displayTitle?: Maybe<Scalars['String']['output']>;
   events?: Maybe<Array<Maybe<TimelineEvent>>>;
-  showBorder?: Maybe<Scalars['Boolean']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
   /** Title for internal reference only */
   title?: Maybe<Scalars['String']['output']>;
@@ -2841,7 +2810,6 @@ export type SectionTimelineFilter = {
   background?: InputMaybe<StringFilter>;
   description?: InputMaybe<StringFilter>;
   displayTitle?: InputMaybe<StringFilter>;
-  showBorder?: InputMaybe<BooleanFilter>;
   subtitle?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
 };
@@ -2856,7 +2824,6 @@ export type SectionTimelineSorting = {
   background?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   displayTitle?: InputMaybe<SortOrder>;
-  showBorder?: InputMaybe<SortOrder>;
   subtitle?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
 };
@@ -3406,7 +3373,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
         sortOrder?: string;
@@ -3420,7 +3386,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
           availableDays?: Array<string>;
@@ -3441,7 +3406,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
           _key?: string;
@@ -3492,7 +3456,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         contentRaw?: any;
       }
     | {
@@ -3504,7 +3467,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
           _key?: string;
@@ -3521,7 +3483,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
           _key?: string;
@@ -3571,7 +3532,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
           emailTo?: string;
@@ -3601,7 +3561,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         image?: {
           __typename?: 'Image';
           asset?: {
@@ -3651,7 +3610,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
           _key?: string;
@@ -3678,7 +3636,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
           _key?: string;
@@ -3729,7 +3686,6 @@ type PageFields_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
           _key?: string;
@@ -3818,7 +3774,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
         sortOrder?: string;
@@ -3832,7 +3787,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
           availableDays?: Array<string>;
@@ -3853,7 +3807,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
           _key?: string;
@@ -3904,7 +3857,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         contentRaw?: any;
       }
     | {
@@ -3916,7 +3868,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
           _key?: string;
@@ -3933,7 +3884,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
           _key?: string;
@@ -3983,7 +3933,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
           emailTo?: string;
@@ -4013,7 +3962,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         image?: {
           __typename?: 'Image';
           asset?: {
@@ -4063,7 +4011,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
           _key?: string;
@@ -4090,7 +4037,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
           _key?: string;
@@ -4141,7 +4087,6 @@ type PageFields_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
           _key?: string;
@@ -4230,7 +4175,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
         sortOrder?: string;
@@ -4244,7 +4188,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
           availableDays?: Array<string>;
@@ -4265,7 +4208,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
           _key?: string;
@@ -4316,7 +4258,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         contentRaw?: any;
       }
     | {
@@ -4328,7 +4269,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
           _key?: string;
@@ -4345,7 +4285,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
           _key?: string;
@@ -4395,7 +4334,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
           emailTo?: string;
@@ -4425,7 +4363,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         image?: {
           __typename?: 'Image';
           asset?: {
@@ -4475,7 +4412,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
           _key?: string;
@@ -4502,7 +4438,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
           _key?: string;
@@ -4553,7 +4488,6 @@ type PageFields_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
           _key?: string;
@@ -4642,7 +4576,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
         sortOrder?: string;
@@ -4656,7 +4589,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
           availableDays?: Array<string>;
@@ -4677,7 +4609,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
           _key?: string;
@@ -4728,7 +4659,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         contentRaw?: any;
       }
     | {
@@ -4740,7 +4670,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
           _key?: string;
@@ -4757,7 +4686,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
           _key?: string;
@@ -4807,7 +4735,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
           emailTo?: string;
@@ -4837,7 +4764,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         image?: {
           __typename?: 'Image';
           asset?: {
@@ -4887,7 +4813,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
           _key?: string;
@@ -4914,7 +4839,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
           _key?: string;
@@ -4965,7 +4889,6 @@ type PageFields_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
           _key?: string;
@@ -5063,7 +4986,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
         sortOrder?: string;
@@ -5077,7 +4999,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
           availableDays?: Array<string>;
@@ -5098,7 +5019,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
           _key?: string;
@@ -5149,7 +5069,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         contentRaw?: any;
       }
     | {
@@ -5161,7 +5080,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
           _key?: string;
@@ -5178,7 +5096,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
           _key?: string;
@@ -5228,7 +5145,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
           emailTo?: string;
@@ -5258,7 +5174,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         image?: {
           __typename?: 'Image';
           asset?: {
@@ -5308,7 +5223,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
           _key?: string;
@@ -5335,7 +5249,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
           _key?: string;
@@ -5386,7 +5299,6 @@ type PageFields_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
           _key?: string;
@@ -5493,7 +5405,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
         sortOrder?: string;
@@ -5507,7 +5418,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
           availableDays?: Array<string>;
@@ -5528,7 +5438,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
           _key?: string;
@@ -5579,7 +5488,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         contentRaw?: any;
       }
     | {
@@ -5591,7 +5499,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
           _key?: string;
@@ -5608,7 +5515,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
           _key?: string;
@@ -5658,7 +5564,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
           emailTo?: string;
@@ -5688,7 +5593,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         image?: {
           __typename?: 'Image';
           asset?: {
@@ -5738,7 +5642,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
           _key?: string;
@@ -5765,7 +5668,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
           _key?: string;
@@ -5816,7 +5718,6 @@ type PageFields_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
           _key?: string;
@@ -6051,7 +5952,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
         sortOrder?: string;
@@ -6065,7 +5965,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
           availableDays?: Array<string>;
@@ -6086,7 +5985,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
           _key?: string;
@@ -6137,7 +6035,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         contentRaw?: any;
       }
     | {
@@ -6149,7 +6046,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
           _key?: string;
@@ -6166,7 +6062,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
           _key?: string;
@@ -6216,7 +6111,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
           emailTo?: string;
@@ -6246,7 +6140,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         image?: {
           __typename?: 'Image';
           asset?: {
@@ -6296,7 +6189,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
           _key?: string;
@@ -6323,7 +6215,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
           _key?: string;
@@ -6374,7 +6265,6 @@ type CommonPageContent_AboutPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
           _key?: string;
@@ -6458,7 +6348,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
         sortOrder?: string;
@@ -6472,7 +6361,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
           availableDays?: Array<string>;
@@ -6493,7 +6381,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
           _key?: string;
@@ -6544,7 +6431,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         contentRaw?: any;
       }
     | {
@@ -6556,7 +6442,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
           _key?: string;
@@ -6573,7 +6458,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
           _key?: string;
@@ -6623,7 +6507,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
           emailTo?: string;
@@ -6653,7 +6536,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         image?: {
           __typename?: 'Image';
           asset?: {
@@ -6703,7 +6585,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
           _key?: string;
@@ -6730,7 +6611,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
           _key?: string;
@@ -6781,7 +6661,6 @@ type CommonPageContent_ApproachPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
           _key?: string;
@@ -6865,7 +6744,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
         sortOrder?: string;
@@ -6879,7 +6757,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
           availableDays?: Array<string>;
@@ -6900,7 +6777,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
           _key?: string;
@@ -6951,7 +6827,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         contentRaw?: any;
       }
     | {
@@ -6963,7 +6838,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
           _key?: string;
@@ -6980,7 +6854,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
           _key?: string;
@@ -7030,7 +6903,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
           emailTo?: string;
@@ -7060,7 +6932,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         image?: {
           __typename?: 'Image';
           asset?: {
@@ -7110,7 +6981,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
           _key?: string;
@@ -7137,7 +7007,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
           _key?: string;
@@ -7188,7 +7057,6 @@ type CommonPageContent_BlogPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
           _key?: string;
@@ -7272,7 +7140,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
         sortOrder?: string;
@@ -7286,7 +7153,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
           availableDays?: Array<string>;
@@ -7307,7 +7173,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
           _key?: string;
@@ -7358,7 +7223,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         contentRaw?: any;
       }
     | {
@@ -7370,7 +7234,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
           _key?: string;
@@ -7387,7 +7250,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
           _key?: string;
@@ -7437,7 +7299,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
           emailTo?: string;
@@ -7467,7 +7328,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         image?: {
           __typename?: 'Image';
           asset?: {
@@ -7517,7 +7377,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
           _key?: string;
@@ -7544,7 +7403,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
           _key?: string;
@@ -7595,7 +7453,6 @@ type CommonPageContent_CoachingPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
           _key?: string;
@@ -7683,7 +7540,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
         sortOrder?: string;
@@ -7697,7 +7553,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
           availableDays?: Array<string>;
@@ -7718,7 +7573,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
           _key?: string;
@@ -7769,7 +7623,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         contentRaw?: any;
       }
     | {
@@ -7781,7 +7634,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
           _key?: string;
@@ -7798,7 +7650,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
           _key?: string;
@@ -7848,7 +7699,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
           emailTo?: string;
@@ -7878,7 +7728,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         image?: {
           __typename?: 'Image';
           asset?: {
@@ -7928,7 +7777,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
           _key?: string;
@@ -7955,7 +7803,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
           _key?: string;
@@ -8006,7 +7853,6 @@ type CommonPageContent_ContactPage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
           _key?: string;
@@ -8094,7 +7940,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         postsToShow?: number;
         showFeaturedOnly?: boolean;
         sortOrder?: string;
@@ -8108,7 +7953,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         settings?: {
           __typename?: 'CalendarSettings';
           availableDays?: Array<string>;
@@ -8129,7 +7973,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         cards?: Array<{
           __typename?: 'Card';
           _key?: string;
@@ -8180,7 +8023,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         contentRaw?: any;
       }
     | {
@@ -8192,7 +8034,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         questions?: Array<{
           __typename?: 'FaqItem';
           _key?: string;
@@ -8209,7 +8050,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         items?: Array<{
           __typename?: 'FeatureItem';
           _key?: string;
@@ -8259,7 +8099,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         form?: {
           __typename?: 'FormConfiguration';
           emailTo?: string;
@@ -8289,7 +8128,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         image?: {
           __typename?: 'Image';
           asset?: {
@@ -8339,7 +8177,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         pricingCards?: Array<{
           __typename?: 'PricingCard';
           _key?: string;
@@ -8366,7 +8203,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         testimonials?: Array<{
           __typename?: 'Testimonial';
           _key?: string;
@@ -8417,7 +8253,6 @@ type CommonPageContent_HomePage_Fragment = {
         displayTitle?: string;
         subtitle?: string;
         background?: string;
-        showBorder?: boolean;
         events?: Array<{
           __typename?: 'TimelineEvent';
           _key?: string;
@@ -8615,7 +8450,6 @@ export type SectionBlogFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   postsToShow?: number;
   showFeaturedOnly?: boolean;
   sortOrder?: string;
@@ -8630,7 +8464,6 @@ export type SectionCalendarFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   settings?: {
     __typename?: 'CalendarSettings';
     availableDays?: Array<string>;
@@ -8652,7 +8485,6 @@ export type SectionCardsFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   cards?: Array<{
     __typename?: 'Card';
     _key?: string;
@@ -8704,7 +8536,6 @@ export type SectionContentFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   contentRaw?: any;
 };
 
@@ -8717,7 +8548,6 @@ export type SectionFaqFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   questions?: Array<{
     __typename?: 'FaqItem';
     _key?: string;
@@ -8735,7 +8565,6 @@ export type SectionFeaturedFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   items?: Array<{
     __typename?: 'FeatureItem';
     _key?: string;
@@ -8786,7 +8615,6 @@ type CommonSectionFields_SectionBlog_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   postsToShow?: number;
   showFeaturedOnly?: boolean;
   sortOrder?: string;
@@ -8801,7 +8629,6 @@ type CommonSectionFields_SectionCalendar_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   settings?: {
     __typename?: 'CalendarSettings';
     availableDays?: Array<string>;
@@ -8823,7 +8650,6 @@ type CommonSectionFields_SectionCards_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   cards?: Array<{
     __typename?: 'Card';
     _key?: string;
@@ -8875,7 +8701,6 @@ type CommonSectionFields_SectionContent_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   contentRaw?: any;
 };
 
@@ -8888,7 +8713,6 @@ type CommonSectionFields_SectionFaq_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   questions?: Array<{
     __typename?: 'FaqItem';
     _key?: string;
@@ -8906,7 +8730,6 @@ type CommonSectionFields_SectionFeatured_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   items?: Array<{
     __typename?: 'FeatureItem';
     _key?: string;
@@ -8957,7 +8780,6 @@ type CommonSectionFields_SectionForm_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   form?: {
     __typename?: 'FormConfiguration';
     emailTo?: string;
@@ -8988,7 +8810,6 @@ type CommonSectionFields_SectionHeader_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   image?: {
     __typename?: 'Image';
     asset?: {
@@ -9039,7 +8860,6 @@ type CommonSectionFields_SectionPricing_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   pricingCards?: Array<{
     __typename?: 'PricingCard';
     _key?: string;
@@ -9067,7 +8887,6 @@ type CommonSectionFields_SectionTestimonial_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   testimonials?: Array<{
     __typename?: 'Testimonial';
     _key?: string;
@@ -9119,7 +8938,6 @@ type CommonSectionFields_SectionTimeline_Fragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   events?: Array<{
     __typename?: 'TimelineEvent';
     _key?: string;
@@ -9151,7 +8969,6 @@ export type SectionFormFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   form?: {
     __typename?: 'FormConfiguration';
     emailTo?: string;
@@ -9182,7 +8999,6 @@ export type SectionHeaderFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   image?: {
     __typename?: 'Image';
     asset?: {
@@ -9233,7 +9049,6 @@ export type SectionPricingFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   pricingCards?: Array<{
     __typename?: 'PricingCard';
     _key?: string;
@@ -9261,7 +9076,6 @@ export type SectionTestimonialFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   testimonials?: Array<{
     __typename?: 'Testimonial';
     _key?: string;
@@ -9313,7 +9127,6 @@ export type SectionTimelineFieldsFragment = {
   displayTitle?: string;
   subtitle?: string;
   background?: string;
-  showBorder?: boolean;
   events?: Array<{
     __typename?: 'TimelineEvent';
     _key?: string;
@@ -9523,7 +9336,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               postsToShow?: number;
               showFeaturedOnly?: boolean;
               sortOrder?: string;
@@ -9537,7 +9349,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               settings?: {
                 __typename?: 'CalendarSettings';
                 availableDays?: Array<string>;
@@ -9558,7 +9369,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               cards?: Array<{
                 __typename?: 'Card';
                 _key?: string;
@@ -9609,7 +9419,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               contentRaw?: any;
             }
           | {
@@ -9621,7 +9430,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               questions?: Array<{
                 __typename?: 'FaqItem';
                 _key?: string;
@@ -9638,7 +9446,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               items?: Array<{
                 __typename?: 'FeatureItem';
                 _key?: string;
@@ -9688,7 +9495,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               form?: {
                 __typename?: 'FormConfiguration';
                 emailTo?: string;
@@ -9718,7 +9524,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               image?: {
                 __typename?: 'Image';
                 asset?: {
@@ -9768,7 +9573,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               pricingCards?: Array<{
                 __typename?: 'PricingCard';
                 _key?: string;
@@ -9795,7 +9599,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               testimonials?: Array<{
                 __typename?: 'Testimonial';
                 _key?: string;
@@ -9846,7 +9649,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               events?: Array<{
                 __typename?: 'TimelineEvent';
                 _key?: string;
@@ -9934,7 +9736,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               postsToShow?: number;
               showFeaturedOnly?: boolean;
               sortOrder?: string;
@@ -9948,7 +9749,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               settings?: {
                 __typename?: 'CalendarSettings';
                 availableDays?: Array<string>;
@@ -9969,7 +9769,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               cards?: Array<{
                 __typename?: 'Card';
                 _key?: string;
@@ -10020,7 +9819,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               contentRaw?: any;
             }
           | {
@@ -10032,7 +9830,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               questions?: Array<{
                 __typename?: 'FaqItem';
                 _key?: string;
@@ -10049,7 +9846,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               items?: Array<{
                 __typename?: 'FeatureItem';
                 _key?: string;
@@ -10099,7 +9895,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               form?: {
                 __typename?: 'FormConfiguration';
                 emailTo?: string;
@@ -10129,7 +9924,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               image?: {
                 __typename?: 'Image';
                 asset?: {
@@ -10179,7 +9973,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               pricingCards?: Array<{
                 __typename?: 'PricingCard';
                 _key?: string;
@@ -10206,7 +9999,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               testimonials?: Array<{
                 __typename?: 'Testimonial';
                 _key?: string;
@@ -10257,7 +10049,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               events?: Array<{
                 __typename?: 'TimelineEvent';
                 _key?: string;
@@ -10345,7 +10136,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               postsToShow?: number;
               showFeaturedOnly?: boolean;
               sortOrder?: string;
@@ -10359,7 +10149,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               settings?: {
                 __typename?: 'CalendarSettings';
                 availableDays?: Array<string>;
@@ -10380,7 +10169,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               cards?: Array<{
                 __typename?: 'Card';
                 _key?: string;
@@ -10431,7 +10219,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               contentRaw?: any;
             }
           | {
@@ -10443,7 +10230,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               questions?: Array<{
                 __typename?: 'FaqItem';
                 _key?: string;
@@ -10460,7 +10246,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               items?: Array<{
                 __typename?: 'FeatureItem';
                 _key?: string;
@@ -10510,7 +10295,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               form?: {
                 __typename?: 'FormConfiguration';
                 emailTo?: string;
@@ -10540,7 +10324,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               image?: {
                 __typename?: 'Image';
                 asset?: {
@@ -10590,7 +10373,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               pricingCards?: Array<{
                 __typename?: 'PricingCard';
                 _key?: string;
@@ -10617,7 +10399,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               testimonials?: Array<{
                 __typename?: 'Testimonial';
                 _key?: string;
@@ -10668,7 +10449,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               events?: Array<{
                 __typename?: 'TimelineEvent';
                 _key?: string;
@@ -10756,7 +10536,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               postsToShow?: number;
               showFeaturedOnly?: boolean;
               sortOrder?: string;
@@ -10770,7 +10549,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               settings?: {
                 __typename?: 'CalendarSettings';
                 availableDays?: Array<string>;
@@ -10791,7 +10569,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               cards?: Array<{
                 __typename?: 'Card';
                 _key?: string;
@@ -10842,7 +10619,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               contentRaw?: any;
             }
           | {
@@ -10854,7 +10630,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               questions?: Array<{
                 __typename?: 'FaqItem';
                 _key?: string;
@@ -10871,7 +10646,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               items?: Array<{
                 __typename?: 'FeatureItem';
                 _key?: string;
@@ -10921,7 +10695,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               form?: {
                 __typename?: 'FormConfiguration';
                 emailTo?: string;
@@ -10951,7 +10724,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               image?: {
                 __typename?: 'Image';
                 asset?: {
@@ -11001,7 +10773,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               pricingCards?: Array<{
                 __typename?: 'PricingCard';
                 _key?: string;
@@ -11028,7 +10799,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               testimonials?: Array<{
                 __typename?: 'Testimonial';
                 _key?: string;
@@ -11079,7 +10849,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               events?: Array<{
                 __typename?: 'TimelineEvent';
                 _key?: string;
@@ -11175,7 +10944,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               postsToShow?: number;
               showFeaturedOnly?: boolean;
               sortOrder?: string;
@@ -11189,7 +10957,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               settings?: {
                 __typename?: 'CalendarSettings';
                 availableDays?: Array<string>;
@@ -11210,7 +10977,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               cards?: Array<{
                 __typename?: 'Card';
                 _key?: string;
@@ -11261,7 +11027,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               contentRaw?: any;
             }
           | {
@@ -11273,7 +11038,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               questions?: Array<{
                 __typename?: 'FaqItem';
                 _key?: string;
@@ -11290,7 +11054,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               items?: Array<{
                 __typename?: 'FeatureItem';
                 _key?: string;
@@ -11340,7 +11103,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               form?: {
                 __typename?: 'FormConfiguration';
                 emailTo?: string;
@@ -11370,7 +11132,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               image?: {
                 __typename?: 'Image';
                 asset?: {
@@ -11420,7 +11181,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               pricingCards?: Array<{
                 __typename?: 'PricingCard';
                 _key?: string;
@@ -11447,7 +11207,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               testimonials?: Array<{
                 __typename?: 'Testimonial';
                 _key?: string;
@@ -11498,7 +11257,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               events?: Array<{
                 __typename?: 'TimelineEvent';
                 _key?: string;
@@ -11602,7 +11360,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               postsToShow?: number;
               showFeaturedOnly?: boolean;
               sortOrder?: string;
@@ -11616,7 +11373,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               settings?: {
                 __typename?: 'CalendarSettings';
                 availableDays?: Array<string>;
@@ -11637,7 +11393,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               cards?: Array<{
                 __typename?: 'Card';
                 _key?: string;
@@ -11688,7 +11443,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               contentRaw?: any;
             }
           | {
@@ -11700,7 +11454,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               questions?: Array<{
                 __typename?: 'FaqItem';
                 _key?: string;
@@ -11717,7 +11470,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               items?: Array<{
                 __typename?: 'FeatureItem';
                 _key?: string;
@@ -11767,7 +11519,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               form?: {
                 __typename?: 'FormConfiguration';
                 emailTo?: string;
@@ -11797,7 +11548,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               image?: {
                 __typename?: 'Image';
                 asset?: {
@@ -11847,7 +11597,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               pricingCards?: Array<{
                 __typename?: 'PricingCard';
                 _key?: string;
@@ -11874,7 +11623,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               testimonials?: Array<{
                 __typename?: 'Testimonial';
                 _key?: string;
@@ -11925,7 +11673,6 @@ export type GetPageQuery = {
               displayTitle?: string;
               subtitle?: string;
               background?: string;
-              showBorder?: boolean;
               events?: Array<{
                 __typename?: 'TimelineEvent';
                 _key?: string;

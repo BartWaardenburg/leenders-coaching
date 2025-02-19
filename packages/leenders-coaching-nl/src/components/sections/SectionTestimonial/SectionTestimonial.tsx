@@ -31,8 +31,6 @@ type SectionTestimonialProps = {
   background?: PastelColor;
   /** Whether to show a border */
   border?: boolean;
-  /** Whether to show a border under the title */
-  showBorder?: boolean;
 } & ComponentPropsWithoutRef<'section'>;
 
 const TestimonialSlide = ({ quote, name, role, image }: Testimonial) => (
@@ -61,7 +59,6 @@ export const SectionTestimonial = ({
   testimonials,
   background,
   border = false,
-  showBorder = false,
   className,
   ...props
 }: SectionTestimonialProps) => {
@@ -80,8 +77,9 @@ export const SectionTestimonial = ({
                 <Heading
                   level="h2"
                   variant="large"
-                  showBorder={showBorder}
+                  showBorder
                   borderColor={background}
+                  textAlign="center"
                 >
                   {title}
                 </Heading>

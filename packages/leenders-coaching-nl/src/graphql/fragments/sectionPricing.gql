@@ -6,7 +6,6 @@ fragment SectionPricingFields on SectionPricing {
   displayTitle
   subtitle
   background
-  showBorder
   pricingCards {
     _key
     title

@@ -9,7 +9,6 @@ export interface SanityFormSection extends Record<string, unknown> {
   displayTitle?: string;
   description?: string;
   submitLabel?: string;
-  showBorder?: boolean;
   background?: PastelColor;
   border?: boolean;
 }
@@ -37,7 +36,6 @@ export const transformFormSection = (
     title: data.displayTitle || undefined,
     description: data.description,
     submitLabel: data.submitLabel,
-    showBorder: data.showBorder,
     background: data.background,
     border: data.border,
     onSubmit: async (formData) => {
@@ -50,7 +48,6 @@ export const transformFormSection = (
 type FormSectionData = {
   title?: string;
   description?: string;
-  showBorder?: boolean;
   background?: PastelColor;
   border?: boolean;
 };
@@ -59,7 +56,6 @@ export const mapFormSection = (data: FormSectionData) => {
   return {
     title: data.title,
     description: data.description,
-    showBorder: data.showBorder,
     background: data.background,
     border: data.border,
   };

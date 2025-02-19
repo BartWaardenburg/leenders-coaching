@@ -12,7 +12,6 @@ export interface SanityFAQSection extends Record<string, unknown> {
   items: FAQItem[];
   background?: PastelColor;
   border?: boolean;
-  showBorder?: boolean;
 }
 
 /**
@@ -40,7 +39,6 @@ export const transformFAQSection = (
     items: data.items,
     background: data.background,
     border: data.border,
-    showBorder: data.showBorder,
   };
 };
 
@@ -50,7 +48,6 @@ type FAQSectionData = {
   items: FAQItem[];
   background?: PastelColor;
   border?: boolean;
-  showBorder?: boolean;
 };
 
 export const mapFAQSection = (data: FAQSectionData) => {
@@ -60,6 +57,5 @@ export const mapFAQSection = (data: FAQSectionData) => {
     items: data.items,
     background: data.background,
     border: data.border,
-    showBorder: data.showBorder,
   };
 };

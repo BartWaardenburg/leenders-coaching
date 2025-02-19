@@ -9,7 +9,6 @@ import type { PortableTextBlock } from '@portabletext/react';
 
 type SectionContentProps = {
   title?: ReactNode;
-  showBorder?: boolean;
   background?: PastelColor;
   border?: boolean;
   contentRaw?: PortableTextBlock[];
@@ -21,7 +20,6 @@ type SectionContentProps = {
 export const SectionContent = ({
   title,
   contentRaw,
-  showBorder = false,
   background,
   border = false,
   className,
@@ -41,7 +39,7 @@ export const SectionContent = ({
             <Heading
               level="h2"
               variant="large"
-              showBorder={showBorder}
+              showBorder
               borderColor={background}
               textAlign="center"
             >

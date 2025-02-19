@@ -20,8 +20,6 @@ type SectionTimelineProps = {
   background?: PastelColor;
   /** Whether to show a border */
   border?: boolean;
-  /** Whether to show a border under the title */
-  showBorder?: boolean;
 } & ComponentPropsWithoutRef<'section'>;
 
 /**
@@ -33,7 +31,6 @@ export const SectionTimeline = ({
   steps,
   background,
   border = false,
-  showBorder = false,
   className,
   ...props
 }: SectionTimelineProps) => {
@@ -53,8 +50,9 @@ export const SectionTimeline = ({
                 <Heading
                   level="h2"
                   variant="large"
-                  showBorder={showBorder}
+                  showBorder
                   borderColor={background}
+                  textAlign="center"
                 >
                   {title}
                 </Heading>

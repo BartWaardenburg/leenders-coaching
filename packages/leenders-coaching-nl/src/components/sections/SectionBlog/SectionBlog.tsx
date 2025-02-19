@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from 'react'
-import { Section } from '@/components/ui/Section'
+import { PastelColor, Section } from '@/components/ui/Section'
 import { Heading } from '@/components/ui/Heading'
 import { Text } from '@/components/ui/Text'
 import { Box } from '@/components/ui/Box'
@@ -34,6 +34,10 @@ interface SectionBlogProps {
    */
   postsPerPage?: number;
   className?: string;
+  /** Optional background color */
+  background?: PastelColor;
+  /** Whether to show a border */
+  border?: boolean;
 }
 
 /**
@@ -45,6 +49,8 @@ export const SectionBlog = ({
   posts,
   postsPerPage = 6,
   className,
+  background,
+  border = false,
 }: SectionBlogProps) => {
   const [currentPage, setCurrentPage] = useState(1)
   const gridRef = useRef<HTMLDivElement>(null)
@@ -79,11 +85,21 @@ export const SectionBlog = ({
   }
 
   return (
-    <Section className={className} maxWidth="7xl">
+    <Section
+      background={background}
+      border={border}
+      className={className}
+      maxWidth="7xl">
       {(title || description) && (
         <Flex direction="column" items="center" className="mb-16">
           {title && (
-            <Heading level="h2" variant="large" className="mb-6" textAlign="center">
+            <Heading
+              level="h2"
+              variant="large"
+              showBorder
+              borderColor={background}
+              textAlign="center"
+            >
               {title}
             </Heading>
           )}

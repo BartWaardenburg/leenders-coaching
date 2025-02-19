@@ -18,10 +18,6 @@ const meta = {
       control: 'boolean',
       description: 'Show top and bottom borders',
     },
-    showBorder: {
-      control: 'boolean',
-      description: 'Show border under heading',
-    },
   },
 } satisfies Meta<typeof SectionHeader>;
 
@@ -36,20 +32,11 @@ export const Default: Story = {
   },
 };
 
-export const WithBorder: Story = {
-  args: {
-    title: 'Section Title with Border',
-    description: 'This section header includes a bottom border on the heading.',
-    showBorder: true,
-  },
-};
-
 export const WithBackground: Story = {
   args: {
     title: 'Section With Background',
     description:
       'This section uses a pastel background color that also affects the heading border.',
-    showBorder: true,
     background: 'purple',
   },
 };
@@ -59,7 +46,6 @@ export const WithBackgroundAndBorders: Story = {
     title: 'Section With Background and Borders',
     description:
       'This section has a background color with matching top and bottom borders.',
-    showBorder: true,
     background: 'blue',
     border: true,
   },
@@ -70,7 +56,6 @@ export const WithButtons: Story = {
     title: 'Section With CTAs',
     description:
       'This section includes call-to-action buttons that are right-aligned on desktop.',
-    showBorder: true,
     background: 'blue',
     border: true,
     primaryCta: {

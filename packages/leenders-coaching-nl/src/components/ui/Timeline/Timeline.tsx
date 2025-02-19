@@ -56,9 +56,9 @@ const transitions = {
 /* Animation sequence timing */
 const sequence = {
   mainLine: 0,
-  content: 0.8,
-  dot: 1.2,
-  connector: 1.2,
+  content: 0.4,
+  dot: 0.8,
+  connector: 0.9,
 } as const;
 
 /**

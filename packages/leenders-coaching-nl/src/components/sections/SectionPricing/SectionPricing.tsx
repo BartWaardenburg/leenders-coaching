@@ -1,4 +1,4 @@
-import { Section } from '@/components/ui/Section'
+import { Section, PastelColor } from '@/components/ui/Section'
 import { Heading } from '@/components/ui/Heading'
 import { Text } from '@/components/ui/Text'
 import { Flex } from '@/components/ui/Flex'
@@ -25,6 +25,8 @@ interface SectionPricingProps {
   packages: PricingPackage[]
   onBooking?: () => void
   className?: string
+  background?: PastelColor
+  border?: boolean
 }
 
 /**
@@ -35,14 +37,20 @@ export const SectionPricing = ({
   description,
   packages,
   className,
-  onBooking
+  onBooking,
+  background,
+  border = false,
 }: SectionPricingProps) => {
   return (
-    <Section className={className}>
+    <Section
+      background={background}
+      border={border}
+      className={className}
+    >
       {(title || description) && (
         <Flex direction="column" items="center" className="mb-16">
           {title && (
-            <Heading level="h2" variant="large" className="mb-6" textAlign="center">
+            <Heading level="h2" variant="large" showBorder borderColor={background} textAlign="center">
               {title}
             </Heading>
           )}

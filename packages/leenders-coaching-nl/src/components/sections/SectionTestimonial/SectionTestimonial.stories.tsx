@@ -18,10 +18,6 @@ const meta = {
       control: 'boolean',
       description: 'Show top and bottom borders',
     },
-    showBorder: {
-      control: 'boolean',
-      description: 'Show border under heading',
-    },
   },
 } satisfies Meta<typeof SectionTestimonial>;
 
@@ -69,7 +65,6 @@ export const WithBackground: Story = {
     ...Default.args,
     background: 'blue',
     border: true,
-    showBorder: true,
   },
 };
 
@@ -78,7 +73,6 @@ export const WithPurpleBackground: Story = {
     ...Default.args,
     background: 'purple',
     border: true,
-    showBorder: true,
   },
 };
 

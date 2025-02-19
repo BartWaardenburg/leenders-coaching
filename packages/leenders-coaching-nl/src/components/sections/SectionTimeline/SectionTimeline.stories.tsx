@@ -61,7 +61,6 @@ export const WithBackground: Story = {
     ...Default.args,
     background: 'blue',
     border: true,
-    showBorder: true,
   },
 };
 

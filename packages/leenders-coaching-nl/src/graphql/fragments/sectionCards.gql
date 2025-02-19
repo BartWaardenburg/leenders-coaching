@@ -8,7 +8,7 @@ fragment SectionCardsFields on SectionCards {
   displayTitle
   subtitle
   background
-  showBorder
+
   cards {
     _key
     title

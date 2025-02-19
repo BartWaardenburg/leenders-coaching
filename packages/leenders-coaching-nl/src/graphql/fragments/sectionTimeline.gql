@@ -6,7 +6,7 @@ fragment SectionTimelineFields on SectionTimeline {
   displayTitle
   subtitle
   background
-  showBorder
+
   events {
     _key
     title

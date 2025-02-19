@@ -196,7 +196,6 @@ export const AllSections: Story = {
         title="Our Comprehensive Approach"
         contentRaw={mockContent.longContent}
         background="yellow"
-        showBorder
       />
       <SectionCards
         title="Our Services"

@@ -20,10 +20,6 @@ const meta = {
       control: 'text',
       description: 'Description text below the title',
     },
-    showBorder: {
-      control: 'boolean',
-      description: 'Whether to show a border under the title',
-    },
     background: {
       control: 'select',
       options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
@@ -66,13 +62,6 @@ export const Default: Story = {
     description:
       "Fill out the form below and we'll get back to you as soon as possible.",
     children: <FormContent />,
-  },
-};
-
-export const WithBorder: Story = {
-  args: {
-    ...Default.args,
-    showBorder: true,
   },
 };
 

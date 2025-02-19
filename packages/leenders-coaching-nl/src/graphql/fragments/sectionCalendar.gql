@@ -6,7 +6,6 @@ fragment SectionCalendarFields on SectionCalendar {
   displayTitle
   subtitle
   background
-  showBorder
   settings {
     availableDays
     availableTimeSlots {

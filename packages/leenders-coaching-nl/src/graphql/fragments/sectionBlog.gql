@@ -6,7 +6,7 @@ fragment SectionBlogFields on SectionBlog {
   displayTitle
   subtitle
   background
-  showBorder
+
   postsToShow
   showFeaturedOnly
   sortOrder

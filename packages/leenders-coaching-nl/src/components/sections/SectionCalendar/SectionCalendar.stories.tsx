@@ -18,10 +18,6 @@ const meta = {
       control: 'boolean',
       description: 'Show top and bottom borders',
     },
-    showBorder: {
-      control: 'boolean',
-      description: 'Show border under heading',
-    },
   },
 } satisfies Meta<typeof SectionCalendar>;
 
@@ -33,13 +29,6 @@ export const Default: Story = {
     title: 'Calendar',
     description: 'Select a date to schedule your appointment.',
     initialDate: new Date(),
-  },
-};
-
-export const WithBorder: Story = {
-  args: {
-    ...Default.args,
-    showBorder: true,
   },
 };
 
