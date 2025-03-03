@@ -33,7 +33,7 @@ jobs:
       - uses: pnpm/action-setup@v2
         name: Install pnpm
         with:
-          version: 10.4.1
+          version: 9.15.5
           run_install: false
 
       - name: Verify lockfile
