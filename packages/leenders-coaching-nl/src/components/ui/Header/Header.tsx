@@ -99,8 +99,6 @@ export const Header = ({ className, navigation, about, social, contact, ...props
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  console.log(navigation);
-
   const menuFooter = {
     about,
     social,
