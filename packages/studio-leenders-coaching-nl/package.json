@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "main": "package.json",
+  "type": "module",
   "license": "UNLICENSED",
   "scripts": {
     "dev": "sanity dev",
@@ -10,7 +11,23 @@
     "build": "sanity build",
     "deploy": "sanity deploy",
     "deploy-graphql": "sanity graphql deploy",
-    "create-singletons": "ts-node scripts/createSingletons.ts"
+    "seed:create-home-page": "node --loader ts-node/esm scripts/content-seeding/create-home-page.ts",
+    "seed:create-home-page:dry-run": "node --loader ts-node/esm scripts/content-seeding/create-home-page.ts --dry-run",
+    "seed:create-about-page": "node --loader ts-node/esm scripts/content-seeding/create-about-page.ts",
+    "seed:create-about-page:dry-run": "node --loader ts-node/esm scripts/content-seeding/create-about-page.ts --dry-run",
+    "seed:create-coaching-page": "node --loader ts-node/esm scripts/content-seeding/create-coaching-page.ts",
+    "seed:create-coaching-page:dry-run": "node --loader ts-node/esm scripts/content-seeding/create-coaching-page.ts --dry-run",
+    "seed:create-approach-page": "node --loader ts-node/esm scripts/content-seeding/create-approach-page.ts",
+    "seed:create-approach-page:dry-run": "node --loader ts-node/esm scripts/content-seeding/create-approach-page.ts --dry-run",
+    "seed:test-home": "node --loader ts-node/esm scripts/content-seeding/test-homepage.ts",
+    "seed:create-contact-page": "node --loader ts-node/esm scripts/content-seeding/create-contact-page.ts",
+    "seed:create-contact-page:dry-run": "node --loader ts-node/esm scripts/content-seeding/create-contact-page.ts --dry-run",
+    "seed:create-blog-page": "node --loader ts-node/esm scripts/content-seeding/create-blog-page.ts",
+    "seed:create-blog-page:dry-run": "node --loader ts-node/esm scripts/content-seeding/create-blog-page.ts --dry-run",
+    "seed:all": "node --loader ts-node/esm scripts/content-seeding/seed-all-pages.ts",
+    "seed:all:dry-run": "node --loader ts-node/esm scripts/content-seeding/seed-all-pages.ts --dry-run",
+    "seed:test": "node --loader ts-node/esm scripts/content-seeding/test-script.ts",
+    "seed:test:dry-run": "node --loader ts-node/esm scripts/content-seeding/test-script.ts --dry-run"
   },
   "keywords": [
     "sanity"
@@ -23,6 +40,7 @@
     "lodash.difference": "4.5.0",
     "lodash.flatten": "4.4.0",
     "lodash.union": "4.6.0",
+    "nanoid": "^5.1.2",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-is": "19.0.0",

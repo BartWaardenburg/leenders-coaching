@@ -3,9 +3,13 @@ import { createClient } from 'next-sanity';
 import imageUrlBuilder from '@sanity/image-url';
 import { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
+/* Check if we're running on the server or client */
+const isServer = typeof window === 'undefined';
+
 /* Validate required environment variables */
 const validateEnv = () => {
-  if (!process.env.SANITY_API_TOKEN) {
+  // Only check for SANITY_API_TOKEN on the server
+  if (isServer && !process.env.SANITY_API_TOKEN) {
     throw new Error('SANITY_API_TOKEN is required');
   }
 
@@ -25,7 +29,7 @@ validateEnv();
 export const sanityConfig = {
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID as string,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET as string,
-  apiToken: process.env.SANITY_API_TOKEN as string,
+  apiToken: isServer ? (process.env.SANITY_API_TOKEN as string) : '',
   apiVersion: '2024-02-14', // Current API version
   useCdn: true,
 };
@@ -35,9 +39,10 @@ const apiUrl = `https://${sanityConfig.projectId}.api.sanity.io/v1/graphql/${san
 
 /* Create a GraphQL client instance for Sanity */
 export const sanityClient = new GraphQLClient(apiUrl, {
-  headers: {
-    authorization: `Bearer ${sanityConfig.apiToken}`,
-  },
+  headers:
+    isServer && sanityConfig.apiToken
+      ? { authorization: `Bearer ${sanityConfig.apiToken}` }
+      : {}, // Only include auth headers on server
 });
 
 /* Create a Sanity client for image handling */
@@ -46,6 +51,7 @@ export const client = createClient({
   dataset: sanityConfig.dataset,
   apiVersion: sanityConfig.apiVersion,
   useCdn: sanityConfig.useCdn,
+  token: isServer ? sanityConfig.apiToken : undefined, // Only include token on server
 });
 
 /* Create an image URL builder */

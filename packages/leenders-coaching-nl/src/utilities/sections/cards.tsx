@@ -48,19 +48,21 @@ export const transformCardsSection = (
     description: data.description,
     background: data.background,
     border: data.border,
-    children: data.cards.map((card) => (
-      <Card
-        key={card.title}
-        featured={card.featured}
-        title={card.title}
-        date={card.date}
-        categories={card.categories}
-        slug={card.slug}
-        image={card.image}
-        variant={card.variant}
-        border
-        reverse={card.reverse}
-      />
-    )),
+    children: Array.isArray(data.cards) && data.cards.length > 0
+      ? data.cards.map((card) => (
+        <Card
+          key={card.title}
+          featured={card.featured}
+          title={card.title}
+          date={card.date}
+          categories={card.categories}
+          slug={card.slug}
+          image={card.image}
+          variant={card.variant}
+          border
+          reverse={card.reverse}
+        />
+      ))
+      : null,
   };
 }; 

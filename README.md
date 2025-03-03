@@ -192,13 +192,6 @@ export const baseSectionFields = [
     },
   },
   {
-    name: "maxWidth",
-    type: "string",
-    options: {
-      list: ["sm", "md", "lg", "xl", "2xl", "3xl", "4xl", "5xl", "6xl", "7xl"],
-    },
-  },
-  {
     name: "showBorder",
     type: "boolean",
   },

@@ -44,12 +44,15 @@ export const transformTestimonialSection = (
   return {
     title: data.displayTitle || undefined,
     description: data.description,
-    testimonials: data.testimonials.map((testimonial) => ({
-      quote: testimonial.quote,
-      name: testimonial.name,
-      role: testimonial.role,
-      image: testimonial.image?.asset?.url || '',
-    })),
+    testimonials:
+      Array.isArray(data.testimonials) && data.testimonials.length > 0
+        ? data.testimonials.map((testimonial) => ({
+            quote: testimonial.quote,
+            name: testimonial.name,
+            role: testimonial.role,
+            image: testimonial.image?.asset?.url || '',
+          }))
+        : [],
     background: data.background,
     border: data.border,
   };
