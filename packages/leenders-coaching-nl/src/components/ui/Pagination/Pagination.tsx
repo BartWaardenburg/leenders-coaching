@@ -2,6 +2,7 @@ import { FC } from 'react'
 import { Box } from '@/components/ui/Box'
 import { Flex } from '@/components/ui/Flex'
 import { Button } from '@/components/ui/Button'
+import { IconButton } from '@/components/ui/IconButton'
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5'
 import { motion } from 'motion/react'
 
@@ -103,14 +104,17 @@ export const Pagination: FC<PaginationProps> = ({
         whileTap="tap"
         variants={buttonVariants}
       >
-        <Button
-          variant="transparent"
+        <IconButton
+          variant="ghost"
+          shape="square"
+          bordered
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
+          label="Previous page"
           className={itemClasses}
         >
           <IoChevronBack className="h-4 w-4" />
-        </Button>
+        </IconButton>
       </motion.div>
 
       {visiblePages.map((page, index) => {
@@ -152,14 +156,17 @@ export const Pagination: FC<PaginationProps> = ({
         whileTap="tap"
         variants={buttonVariants}
       >
-        <Button
-          variant="transparent"
+        <IconButton
+          variant="ghost"
+          shape="square"
+          bordered
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
+          label="Next page"
           className={itemClasses}
         >
           <IoChevronForward className="h-4 w-4" />
-        </Button>
+        </IconButton>
       </motion.div>
     </Flex>
   )

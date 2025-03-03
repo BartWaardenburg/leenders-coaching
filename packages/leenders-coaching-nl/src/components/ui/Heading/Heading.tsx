@@ -14,7 +14,7 @@ type BorderColor =
   | 'teal';
 
 const borderColors: Record<BorderColor, string> = {
-  default: 'bg-foreground/40 dark:bg-foreground/60',
+  default: 'bg-foreground dark:bg-foreground',
   blue: 'bg-pastel-blue-dark dark:bg-pastel-blue-light',
   purple: 'bg-pastel-purple-dark dark:bg-pastel-purple-light',
   green: 'bg-pastel-green-dark dark:bg-pastel-green-light',
@@ -74,7 +74,7 @@ export const Heading = ({
           variant === 'default' && 'text-3xl md:text-4xl',
           variant === 'large' && 'text-5xl md:text-7xl',
           variant === 'medium' &&
-            'text-3xl sm:text-4xl md:text-[42px] leading-[1.1]',
+          'text-3xl sm:text-4xl md:text-[42px] leading-[1.1]',
           variant === 'small' && 'text-lg md:text-xl',
           /* Text alignment */
           textAlign === 'center' && 'text-center',
