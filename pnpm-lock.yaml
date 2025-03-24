@@ -229,7 +229,7 @@ importers:
         specifier: 4.6.0
         version: 4.6.0
       nanoid:
-        specifier: ^5.1.2
+        specifier: 5.1.5
         version: 5.1.5
       react:
         specifier: 19.0.0
