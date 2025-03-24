@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import type { CoachingPage } from '@/generated/graphql';
+import type { CoachingPage } from '@/types/Page';
 import { createPageComponent } from '@/utilities/page';
 
 /* 

@@ -1,5 +1,8 @@
-import { GraphQLClient } from 'graphql-request';
-import { createClient } from 'next-sanity';
+import {
+  createClient,
+  QueryParams,
+  defineQuery as nextSanityDefineQuery,
+} from 'next-sanity';
 import imageUrlBuilder from '@sanity/image-url';
 import { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
@@ -30,22 +33,14 @@ export const sanityConfig = {
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID as string,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET as string,
   apiToken: isServer ? (process.env.SANITY_API_TOKEN as string) : '',
-  apiVersion: '2024-02-14', // Current API version
-  useCdn: true,
+  apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-02-14',
+  useCdn: process.env.NODE_ENV === 'production',
 };
 
-/* Construct the Sanity GraphQL API URL */
-const apiUrl = `https://${sanityConfig.projectId}.api.sanity.io/v1/graphql/${sanityConfig.dataset}/default`;
-
-/* Create a GraphQL client instance for Sanity */
-export const sanityClient = new GraphQLClient(apiUrl, {
-  headers:
-    isServer && sanityConfig.apiToken
-      ? { authorization: `Bearer ${sanityConfig.apiToken}` }
-      : {}, // Only include auth headers on server
-});
-
-/* Create a Sanity client for image handling */
+/**
+ * Create a Sanity client with the configuration
+ * This is the primary client for all operations
+ */
 export const client = createClient({
   projectId: sanityConfig.projectId,
   dataset: sanityConfig.dataset,
@@ -62,4 +57,53 @@ const builder = imageUrlBuilder(client);
  */
 export const urlFor = (source: SanityImageSource) => {
   return builder.image(source);
+};
+
+/**
+ * Helper function to create a typed GROQ query using next-sanity's defineQuery
+ * This allows TypeGen to discover and generate types for GROQ queries
+ */
+export const defineQuery = nextSanityDefineQuery;
+
+/**
+ * Helper function to execute a GROQ query with type safety
+ * @param query - The GROQ query, preferably created with defineQuery
+ * @param params - Query parameters
+ * @returns A promise resolving to the typed result
+ */
+export const groq = <T>(
+  query: string | ReturnType<typeof defineQuery>,
+  params?: QueryParams,
+): Promise<T> => {
+  // Handle both string and defineQuery result
+  const queryString =
+    typeof query === 'string' ? query : (query as { query: string }).query;
+  return client.fetch<T>(queryString, params || {});
+};
+
+/**
+ * Common GROQ queries that can be reused throughout the application
+ */
+export const queries = {
+  // Get a page by type (e.g., homePage, aboutPage)
+  getPageByType: (type: string) => defineQuery(`*[_type == "${type}"][0]`),
+
+  // Get multiple items of a specific type
+  getDocumentsByType: (type: string) => defineQuery(`*[_type == "${type}"]`),
+
+  // Get site settings
+  getSiteSettings: defineQuery(`*[_type == "siteSettings"][0]`),
+
+  // Get navigation
+  getNavigation: defineQuery(`*[_type == "navigation"][0]`),
+
+  // Get footer
+  getFooter: defineQuery(`*[_type == "footer"][0]`),
+
+  // Get global data (navigation, footer, site settings)
+  getGlobalData: defineQuery(`{
+    "navigation": *[_type == "navigation"][0],
+    "footer": *[_type == "footer"][0],
+    "siteSettings": *[_type == "siteSettings"][0]
+  }`),
 };

@@ -1,35 +1,24 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { sanityClient } from '@/utilities/sanity';
-import type { GetPageQuery, Document, Metadata as SanityMetadata } from '@/generated/graphql';
-import GetPage from '@/graphql/queries/getPage.gql';
-import { SectionRenderer } from '@/components/sections/SectionRenderer';
-import type { Section } from '@/utilities/sections/index';
 import type { ReactNode } from 'react';
+import { SectionRenderer } from '@/components/sections/SectionRenderer';
+import { groq } from '@/utilities/sanity';
+import { PAGE_QUERY } from '@/groq/queries';
+import type { BasePage } from '@/types/Page';
+import type { PAGE_QUERYResult } from '@/types/sanity/groq';
 
 /**
- * Represents a generic page from Sanity with common fields
- * Extends the Document type from generated GraphQL types
- */
-export interface BasePage extends Document {
-  title?: string;
-  metadata?: SanityMetadata;
-  sections?: Section[];
-  slug?: {
-    current?: string;
-  };
-}
-
-/**
- * Generic function to fetch page data from Sanity
+ * Generic function to fetch page data from Sanity using GROQ
  * @param pageType - The type of page to fetch (e.g., 'homePage', 'contactPage')
  * @returns Promise resolving to the page data or null
  */
 export const getPageData = async <T extends BasePage>(pageType: string): Promise<T | null> => {
-  const response = await sanityClient.request<GetPageQuery>(GetPage, {
-    type: pageType
-  });
-  return response.allDocument?.[0] as T ?? null;
+  try {
+    return await groq<PAGE_QUERYResult<T>>(PAGE_QUERY(pageType));
+  } catch (error) {
+    console.error(`Error fetching ${pageType} data:`, error);
+    return null;
+  }
 };
 
 /**
@@ -49,35 +38,40 @@ export const generatePageMetadata = (
     };
   }
 
-  const { metadata } = page;
-  return {
-    title: metadata.title || fallbackTitle,
-    description: metadata.description || undefined,
-    keywords: metadata.keywords?.filter((keyword: string | null): keyword is string =>
-      keyword !== null) || undefined,
-    openGraph: metadata.openGraph?.image?.url?.asset?.url
-      ? {
-        title: metadata.openGraph.title || metadata.title || fallbackTitle,
-        description: metadata.openGraph.description || metadata.description,
-        url: metadata.openGraph.url,
-        siteName: metadata.openGraph.siteName,
-        images: [
-          {
-            url: metadata.openGraph.image.url.asset.url,
-            width: metadata.openGraph.image.width || 1200,
-            height: metadata.openGraph.image.height || 630,
-            alt: metadata.openGraph.image.alt || metadata.title || fallbackTitle,
-          },
-        ],
-        type: (metadata.openGraph.type || 'website') as 'website' | 'article',
-      }
-      : undefined,
+  const metadata: Metadata = {
+    title: page.metadata.title || fallbackTitle,
+    description: page.metadata.description,
+    keywords: page.metadata.keywords,
   };
+
+  // Add OpenGraph metadata if available
+  if (page.metadata.openGraph) {
+    const og = page.metadata.openGraph;
+    metadata.openGraph = {
+      title: og.title,
+      description: og.description,
+      type: 'website', // Using a fixed valid type
+      url: og.url,
+      siteName: og.siteName,
+    };
+
+    // Only add images if we have image data
+    if (og.image) {
+      metadata.openGraph.images = [{
+        url: typeof og.image.url === 'string' ? og.image.url : '',
+        width: og.image.width,
+        height: og.image.height,
+        alt: og.image.alt,
+      }];
+    }
+  }
+
+  return metadata;
 };
 
 /**
- * Render page sections
- * @param page - The page data containing sections to render
+ * Renders the sections of a page
+ * @param page - The page data from Sanity
  * @param wrapper - Optional wrapper component for the sections
  * @returns React component with rendered sections
  */
@@ -93,14 +87,15 @@ export const renderPageSections = (
     // Skip sections without a type
     if (!section._type) return null;
 
-    // Generate a unique key using available identifiers or index as fallback
-    const uniqueKey = section._key || section._id || `${section._type}-${index}`;
+    // Ensure section._type and section._key are strings
+    const sectionType = String(section._type);
+    const sectionKey = section._key ? String(section._key) : `section-${index}`;
 
     return (
       <SectionRenderer
-        key={uniqueKey}
-        type={section._type}
-        data={section}
+        key={sectionKey}
+        type={sectionType}
+        data={section as unknown as Record<string, unknown>}
       />
     );
   }) || [];
@@ -121,10 +116,12 @@ export const createPageComponent = <T extends BasePage>(
   wrapper?: (children: ReactNode) => ReactNode
 ) => {
   const getPageDataInternal = async (): Promise<T | null> => {
-    const response = await sanityClient.request<GetPageQuery>(GetPage, {
-      type: pageType
-    });
-    return response.allDocument?.[0] as T ?? null;
+    try {
+      return await groq<PAGE_QUERYResult<T>>(PAGE_QUERY(pageType));
+    } catch (error) {
+      console.error(`Error fetching ${pageType} data:`, error);
+      return null;
+    }
   };
 
   const getMetadata = async (): Promise<Metadata> => {

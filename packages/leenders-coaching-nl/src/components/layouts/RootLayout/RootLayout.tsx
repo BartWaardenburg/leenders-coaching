@@ -3,6 +3,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { Box } from '@/components/ui/Box';
 import { GlobalDataProvider } from '@/components/providers/GlobalDataProvider';
+import { ToastProvider } from '@/components/providers/ToastProvider';
 
 import '@/app/globals.css';
 
@@ -27,7 +28,9 @@ export const RootLayout = async ({ children, fonts }: RootLayoutProps) => {
       <Box as="body" className="antialiased min-h-screen flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <GlobalDataProvider>
-            {children}
+            <ToastProvider>
+              {children}
+            </ToastProvider>
           </GlobalDataProvider>
           <Analytics />
         </ThemeProvider>

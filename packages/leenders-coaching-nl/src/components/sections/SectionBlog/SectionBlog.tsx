@@ -27,7 +27,7 @@ interface SectionBlogProps {
   /** The description text */
   description: string;
   /** Array of blog posts to display */
-  posts: BlogPost[];
+  posts?: BlogPost[];
   /**
    * Number of posts per page
    * @default 6
@@ -46,7 +46,7 @@ interface SectionBlogProps {
 export const SectionBlog = ({
   title,
   description,
-  posts,
+  posts = [],
   postsPerPage = 6,
   className,
   background,
@@ -112,40 +112,48 @@ export const SectionBlog = ({
       )}
 
       <Box className="w-full">
-        <Grid
-          ref={gridRef}
-          columns={{
-            default: 1,
-            '@2xl': 2,
-          }}
-          gap={6}
-          className="mb-12"
-        >
-          {currentPosts.map((post, index) => (
-            <Card
-              key={post.slug}
-              title={post.title}
-              date={post.date}
-              categories={post.categories}
-              slug={post.slug}
-              image={post.image}
-              variant={post.variant || 'blue'}
-              featured={post.featured}
-              border
-              reverse={index % 2 === 1}
+        {posts.length > 0 ? (
+          <>
+            <Grid
+              ref={gridRef}
+              columns={{
+                default: 1,
+                '@2xl': 2,
+              }}
+              gap={6}
+              className="mb-12"
             >
-              <Text className="text-muted-foreground">{post.description}</Text>
-            </Card>
-          ))}
-        </Grid>
+              {currentPosts.map((post, index) => (
+                <Card
+                  key={post.slug}
+                  title={post.title}
+                  date={post.date}
+                  categories={post.categories}
+                  slug={post.slug}
+                  image={post.image}
+                  variant={post.variant || 'blue'}
+                  featured={post.featured}
+                  border
+                  reverse={index % 2 === 1}
+                >
+                  <Text className="text-muted-foreground">{post.description}</Text>
+                </Card>
+              ))}
+            </Grid>
 
-        {totalPages > 1 && (
-          <Pagination
-            totalPages={totalPages}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-            className="mt-8"
-          />
+            {totalPages > 1 && (
+              <Pagination
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+                className="mt-8"
+              />
+            )}
+          </>
+        ) : (
+          <Text className="text-muted-foreground text-center">
+            Er zijn momenteel geen blog artikelen beschikbaar.
+          </Text>
         )}
       </Box>
     </Section>

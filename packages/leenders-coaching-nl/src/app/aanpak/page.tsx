@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import type { ApproachPage } from '@/generated/graphql';
+import type { ApproachPage } from '@/types/Page';
 import { createPageComponent } from '@/utilities/page';
 
 /* 

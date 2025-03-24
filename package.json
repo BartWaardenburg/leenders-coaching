@@ -11,6 +11,7 @@
     "clean": "pnpm -r exec rm -rf node_modules && rm -rf node_modules",
     "update-deps": "pnpm up -r --latest",
     "check-updates": "pnpm dlx npm-check-updates",
+    "update-types": "pnpm --filter studio-leenders-coaching-nl run update-types",
     "seed:home": "node --loader ts-node/esm scripts/content-seeding/archive/add-home-sections.ts",
     "seed:blog-post": "node --loader ts-node/esm scripts/content-seeding/create-blog-post.ts",
     "seed:create-home-page": "node --loader ts-node/esm scripts/content-seeding/create-home-page.ts",
@@ -37,19 +38,14 @@
     "@typescript-eslint/eslint-plugin": "8.25.0",
     "@typescript-eslint/parser": "8.25.0",
     "eslint": "9.21.0",
-    "graphql": "16.10.0",
     "husky": "9.1.7",
     "lint-staged": "15.4.3",
     "prettier": "3.5.3",
     "typescript": "5.8.2"
   },
-  "pnpm": {
-    "resolutions": {
-      "graphql": "16.10.0"
-    }
-  },
   "engines": {
     "node": ">=20.0.0",
-    "pnpm": "9.15.5"
-  }
+    "pnpm": "9.15.9"
+  },
+  "packageManager": "pnpm@9.15.9"
 }

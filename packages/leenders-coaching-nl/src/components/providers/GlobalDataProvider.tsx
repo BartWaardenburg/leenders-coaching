@@ -1,14 +1,14 @@
 import type { ReactNode } from 'react';
-import type { GetGlobalDataQuery } from '@/generated/graphql';
 import type { ConfigType } from './ConfigProvider';
 
-import { sanityClient } from '@/utilities/sanity';
+import { groq } from '@/utilities/sanity';
+import { GLOBAL_DATA_QUERY } from '@/groq/queries';
 import { transformNullable, transformNullableArray } from '@/utilities/transform';
 import { Header } from '@/components/ui/Header';
 import { Footer } from '@/components/ui/Footer';
 import { Main } from '@/components/ui/Main';
-import GetGlobalData from '@/graphql/queries/getGlobalData.gql';
 import { ConfigProvider, defaultConfig } from './ConfigProvider';
+import type { GLOBAL_DATA_QUERYResult } from '@/types/sanity/groq';
 
 type GlobalDataProviderProps = {
   children: ReactNode;
@@ -52,53 +52,53 @@ const defaultFooter = {
  * Provider component that fetches and manages global data
  */
 export const GlobalDataProvider = async ({ children }: GlobalDataProviderProps) => {
-  /* Fetch data from Sanity */
-  const {
-    allHeader: [header] = [],
-    allFooter: [footer] = [],
-    allConfiguration: [configuration] = [],
-  } = await sanityClient.request<GetGlobalDataQuery>(GetGlobalData);
+  /* Fetch data from Sanity using GROQ */
+  const globalData = await groq<GLOBAL_DATA_QUERYResult>(GLOBAL_DATA_QUERY);
 
-  if (!header || !footer) {
+  if (!globalData?.navigation || !globalData?.footer) {
     throw new Error('Failed to fetch required data from Sanity');
   }
 
+  const header = globalData.navigation;
+  const footer = globalData.footer;
+  const configuration = globalData.siteSettings;
+
   /* Transform data to match component types */
   const headerData = {
-    navigation: transformNullableArray(header?.navigation, item => ({
+    navigation: transformNullableArray(header.navigation, (item) => ({
       _key: transformNullable(item?._key, ''),
       label: transformNullable(item?.label, ''),
       href: transformNullable(item?.href, '#'),
     })) || defaultHeader.navigation,
     about: {
-      title: transformNullable(header?.about?.title, defaultHeader.about.title),
-      description: transformNullable(header?.about?.description, defaultHeader.about.description),
+      title: transformNullable(header.about?.title, defaultHeader.about.title),
+      description: transformNullable(header.about?.description, defaultHeader.about.description),
     },
     social: {
-      title: transformNullable(header?.social?.title, defaultHeader.social.title),
+      title: transformNullable(header.social?.title, defaultHeader.social.title),
     },
     contact: {
-      title: transformNullable(header?.contact?.title, defaultHeader.contact.title),
+      title: transformNullable(header.contact?.title, defaultHeader.contact.title),
       projectEnquiry: {
-        label: transformNullable(header?.contact?.projectEnquiry?.label, defaultHeader.contact.projectEnquiry.label),
-        href: transformNullable(header?.contact?.projectEnquiry?.href, defaultHeader.contact.projectEnquiry.href),
-        linkText: transformNullable(header?.contact?.projectEnquiry?.linkText, defaultHeader.contact.projectEnquiry.linkText),
+        label: transformNullable(header.contact?.projectEnquiry?.label, defaultHeader.contact.projectEnquiry.label),
+        href: transformNullable(header.contact?.projectEnquiry?.href, defaultHeader.contact.projectEnquiry.href),
+        linkText: transformNullable(header.contact?.projectEnquiry?.linkText, defaultHeader.contact.projectEnquiry.linkText),
       },
       generalEnquiry: {
-        label: transformNullable(header?.contact?.generalEnquiry?.label, defaultHeader.contact.generalEnquiry.label),
-        href: transformNullable(header?.contact?.generalEnquiry?.href, defaultHeader.contact.generalEnquiry.href),
-        linkText: transformNullable(header?.contact?.generalEnquiry?.linkText, defaultHeader.contact.generalEnquiry.linkText),
+        label: transformNullable(header.contact?.generalEnquiry?.label, defaultHeader.contact.generalEnquiry.label),
+        href: transformNullable(header.contact?.generalEnquiry?.href, defaultHeader.contact.generalEnquiry.href),
+        linkText: transformNullable(header.contact?.generalEnquiry?.linkText, defaultHeader.contact.generalEnquiry.linkText),
       },
     },
   };
 
   const footerData = {
-    copyright: transformNullable(footer?.copyright, defaultFooter.copyright),
+    copyright: transformNullable(footer.copyright, defaultFooter.copyright),
     contact: {
-      email: transformNullable(footer?.contact?.email, defaultFooter.contact.email),
-      phone: transformNullable(footer?.contact?.phone, defaultFooter.contact.phone),
+      email: transformNullable(footer.contact?.email, defaultFooter.contact.email),
+      phone: transformNullable(footer.contact?.phone, defaultFooter.contact.phone),
     },
-    socialLinks: transformNullableArray(footer?.socialLinks, link => ({
+    socialLinks: transformNullableArray(footer.socialLinks, (link) => ({
       _key: transformNullable(link?._key, ''),
       platform: transformNullable(link?.platform, ''),
       url: transformNullable(link?.url, '#'),

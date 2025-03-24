@@ -4,32 +4,38 @@ import type { SectionCards } from '@/components/sections/SectionCards';
 import type { PastelColor } from '@/components/ui/Section';
 import { Card } from '@/components/ui/Card';
 
+/* Card variant type */
+type CardVariant = 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal';
+
+/* Sanity card data type */
+interface SanityCard {
+  _key: string;
+  title: string;
+  featured?: boolean;
+  date?: string;
+  categories?: string[];
+  slug?: string;
+  image?: {
+    url: string;
+    alt?: string;
+  };
+  variant?: CardVariant;
+  reverse?: boolean;
+}
+
 /* Sanity data type */
 export interface SanityCardsSection extends Record<string, unknown> {
   _type: 'sectionCards';
   title?: string;
   displayTitle?: string;
   description?: string;
+  cards?: SanityCard[];
   background?: PastelColor;
   border?: boolean;
-  cards: Array<{
-    featured?: boolean;
-    title: string;
-    date?: string;
-    categories?: string[];
-    slug?: string;
-    image?: string;
-    variant?: 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal';
-    reverse?: boolean;
-  }>;
 }
 
-/**
- * Type guard for cards section
- */
-export const isCardsSection = (
-  data: Record<string, unknown>,
-): data is SanityCardsSection => {
+/* Type guard for cards section */
+const isSanityCardsSection = (data: Record<string, unknown>): data is SanityCardsSection => {
   return data._type === 'sectionCards';
 };
 
@@ -39,7 +45,7 @@ export const isCardsSection = (
 export const transformCardsSection = (
   data: Record<string, unknown>,
 ): ComponentProps<typeof SectionCards> => {
-  if (!isCardsSection(data)) {
+  if (!isSanityCardsSection(data)) {
     throw new Error('Invalid cards section data');
   }
 
@@ -51,13 +57,13 @@ export const transformCardsSection = (
     children: Array.isArray(data.cards) && data.cards.length > 0
       ? data.cards.map((card) => (
         <Card
-          key={card.title}
+          key={card._key}
           featured={card.featured}
           title={card.title}
           date={card.date}
           categories={card.categories}
           slug={card.slug}
-          image={card.image}
+          image={card.image?.url}
           variant={card.variant}
           border
           reverse={card.reverse}
@@ -65,4 +71,4 @@ export const transformCardsSection = (
       ))
       : null,
   };
-}; 
+};

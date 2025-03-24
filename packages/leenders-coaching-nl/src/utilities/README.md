@@ -14,19 +14,19 @@ The easiest way to use these utilities is with the `createPageComponent` functio
 
 ```tsx
 import type { Metadata } from "next";
-import type { ContactPage } from "@/generated/graphql";
+import type { ContactPage } from "@/types/Page";
 import { createPageComponent } from "@/utilities/page";
 
-// Create page component with type, fallback title, and optional wrapper
+/* Create page component with type, fallback title, and optional wrapper */
 const { getMetadata, PageComponent } = createPageComponent<ContactPage>(
   "contactPage",
   "Contact | Leenders Coaching",
 );
 
-// Generate metadata from Sanity data
+/* Generate metadata from Sanity data */
 export const generateMetadata = (): Promise<Metadata> => getMetadata();
 
-// Default export is the page component
+/* Default export is the page component */
 export default PageComponent;
 ```
 
@@ -41,24 +41,24 @@ import {
   generatePageMetadata,
   renderPageSections,
 } from "@/utilities/page";
-import type { AboutPage } from "@/generated/graphql";
+import type { AboutPage } from "@/types/Page";
 
-// Fetch page data
+/* Fetch page data using GROQ */
 const getAboutPage = async (): Promise<AboutPage | null> => {
   return await getPageData<AboutPage>("aboutPage");
 };
 
-// Generate metadata
+/* Generate metadata */
 export async function generateMetadata(): Promise<Metadata> {
   const aboutPage = await getAboutPage();
   return generatePageMetadata(aboutPage, "About | Leenders Coaching");
 }
 
-// Custom page component with wrapper
+/* Custom page component with wrapper */
 export default async function AboutPage() {
   const aboutPage = await getAboutPage();
 
-  // Use a custom wrapper
+  /* Use a custom wrapper */
   return renderPageSections(aboutPage, (children) => (
     <div className="about-page">
       <h1>About Us</h1>
@@ -70,7 +70,7 @@ export default async function AboutPage() {
 
 ### Available Functions
 
-- `getPageData<T>`: Generic function to fetch page data from Sanity
+- `getPageData<T>`: Generic function to fetch page data from Sanity using GROQ
 - `generatePageMetadata`: Generates Next.js metadata object from page data
 - `renderPageSections`: Renders page sections using the SectionRenderer component
 - `createPageComponent`: Factory function that creates both the metadata and page component

@@ -1,5 +1,4 @@
 import type { ComponentProps } from 'react';
-import type { SectionBlogOrSectionCalendarOrSectionCardsOrSectionContentOrSectionFaqOrSectionFeaturedOrSectionFormOrSectionHeaderOrSectionPricingOrSectionTestimonialOrSectionTimeline } from '@/generated/graphql';
 
 import { transformHeaderSection } from './header';
 import { transformBlogSection } from './blog';
@@ -24,10 +23,6 @@ import { SectionHeader } from '@/components/sections/SectionHeader/SectionHeader
 import { SectionPricing } from '@/components/sections/SectionPricing/SectionPricing';
 import { SectionTestimonial } from '@/components/sections/SectionTestimonial/SectionTestimonial';
 import { SectionTimeline } from '@/components/sections/SectionTimeline/SectionTimeline';
-
-/* Type alias for the section union type to improve code readability */
-export type Section =
-  SectionBlogOrSectionCalendarOrSectionCardsOrSectionContentOrSectionFaqOrSectionFeaturedOrSectionFormOrSectionHeaderOrSectionPricingOrSectionTestimonialOrSectionTimeline;
 
 /**
  * Registry of all section components
@@ -80,3 +75,6 @@ export const sectionTransformers: {
  */
 export const isSectionType = (type: string): type is SectionType =>
   type in sectionRegistry;
+
+// Re-export the Section type to avoid imports from multiple places
+export type { Section } from '@/types/sections';
