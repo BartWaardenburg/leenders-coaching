@@ -9,16 +9,14 @@ export interface SanityCalendarSection extends Record<string, unknown> {
   title?: string;
   displayTitle?: string;
   description?: string;
-  initialDate?: string; // ISO date string
+  initialDate?: string;
   disabledDates?: DisabledDates;
   background?: PastelColor;
   border?: boolean;
 }
 
-/**
- * Type guard for calendar section
- */
-export const isCalendarSection = (
+/* Type guard for calendar section */
+const isSanityCalendarSection = (
   data: Record<string, unknown>,
 ): data is SanityCalendarSection => {
   return data._type === 'sectionCalendar';
@@ -30,7 +28,7 @@ export const isCalendarSection = (
 export const transformCalendarSection = (
   data: Record<string, unknown>,
 ): ComponentProps<typeof SectionCalendar> => {
-  if (!isCalendarSection(data)) {
+  if (!isSanityCalendarSection(data)) {
     throw new Error('Invalid calendar section data');
   }
 
@@ -41,27 +39,5 @@ export const transformCalendarSection = (
     disabledDates: data.disabledDates,
     background: data.background,
     border: data.border,
-  };
-};
-
-type CalendarSectionData = {
-  title?: string;
-  description?: string;
-
-  background?: PastelColor;
-  border?: boolean;
-  initialDate?: string;
-  disabledDates?: DisabledDates;
-};
-
-export const mapCalendarSection = (data: CalendarSectionData) => {
-  return {
-    title: data.title,
-    description: data.description,
-
-    background: data.background,
-    border: data.border,
-    initialDate: data.initialDate ? new Date(data.initialDate) : undefined,
-    disabledDates: data.disabledDates,
   };
 };

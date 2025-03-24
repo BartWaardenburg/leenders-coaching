@@ -13,10 +13,8 @@ export interface SanityFormSection extends Record<string, unknown> {
   border?: boolean;
 }
 
-/**
- * Type guard for form section
- */
-export const isFormSection = (
+/* Type guard for form section */
+const isSanityFormSection = (
   data: Record<string, unknown>,
 ): data is SanityFormSection => {
   return data._type === 'sectionForm';
@@ -27,8 +25,8 @@ export const isFormSection = (
  */
 export const transformFormSection = (
   data: Record<string, unknown>,
-): ComponentProps<typeof SectionForm> => {
-  if (!isFormSection(data)) {
+): Omit<ComponentProps<typeof SectionForm>, 'onSubmit'> => {
+  if (!isSanityFormSection(data)) {
     throw new Error('Invalid form section data');
   }
 
@@ -36,26 +34,6 @@ export const transformFormSection = (
     title: data.displayTitle || undefined,
     description: data.description,
     submitLabel: data.submitLabel,
-    background: data.background,
-    border: data.border,
-    onSubmit: async (formData) => {
-      // Handle form submission here
-      console.log('Form submitted:', formData);
-    },
-  };
-};
-
-type FormSectionData = {
-  title?: string;
-  description?: string;
-  background?: PastelColor;
-  border?: boolean;
-};
-
-export const mapFormSection = (data: FormSectionData) => {
-  return {
-    title: data.title,
-    description: data.description,
     background: data.background,
     border: data.border,
   };

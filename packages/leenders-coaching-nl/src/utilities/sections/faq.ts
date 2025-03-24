@@ -1,7 +1,13 @@
 import type { ComponentProps } from 'react';
 import type { SectionFAQ } from '@/components/sections/SectionFAQ';
 import type { PastelColor } from '@/components/ui/Section';
-import type { FAQItem } from '@/components/ui/FAQ';
+import type { PortableTextBlock } from '@portabletext/react';
+
+export interface FAQItem {
+  _key: string;
+  question: string;
+  answer: PortableTextBlock[];
+}
 
 /* Sanity data type */
 export interface SanityFAQSection extends Record<string, unknown> {
@@ -9,15 +15,13 @@ export interface SanityFAQSection extends Record<string, unknown> {
   title?: string;
   displayTitle?: string;
   description?: string;
-  items: FAQItem[];
+  items?: FAQItem[];
   background?: PastelColor;
   border?: boolean;
 }
 
-/**
- * Type guard for FAQ section
- */
-export const isFAQSection = (
+/* Type guard for FAQ section */
+const isSanityFAQSection = (
   data: Record<string, unknown>,
 ): data is SanityFAQSection => {
   return data._type === 'sectionFAQ';
@@ -29,32 +33,17 @@ export const isFAQSection = (
 export const transformFAQSection = (
   data: Record<string, unknown>,
 ): ComponentProps<typeof SectionFAQ> => {
-  if (!isFAQSection(data)) {
+  if (!isSanityFAQSection(data)) {
     throw new Error('Invalid FAQ section data');
   }
 
   return {
     title: data.displayTitle || undefined,
     description: data.description,
-    items: data.items,
-    background: data.background,
-    border: data.border,
-  };
-};
-
-type FAQSectionData = {
-  title?: string;
-  description?: string;
-  items: FAQItem[];
-  background?: PastelColor;
-  border?: boolean;
-};
-
-export const mapFAQSection = (data: FAQSectionData) => {
-  return {
-    title: data.title,
-    description: data.description,
-    items: data.items,
+    items:
+      data.items?.filter((item): item is FAQItem =>
+        Boolean(item.question && item.answer),
+      ) || [],
     background: data.background,
     border: data.border,
   };

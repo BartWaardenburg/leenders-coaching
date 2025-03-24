@@ -10,8 +10,10 @@ import { Box } from '@/components/ui/Box';
 import { Form } from '@/components/ui/Form';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { submitContactForm } from '@/lib/api/contact';
+import { useToast } from '@/components/providers/ToastProvider';
 
-type ContactFormData = {
+export type ContactFormData = {
   name: string;
   email: string;
   subject: string;
@@ -22,7 +24,6 @@ type SectionFormProps = {
   title?: string;
   description?: string;
   submitLabel?: string;
-  onSubmit?: (data: ContactFormData) => Promise<void>;
   background?: PastelColor;
   border?: boolean;
 } & Omit<ComponentPropsWithoutRef<'section'>, 'onSubmit'>;
@@ -34,7 +35,6 @@ export const SectionForm = ({
   title,
   description,
   submitLabel = 'Verstuur bericht',
-  onSubmit,
   background,
   border = false,
   className,
@@ -44,11 +44,24 @@ export const SectionForm = ({
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    reset,
   } = useForm<ContactFormData>();
+  const { showToast } = useToast();
 
   const handleFormSubmit = async (data: ContactFormData) => {
-    if (onSubmit) {
-      await onSubmit(data);
+    try {
+      await submitContactForm(data);
+      reset();
+      showToast('Bedankt voor je bericht! We nemen zo snel mogelijk contact met je op.', {
+        variant: 'green',
+        duration: 5000,
+      });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      showToast('Er is iets misgegaan bij het versturen van je bericht. Probeer het later opnieuw.', {
+        variant: 'pink',
+        duration: 5000,
+      });
     }
   };
 

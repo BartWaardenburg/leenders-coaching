@@ -28,7 +28,7 @@ export type FAQVariant =
 
 type FAQProps = {
   /** Array of FAQ items */
-  items: FAQItem[];
+  items?: FAQItem[];
   /** Optional color variant */
   variant?: FAQVariant;
   /** Optional className for styling */
@@ -40,7 +40,7 @@ const MotionBox = motion.create(Box);
 /**
  * FAQ component with smooth animations and pastel styling
  */
-export const FAQ = ({ items, variant = 'blue', className }: FAQProps) => {
+export const FAQ = ({ items = [], variant = 'blue', className }: FAQProps) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const variantStyles = {
@@ -54,6 +54,14 @@ export const FAQ = ({ items, variant = 'blue', className }: FAQProps) => {
       'bg-pastel-yellow/50 dark:bg-pastel-yellow-dark/50 border-pastel-yellow-dark dark:border-pastel-yellow',
     teal: 'bg-pastel-teal/50 dark:bg-pastel-teal-dark/50 border-pastel-teal-dark dark:border-pastel-teal',
   };
+
+  if (!items.length) {
+    return (
+      <Box className="text-center text-muted-foreground">
+        <Text>Er zijn momenteel geen veelgestelde vragen beschikbaar.</Text>
+      </Box>
+    );
+  }
 
   return (
     <Stack gap={4} className={className}>

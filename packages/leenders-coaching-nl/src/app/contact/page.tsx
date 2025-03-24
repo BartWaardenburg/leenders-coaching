@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import type { ContactPage } from '@/generated/graphql';
+import type { ContactPage } from '@/types/Page';
 import { createPageComponent } from '@/utilities/page';
 
 /* 

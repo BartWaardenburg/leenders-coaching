@@ -1,0 +1,6 @@
+{
+  "path": "../leenders-coaching-nl/src/**/*.{ts,tsx,js,jsx}",
+  "schema": "schema.json",
+  "generates": "../leenders-coaching-nl/src/types/sanity/schema.ts",
+  "overloadClientMethods": true
+}

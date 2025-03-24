@@ -8,7 +8,7 @@ A modern, type-safe website built with Next.js and Sanity.io.
 
 - **Frontend Framework**: Next.js (App Router)
 - **CMS**: Sanity.io
-- **Data Layer**: GraphQL
+- **Data Layer**: GROQ (Sanity's native query language)
 - **Type Safety**: TypeScript
 - **Styling**: Tailwind CSS with custom design system
 - **Testing**: Vitest + React Testing Library
@@ -142,7 +142,7 @@ packages/
 │   │   │   ├── sections/      # Page section components
 │   │   │   ├── providers/     # React context providers
 │   │   │   └── layouts/       # Layout components
-│   │   ├── graphql/           # GraphQL queries and types
+│   │   ├── groq/              # GROQ queries
 │   │   ├── hooks/             # Custom React hooks
 │   │   ├── utilities/         # Utility functions
 │   │   ├── types/             # Global TypeScript types
@@ -200,19 +200,15 @@ export const baseSectionFields = [
 
 ### Type Generation Flow
 
-1. **Sanity Schema → GraphQL Schema**
+1. **Sanity Schema → GROQ Types**
 
-   - Sanity automatically generates a GraphQL API
-   - Each section schema becomes a GraphQL type
+   - We use TypeScript interfaces that match our Sanity schema
+   - Each section schema is represented by a corresponding TypeScript interface
 
-2. **GraphQL → TypeScript Types**
+2. **Type Safety**
 
-   ```bash
-   pnpm run codegen
-   ```
-
-   - Generates types in `src/graphql/generated/`
-   - These types are the source of truth
+   - Types are maintained manually to match the Sanity schema
+   - This gives us full control over type definitions
 
 3. **Generated Types → UI Props**
    - UI components use their own prop types
@@ -235,6 +231,7 @@ export const baseSectionFields = [
 3. **Performance**
 
    - Fetch page data in one query
+   - Use GROQ projections to request only needed fields
    - Transform data at render time
    - Memoize heavy transformations
 
@@ -262,10 +259,9 @@ export const baseSectionFields = [
    pnpm dev
    ```
 
-3. **Type Generation**
-   ```bash
-   pnpm run codegen
-   ```
+3. **Type Usage**
+   - All types are available in the `src/types` directory
+   - Sanity client is configured in `src/utilities/sanity.ts`
 
 ## License
 

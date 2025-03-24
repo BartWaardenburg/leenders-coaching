@@ -1,14 +1,19 @@
 import type { ComponentProps } from 'react';
 import type { SectionFeatured } from '@/components/sections/SectionFeatured';
 import type { PastelColor } from '@/components/ui/Section';
-import { urlFor } from '@/utilities/sanity';
 
-/* Sanity image type */
-interface SanityImage {
-  _type: 'image';
-  asset: {
-    _ref: string;
-  };
+export interface CallToAction {
+  text: string;
+  link: string;
+  variant?:
+    | 'black'
+    | 'transparent'
+    | 'blue'
+    | 'purple'
+    | 'green'
+    | 'pink'
+    | 'yellow'
+    | 'teal';
 }
 
 /* Sanity data type */
@@ -17,47 +22,16 @@ export interface SanityFeaturedSection extends Record<string, unknown> {
   title?: string;
   displayTitle?: string;
   description?: string;
-  image?: SanityImage;
+  image?: string;
   imageAlt?: string;
-  cta?: {
-    href: string;
-    label: string;
-    variant?:
-      | 'black'
-      | 'transparent'
-      | 'blue'
-      | 'purple'
-      | 'green'
-      | 'pink'
-      | 'yellow'
-      | 'teal';
-  };
+  cta?: CallToAction;
   background?: PastelColor;
   border?: boolean;
   reverse?: boolean;
 }
 
-/**
- * Type guard for Sanity image
- */
-const isSanityImage = (image: unknown): image is SanityImage => {
-  return (
-    typeof image === 'object' &&
-    image !== null &&
-    '_type' in image &&
-    image._type === 'image' &&
-    'asset' in image &&
-    typeof image.asset === 'object' &&
-    image.asset !== null &&
-    '_ref' in image.asset &&
-    typeof image.asset._ref === 'string'
-  );
-};
-
-/**
- * Type guard for featured section
- */
-export const isFeaturedSection = (
+/* Type guard for featured section */
+const isSanityFeaturedSection = (
   data: Record<string, unknown>,
 ): data is SanityFeaturedSection => {
   return data._type === 'sectionFeatured';
@@ -69,26 +43,22 @@ export const isFeaturedSection = (
 export const transformFeaturedSection = (
   data: Record<string, unknown>,
 ): ComponentProps<typeof SectionFeatured> => {
-  if (!isFeaturedSection(data)) {
+  if (!isSanityFeaturedSection(data)) {
     throw new Error('Invalid featured section data');
-  }
-
-  /* Transform Sanity image to URL using the image URL builder */
-  let imageUrl = '';
-  if (data.image && isSanityImage(data.image)) {
-    try {
-      imageUrl = urlFor(data.image).width(1920).quality(80).url();
-    } catch (error) {
-      console.error('Error generating image URL:', error);
-    }
   }
 
   return {
     title: data.displayTitle || undefined,
     description: data.description,
-    image: imageUrl,
-    imageAlt: data.imageAlt || data.title || '',
-    cta: data.cta,
+    image: data.image || '',
+    imageAlt: data.imageAlt || '',
+    cta: data.cta
+      ? {
+          href: data.cta.link,
+          label: data.cta.text,
+          variant: data.cta.variant,
+        }
+      : undefined,
     background: data.background,
     border: data.border,
     reverse: data.reverse,

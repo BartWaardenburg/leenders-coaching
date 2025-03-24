@@ -8,24 +8,19 @@ export interface SanityTestimonialSection extends Record<string, unknown> {
   title?: string;
   displayTitle?: string;
   description?: string;
-  testimonials: Array<{
+  testimonials?: Array<{
+    _key: string;
     quote: string;
     name: string;
     role?: string;
-    image?: {
-      asset?: {
-        url?: string;
-      };
-    };
+    image?: string;
   }>;
   background?: PastelColor;
   border?: boolean;
 }
 
-/**
- * Type guard for testimonial section
- */
-export const isTestimonialSection = (
+/* Type guard for testimonial section */
+const isSanityTestimonialSection = (
   data: Record<string, unknown>,
 ): data is SanityTestimonialSection => {
   return data._type === 'sectionTestimonial';
@@ -37,7 +32,7 @@ export const isTestimonialSection = (
 export const transformTestimonialSection = (
   data: Record<string, unknown>,
 ): ComponentProps<typeof SectionTestimonial> => {
-  if (!isTestimonialSection(data)) {
+  if (!isSanityTestimonialSection(data)) {
     throw new Error('Invalid testimonial section data');
   }
 
@@ -45,39 +40,12 @@ export const transformTestimonialSection = (
     title: data.displayTitle || undefined,
     description: data.description,
     testimonials:
-      Array.isArray(data.testimonials) && data.testimonials.length > 0
-        ? data.testimonials.map((testimonial) => ({
-            quote: testimonial.quote,
-            name: testimonial.name,
-            role: testimonial.role,
-            image: testimonial.image?.asset?.url || '',
-          }))
-        : [],
-    background: data.background,
-    border: data.border,
-  };
-};
-
-export type Testimonial = {
-  name: string;
-  role?: string;
-  quote: string;
-  image?: string;
-};
-
-type TestimonialSectionData = {
-  title?: string;
-  description?: string;
-  testimonials: Testimonial[];
-  background?: PastelColor;
-  border?: boolean;
-};
-
-export const mapTestimonialSection = (data: TestimonialSectionData) => {
-  return {
-    title: data.title,
-    description: data.description,
-    testimonials: data.testimonials,
+      data.testimonials?.map((testimonial) => ({
+        quote: testimonial.quote,
+        name: testimonial.name,
+        role: testimonial.role,
+        image: testimonial.image || '',
+      })) || [],
     background: data.background,
     border: data.border,
   };

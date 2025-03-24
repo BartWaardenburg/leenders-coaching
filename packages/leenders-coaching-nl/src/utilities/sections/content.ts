@@ -13,10 +13,8 @@ export interface SanityContentSection extends Record<string, unknown> {
   border?: boolean;
 }
 
-/**
- * Type guard for content section
- */
-export const isContentSection = (
+/* Type guard for content section */
+const isSanityContentSection = (
   data: Record<string, unknown>,
 ): data is SanityContentSection => {
   return data._type === 'sectionContent';
@@ -28,7 +26,7 @@ export const isContentSection = (
 export const transformContentSection = (
   data: Record<string, unknown>,
 ): ComponentProps<typeof SectionContent> => {
-  if (!isContentSection(data)) {
+  if (!isSanityContentSection(data)) {
     throw new Error('Invalid content section data');
   }
 
@@ -37,23 +35,5 @@ export const transformContentSection = (
     contentRaw: data.contentRaw,
     background: data.background,
     border: data.border,
-  };
-};
-
-type ContentSectionData = {
-  title?: string;
-
-  background?: PastelColor;
-  border?: boolean;
-  contentRaw?: PortableTextBlock[];
-};
-
-export const mapContentSection = (data: ContentSectionData) => {
-  return {
-    title: data.title,
-
-    background: data.background,
-    border: data.border,
-    contentRaw: data.contentRaw,
   };
 };

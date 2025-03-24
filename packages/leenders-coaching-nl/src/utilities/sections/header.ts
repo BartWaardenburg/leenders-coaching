@@ -9,11 +9,10 @@ export interface SanityHeaderSection extends Record<string, unknown> {
   displayTitle?: string;
   subtitle?: string;
   background?: PastelColor;
-
   cta?: {
     text: string;
     link: string;
-    variant:
+    variant?:
       | 'black'
       | 'transparent'
       | 'blue'
@@ -25,10 +24,8 @@ export interface SanityHeaderSection extends Record<string, unknown> {
   };
 }
 
-/**
- * Type guard for header section
- */
-export const isHeaderSection = (
+/* Type guard for SanityHeaderSection */
+const isSanityHeaderSection = (
   data: Record<string, unknown>,
 ): data is SanityHeaderSection => {
   return data._type === 'sectionHeader';
@@ -40,7 +37,7 @@ export const isHeaderSection = (
 export const transformHeaderSection = (
   data: Record<string, unknown>,
 ): ComponentProps<typeof SectionHeader> => {
-  if (!isHeaderSection(data)) {
+  if (!isSanityHeaderSection(data)) {
     throw new Error('Invalid header section data');
   }
 
@@ -48,7 +45,6 @@ export const transformHeaderSection = (
     title: data.displayTitle || undefined,
     description: data.subtitle,
     background: data.background,
-
     primaryCta: data.cta
       ? {
           href: data.cta.link,
