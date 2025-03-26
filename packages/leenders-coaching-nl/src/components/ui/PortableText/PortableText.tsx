@@ -10,7 +10,7 @@ import { Link } from '@/components/ui/Link';
 import { Text } from '@/components/ui/Text';
 import { Box } from '@/components/ui/Box';
 import { Button } from '@/components/ui/Button';
-import { urlFor } from '@/utilities/sanity';
+import { urlForImage } from '@/utilities/sanity';
 
 type LinkAnnotation = {
   _type: 'link';
@@ -94,7 +94,7 @@ const components: PortableTextComponents = {
     image: ({ value }: { value: SanityImage }) => {
       if (!value?.asset) return null;
 
-      const imageUrl = value.asset.url || urlFor(value).width(800).height(400).url();
+      const imageUrl = value.asset.url || urlForImage(value).width(800).height(400).url();
 
       return (
         <Box className="my-8">

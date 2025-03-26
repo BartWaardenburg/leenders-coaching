@@ -5,80 +5,47 @@ import { defineQuery } from '@/utilities/sanity';
  * @returns The page data or null
  */
 export const PAGE_QUERY = (type: string) =>
-  // The result type is: PAGE_QUERYResult<T>
   defineQuery(`*[_type == "${type}"][0] {
-    _id,
-    _type,
-    title,
-    slug,
-    metadata {
-      title,
-      description,
-      keywords,
-      openGraph {
-        title,
-        description,
-        type,
-        url,
-        siteName,
+    ...,
+    sections[] {
+      ...,
+      image {
+        asset->,
+        hotspot,
+        crop,
+        alt
+      },
+      "posts": select(
+        _type == "sectionBlog" => posts[]-> {
+          title,
+          description,
+          slug,
+          publishedAt,
+          categories,
+          "image": image.asset->url,
+          featured,
+          variant
+        }
+      ),
+      testimonials[] {
+        ...,
         image {
-          url,
-          width,
-          height,
+          asset->,
+          hotspot,
+          crop,
           alt
         }
+      },
+      content[] {
+        ...,
+        _type == "image" => {
+          asset->,
+          hotspot,
+          crop,
+          alt,
+          caption
+        }
       }
-    },
-    sections[] {
-      _type,
-      _key,
-      title,
-      displayTitle,
-      subtitle,
-      description,
-      background,
-      showBorder,
-      
-      // Common fields for various section types
-      ...,
-      
-      // SectionHeader
-      image,
-      cta,
-      
-      // SectionFeatured
-      headline,
-      features[]{...},
-      
-      // SectionCards
-      cards[]{...},
-      
-      // SectionTestimonial
-      testimonials[]{...},
-      
-      // SectionContent
-      content,
-      
-      // SectionFAQ
-      faqs[]{...},
-      
-      // SectionBlog
-      posts,
-      limit,
-      showFeatured,
-      
-      // SectionCalendar
-      events[]{...},
-      
-      // SectionForm
-      formType,
-      successMessage,
-      
-      // SectionPricing
-      plans[]{...},
-      
-      // SectionTimeline
-      steps[]{...}
     }
   }`);
 
@@ -87,54 +54,46 @@ export const PAGE_QUERY = (type: string) =>
  * @returns The home page data or null
  */
 export const HOME_PAGE_QUERY = defineQuery(`*[_type == "homePage"][0] {
-  _id,
-  _type,
-  title,
-  slug,
-  metadata {
-    title,
-    description,
-    keywords,
-    openGraph {
-      title,
-      description,
-      type,
-      url,
-      siteName,
+  ...,
+  sections[] {
+    ...,
+    image {
+      asset->,
+      hotspot,
+      crop,
+      alt
+    },
+    "posts": select(
+      _type == "sectionBlog" => posts[]-> {
+        title,
+        description,
+        slug,
+        publishedAt,
+        categories,
+        "image": image.asset->url,
+        featured,
+        variant
+      }
+    ),
+    testimonials[] {
+      ...,
       image {
-        url,
-        width,
-        height,
+        asset->,
+        hotspot,
+        crop,
         alt
       }
+    },
+    content[] {
+      ...,
+      _type == "image" => {
+        asset->,
+        hotspot,
+        crop,
+        alt,
+        caption
+      }
     }
-  },
-  sections[] {
-    _type,
-    _key,
-    title,
-    displayTitle,
-    subtitle,
-    description,
-    background,
-    showBorder,
-    
-    // SectionHeader
-    image,
-    cta,
-    
-    // SectionFeatured
-    headline,
-    features[]{...},
-    
-    // SectionCards
-    cards[]{...},
-    
-    // SectionTestimonial
-    testimonials[]{...},
-    
-    // SectionContent
-    content,
   }
 }`);
 
@@ -143,40 +102,46 @@ export const HOME_PAGE_QUERY = defineQuery(`*[_type == "homePage"][0] {
  * @returns The about page data or null
  */
 export const ABOUT_PAGE_QUERY = defineQuery(`*[_type == "aboutPage"][0] {
-  _id,
-  _type,
-  title,
-  slug,
-  metadata {
-    title,
-    description,
-    keywords,
-    openGraph {
-      title,
-      description,
-      type,
-      url,
-      siteName,
+  ...,
+  sections[] {
+    ...,
+    image {
+      asset->,
+      hotspot,
+      crop,
+      alt
+    },
+    "posts": select(
+      _type == "sectionBlog" => posts[]-> {
+        title,
+        description,
+        slug,
+        publishedAt,
+        categories,
+        "image": image.asset->url,
+        featured,
+        variant
+      }
+    ),
+    testimonials[] {
+      ...,
       image {
-        url,
-        width,
-        height,
+        asset->,
+        hotspot,
+        crop,
         alt
       }
+    },
+    content[] {
+      ...,
+      _type == "image" => {
+        asset->,
+        hotspot,
+        crop,
+        alt,
+        caption
+      }
     }
-  },
-  sections[] {
-    _type,
-    _key,
-    title,
-    displayTitle,
-    subtitle,
-    description,
-    background,
-    showBorder,
-    
-    // Include all possible section fields
-    ...,
   }
 }`);
 
@@ -185,89 +150,14 @@ export const ABOUT_PAGE_QUERY = defineQuery(`*[_type == "aboutPage"][0] {
  * @returns Global data including navigation, footer and site settings
  */
 export const GLOBAL_DATA_QUERY = defineQuery(`{
-  "navigation": *[_type == "navigation"][0] {
-    navigation[] {
-      _key,
-      label,
-      href
-    },
-    about {
-      title,
-      description
-    },
-    social {
-      title
-    },
-    contact {
-      title,
-      projectEnquiry {
-        label,
-        href,
-        linkText
-      },
-      generalEnquiry {
-        label,
-        href,
-        linkText
-      }
-    }
+  "navigation": *[_type == "header"][0] {
+    ...
   },
   "footer": *[_type == "footer"][0] {
-    copyright,
-    contact {
-      email,
-      phone
-    },
-    socialLinks[] {
-      _key,
-      platform,
-      url
-    }
+    ...
   },
   "siteSettings": *[_type == "siteSettings"][0] {
-    accessibility {
-      closeButtons {
-        toast,
-        modal
-      },
-      calendar {
-        previousMonth,
-        nextMonth
-      }
-    },
-    interface {
-      mobileMenu {
-        toggleButton,
-        menuLabel,
-        closeButton
-      },
-      themeToggle {
-        label
-      },
-      buttons {
-        loadMore,
-        readMore,
-        submit,
-        close
-      }
-    },
-    blog {
-      labels {
-        featured,
-        readArticle
-      },
-      paths {
-        blog
-      }
-    },
-    forms {
-      messages {
-        required,
-        invalid,
-        success,
-        error
-      }
-    }
+    ...
   }
 }`);
 
@@ -277,23 +167,19 @@ export const GLOBAL_DATA_QUERY = defineQuery(`{
  */
 export const BLOG_POSTS_QUERY =
   defineQuery(`*[_type == "post"] | order(publishedAt desc) {
-  _id,
-  _type,
-  title,
-  slug,
-  publishedAt,
-  excerpt,
-  mainImage,
-  categories[]->{
-    _id,
-    title
-  },
-  author->{
-    _id,
-    name,
-    image
-  }
-}`);
+    ...,
+    "image": image.asset->url,
+    content[] {
+      ...,
+      _type == "image" => {
+        asset->,
+        hotspot,
+        crop,
+        alt,
+        caption
+      }
+    }
+  }`);
 
 /**
  * Query to get a single blog post by slug
@@ -301,31 +187,17 @@ export const BLOG_POSTS_QUERY =
  */
 export const BLOG_POST_BY_SLUG_QUERY = (slug: string) =>
   defineQuery(`*[_type == "post" && slug.current == "${slug}"][0] {
-    _id,
-    _type,
-    title,
-    slug,
-    publishedAt,
-    excerpt,
-    body,
-    mainImage,
-    categories[]->{
-      _id,
-      title
-    },
-    author->{
-      _id,
-      name,
-      image,
-      bio
-    },
-    related[]->{
-      _id,
-      title,
-      slug,
-      publishedAt,
-      excerpt,
-      mainImage
+    ...,
+    "image": image.asset->url,
+    content[] {
+      ...,
+      _type == "image" => {
+        asset->,
+        hotspot,
+        crop,
+        alt,
+        caption
+      }
     }
   }`);
 
@@ -335,10 +207,8 @@ export const BLOG_POST_BY_SLUG_QUERY = (slug: string) =>
  */
 export const CATEGORIES_QUERY =
   defineQuery(`*[_type == "category"] | order(title asc) {
-  _id,
-  title,
-  description
-}`);
+    ...
+  }`);
 
 /**
  * Query to get posts by category ID
@@ -346,18 +216,13 @@ export const CATEGORIES_QUERY =
  */
 export const POSTS_BY_CATEGORY_QUERY = (categoryId: string) =>
   defineQuery(`*[_type == "post" && references("${categoryId}")] | order(publishedAt desc) {
-    _id,
-    _type,
-    title,
-    slug,
-    publishedAt,
-    excerpt,
-    mainImage,
-    categories[]->{
+    ...,
+    "image": image.asset->url,
+    categories[]-> {
       _id,
       title
     },
-    author->{
+    author-> {
       _id,
       name,
       image

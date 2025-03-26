@@ -9,14 +9,10 @@ export const sectionForm = defineType({
   fields: [
     ...baseSectionFields,
     {
-      name: 'description',
-      title: 'Description',
-      type: 'text',
-    },
-    {
       name: 'form',
       title: 'Form Configuration',
       type: 'formConfiguration',
+      description: 'Configure email settings and submit button text',
     },
   ],
 });

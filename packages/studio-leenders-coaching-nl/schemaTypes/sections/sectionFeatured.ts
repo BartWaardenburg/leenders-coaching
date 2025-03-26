@@ -9,15 +9,30 @@ export const sectionFeatured = defineType({
   fields: [
     ...baseSectionFields,
     {
-      name: 'description',
-      title: 'Description',
-      type: 'text',
+      name: 'image',
+      title: 'Image',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
     },
     {
-      name: 'items',
-      title: 'Featured Items',
-      type: 'array',
-      of: [{ type: 'featureItem' }],
+      name: 'imageAlt',
+      title: 'Image Alt Text',
+      type: 'string',
+      description: 'Alternative text for accessibility',
+    },
+    {
+      name: 'cta',
+      title: 'Call to Action',
+      type: 'callToAction',
+    },
+    {
+      name: 'reverse',
+      title: 'Reverse Layout',
+      type: 'boolean',
+      description: 'Reverse the order of content and image',
+      initialValue: false,
     },
   ],
 });

@@ -107,6 +107,12 @@ export type HeaderContact = {
 export type HeaderSocial = {
   _type: "headerSocial";
   title?: string;
+  links?: Array<{
+    platform?: "linkedin" | "instagram" | "facebook" | "twitter";
+    url?: string;
+    _type: "socialLink";
+    _key: string;
+  }>;
 };
 
 export type HeaderAbout = {
@@ -156,6 +162,14 @@ export type FooterContact = {
   email?: string;
   phone?: string;
 };
+
+export type ColorVariant =
+  | "blue"
+  | "purple"
+  | "green"
+  | "pink"
+  | "yellow"
+  | "teal";
 
 export type Forms = {
   _type: "forms";
@@ -234,19 +248,14 @@ export type CloseButtons = {
 
 export type Seo = {
   _type: "seo";
+  title?: string;
+  description?: string;
   keywords?: Array<string>;
-  defaultMetaImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    altText?: string;
-    _type: "image";
-  };
+  openGraph?: OpenGraph;
+  twitter?: Twitter;
+  robots?: Robots;
+  googleSiteVerification?: string;
+  bingSiteVerification?: string;
 };
 
 export type GoogleBot = {
@@ -284,16 +293,19 @@ export type OpenGraphImage = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+  alt?: string;
   width?: number;
   height?: number;
-  alt?: string;
 };
 
 export type Robots = {
   _type: "robots";
   index?: boolean;
   follow?: boolean;
-  googleBot?: GoogleBot;
+  googleBot?: {
+    index?: boolean;
+    follow?: boolean;
+  };
 };
 
 export type Twitter = {
@@ -308,7 +320,7 @@ export type OpenGraph = {
   _type: "openGraph";
   title?: string;
   description?: string;
-  type?: string;
+  type?: "website" | "article";
   url?: string;
   siteName?: string;
   image?: OpenGraphImage;
@@ -336,6 +348,7 @@ export type TimeSlot = {
   _type: "timeSlot";
   startTime?: string;
   endTime?: string;
+  isAvailable?: boolean;
 };
 
 export type FormFieldOption = {
@@ -360,115 +373,15 @@ export type FormField = {
 export type TimelineEvent = {
   _type: "timelineEvent";
   title?: string;
-  date?: string;
   description?: string;
+  date?: string;
+  variant?: ColorVariant;
 };
 
 export type FaqItem = {
   _type: "faqItem";
   question?: string;
-  answer?: string;
-};
-
-export type PricingCard = {
-  _type: "pricingCard";
-  title?: string;
-  price?: string;
-  description?: string;
-  features?: Array<string>;
-  isPopular?: boolean;
-  variant?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-  cta?: CallToAction;
-};
-
-export type FeatureItem = {
-  _type: "featureItem";
-  title?: string;
-  description?: string;
-  image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-};
-
-export type Card = {
-  _type: "card";
-  title?: string;
-  description?: string;
-  image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  link?: Link;
-};
-
-export type Link = {
-  _type: "link";
-  text?: string;
-  url?: string;
-};
-
-export type SectionTestimonial = {
-  _id: string;
-  _type: "sectionTestimonial";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  displayTitle?: string;
-  subtitle?: string;
-  background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-  description?: string;
-  testimonials?: Array<
-    {
-      _key: string;
-    } & Testimonial
-  >;
-};
-
-export type SectionCards = {
-  _id: string;
-  _type: "sectionCards";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  displayTitle?: string;
-  subtitle?: string;
-  background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-  description?: string;
-  cards?: Array<
-    {
-      _key: string;
-    } & Card
-  >;
-};
-
-export type SectionContent = {
-  _id: string;
-  _type: "sectionContent";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  displayTitle?: string;
-  subtitle?: string;
-  background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-  content?: Array<
+  answer?: Array<
     | {
         children?: Array<{
           marks?: Array<string>;
@@ -480,6 +393,7 @@ export type SectionContent = {
         listItem?: "bullet" | "number";
         markDefs?: Array<{
           href?: string;
+          isExternal?: boolean;
           _type: "link";
           _key: string;
         }>;
@@ -496,10 +410,160 @@ export type SectionContent = {
         };
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
+        alt?: string;
         _type: "image";
         _key: string;
       }
   >;
+};
+
+export type PricingCard = {
+  _type: "pricingCard";
+  title?: string;
+  description?: string;
+  price?: string;
+  features?: Array<{
+    text?: string;
+    _type: "feature";
+    _key: string;
+  }>;
+  isPopular?: boolean;
+  ctaLabel?: string;
+  variant?: ColorVariant;
+};
+
+export type FeatureItem = {
+  _type: "featureItem";
+  title?: string;
+  description?: string;
+  image?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  link?: Link;
+};
+
+export type Card = {
+  _type: "card";
+  title?: string;
+  description?: string;
+  featured?: boolean;
+  date?: string;
+  categories?: Array<string>;
+  slug?: string;
+  image?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  variant?: ColorVariant;
+  reverse?: boolean;
+};
+
+export type Link = {
+  _type: "link";
+  text?: string;
+  url?: string;
+};
+
+export type RichText = Array<
+  | {
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal" | "h2" | "h3" | "h4";
+      listItem?: "bullet" | "number";
+      markDefs?: Array<{
+        href?: string;
+        isExternal?: boolean;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }
+  | {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+      _key: string;
+    }
+>;
+
+export type SectionTestimonial = {
+  _id: string;
+  _type: "sectionTestimonial";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  displayTitle?: string;
+  description?: string;
+  background?: ColorVariant;
+  border?: boolean;
+  testimonials?: Array<
+    {
+      _key: string;
+    } & Testimonial
+  >;
+};
+
+export type SectionCards = {
+  _id: string;
+  _type: "sectionCards";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  displayTitle?: string;
+  description?: string;
+  background?: ColorVariant;
+  border?: boolean;
+  cards?: Array<
+    {
+      _key: string;
+    } & Card
+  >;
+};
+
+export type SectionContent = {
+  _id: string;
+  _type: "sectionContent";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  displayTitle?: string;
+  description?: string;
+  background?: ColorVariant;
+  border?: boolean;
+  content?: RichText;
 };
 
 export type SectionForm = {
@@ -510,9 +574,9 @@ export type SectionForm = {
   _rev: string;
   title?: string;
   displayTitle?: string;
-  subtitle?: string;
-  background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
   description?: string;
+  background?: ColorVariant;
+  border?: boolean;
   form?: FormConfiguration;
 };
 
@@ -520,11 +584,7 @@ export type FormConfiguration = {
   _type: "formConfiguration";
   emailTo?: string;
   emailSubject?: string;
-  fields?: Array<
-    {
-      _key: string;
-    } & FormField
-  >;
+  submitLabel?: string;
 };
 
 export type SectionFeatured = {
@@ -535,14 +595,23 @@ export type SectionFeatured = {
   _rev: string;
   title?: string;
   displayTitle?: string;
-  subtitle?: string;
-  background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
   description?: string;
-  items?: Array<
-    {
-      _key: string;
-    } & FeatureItem
-  >;
+  background?: ColorVariant;
+  border?: boolean;
+  image?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  imageAlt?: string;
+  cta?: CallToAction;
+  reverse?: boolean;
 };
 
 export type SectionCalendar = {
@@ -553,21 +622,26 @@ export type SectionCalendar = {
   _rev: string;
   title?: string;
   displayTitle?: string;
-  subtitle?: string;
-  background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
   description?: string;
+  background?: ColorVariant;
+  border?: boolean;
   settings?: CalendarSettings;
 };
 
 export type CalendarSettings = {
   _type: "calendarSettings";
-  availableDays?: Array<string>;
-  availableTimeSlots?: Array<
-    {
+  initialDate?: string;
+  disabledDates?: {
+    daysOfWeek?: Array<number>;
+    dates?: Array<string>;
+    ranges?: Array<{
+      start?: string;
+      end?: string;
       _key: string;
-    } & TimeSlot
-  >;
-  excludedDates?: Array<string>;
+    }>;
+    before?: string;
+    after?: string;
+  };
 };
 
 export type SectionTimeline = {
@@ -578,10 +652,10 @@ export type SectionTimeline = {
   _rev: string;
   title?: string;
   displayTitle?: string;
-  subtitle?: string;
-  background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
   description?: string;
-  events?: Array<
+  background?: ColorVariant;
+  border?: boolean;
+  steps?: Array<
     {
       _key: string;
     } & TimelineEvent
@@ -596,10 +670,10 @@ export type SectionFAQ = {
   _rev: string;
   title?: string;
   displayTitle?: string;
-  subtitle?: string;
-  background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
   description?: string;
-  questions?: Array<
+  background?: ColorVariant;
+  border?: boolean;
+  items?: Array<
     {
       _key: string;
     } & FaqItem
@@ -614,10 +688,10 @@ export type SectionPricing = {
   _rev: string;
   title?: string;
   displayTitle?: string;
-  subtitle?: string;
-  background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
   description?: string;
-  pricingCards?: Array<
+  background?: ColorVariant;
+  border?: boolean;
+  packages?: Array<
     {
       _key: string;
     } & PricingCard
@@ -632,10 +706,17 @@ export type SectionBlog = {
   _rev: string;
   title?: string;
   displayTitle?: string;
-  subtitle?: string;
-  background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
   description?: string;
-  postsToShow?: number;
+  background?: ColorVariant;
+  border?: boolean;
+  posts?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "post";
+  }>;
+  postsPerPage?: number;
   showFeaturedOnly?: boolean;
   sortOrder?: "newest" | "oldest";
 };
@@ -648,28 +729,27 @@ export type SectionHeader = {
   _rev: string;
   title?: string;
   displayTitle?: string;
-  subtitle?: string;
-  background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
   description?: string;
-  image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  cta?: CallToAction;
+  background?: ColorVariant;
+  border?: boolean;
+  primaryCta?: CallToAction;
+  secondaryCta?: CallToAction;
 };
 
 export type CallToAction = {
   _type: "callToAction";
-  text?: string;
-  link?: string;
-  variant?: "primary" | "secondary" | "text";
+  label?: string;
+  href?: string;
+  variant?:
+    | "black"
+    | "transparent"
+    | "blue"
+    | "purple"
+    | "green"
+    | "pink"
+    | "yellow"
+    | "teal";
+  isExternal?: boolean;
 };
 
 export type Post = {
@@ -695,7 +775,7 @@ export type Post = {
     _type: "image";
   };
   featured?: boolean;
-  variant?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
+  variant?: ColorVariant;
   content?: Array<
     | {
         children?: Array<{
@@ -745,9 +825,91 @@ export type ContactPage = {
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        primaryCta?: CallToAction;
+        secondaryCta?: CallToAction;
+        _type: "sectionHeader";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        posts?: Array<{
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          _key: string;
+          [internalGroqTypeReferenceTo]?: "post";
+        }>;
+        postsPerPage?: number;
+        showFeaturedOnly?: boolean;
+        sortOrder?: "newest" | "oldest";
+        _type: "sectionBlog";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        packages?: Array<
+          {
+            _key: string;
+          } & PricingCard
+        >;
+        _type: "sectionPricing";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        items?: Array<
+          {
+            _key: string;
+          } & FaqItem
+        >;
+        _type: "sectionFAQ";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        steps?: Array<
+          {
+            _key: string;
+          } & TimelineEvent
+        >;
+        _type: "sectionTimeline";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        settings?: CalendarSettings;
+        _type: "sectionCalendar";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         image?: {
           asset?: {
             _ref: string;
@@ -759,94 +921,18 @@ export type ContactPage = {
           crop?: SanityImageCrop;
           _type: "image";
         };
+        imageAlt?: string;
         cta?: CallToAction;
-        _type: "sectionHeader";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        postsToShow?: number;
-        showFeaturedOnly?: boolean;
-        sortOrder?: "newest" | "oldest";
-        _type: "sectionBlog";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        pricingCards?: Array<
-          {
-            _key: string;
-          } & PricingCard
-        >;
-        _type: "sectionPricing";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        questions?: Array<
-          {
-            _key: string;
-          } & FaqItem
-        >;
-        _type: "sectionFAQ";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        events?: Array<
-          {
-            _key: string;
-          } & TimelineEvent
-        >;
-        _type: "sectionTimeline";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        settings?: CalendarSettings;
-        _type: "sectionCalendar";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        items?: Array<
-          {
-            _key: string;
-          } & FeatureItem
-        >;
+        reverse?: boolean;
         _type: "sectionFeatured";
         _key: string;
       }
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         form?: FormConfiguration;
         _type: "sectionForm";
         _key: string;
@@ -854,49 +940,19 @@ export type ContactPage = {
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        content?: Array<
-          | {
-              children?: Array<{
-                marks?: Array<string>;
-                text?: string;
-                _type: "span";
-                _key: string;
-              }>;
-              style?: "normal" | "h2" | "h3" | "h4";
-              listItem?: "bullet" | "number";
-              markDefs?: Array<{
-                href?: string;
-                _type: "link";
-                _key: string;
-              }>;
-              level?: number;
-              _type: "block";
-              _key: string;
-            }
-          | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
-              hotspot?: SanityImageHotspot;
-              crop?: SanityImageCrop;
-              _type: "image";
-              _key: string;
-            }
-        >;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        content?: RichText;
         _type: "sectionContent";
         _key: string;
       }
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         cards?: Array<
           {
             _key: string;
@@ -908,9 +964,9 @@ export type ContactPage = {
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         testimonials?: Array<
           {
             _key: string;
@@ -1001,9 +1057,91 @@ export type BlogPage = {
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        primaryCta?: CallToAction;
+        secondaryCta?: CallToAction;
+        _type: "sectionHeader";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        posts?: Array<{
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          _key: string;
+          [internalGroqTypeReferenceTo]?: "post";
+        }>;
+        postsPerPage?: number;
+        showFeaturedOnly?: boolean;
+        sortOrder?: "newest" | "oldest";
+        _type: "sectionBlog";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        packages?: Array<
+          {
+            _key: string;
+          } & PricingCard
+        >;
+        _type: "sectionPricing";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        items?: Array<
+          {
+            _key: string;
+          } & FaqItem
+        >;
+        _type: "sectionFAQ";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        steps?: Array<
+          {
+            _key: string;
+          } & TimelineEvent
+        >;
+        _type: "sectionTimeline";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        settings?: CalendarSettings;
+        _type: "sectionCalendar";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         image?: {
           asset?: {
             _ref: string;
@@ -1015,94 +1153,18 @@ export type BlogPage = {
           crop?: SanityImageCrop;
           _type: "image";
         };
+        imageAlt?: string;
         cta?: CallToAction;
-        _type: "sectionHeader";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        postsToShow?: number;
-        showFeaturedOnly?: boolean;
-        sortOrder?: "newest" | "oldest";
-        _type: "sectionBlog";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        pricingCards?: Array<
-          {
-            _key: string;
-          } & PricingCard
-        >;
-        _type: "sectionPricing";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        questions?: Array<
-          {
-            _key: string;
-          } & FaqItem
-        >;
-        _type: "sectionFAQ";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        events?: Array<
-          {
-            _key: string;
-          } & TimelineEvent
-        >;
-        _type: "sectionTimeline";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        settings?: CalendarSettings;
-        _type: "sectionCalendar";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        items?: Array<
-          {
-            _key: string;
-          } & FeatureItem
-        >;
+        reverse?: boolean;
         _type: "sectionFeatured";
         _key: string;
       }
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         form?: FormConfiguration;
         _type: "sectionForm";
         _key: string;
@@ -1110,49 +1172,19 @@ export type BlogPage = {
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        content?: Array<
-          | {
-              children?: Array<{
-                marks?: Array<string>;
-                text?: string;
-                _type: "span";
-                _key: string;
-              }>;
-              style?: "normal" | "h2" | "h3" | "h4";
-              listItem?: "bullet" | "number";
-              markDefs?: Array<{
-                href?: string;
-                _type: "link";
-                _key: string;
-              }>;
-              level?: number;
-              _type: "block";
-              _key: string;
-            }
-          | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
-              hotspot?: SanityImageHotspot;
-              crop?: SanityImageCrop;
-              _type: "image";
-              _key: string;
-            }
-        >;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        content?: RichText;
         _type: "sectionContent";
         _key: string;
       }
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         cards?: Array<
           {
             _key: string;
@@ -1164,9 +1196,9 @@ export type BlogPage = {
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         testimonials?: Array<
           {
             _key: string;
@@ -1257,9 +1289,91 @@ export type ApproachPage = {
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        primaryCta?: CallToAction;
+        secondaryCta?: CallToAction;
+        _type: "sectionHeader";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        posts?: Array<{
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          _key: string;
+          [internalGroqTypeReferenceTo]?: "post";
+        }>;
+        postsPerPage?: number;
+        showFeaturedOnly?: boolean;
+        sortOrder?: "newest" | "oldest";
+        _type: "sectionBlog";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        packages?: Array<
+          {
+            _key: string;
+          } & PricingCard
+        >;
+        _type: "sectionPricing";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        items?: Array<
+          {
+            _key: string;
+          } & FaqItem
+        >;
+        _type: "sectionFAQ";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        steps?: Array<
+          {
+            _key: string;
+          } & TimelineEvent
+        >;
+        _type: "sectionTimeline";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        settings?: CalendarSettings;
+        _type: "sectionCalendar";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         image?: {
           asset?: {
             _ref: string;
@@ -1271,94 +1385,18 @@ export type ApproachPage = {
           crop?: SanityImageCrop;
           _type: "image";
         };
+        imageAlt?: string;
         cta?: CallToAction;
-        _type: "sectionHeader";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        postsToShow?: number;
-        showFeaturedOnly?: boolean;
-        sortOrder?: "newest" | "oldest";
-        _type: "sectionBlog";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        pricingCards?: Array<
-          {
-            _key: string;
-          } & PricingCard
-        >;
-        _type: "sectionPricing";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        questions?: Array<
-          {
-            _key: string;
-          } & FaqItem
-        >;
-        _type: "sectionFAQ";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        events?: Array<
-          {
-            _key: string;
-          } & TimelineEvent
-        >;
-        _type: "sectionTimeline";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        settings?: CalendarSettings;
-        _type: "sectionCalendar";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        items?: Array<
-          {
-            _key: string;
-          } & FeatureItem
-        >;
+        reverse?: boolean;
         _type: "sectionFeatured";
         _key: string;
       }
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         form?: FormConfiguration;
         _type: "sectionForm";
         _key: string;
@@ -1366,49 +1404,19 @@ export type ApproachPage = {
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        content?: Array<
-          | {
-              children?: Array<{
-                marks?: Array<string>;
-                text?: string;
-                _type: "span";
-                _key: string;
-              }>;
-              style?: "normal" | "h2" | "h3" | "h4";
-              listItem?: "bullet" | "number";
-              markDefs?: Array<{
-                href?: string;
-                _type: "link";
-                _key: string;
-              }>;
-              level?: number;
-              _type: "block";
-              _key: string;
-            }
-          | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
-              hotspot?: SanityImageHotspot;
-              crop?: SanityImageCrop;
-              _type: "image";
-              _key: string;
-            }
-        >;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        content?: RichText;
         _type: "sectionContent";
         _key: string;
       }
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         cards?: Array<
           {
             _key: string;
@@ -1420,9 +1428,9 @@ export type ApproachPage = {
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         testimonials?: Array<
           {
             _key: string;
@@ -1513,9 +1521,91 @@ export type CoachingPage = {
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        primaryCta?: CallToAction;
+        secondaryCta?: CallToAction;
+        _type: "sectionHeader";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        posts?: Array<{
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          _key: string;
+          [internalGroqTypeReferenceTo]?: "post";
+        }>;
+        postsPerPage?: number;
+        showFeaturedOnly?: boolean;
+        sortOrder?: "newest" | "oldest";
+        _type: "sectionBlog";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        packages?: Array<
+          {
+            _key: string;
+          } & PricingCard
+        >;
+        _type: "sectionPricing";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        items?: Array<
+          {
+            _key: string;
+          } & FaqItem
+        >;
+        _type: "sectionFAQ";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        steps?: Array<
+          {
+            _key: string;
+          } & TimelineEvent
+        >;
+        _type: "sectionTimeline";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        settings?: CalendarSettings;
+        _type: "sectionCalendar";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         image?: {
           asset?: {
             _ref: string;
@@ -1527,94 +1617,18 @@ export type CoachingPage = {
           crop?: SanityImageCrop;
           _type: "image";
         };
+        imageAlt?: string;
         cta?: CallToAction;
-        _type: "sectionHeader";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        postsToShow?: number;
-        showFeaturedOnly?: boolean;
-        sortOrder?: "newest" | "oldest";
-        _type: "sectionBlog";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        pricingCards?: Array<
-          {
-            _key: string;
-          } & PricingCard
-        >;
-        _type: "sectionPricing";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        questions?: Array<
-          {
-            _key: string;
-          } & FaqItem
-        >;
-        _type: "sectionFAQ";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        events?: Array<
-          {
-            _key: string;
-          } & TimelineEvent
-        >;
-        _type: "sectionTimeline";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        settings?: CalendarSettings;
-        _type: "sectionCalendar";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        items?: Array<
-          {
-            _key: string;
-          } & FeatureItem
-        >;
+        reverse?: boolean;
         _type: "sectionFeatured";
         _key: string;
       }
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         form?: FormConfiguration;
         _type: "sectionForm";
         _key: string;
@@ -1622,49 +1636,19 @@ export type CoachingPage = {
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        content?: Array<
-          | {
-              children?: Array<{
-                marks?: Array<string>;
-                text?: string;
-                _type: "span";
-                _key: string;
-              }>;
-              style?: "normal" | "h2" | "h3" | "h4";
-              listItem?: "bullet" | "number";
-              markDefs?: Array<{
-                href?: string;
-                _type: "link";
-                _key: string;
-              }>;
-              level?: number;
-              _type: "block";
-              _key: string;
-            }
-          | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
-              hotspot?: SanityImageHotspot;
-              crop?: SanityImageCrop;
-              _type: "image";
-              _key: string;
-            }
-        >;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        content?: RichText;
         _type: "sectionContent";
         _key: string;
       }
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         cards?: Array<
           {
             _key: string;
@@ -1676,9 +1660,9 @@ export type CoachingPage = {
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         testimonials?: Array<
           {
             _key: string;
@@ -1769,9 +1753,91 @@ export type AboutPage = {
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        primaryCta?: CallToAction;
+        secondaryCta?: CallToAction;
+        _type: "sectionHeader";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        posts?: Array<{
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          _key: string;
+          [internalGroqTypeReferenceTo]?: "post";
+        }>;
+        postsPerPage?: number;
+        showFeaturedOnly?: boolean;
+        sortOrder?: "newest" | "oldest";
+        _type: "sectionBlog";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        packages?: Array<
+          {
+            _key: string;
+          } & PricingCard
+        >;
+        _type: "sectionPricing";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        items?: Array<
+          {
+            _key: string;
+          } & FaqItem
+        >;
+        _type: "sectionFAQ";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        steps?: Array<
+          {
+            _key: string;
+          } & TimelineEvent
+        >;
+        _type: "sectionTimeline";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        settings?: CalendarSettings;
+        _type: "sectionCalendar";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         image?: {
           asset?: {
             _ref: string;
@@ -1783,94 +1849,18 @@ export type AboutPage = {
           crop?: SanityImageCrop;
           _type: "image";
         };
+        imageAlt?: string;
         cta?: CallToAction;
-        _type: "sectionHeader";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        postsToShow?: number;
-        showFeaturedOnly?: boolean;
-        sortOrder?: "newest" | "oldest";
-        _type: "sectionBlog";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        pricingCards?: Array<
-          {
-            _key: string;
-          } & PricingCard
-        >;
-        _type: "sectionPricing";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        questions?: Array<
-          {
-            _key: string;
-          } & FaqItem
-        >;
-        _type: "sectionFAQ";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        events?: Array<
-          {
-            _key: string;
-          } & TimelineEvent
-        >;
-        _type: "sectionTimeline";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        settings?: CalendarSettings;
-        _type: "sectionCalendar";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        items?: Array<
-          {
-            _key: string;
-          } & FeatureItem
-        >;
+        reverse?: boolean;
         _type: "sectionFeatured";
         _key: string;
       }
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         form?: FormConfiguration;
         _type: "sectionForm";
         _key: string;
@@ -1878,49 +1868,19 @@ export type AboutPage = {
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        content?: Array<
-          | {
-              children?: Array<{
-                marks?: Array<string>;
-                text?: string;
-                _type: "span";
-                _key: string;
-              }>;
-              style?: "normal" | "h2" | "h3" | "h4";
-              listItem?: "bullet" | "number";
-              markDefs?: Array<{
-                href?: string;
-                _type: "link";
-                _key: string;
-              }>;
-              level?: number;
-              _type: "block";
-              _key: string;
-            }
-          | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
-              hotspot?: SanityImageHotspot;
-              crop?: SanityImageCrop;
-              _type: "image";
-              _key: string;
-            }
-        >;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        content?: RichText;
         _type: "sectionContent";
         _key: string;
       }
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         cards?: Array<
           {
             _key: string;
@@ -1932,9 +1892,9 @@ export type AboutPage = {
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         testimonials?: Array<
           {
             _key: string;
@@ -2025,9 +1985,91 @@ export type HomePage = {
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        primaryCta?: CallToAction;
+        secondaryCta?: CallToAction;
+        _type: "sectionHeader";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        posts?: Array<{
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          _key: string;
+          [internalGroqTypeReferenceTo]?: "post";
+        }>;
+        postsPerPage?: number;
+        showFeaturedOnly?: boolean;
+        sortOrder?: "newest" | "oldest";
+        _type: "sectionBlog";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        packages?: Array<
+          {
+            _key: string;
+          } & PricingCard
+        >;
+        _type: "sectionPricing";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        items?: Array<
+          {
+            _key: string;
+          } & FaqItem
+        >;
+        _type: "sectionFAQ";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        steps?: Array<
+          {
+            _key: string;
+          } & TimelineEvent
+        >;
+        _type: "sectionTimeline";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        settings?: CalendarSettings;
+        _type: "sectionCalendar";
+        _key: string;
+      }
+    | {
+        title?: string;
+        displayTitle?: string;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         image?: {
           asset?: {
             _ref: string;
@@ -2039,94 +2081,18 @@ export type HomePage = {
           crop?: SanityImageCrop;
           _type: "image";
         };
+        imageAlt?: string;
         cta?: CallToAction;
-        _type: "sectionHeader";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        postsToShow?: number;
-        showFeaturedOnly?: boolean;
-        sortOrder?: "newest" | "oldest";
-        _type: "sectionBlog";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        pricingCards?: Array<
-          {
-            _key: string;
-          } & PricingCard
-        >;
-        _type: "sectionPricing";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        questions?: Array<
-          {
-            _key: string;
-          } & FaqItem
-        >;
-        _type: "sectionFAQ";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        events?: Array<
-          {
-            _key: string;
-          } & TimelineEvent
-        >;
-        _type: "sectionTimeline";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        settings?: CalendarSettings;
-        _type: "sectionCalendar";
-        _key: string;
-      }
-    | {
-        title?: string;
-        displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        description?: string;
-        items?: Array<
-          {
-            _key: string;
-          } & FeatureItem
-        >;
+        reverse?: boolean;
         _type: "sectionFeatured";
         _key: string;
       }
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         form?: FormConfiguration;
         _type: "sectionForm";
         _key: string;
@@ -2134,49 +2100,19 @@ export type HomePage = {
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
-        content?: Array<
-          | {
-              children?: Array<{
-                marks?: Array<string>;
-                text?: string;
-                _type: "span";
-                _key: string;
-              }>;
-              style?: "normal" | "h2" | "h3" | "h4";
-              listItem?: "bullet" | "number";
-              markDefs?: Array<{
-                href?: string;
-                _type: "link";
-                _key: string;
-              }>;
-              level?: number;
-              _type: "block";
-              _key: string;
-            }
-          | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
-              hotspot?: SanityImageHotspot;
-              crop?: SanityImageCrop;
-              _type: "image";
-              _key: string;
-            }
-        >;
+        description?: string;
+        background?: ColorVariant;
+        border?: boolean;
+        content?: RichText;
         _type: "sectionContent";
         _key: string;
       }
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         cards?: Array<
           {
             _key: string;
@@ -2188,9 +2124,9 @@ export type HomePage = {
     | {
         title?: string;
         displayTitle?: string;
-        subtitle?: string;
-        background?: "blue" | "purple" | "green" | "pink" | "yellow" | "teal";
         description?: string;
+        background?: ColorVariant;
+        border?: boolean;
         testimonials?: Array<
           {
             _key: string;
@@ -2358,6 +2294,7 @@ export type AllSanitySchemaTypes =
   | SocialLink
   | Footer
   | FooterContact
+  | ColorVariant
   | Forms
   | FormMessages
   | Blog
@@ -2387,6 +2324,7 @@ export type AllSanitySchemaTypes =
   | FeatureItem
   | Card
   | Link
+  | RichText
   | SectionTestimonial
   | SectionCards
   | SectionContent

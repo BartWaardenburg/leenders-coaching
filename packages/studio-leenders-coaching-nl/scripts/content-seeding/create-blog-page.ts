@@ -63,7 +63,7 @@ const createBlogPage = async (): Promise<void> => {
       title: 'Uitgelichte blogs',
       displayTitle: 'Uitgelichte artikelen',
       background: 'purple',
-      description: 'Ontdek onze meest populaire en recente blog artikelen.',
+      description: 'Ontdek mijn meest populaire en recente blog artikelen.',
       postsToShow: 3,
       showFeaturedOnly: true,
       cta: {
@@ -110,7 +110,7 @@ const createBlogPage = async (): Promise<void> => {
       displayTitle: 'Alle blog artikelen',
       background: 'teal',
       description:
-        'Bekijk hier al onze blog artikelen. Gebruik de filters om op categorie of thema te filteren.',
+        'Bekijk hier al mijn blog artikelen. Gebruik de filters om op categorie of thema te filteren.',
       postsToShow: 10,
       showFeaturedOnly: false,
     });

@@ -50,8 +50,12 @@ export const NavigationItems = ({ links, onItemClick }: NavigationItemsProps) =>
     animate="visible"
   >
     <Stack space={4}>
-      {links?.map((link) => (
-        link.href && link.label && (
+      {links?.map((link) => {
+        if (!link.href || !link.label) {
+          console.warn('Invalid navigation link:', link);
+          return null;
+        }
+        return (
           <Box
             as={motion.li}
             variants={itemVariants}
@@ -67,8 +71,8 @@ export const NavigationItems = ({ links, onItemClick }: NavigationItemsProps) =>
               </Text>
             </Link>
           </Box>
-        )
-      ))}
+        );
+      })}
     </Stack>
   </Box>
 );

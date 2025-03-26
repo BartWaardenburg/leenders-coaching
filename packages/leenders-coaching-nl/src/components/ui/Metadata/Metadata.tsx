@@ -52,7 +52,7 @@ export const Metadata: FC<MetadataProps> = ({
   openGraph,
   twitter,
   robots,
-  baseUrl = 'https://www.leenderscoaching.nl',
+  baseUrl = 'https://www.leenders-coaching.nl',
   pathname = '/',
 }) => {
   const url = `${baseUrl}${pathname}`;
@@ -131,17 +131,15 @@ export const Metadata: FC<MetadataProps> = ({
         <>
           <meta
             name="robots"
-            content={`${robots.index ? 'index' : 'noindex'}, ${
-              robots.follow ? 'follow' : 'nofollow'
-            }`}
+            content={`${robots.index ? 'index' : 'noindex'}, ${robots.follow ? 'follow' : 'nofollow'
+              }`}
           />
           {robots.googleBot && (
             <>
               <meta
                 name="googlebot"
-                content={`${robots.googleBot.index ? 'index' : 'noindex'}, ${
-                  robots.googleBot.follow ? 'follow' : 'nofollow'
-                }`}
+                content={`${robots.googleBot.index ? 'index' : 'noindex'}, ${robots.googleBot.follow ? 'follow' : 'nofollow'
+                  }`}
               />
               {robots.googleBot['max-video-preview'] !== undefined && (
                 <meta

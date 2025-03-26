@@ -1,38 +1,11 @@
 import type { ComponentProps } from 'react';
 import type { SectionPricing } from '@/components/sections/SectionPricing';
-import type { PastelColor } from '@/components/ui/Section';
-
-interface PricingFeature {
-  _key: string;
-  text: string;
-}
-
-interface PricingPackage {
-  _key: string;
-  title: string;
-  description: string;
-  price: string;
-  features: PricingFeature[];
-  isPopular?: boolean;
-  ctaLabel: string;
-  variant?: 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal';
-}
-
-/* Sanity data type */
-export interface SanityPricingSection extends Record<string, unknown> {
-  _type: 'sectionPricing';
-  title?: string;
-  displayTitle?: string;
-  description?: string;
-  packages?: PricingPackage[];
-  background?: PastelColor;
-  border?: boolean;
-}
+import type { SectionPricing as SanitySectionPricing } from '@/types/sanity/schema';
 
 /* Type guard for pricing section */
-const isSanityPricingSection = (
+const isSanitySectionPricing = (
   data: Record<string, unknown>,
-): data is SanityPricingSection => {
+): data is SanitySectionPricing => {
   return data._type === 'sectionPricing';
 };
 
@@ -42,14 +15,28 @@ const isSanityPricingSection = (
 export const transformPricingSection = (
   data: Record<string, unknown>,
 ): ComponentProps<typeof SectionPricing> => {
-  if (!isSanityPricingSection(data)) {
+  if (!isSanitySectionPricing(data)) {
     throw new Error('Invalid pricing section data');
   }
 
   return {
     title: data.displayTitle || undefined,
-    description: data.description,
-    packages: data.packages || [],
+    description: data.description || '',
+    packages:
+      data.packages?.map((pkg) => ({
+        _key: pkg._key,
+        title: pkg.title || '',
+        description: pkg.description || '',
+        price: pkg.price || '',
+        features:
+          pkg.features?.map((feature) => ({
+            _key: feature._key,
+            text: feature.text || '',
+          })) || [],
+        isPopular: pkg.isPopular,
+        ctaLabel: pkg.ctaLabel || '',
+        variant: pkg.variant,
+      })) || [],
     background: data.background,
     border: data.border,
   };

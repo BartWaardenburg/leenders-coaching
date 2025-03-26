@@ -1,28 +1,12 @@
 import type { ComponentProps } from 'react';
 import type { SectionTestimonial } from '@/components/sections/SectionTestimonial';
-import type { PastelColor } from '@/components/ui/Section';
-
-/* Sanity data type */
-export interface SanityTestimonialSection extends Record<string, unknown> {
-  _type: 'sectionTestimonial';
-  title?: string;
-  displayTitle?: string;
-  description?: string;
-  testimonials?: Array<{
-    _key: string;
-    quote: string;
-    name: string;
-    role?: string;
-    image?: string;
-  }>;
-  background?: PastelColor;
-  border?: boolean;
-}
+import type { SectionTestimonial as SanitySectionTestimonial } from '@/types/sanity/schema';
+import { urlForImage } from '@/utilities/sanity';
 
 /* Type guard for testimonial section */
-const isSanityTestimonialSection = (
+const isSanitySectionTestimonial = (
   data: Record<string, unknown>,
-): data is SanityTestimonialSection => {
+): data is SanitySectionTestimonial => {
   return data._type === 'sectionTestimonial';
 };
 
@@ -32,19 +16,20 @@ const isSanityTestimonialSection = (
 export const transformTestimonialSection = (
   data: Record<string, unknown>,
 ): ComponentProps<typeof SectionTestimonial> => {
-  if (!isSanityTestimonialSection(data)) {
+  if (!isSanitySectionTestimonial(data)) {
     throw new Error('Invalid testimonial section data');
   }
 
   return {
     title: data.displayTitle || undefined,
-    description: data.description,
+    description: data.description || '',
     testimonials:
       data.testimonials?.map((testimonial) => ({
-        quote: testimonial.quote,
-        name: testimonial.name,
+        _key: testimonial._key,
+        quote: testimonial.quote || '',
+        name: testimonial.name || '',
         role: testimonial.role,
-        image: testimonial.image || '',
+        image: testimonial.image ? urlForImage(testimonial.image).url() : '',
       })) || [],
     background: data.background,
     border: data.border,

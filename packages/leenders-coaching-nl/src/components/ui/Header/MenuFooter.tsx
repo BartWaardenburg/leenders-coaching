@@ -27,6 +27,7 @@ type MenuFooterContact = {
 
 type MenuFooterSocial = {
   title: string | null;
+  links: SocialLink[];
 };
 
 type MenuFooter = {
@@ -44,7 +45,6 @@ type SocialLink = {
 
 type MenuFooterProps = {
   sections: MenuFooter;
-  socialLinks: SocialLink[];
 };
 
 /* Animation variants for the footer sections container */
@@ -142,7 +142,7 @@ const SocialLink = ({ href, label }: SocialLinkProps) => (
   </motion.div>
 );
 
-export const MenuFooter = ({ sections, socialLinks }: MenuFooterProps) => {
+export const MenuFooter = ({ sections }: MenuFooterProps) => {
   if (!sections.about || !sections.contact) return null;
 
   return (
@@ -168,7 +168,7 @@ export const MenuFooter = ({ sections, socialLinks }: MenuFooterProps) => {
             <Flex direction="column" className="h-full">
               <Box as="ul" className="flex-1">
                 <Stack space={4}>
-                  {socialLinks.map(link => (
+                  {sections.social?.links.map(link => (
                     link.platform && link.url && (
                       <Box as="li" key={link._key}>
                         <SocialLink href={link.url} label={link.platform} />

@@ -25,6 +25,7 @@ import {
 
 import {
   callToAction,
+  block,
   link,
   card,
   featureItem,
@@ -57,6 +58,7 @@ import {
   blogPaths,
   forms,
   formMessages,
+  colorVariant,
 } from './objects';
 
 import { footer, footerContact, socialLink } from './footer';
@@ -99,6 +101,7 @@ export const schemaTypes = [
 
   // Objects
   callToAction,
+  block,
   link,
   card,
   featureItem,
@@ -131,6 +134,7 @@ export const schemaTypes = [
   blogPaths,
   forms,
   formMessages,
+  colorVariant,
 
   // Footer
   footer,

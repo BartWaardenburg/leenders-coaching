@@ -15,17 +15,18 @@ export const formConfiguration = defineType({
     }),
     defineField({
       name: 'emailSubject',
-      title: 'Email Subject',
+      title: 'Email Subject Template',
       type: 'string',
-      description: 'Subject line for form submission emails',
+      description:
+        'Subject line template for form submission emails. Use {subject} to include the submitted subject.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'fields',
-      title: 'Form Fields',
-      type: 'array',
-      of: [{ type: 'formField' }],
-      validation: (Rule) => Rule.required(),
+      name: 'submitLabel',
+      title: 'Submit Button Label',
+      type: 'string',
+      description: 'Text to display on the submit button',
+      initialValue: 'Verstuur bericht',
     }),
   ],
 });

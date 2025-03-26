@@ -60,7 +60,7 @@ export const menuFooterConfig: MenuFooterConfig = {
 export const footerConfig = {
   copyright: '© 2025 Simone Leenders Coaching',
   instagram: {
-    href: 'https://instagram.com/leenderscoaching',
+    href: 'https://instagram.com/leenders-coaching',
     label: 'Instagram',
   },
   contact: {

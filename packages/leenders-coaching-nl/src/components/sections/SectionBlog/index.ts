@@ -1,1 +1,1 @@
-export { SectionBlog } from './SectionBlog';
+export { SectionBlog, type BlogPost } from './SectionBlog';

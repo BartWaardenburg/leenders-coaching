@@ -36,7 +36,7 @@ export const Footer = ({ className, copyright, contact, socialLinks, ...props }:
     <Box
       as="footer"
       className={twMerge(
-        'mt-auto bg-secondary/20 dark:bg-menu transition-theme bg-background',
+        'mt-auto dark:bg-menu transition-theme bg-background',
         className,
       )}
       {...props}

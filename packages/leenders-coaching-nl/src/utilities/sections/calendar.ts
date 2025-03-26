@@ -1,25 +1,16 @@
 import type { ComponentProps } from 'react';
 import type { SectionCalendar } from '@/components/sections/SectionCalendar';
-import type { PastelColor } from '@/components/ui/Section';
-import type { DisabledDates } from '@/components/ui/Calendar/calendarUtilities';
-
-/* Sanity data type */
-export interface SanityCalendarSection extends Record<string, unknown> {
-  _type: 'sectionCalendar';
-  title?: string;
-  displayTitle?: string;
-  description?: string;
-  initialDate?: string;
-  disabledDates?: DisabledDates;
-  background?: PastelColor;
-  border?: boolean;
-}
+import type {
+  DisabledDates,
+  DayOfWeek,
+} from '@/components/ui/Calendar/calendarUtilities';
+import type { SectionCalendar as SanitySectionCalendar } from '@/types/sanity/schema';
 
 /* Type guard for calendar section */
-const isSanityCalendarSection = (
+const isSanitySectionCalendar = (
   data: Record<string, unknown>,
-): data is SanityCalendarSection => {
-  return data._type === 'sectionCalendar';
+): data is SanitySectionCalendar => {
+  return data._type === 'sectionCalendar' && !!data.settings;
 };
 
 /**
@@ -28,15 +19,33 @@ const isSanityCalendarSection = (
 export const transformCalendarSection = (
   data: Record<string, unknown>,
 ): ComponentProps<typeof SectionCalendar> => {
-  if (!isSanityCalendarSection(data)) {
+  if (!isSanitySectionCalendar(data)) {
     throw new Error('Invalid calendar section data');
   }
 
+  const { settings } = data;
+
+  if (!settings) {
+    throw new Error('Calendar settings are required');
+  }
+
+  // Transform disabled dates
+  const disabledDates: DisabledDates = {
+    daysOfWeek: settings.disabledDates?.daysOfWeek as DayOfWeek[] | undefined,
+    dates: settings.disabledDates?.dates?.map((date) => new Date(date)),
+    ranges: settings.disabledDates?.ranges?.map((range) => ({
+      start: new Date(range.start || ''),
+      end: new Date(range.end || ''),
+    })),
+  };
+
   return {
     title: data.displayTitle || undefined,
-    description: data.description,
-    initialDate: data.initialDate ? new Date(data.initialDate) : undefined,
-    disabledDates: data.disabledDates,
+    description: data.description || '',
+    initialDate: settings.initialDate
+      ? new Date(settings.initialDate)
+      : undefined,
+    disabledDates,
     background: data.background,
     border: data.border,
   };

@@ -1,7 +1,7 @@
 "use client";
 
 import type { ComponentPropsWithoutRef } from 'react';
-import { useForm } from 'react-hook-form';
+import * as reactHookForm from 'react-hook-form';
 
 import { Section, type PastelColor } from '@/components/ui/Section';
 import { Stack } from '@/components/ui/Stack';
@@ -11,7 +11,7 @@ import { Form } from '@/components/ui/Form';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { submitContactForm } from '@/lib/api/contact';
-import { useToast } from '@/components/providers/ToastProvider';
+import { useToast } from '@/components/ui/Toast/ToastManager';
 
 export type ContactFormData = {
   name: string;
@@ -45,20 +45,20 @@ export const SectionForm = ({
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<ContactFormData>();
-  const { showToast } = useToast();
+  } = reactHookForm.useForm<ContactFormData>();
+  const { show } = useToast();
 
   const handleFormSubmit = async (data: ContactFormData) => {
     try {
       await submitContactForm(data);
       reset();
-      showToast('Bedankt voor je bericht! We nemen zo snel mogelijk contact met je op.', {
+      show('Bedankt voor je bericht! We nemen zo snel mogelijk contact met je op.', {
         variant: 'green',
         duration: 5000,
       });
     } catch (error) {
       console.error('Error submitting form:', error);
-      showToast('Er is iets misgegaan bij het versturen van je bericht. Probeer het later opnieuw.', {
+      show('Er is iets misgegaan bij het versturen van je bericht. Probeer het later opnieuw.', {
         variant: 'pink',
         duration: 5000,
       });

@@ -9,16 +9,12 @@ export const sectionTimeline = defineType({
   fields: [
     ...baseSectionFields,
     {
-      name: 'description',
-      title: 'Description',
-      type: 'text',
-    },
-    {
-      name: 'events',
-      title: 'Timeline Events',
+      name: 'steps',
+      title: 'Timeline Steps',
       type: 'array',
+      description: 'Add timeline steps to display',
       of: [{ type: 'timelineEvent' }],
-      validation: (rule: Rule) => rule.unique(),
+      validation: (Rule: Rule) => Rule.required().min(1),
     },
   ],
 });

@@ -46,7 +46,7 @@ export const metadataConfig = {
   openGraph: {
     type: 'website',
     locale: 'nl_NL',
-    url: 'https://www.leenderscoaching.nl',
+    url: 'https://www.leenders-coaching.nl',
     siteName: 'Simone Leenders Coaching',
     images: [
       {

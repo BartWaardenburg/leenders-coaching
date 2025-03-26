@@ -1,33 +1,11 @@
-import type { PastelColor } from '@/components/ui/Section';
 import type { ComponentProps } from 'react';
 import type { SectionHeader } from '@/components/sections/SectionHeader';
-
-/* Sanity data type */
-export interface SanityHeaderSection extends Record<string, unknown> {
-  _type: 'sectionHeader';
-  title?: string;
-  displayTitle?: string;
-  subtitle?: string;
-  background?: PastelColor;
-  cta?: {
-    text: string;
-    link: string;
-    variant?:
-      | 'black'
-      | 'transparent'
-      | 'blue'
-      | 'purple'
-      | 'green'
-      | 'pink'
-      | 'yellow'
-      | 'teal';
-  };
-}
+import type { SectionHeader as SanitySectionHeader } from '@/types/sanity/schema';
 
 /* Type guard for SanityHeaderSection */
-const isSanityHeaderSection = (
+const isSanitySectionHeader = (
   data: Record<string, unknown>,
-): data is SanityHeaderSection => {
+): data is SanitySectionHeader => {
   return data._type === 'sectionHeader';
 };
 
@@ -37,19 +15,29 @@ const isSanityHeaderSection = (
 export const transformHeaderSection = (
   data: Record<string, unknown>,
 ): ComponentProps<typeof SectionHeader> => {
-  if (!isSanityHeaderSection(data)) {
+  if (!isSanitySectionHeader(data)) {
     throw new Error('Invalid header section data');
   }
 
   return {
     title: data.displayTitle || undefined,
-    description: data.subtitle,
+    description: data.description || '',
     background: data.background,
-    primaryCta: data.cta
+    border: data.border,
+    primaryCta: data.primaryCta
       ? {
-          href: data.cta.link,
-          label: data.cta.text,
-          variant: data.cta.variant,
+          href: data.primaryCta.href || '',
+          label: data.primaryCta.label || '',
+          isExternal: data.primaryCta.isExternal,
+          variant: data.primaryCta.variant,
+        }
+      : undefined,
+    secondaryCta: data.secondaryCta
+      ? {
+          href: data.secondaryCta.href || '',
+          label: data.secondaryCta.label || '',
+          isExternal: data.secondaryCta.isExternal,
+          variant: data.secondaryCta.variant,
         }
       : undefined,
   };

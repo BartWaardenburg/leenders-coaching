@@ -3,6 +3,7 @@ import type { Preview } from '@storybook/react';
 import { ThemeProvider } from 'next-themes';
 import { useDarkMode } from 'storybook-dark-mode';
 import { ConfigProvider, defaultConfig as baseConfig } from '../src/components/providers/ConfigProvider';
+import { ToastProvider } from '../src/components/ui/Toast/ToastManager';
 import '../src/app/globals.css';
 
 const preview: Preview = {
@@ -35,7 +36,9 @@ const preview: Preview = {
           forcedTheme={isDarkMode ? 'dark' : 'light'}
         >
           <ConfigProvider config={baseConfig}>
-            <Story />
+            <ToastProvider>
+              <Story />
+            </ToastProvider>
           </ConfigProvider>
         </ThemeProvider>
       );

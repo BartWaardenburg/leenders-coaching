@@ -73,19 +73,7 @@ export const postType = defineType({
     defineField({
       name: 'variant',
       title: 'Color Variant',
-      type: 'string',
-      group: 'content',
-      options: {
-        list: [
-          { title: 'Blue', value: 'blue' },
-          { title: 'Purple', value: 'purple' },
-          { title: 'Green', value: 'green' },
-          { title: 'Pink', value: 'pink' },
-          { title: 'Yellow', value: 'yellow' },
-          { title: 'Teal', value: 'teal' },
-        ],
-      },
-      initialValue: 'blue',
+      type: 'colorVariant',
     }),
     defineField({
       name: 'content',

@@ -9,15 +9,12 @@ export const sectionTestimonial = defineType({
   fields: [
     ...baseSectionFields,
     {
-      name: 'description',
-      title: 'Description',
-      type: 'text',
-    },
-    {
       name: 'testimonials',
       title: 'Testimonials',
       type: 'array',
+      description: 'Add testimonials to display in the carousel',
       of: [{ type: 'testimonial' }],
+      validation: (Rule: any) => Rule.required().min(1),
     },
   ],
 });

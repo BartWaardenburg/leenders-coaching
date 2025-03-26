@@ -23,6 +23,12 @@ type NavigationItem = {
   href: string;
 };
 
+export type SocialLink = {
+  _key: string;
+  platform: string;
+  url: string;
+};
+
 type HeaderProps = Omit<ComponentPropsWithoutRef<'header'>, 'about'> & {
   navigation: NavigationItem[];
   about: {
@@ -31,6 +37,7 @@ type HeaderProps = Omit<ComponentPropsWithoutRef<'header'>, 'about'> & {
   };
   social: {
     title: string;
+    links: SocialLink[];
   };
   contact: {
     title: string;
@@ -164,7 +171,7 @@ export const Header = ({ className, navigation, about, social, contact, ...props
                         onItemClick={() => setIsMenuOpen(false)}
                       />
                     </Box>
-                    <HeaderMenuFooter sections={menuFooter} socialLinks={[]} />
+                    <HeaderMenuFooter sections={menuFooter} />
                   </Flex>
                 </motion.div>
               </Container>

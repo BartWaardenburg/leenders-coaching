@@ -1,10 +1,7 @@
-import {
-  createClient,
-  QueryParams,
-  defineQuery as nextSanityDefineQuery,
-} from 'next-sanity';
+import { createClient } from '@sanity/client';
+import type { QueryParams } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
-import { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
 /* Check if we're running on the server or client */
 const isServer = typeof window === 'undefined';
@@ -37,10 +34,7 @@ export const sanityConfig = {
   useCdn: process.env.NODE_ENV === 'production',
 };
 
-/**
- * Create a Sanity client with the configuration
- * This is the primary client for all operations
- */
+/* Create Sanity client */
 export const client = createClient({
   projectId: sanityConfig.projectId,
   dataset: sanityConfig.dataset,
@@ -49,21 +43,24 @@ export const client = createClient({
   token: isServer ? sanityConfig.apiToken : undefined, // Only include token on server
 });
 
-/* Create an image URL builder */
-const builder = imageUrlBuilder(client);
+/* Create image URL builder instance */
+const imageBuilder = imageUrlBuilder(client);
 
 /**
- * Helper function to build image URLs from Sanity image references
+ * Get image URL for a Sanity image reference
  */
-export const urlFor = (source: SanityImageSource) => {
-  return builder.image(source);
+export const urlForImage = (source: SanityImageSource) => {
+  return imageBuilder.image(source);
 };
 
 /**
- * Helper function to create a typed GROQ query using next-sanity's defineQuery
- * This allows TypeGen to discover and generate types for GROQ queries
+ * Helper to define a GROQ query with proper typing
+ * @param query The GROQ query string
+ * @returns The query string with type information
  */
-export const defineQuery = nextSanityDefineQuery;
+export const defineQuery = <ResultType>(
+  query: string,
+): string & { _type?: ResultType } => query as string & { _type?: ResultType };
 
 /**
  * Helper function to execute a GROQ query with type safety
@@ -71,39 +68,10 @@ export const defineQuery = nextSanityDefineQuery;
  * @param params - Query parameters
  * @returns A promise resolving to the typed result
  */
-export const groq = <T>(
+export const groq = <ResultType>(
   query: string | ReturnType<typeof defineQuery>,
   params?: QueryParams,
-): Promise<T> => {
-  // Handle both string and defineQuery result
-  const queryString =
-    typeof query === 'string' ? query : (query as { query: string }).query;
-  return client.fetch<T>(queryString, params || {});
-};
-
-/**
- * Common GROQ queries that can be reused throughout the application
- */
-export const queries = {
-  // Get a page by type (e.g., homePage, aboutPage)
-  getPageByType: (type: string) => defineQuery(`*[_type == "${type}"][0]`),
-
-  // Get multiple items of a specific type
-  getDocumentsByType: (type: string) => defineQuery(`*[_type == "${type}"]`),
-
-  // Get site settings
-  getSiteSettings: defineQuery(`*[_type == "siteSettings"][0]`),
-
-  // Get navigation
-  getNavigation: defineQuery(`*[_type == "navigation"][0]`),
-
-  // Get footer
-  getFooter: defineQuery(`*[_type == "footer"][0]`),
-
-  // Get global data (navigation, footer, site settings)
-  getGlobalData: defineQuery(`{
-    "navigation": *[_type == "navigation"][0],
-    "footer": *[_type == "footer"][0],
-    "siteSettings": *[_type == "siteSettings"][0]
-  }`),
+): Promise<ResultType> => {
+  const queryString = typeof query === 'string' ? query : query;
+  return client.fetch<ResultType>(queryString, params || {});
 };

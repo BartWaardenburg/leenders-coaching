@@ -1,11 +1,17 @@
 import type { Metadata } from 'next';
-import type { BlogPage } from '@/types/Page';
+import type { BlogPage, Post } from '@/types/sanity/schema';
 import { createPageComponent } from '@/utilities/page';
+import { BLOG_POSTS_QUERY } from '@/groq/queries';
+import { client, urlForImage } from '@/utilities/sanity';
+import { SectionBlog, type BlogPost } from '@/components/sections/SectionBlog';
+
+/* Type for blog section from BlogPage */
+type BlogSection = Extract<NonNullable<BlogPage['sections']>[number], { _type: 'sectionBlog' }>;
 
 /* 
  * Create page component with type, fallback title, and optional wrapper
  */
-const { getMetadata, PageComponent } = createPageComponent<BlogPage>(
+const { getMetadata } = createPageComponent<BlogPage>(
   'blogPage',
   'Blog | Leenders Coaching'
 );
@@ -13,5 +19,50 @@ const { getMetadata, PageComponent } = createPageComponent<BlogPage>(
 /* Generate metadata from Sanity data */
 export const generateMetadata = (): Promise<Metadata> => getMetadata();
 
+/* Blog page component */
+const BlogPage = async () => {
+  /* Get both page data and posts */
+  const [pageData, posts] = await Promise.all([
+    client.fetch<BlogPage>('*[_type == "blogPage"][0]'),
+    client.fetch<Post[]>(BLOG_POSTS_QUERY)
+  ]);
+
+  console.log(posts);
+
+  /* Transform posts to match SectionBlog format */
+  const transformedPosts = posts.map((post: Post): BlogPost => {
+    if (!post.slug?.current) {
+      throw new Error(`Post "${post.title}" is missing a slug`);
+    }
+
+    return {
+      title: post.title || 'Untitled Post',
+      description: post.description || '',
+      slug: post.slug.current || '',
+      date: post.publishedAt || '',
+      categories: post.categories || [],
+      image: post.image ? urlForImage(post.image).url() : '',
+      featured: post.featured,
+      variant: post.variant,
+    };
+  });
+
+  /* Find the blog section from page data if it exists */
+  const blogSection = pageData?.sections?.find((section): section is BlogSection =>
+    section._type === 'sectionBlog'
+  );
+
+  return (
+    <SectionBlog
+      title={blogSection?.title || "Blog"}
+      description={blogSection?.description || "Ontdek de laatste inzichten en verhalen over coaching en persoonlijke ontwikkeling."}
+      posts={transformedPosts}
+      postsPerPage={blogSection?.postsPerPage || 6}
+      background={blogSection?.background || "blue"}
+      border={blogSection?.border}
+    />
+  );
+};
+
 /* Default export is the page component */
-export default PageComponent; 
+export default BlogPage; 

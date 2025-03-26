@@ -190,11 +190,11 @@ export const AllSections: Story = {
       />
       <SectionContent
         title="About Our Coaching Services"
-        contentRaw={mockContent.content}
+        content={mockContent.content}
       />
       <SectionContent
         title="Our Comprehensive Approach"
-        contentRaw={mockContent.longContent}
+        content={mockContent.longContent}
         background="yellow"
       />
       <SectionCards

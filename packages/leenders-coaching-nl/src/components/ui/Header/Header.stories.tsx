@@ -27,6 +27,13 @@ export const Default: Story = {
     },
     social: {
       title: 'Follow Us',
+      links: [
+        {
+          _key: '1',
+          platform: 'facebook',
+          url: 'https://www.facebook.com',
+        },
+      ],
     },
     contact: {
       title: 'Contact Us',

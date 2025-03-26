@@ -16,23 +16,22 @@ export const baseSectionFields = [
     description: 'Title that will be displayed on the website (optional)',
   },
   {
-    name: 'subtitle',
-    title: 'Subtitle',
+    name: 'description',
+    title: 'Description',
     type: 'string',
+    description: 'Description for the section',
   },
   {
     name: 'background',
     title: 'Background Color',
-    type: 'string',
-    options: {
-      list: [
-        { title: 'Blue', value: 'blue' },
-        { title: 'Purple', value: 'purple' },
-        { title: 'Green', value: 'green' },
-        { title: 'Pink', value: 'pink' },
-        { title: 'Yellow', value: 'yellow' },
-        { title: 'Teal', value: 'teal' },
-      ],
-    },
+    type: 'colorVariant',
+    description: 'Background color for the section',
+  },
+  {
+    name: 'border',
+    title: 'Show Border',
+    type: 'boolean',
+    initialValue: false,
+    description: 'Whether to show a border around the section',
   },
 ];

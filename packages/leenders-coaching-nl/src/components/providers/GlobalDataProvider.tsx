@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import type { ConfigType } from './ConfigProvider';
+import type { SocialLink } from '@/components/ui/Header/Header';
 
 import { groq } from '@/utilities/sanity';
 import { GLOBAL_DATA_QUERY } from '@/groq/queries';
@@ -23,6 +24,15 @@ const defaultHeader = {
   },
   social: {
     title: 'Social media',
+    links: [{
+      _key: 'social-link-1',
+      platform: 'Facebook',
+      url: 'https://www.facebook.com/leenders-coaching-nl',
+    }, {
+      _key: 'social-link-2',
+      platform: 'Instagram',
+      url: 'https://www.instagram.com/leenders_coaching',
+    }] as SocialLink[],
   },
   contact: {
     title: 'Contact',
@@ -42,7 +52,7 @@ const defaultHeader = {
 const defaultFooter = {
   copyright: '© 2024 Leenders Coaching. Alle rechten voorbehouden.',
   contact: {
-    email: 'info@leenderscoaching.nl',
+    email: 'info@leenders-coaching.nl',
     phone: null,
   },
   socialLinks: [],
@@ -76,6 +86,11 @@ export const GlobalDataProvider = async ({ children }: GlobalDataProviderProps) 
     },
     social: {
       title: transformNullable(header.social?.title, defaultHeader.social.title),
+      links: transformNullableArray(header.social?.links, (link) => ({
+        _key: transformNullable(link?._key, ''),
+        platform: transformNullable(link?.platform, ''),
+        url: transformNullable(link?.url, '#'),
+      })) || defaultHeader.social.links,
     },
     contact: {
       title: transformNullable(header.contact?.title, defaultHeader.contact.title),

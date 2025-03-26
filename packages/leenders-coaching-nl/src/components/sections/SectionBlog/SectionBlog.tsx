@@ -10,15 +10,15 @@ import { Grid } from '@/components/ui/Grid'
 import { Card } from '@/components/ui/Card'
 import { Pagination } from '@/components/ui/Pagination'
 
-interface BlogPost {
-  title: string
-  description: string
-  slug: string
-  date: string
-  categories: string[]
-  image: string
-  featured?: boolean
-  variant?: 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal'
+export type BlogPost = {
+  title: string,
+  description: string,
+  slug: string,
+  date: string,
+  categories: string[],
+  image: string,
+  featured?: boolean,
+  variant?: PastelColor,
 }
 
 interface SectionBlogProps {

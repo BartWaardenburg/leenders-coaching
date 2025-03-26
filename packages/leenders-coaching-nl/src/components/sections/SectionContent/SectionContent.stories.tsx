@@ -14,7 +14,7 @@ const meta = {
       control: 'text',
       description: 'Title of the section',
     },
-    contentRaw: {
+    content: {
       control: 'object',
       description: 'Portable Text content blocks',
     },
@@ -190,7 +190,7 @@ const defaultContent: PortableTextBlock[] = [
 export const Default: Story = {
   args: {
     title: 'Section Title',
-    contentRaw: defaultContent,
+    content: defaultContent,
   },
 };
 
@@ -211,6 +211,6 @@ export const WithBackgroundAndBorder: Story = {
 
 export const NoTitle: Story = {
   args: {
-    contentRaw: defaultContent,
+    content: defaultContent,
   },
 };

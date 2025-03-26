@@ -1,29 +1,12 @@
 import type { ComponentProps } from 'react';
 import type { SectionFAQ } from '@/components/sections/SectionFAQ';
-import type { PastelColor } from '@/components/ui/Section';
-import type { PortableTextBlock } from '@portabletext/react';
-
-export interface FAQItem {
-  _key: string;
-  question: string;
-  answer: PortableTextBlock[];
-}
-
-/* Sanity data type */
-export interface SanityFAQSection extends Record<string, unknown> {
-  _type: 'sectionFAQ';
-  title?: string;
-  displayTitle?: string;
-  description?: string;
-  items?: FAQItem[];
-  background?: PastelColor;
-  border?: boolean;
-}
+import type { SectionFAQ as SanitySectionFAQ } from '@/types/sanity/schema';
+import type { PortableTextBlock } from '@portabletext/types';
 
 /* Type guard for FAQ section */
-const isSanityFAQSection = (
+const isSanitySectionFAQ = (
   data: Record<string, unknown>,
-): data is SanityFAQSection => {
+): data is SanitySectionFAQ => {
   return data._type === 'sectionFAQ';
 };
 
@@ -33,17 +16,23 @@ const isSanityFAQSection = (
 export const transformFAQSection = (
   data: Record<string, unknown>,
 ): ComponentProps<typeof SectionFAQ> => {
-  if (!isSanityFAQSection(data)) {
+  if (!isSanitySectionFAQ(data)) {
     throw new Error('Invalid FAQ section data');
   }
 
   return {
     title: data.displayTitle || undefined,
-    description: data.description,
+    description: data.description || '',
     items:
-      data.items?.filter((item): item is FAQItem =>
-        Boolean(item.question && item.answer),
-      ) || [],
+      data.items
+        ?.filter((item): item is NonNullable<typeof item> =>
+          Boolean(item?._key && item?.question && item?.answer),
+        )
+        .map((item) => ({
+          _key: item._key,
+          question: item.question || '',
+          answer: (item.answer as PortableTextBlock[]) || [],
+        })) || [],
     background: data.background,
     border: data.border,
   };

@@ -1,34 +1,15 @@
 import type { ComponentProps } from 'react';
 import type { SectionBlog } from '@/components/sections/SectionBlog';
-import type { PastelColor } from '@/components/ui/Section';
-
-interface BlogPost {
-  title: string;
-  description: string;
-  slug: string;
-  date: string;
-  categories: string[];
-  image: string;
-  featured?: boolean;
-  variant?: 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal';
-}
-
-/* Sanity data type */
-export interface SanityBlogSection extends Record<string, unknown> {
-  _type: 'sectionBlog';
-  title?: string;
-  displayTitle?: string;
-  description?: string;
-  posts?: BlogPost[];
-  postsPerPage?: number;
-  background?: PastelColor;
-  border?: boolean;
-}
+import type {
+  SectionBlog as SanitySectionBlog,
+  Post,
+} from '@/types/sanity/schema';
+import { urlForImage } from '@/utilities/sanity';
 
 /* Type guard for blog section */
-const isSanityBlogSection = (
+const isSanitySectionBlog = (
   data: Record<string, unknown>,
-): data is SanityBlogSection => {
+): data is SanitySectionBlog => {
   return data._type === 'sectionBlog';
 };
 
@@ -38,14 +19,51 @@ const isSanityBlogSection = (
 export const transformBlogSection = (
   data: Record<string, unknown>,
 ): ComponentProps<typeof SectionBlog> => {
-  if (!isSanityBlogSection(data)) {
+  if (!isSanitySectionBlog(data)) {
     throw new Error('Invalid blog section data');
+  }
+
+  // Get posts and apply sorting/filtering
+  const posts =
+    data.posts?.map((postRef) => {
+      /* Using any here because Sanity's reference resolution makes it difficult
+       * to type correctly. The resolved post will have all the fields we need,
+       * but the type system can't understand the reference resolution.
+       */
+      const post = postRef as unknown as Post;
+      return {
+        _key: post._id,
+        title: post.title || '',
+        description: post.description || '',
+        slug: post.slug?.current || '',
+        date: post.publishedAt || '',
+        categories: post.categories || [],
+        featured: post.featured || false,
+        image: post.image ? urlForImage(post.image).url() : '',
+        variant: post.variant,
+      };
+    }) || [];
+
+  // Apply featured filter if needed
+  const filteredPosts = data.showFeaturedOnly
+    ? posts.filter((post) => post.featured)
+    : posts;
+
+  // Apply sorting
+  if (data.sortOrder) {
+    filteredPosts.sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return data.sortOrder === 'newest'
+        ? dateB.getTime() - dateA.getTime()
+        : dateA.getTime() - dateB.getTime();
+    });
   }
 
   return {
     title: data.displayTitle || undefined,
     description: data.description || '',
-    posts: data.posts || [],
+    posts: filteredPosts,
     postsPerPage: data.postsPerPage,
     background: data.background,
     border: data.border,

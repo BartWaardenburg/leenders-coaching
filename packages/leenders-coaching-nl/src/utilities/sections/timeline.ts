@@ -1,27 +1,11 @@
 import type { ComponentProps } from 'react';
 import type { SectionTimeline } from '@/components/sections/SectionTimeline';
-import type { PastelColor } from '@/components/ui/Section';
-
-/* Sanity data type */
-export interface SanityTimelineSection extends Record<string, unknown> {
-  _type: 'sectionTimeline';
-  title?: string;
-  displayTitle?: string;
-  description?: string;
-  steps?: Array<{
-    _key: string;
-    title: string;
-    description: string;
-    variant?: 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal';
-  }>;
-  background?: PastelColor;
-  border?: boolean;
-}
+import type { SectionTimeline as SanitySectionTimeline } from '@/types/sanity/schema';
 
 /* Type guard for timeline section */
-const isSanityTimelineSection = (
+const isSanitySectionTimeline = (
   data: Record<string, unknown>,
-): data is SanityTimelineSection => {
+): data is SanitySectionTimeline => {
   return data._type === 'sectionTimeline';
 };
 
@@ -31,17 +15,18 @@ const isSanityTimelineSection = (
 export const transformTimelineSection = (
   data: Record<string, unknown>,
 ): ComponentProps<typeof SectionTimeline> => {
-  if (!isSanityTimelineSection(data)) {
+  if (!isSanitySectionTimeline(data)) {
     throw new Error('Invalid timeline section data');
   }
 
   return {
     title: data.displayTitle || undefined,
-    description: data.description,
+    description: data.description || '',
     steps:
       data.steps?.map((step) => ({
-        title: step.title,
-        description: step.description,
+        _key: step._key,
+        title: step.title || '',
+        description: step.description || '',
         variant: step.variant,
       })) || [],
     background: data.background,

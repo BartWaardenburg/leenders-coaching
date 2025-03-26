@@ -11,15 +11,8 @@ import { Box } from '@/components/ui/Box';
 type CallToAction = {
   href: string;
   label: string;
-  variant?:
-  | 'black'
-  | 'transparent'
-  | 'blue'
-  | 'purple'
-  | 'green'
-  | 'pink'
-  | 'yellow'
-  | 'teal';
+  variant?: 'black' | 'transparent' | 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal';
+  isExternal?: boolean;
 };
 
 type SectionHeaderProps = {
@@ -81,6 +74,8 @@ export const SectionHeader = ({
                 fullWidthOnContainer
                 href={primaryCta.href}
                 variant={primaryCta.variant}
+                target={primaryCta.isExternal ? '_blank' : undefined}
+                rel={primaryCta.isExternal ? 'noopener noreferrer' : undefined}
               >
                 {primaryCta.label}
               </Button>
@@ -91,6 +86,8 @@ export const SectionHeader = ({
                 fullWidthOnContainer
                 href={secondaryCta.href}
                 variant={secondaryCta.variant}
+                target={secondaryCta.isExternal ? '_blank' : undefined}
+                rel={secondaryCta.isExternal ? 'noopener noreferrer' : undefined}
               >
                 {secondaryCta.label}
               </Button>

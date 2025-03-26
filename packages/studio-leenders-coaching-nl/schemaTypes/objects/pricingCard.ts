@@ -6,36 +6,64 @@ export const pricingCard = defineType({
   title: 'Pricing Card',
   type: 'object',
   fields: [
-    { name: 'title', type: 'string', title: 'Title' },
-    { name: 'price', type: 'string', title: 'Price' },
-    { name: 'description', type: 'text', title: 'Description' },
+    {
+      name: 'title',
+      type: 'string',
+      title: 'Title',
+      validation: (Rule: any) => Rule.required(),
+    },
+    {
+      name: 'description',
+      type: 'text',
+      title: 'Description',
+      validation: (Rule: any) => Rule.required(),
+    },
+    {
+      name: 'price',
+      type: 'string',
+      title: 'Price',
+      description: 'Price per session (e.g. "€75" or "Gratis")',
+      validation: (Rule: any) => Rule.required(),
+    },
     {
       name: 'features',
       type: 'array',
       title: 'Features',
-      of: [{ type: 'string' }],
+      description: 'List of features included in this package',
+      of: [
+        {
+          type: 'object',
+          name: 'feature',
+          fields: [
+            {
+              name: 'text',
+              type: 'string',
+              title: 'Feature Text',
+              validation: (Rule: any) => Rule.required(),
+            },
+          ],
+        },
+      ],
+      validation: (Rule: any) => Rule.required(),
     },
     {
       name: 'isPopular',
       type: 'boolean',
       title: 'Is Popular Package',
+      description: 'Highlight this as the most chosen package',
       initialValue: false,
     },
     {
-      name: 'variant',
+      name: 'ctaLabel',
       type: 'string',
-      title: 'Color Variant',
-      options: {
-        list: [
-          { title: 'Blue', value: 'blue' },
-          { title: 'Purple', value: 'purple' },
-          { title: 'Green', value: 'green' },
-          { title: 'Pink', value: 'pink' },
-          { title: 'Yellow', value: 'yellow' },
-          { title: 'Teal', value: 'teal' },
-        ],
-      },
+      title: 'Button Text',
+      validation: (Rule: any) => Rule.required(),
     },
-    { name: 'cta', type: 'callToAction', title: 'Call to Action' },
+    {
+      name: 'variant',
+      type: 'colorVariant',
+      title: 'Color Variant',
+      initialValue: 'blue',
+    },
   ],
 });

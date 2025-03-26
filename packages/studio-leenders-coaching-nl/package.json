@@ -10,7 +10,6 @@
     "start": "sanity start",
     "build": "sanity build",
     "deploy": "sanity deploy",
-    "deploy-graphql": "sanity graphql deploy",
     "extract-schema": "sanity schema extract",
     "generate-types": "sanity typegen generate",
     "update-types": "npm run extract-schema && npm run generate-types",

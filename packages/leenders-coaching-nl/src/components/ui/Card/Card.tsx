@@ -59,7 +59,7 @@ const cardBordersHoverDark: Record<CardVariant, string> = {
   teal: 'hover:border-pastel-teal-dark hover:dark:border-pastel-teal',
 };
 
-type CardProps = {
+export type CardProps = {
   featured?: boolean;
   title: string;
   date?: string;

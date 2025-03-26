@@ -9,15 +9,12 @@ export const sectionPricing = defineType({
   fields: [
     ...baseSectionFields,
     {
-      name: 'description',
-      title: 'Description',
-      type: 'text',
-    },
-    {
-      name: 'pricingCards',
-      title: 'Pricing Cards',
+      name: 'packages',
+      title: 'Pricing Packages',
       type: 'array',
+      description: 'Add pricing packages to display',
       of: [{ type: 'pricingCard' }],
+      validation: (Rule: any) => Rule.required().min(1),
     },
   ],
 });

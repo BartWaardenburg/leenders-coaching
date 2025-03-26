@@ -33,6 +33,11 @@ export type GLOBAL_DATA_QUERYResult = {
     } | null;
     social?: {
       title?: string;
+      links?: Array<{
+        _key: string;
+        platform?: string;
+        url?: string;
+      }> | null;
     } | null;
     contact?: {
       title?: string;

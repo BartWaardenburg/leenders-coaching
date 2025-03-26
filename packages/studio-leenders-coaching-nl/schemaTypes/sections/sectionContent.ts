@@ -6,47 +6,16 @@ export const sectionContent = defineType({
   name: 'sectionContent',
   title: 'Content Section',
   type: 'document',
+  description: 'A section for rich text content with optional title',
   fields: [
     ...baseSectionFields,
     {
       name: 'content',
       title: 'Content',
-      type: 'array',
-      of: [
-        {
-          type: 'block',
-          styles: [
-            { title: 'Normal', value: 'normal' },
-            { title: 'H2', value: 'h2' },
-            { title: 'H3', value: 'h3' },
-            { title: 'H4', value: 'h4' },
-          ],
-          marks: {
-            decorators: [
-              { title: 'Strong', value: 'strong' },
-              { title: 'Emphasis', value: 'em' },
-            ],
-            annotations: [
-              {
-                name: 'link',
-                type: 'object',
-                title: 'Link',
-                fields: [
-                  {
-                    name: 'href',
-                    type: 'url',
-                    title: 'URL',
-                  },
-                ],
-              },
-            ],
-          },
-        },
-        {
-          type: 'image',
-          options: { hotspot: true },
-        },
-      ],
+      type: 'richText',
+      description:
+        'The main content of the section. You can use text formatting, headings, and add images.',
+      validation: (Rule) => Rule.required(),
     },
   ],
 });

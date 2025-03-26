@@ -61,8 +61,8 @@ export const Default: Story = {
     },
     twitter: {
       card: 'summary_large_image',
-      site: '@leenderscoaching',
-      creator: '@leenderscoaching',
+      site: '@leenders-coaching',
+      creator: '@leenders-coaching',
       image: {
         url: '/twitter-card.jpg',
         alt: 'Leenders Coaching',

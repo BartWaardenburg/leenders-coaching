@@ -9,19 +9,13 @@ export const sectionHeader = defineType({
   fields: [
     ...baseSectionFields,
     {
-      name: 'description',
-      title: 'Description',
-      type: 'text',
+      name: 'primaryCta',
+      title: 'Primary Call to Action',
+      type: 'callToAction',
     },
     {
-      name: 'image',
-      title: 'Background Image',
-      type: 'image',
-      options: { hotspot: true },
-    },
-    {
-      name: 'cta',
-      title: 'Call to Action',
+      name: 'secondaryCta',
+      title: 'Secondary Call to Action',
       type: 'callToAction',
     },
   ],
