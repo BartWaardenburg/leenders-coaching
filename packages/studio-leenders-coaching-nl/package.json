@@ -52,11 +52,11 @@
   },
   "devDependencies": {
     "@sanity/eslint-config-studio": "5.0.2",
-    "@types/node": "22.13.14",
-    "@types/react": "19.0.12",
-    "eslint": "9.23.0",
+    "@types/node": "22.14.1",
+    "@types/react": "19.1.2",
+    "eslint": "9.25.1",
     "prettier": "3.5.3",
     "ts-node": "10.9.2",
-    "typescript": "5.8.2"
+    "typescript": "5.8.3"
   }
 }
