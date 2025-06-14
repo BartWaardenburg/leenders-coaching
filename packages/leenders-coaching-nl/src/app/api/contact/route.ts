@@ -39,7 +39,7 @@ export async function POST(request: Request) {
 
     // Send notification email to Leenders Coaching
     const notificationResult = await resend.emails.send({
-      from: 'noreply@contact.leenders-coaching.nl',
+      from: 'noreply@informatie.leenders-coaching.nl',
       to: 'info@leenders-coaching.nl',
       subject: `Contact formulier: ${subject}`,
       react: ContactNotification({ name, email, subject, message }),
@@ -59,7 +59,7 @@ export async function POST(request: Request) {
 
     // Send confirmation email to the sender
     const confirmationResult = await resend.emails.send({
-      from: 'noreply@contact.leenders-coaching.nl',
+      from: 'noreply@informatie.leenders-coaching.nl',
       to: email,
       subject: 'Bedankt voor je bericht aan Leenders Coaching',
       react: ContactConfirmation({ name, subject }),
