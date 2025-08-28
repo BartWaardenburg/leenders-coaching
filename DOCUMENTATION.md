@@ -29,6 +29,7 @@ leenders-coaching/
 ├── README.md                           # Main project documentation
 ├── DEPLOYMENT.md                       # Deployment guide
 ├── DEPLOYMENT_FIXES.md                 # Deployment troubleshooting
+
 ├── packages/
 │   ├── leenders-coaching-nl/
 │   │   └── src/

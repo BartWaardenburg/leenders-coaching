@@ -1,6 +1,6 @@
 # Leenders Coaching
 
-[![Codecov](https://codecov.io/gh/bartwaardenburg/leenders-coaching/branch/main/graph/badge.svg)](https://codecov.io/gh/bartwaardenburg/leenders-coaching)
+[![Codecov](https://codecov.io/gh/bartwaardenburg/leenders-coaching/branch/main/graph/badge.svg?token=YOUR_CODECOV_TOKEN)](https://codecov.io/gh/bartwaardenburg/leenders-coaching)
 
 A modern coaching website built with Next.js, Sanity CMS, and Tailwind CSS.
 
@@ -179,7 +179,7 @@ This project uses Codecov for coverage tracking:
 - **Status checks**: Coverage must not drop below threshold
 - **Reports**: Available in pull requests and Codecov dashboard
 
-[![Codecov](https://codecov.io/gh/bartwaardenburg/leenders-coaching/branch/main/graph/badge.svg)](https://codecov.io/gh/bartwaardenburg/leenders-coaching)
+[![Codecov](https://codecov.io/gh/bartwaardenburg/leenders-coaching/branch/main/graph/badge.svg?token=YOUR_CODECOV_TOKEN)](https://codecov.io/gh/bartwaardenburg/leenders-coaching)
 
 ## 📚 Storybook
 
