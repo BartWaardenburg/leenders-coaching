@@ -144,7 +144,7 @@ If issues persist:
 
 1. Check Vercel build logs for specific errors
 2. Verify all environment variables are set correctly in Vercel
-3. Ensure Node.js 20+ and pnpm 9.15.9+ are used
+3. Ensure Node.js 20+ and pnpm 10.15.0+ are used
 4. Check GitHub Actions logs for CI/CD issues
 5. Verify Sanity project configuration
 6. Check for any client-side hooks being used during static generation

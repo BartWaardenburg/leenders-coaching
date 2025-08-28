@@ -5,7 +5,7 @@ This guide explains how to deploy the Leenders Coaching website to Vercel.
 ## Prerequisites
 
 - Node.js 20+ installed
-- pnpm 9.15.9+ installed
+- pnpm 10.15.0+ installed
 - Vercel account
 - Sanity account
 - Resend account (for email functionality)
@@ -73,7 +73,7 @@ cp env.example .env.local
 
    - **Framework Preset**: Next.js
    - **Build Command**: `pnpm build`
-   - **Install Command**: `corepack enable && corepack prepare pnpm@9.15.9 --activate && pnpm install`
+   - **Install Command**: `corepack enable && corepack prepare pnpm@10.15.0 --activate && pnpm install`
    - **Output Directory**: `packages/leenders-coaching-nl/.next`
 
 4. Deploy automatically on push to main branch
@@ -132,7 +132,7 @@ The Sanity Studio is included in the monorepo and can be deployed separately:
 ### Build Issues
 
 1. **Node version**: Ensure you're using Node.js 20+
-2. **pnpm version**: Ensure you're using pnpm 9.15.9+
+2. **pnpm version**: Ensure you're using pnpm 10.15.0+
 3. **Environment variables**: Verify all required environment variables are set
 4. **Dependencies**: Run `pnpm install` to ensure all dependencies are installed
 

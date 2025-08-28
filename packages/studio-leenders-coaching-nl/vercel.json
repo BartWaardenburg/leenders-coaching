@@ -3,6 +3,6 @@
   "framework": "sanity",
   "buildCommand": "pnpm run build",
   "devCommand": "pnpm run dev",
-  "installCommand": "corepack enable && corepack prepare pnpm@9.15.5 --activate && pnpm install",
+  "installCommand": "corepack enable && corepack prepare pnpm@10.15.0 --activate && pnpm install",
   "outputDirectory": "dist"
 }
