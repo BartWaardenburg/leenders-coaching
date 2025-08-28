@@ -50,6 +50,7 @@ cp env.example .env.local
    ```
 
 3. Build the project:
+
    ```bash
    pnpm build
    ```
@@ -92,29 +93,23 @@ cp env.example .env.local
    ```
 
 3. Deploy:
+
    ```bash
    vercel --prod
    ```
 
-## GitHub Actions Deployment
+## GitHub Actions CI
 
-The project includes GitHub Actions workflows for CI/CD:
+The project includes a GitHub Actions workflow for CI (Continuous Integration):
 
 - **CI Workflow** (`.github/workflows/ci.yml`): Runs on PRs and pushes to main
-- **Deploy Workflow** (`.github/workflows/deploy.yml`): Deploys to production on push to main
+  - Installs dependencies
+  - Runs linting
+  - Performs type checking
+  - Builds the project
+  - Uploads build artifacts
 
-### Required GitHub Secrets
-
-For the deploy workflow to work, add these secrets to your GitHub repository:
-
-- `VERCEL_TOKEN`: Your Vercel API token
-- `VERCEL_ORG_ID`: Your Vercel organization ID
-- `VERCEL_PROJECT_ID`: Your Vercel project ID
-- `NEXT_PUBLIC_SANITY_PROJECT_ID`
-- `NEXT_PUBLIC_SANITY_DATASET`
-- `NEXT_PUBLIC_SANITY_API_VERSION`
-- `SANITY_API_TOKEN`
-- `RESEND_API_KEY`
+This workflow ensures code quality but does not handle deployment (that's handled by Vercel's GitHub integration).
 
 ## Sanity Studio Deployment
 
@@ -127,6 +122,7 @@ The Sanity Studio is included in the monorepo and can be deployed separately:
    ```
 
 2. Deploy to Sanity:
+
    ```bash
    pnpm run deploy
    ```

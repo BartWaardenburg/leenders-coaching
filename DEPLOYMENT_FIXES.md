@@ -35,15 +35,15 @@ This document outlines the fixes made to resolve installation, building, and dep
 - Improved caching configuration
 - Added proper environment variable handling
 
-### 4. Deployment Workflow
+### 4. Duplicate Deployment Mechanisms
 
-**Problem**: No automated deployment workflow for production.
+**Problem**: Had both Vercel's built-in GitHub integration and a custom GitHub Actions deployment workflow, causing conflicts.
 
 **Solution**:
 
-- Created `.github/workflows/deploy.yml` for automatic deployments
-- Added proper environment configuration for production
-- Included Vercel deployment action
+- Removed the custom GitHub Actions deployment workflow (`.github/workflows/deploy.yml`)
+- Kept Vercel's built-in GitHub integration for automatic deployments
+- Updated documentation to reflect the correct setup
 
 ### 5. Documentation
 
@@ -67,14 +67,26 @@ This document outlines the fixes made to resolve installation, building, and dep
 - Made toast functionality optional during static generation while preserving functionality in client-side rendering
 - Added proper TypeScript types for toast options
 
+### 7. Edge Function Size Optimization
+
+**Problem**: The `/api/og` Edge Function was exceeding Vercel's 1MB size limit due to large font files.
+
+**Solution**:
+
+- Used `fonttools` to create optimized subset fonts containing only necessary characters
+- Reduced font file sizes by 90% (512KB → 53KB)
+- Maintained beautiful custom typography while fitting within size limits
+- Preserved all visual design elements
+
 ## Files Created/Modified
 
 ### New Files
 
 - `env.example` - Environment variables template
 - `DEPLOYMENT.md` - Comprehensive deployment guide
-- `.github/workflows/deploy.yml` - Production deployment workflow
 - `DEPLOYMENT_FIXES.md` - This summary document
+- `PlayfairDisplay-Bold-subset.ttf` - Optimized font file (29KB)
+- `Montserrat-Regular-subset.ttf` - Optimized font file (24KB)
 
 ### Modified Files
 
@@ -83,12 +95,15 @@ This document outlines the fixes made to resolve installation, building, and dep
 - `.github/workflows/ci.yml` - Improved CI workflow
 - `README.md` - Updated with better documentation
 - `packages/leenders-coaching-nl/src/components/sections/SectionForm/SectionForm.tsx` - Fixed toast provider issue
+- `packages/leenders-coaching-nl/src/app/api/og/route.tsx` - Optimized with subset fonts
+
+### Removed Files
+
+- `.github/workflows/deploy.yml` - Removed duplicate deployment workflow
 
 ## Required Environment Variables
 
-For successful deployment, ensure these environment variables are set:
-
-### Vercel Dashboard
+For successful deployment, ensure these environment variables are set in Vercel:
 
 - `NEXT_PUBLIC_SANITY_PROJECT_ID`
 - `NEXT_PUBLIC_SANITY_DATASET`
@@ -97,31 +112,20 @@ For successful deployment, ensure these environment variables are set:
 - `RESEND_API_KEY`
 - `NEXT_PUBLIC_APP_URL`
 
-### GitHub Secrets (for automated deployment)
+## Deployment Setup
 
-- `VERCEL_TOKEN`
-- `VERCEL_ORG_ID`
-- `VERCEL_PROJECT_ID`
-- All environment variables listed above
+### Current Setup (Recommended)
 
-## Deployment Options
+1. **Vercel GitHub Integration**: Automatic deployments on push to main
+2. **GitHub Actions CI**: Code quality checks and build verification
+3. **No duplicate deployment workflows**
 
-### Option 1: Vercel Dashboard (Recommended)
+### Deployment Flow
 
-1. Connect GitHub repository to Vercel
-2. Set environment variables in Vercel dashboard
-3. Deploy automatically on push to main
-
-### Option 2: GitHub Actions
-
-1. Add required secrets to GitHub repository
-2. Push to main branch to trigger automatic deployment
-3. Monitor deployment in GitHub Actions tab
-
-### Option 3: Manual Deployment
-
-1. Install Vercel CLI
-2. Run `vercel --prod` from project root
+1. Push code to main branch
+2. GitHub Actions runs CI checks (linting, type checking, build)
+3. Vercel automatically deploys if CI passes
+4. No manual intervention required
 
 ## Verification Steps
 
@@ -129,16 +133,17 @@ To verify the fixes work:
 
 1. **Local Build**: `pnpm build` should complete successfully
 2. **CI Pipeline**: GitHub Actions should pass all checks
-3. **Deployment**: Automatic deployment should work on push to main
+3. **Deployment**: Vercel should automatically deploy on push to main
 4. **Environment**: All environment variables should be properly loaded
 5. **Static Generation**: All pages including contact page should generate successfully
+6. **Edge Function**: `/api/og` should work without size limit errors
 
 ## Troubleshooting
 
 If issues persist:
 
 1. Check Vercel build logs for specific errors
-2. Verify all environment variables are set correctly
+2. Verify all environment variables are set correctly in Vercel
 3. Ensure Node.js 20+ and pnpm 9.15.9+ are used
 4. Check GitHub Actions logs for CI/CD issues
 5. Verify Sanity project configuration
@@ -147,8 +152,8 @@ If issues persist:
 ## Next Steps
 
 1. Set up environment variables in Vercel dashboard
-2. Configure GitHub secrets for automated deployment
-3. Test deployment with a small change
-4. Monitor build and deployment logs
-5. Verify the live site functionality
-6. Test the contact form functionality in production
+2. Test deployment with a small change
+3. Monitor build and deployment logs
+4. Verify the live site functionality
+5. Test the contact form functionality in production
+6. Verify Open Graph images are working correctly
