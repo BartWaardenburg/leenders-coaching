@@ -53,7 +53,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "5.2.1",
-    "@portabletext/react": "3.2.4",
+    "@portabletext/react": "4.0.2",
     "@react-email/components": "0.5.1",
     "@react-email/render": "1.2.1",
     "@sanity/image-url": "1.1.0",
