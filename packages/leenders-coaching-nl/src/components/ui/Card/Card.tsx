@@ -111,7 +111,7 @@ export const Card: FC<CardProps> = ({
       y: 0,
       transition: {
         duration: 0.4,
-        ease: [0.2, 0.65, 0.3, 0.9],
+        ease: [0.2, 0.65, 0.3, 0.9] as const,
         when: 'beforeChildren',
         staggerChildren: 0.08,
         delayChildren: 0.1,
@@ -126,7 +126,7 @@ export const Card: FC<CardProps> = ({
         },
       },
     }),
-  };
+  } as const;
 
   const childVariants = {
     hidden: { opacity: 0, y: 5 },
@@ -135,10 +135,10 @@ export const Card: FC<CardProps> = ({
       y: 0,
       transition: {
         duration: 0.3,
-        ease: [0.2, 0.65, 0.3, 0.9],
+        ease: [0.2, 0.65, 0.3, 0.9] as const,
       },
     },
-  };
+  } as const;
 
   const imageVariants = {
     hidden: { scale: 1.1, opacity: 0 },
@@ -147,7 +147,7 @@ export const Card: FC<CardProps> = ({
       opacity: 1,
       transition: {
         duration: 0.5,
-        ease: [0.2, 0.65, 0.3, 0.9],
+        ease: [0.2, 0.65, 0.3, 0.9] as const,
       },
     },
     ...(slug && {
@@ -159,7 +159,7 @@ export const Card: FC<CardProps> = ({
         },
       },
     }),
-  };
+  } as const;
 
   const content = (
     <motion.div

@@ -37,11 +37,11 @@ const MotionBox = motion.create(Box);
 const transitions = {
   mainLine: {
     duration: 1.5,
-    ease: [0.65, 0, 0.35, 1],
+    ease: [0.65, 0, 0.35, 1] as const,
   },
   content: {
     duration: 0.4,
-    ease: [0.32, 0.72, 0, 1],
+    ease: [0.32, 0.72, 0, 1] as const,
   },
   dot: {
     duration: 0.3,

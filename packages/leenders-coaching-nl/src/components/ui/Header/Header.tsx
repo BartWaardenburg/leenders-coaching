@@ -60,17 +60,17 @@ const menuVariants = {
     y: '-100%',
     transition: {
       duration: 0.4,
-      ease: [0.4, 0, 0.2, 1],
+      ease: [0.4, 0, 0.2, 1] as const,
     },
   },
   visible: {
     y: 0,
     transition: {
       duration: 0.5,
-      ease: [0.4, 0, 0.2, 1],
+      ease: [0.4, 0, 0.2, 1] as const,
     },
   },
-};
+} as const;
 
 /* Animation variants for the menu content */
 const contentVariants = {
