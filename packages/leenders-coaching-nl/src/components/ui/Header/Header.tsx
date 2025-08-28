@@ -60,17 +60,17 @@ const menuVariants = {
     y: '-100%',
     transition: {
       duration: 0.4,
-      ease: [0.4, 0, 0.2, 1],
+      ease: [0.4, 0, 0.2, 1] as const,
     },
   },
   visible: {
     y: 0,
     transition: {
       duration: 0.5,
-      ease: [0.4, 0, 0.2, 1],
+      ease: [0.4, 0, 0.2, 1] as const,
     },
   },
-};
+} as const;
 
 /* Animation variants for the menu content */
 const contentVariants = {
@@ -94,7 +94,14 @@ const contentVariants = {
 /**
  * Header component with hamburger menu and full-screen overlay
  */
-export const Header = ({ className, navigation, about, social, contact, ...props }: HeaderProps) => {
+export const Header = ({
+  className,
+  navigation,
+  about,
+  social,
+  contact,
+  ...props
+}: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -141,7 +148,7 @@ export const Header = ({ className, navigation, about, social, contact, ...props
           <Box
             className={twMerge(
               'h-px transition-theme',
-              isMenuOpen ? 'bg-foreground/80' : 'bg-foreground/10'
+              isMenuOpen ? 'bg-foreground/80' : 'bg-foreground/10',
             )}
           />
         </Container>

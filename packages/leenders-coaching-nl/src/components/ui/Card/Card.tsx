@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { FC, ReactNode } from 'react';
 import Link from 'next/link';
@@ -10,7 +10,7 @@ import { Flex } from '@/components/ui/Flex';
 import { Box } from '@/components/ui/Box';
 import { twMerge } from 'tailwind-merge';
 import { cardConfig } from '@/config/card.config';
-import { motion } from 'motion/react';
+import { motion, easeInOut } from 'motion/react';
 
 type CardVariant = 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal';
 
@@ -92,7 +92,8 @@ export const Card: FC<CardProps> = ({
     'group relative h-full transition-theme block @container border',
     cardBackgrounds[variant],
     border ? cardBordersDark[variant] : cardBordersLight[variant],
-    slug && (border ? cardBordersHoverLight[variant] : cardBordersHoverDark[variant]),
+    slug &&
+      (border ? cardBordersHoverLight[variant] : cardBordersHoverDark[variant]),
     slug && 'cursor-pointer',
   );
 
@@ -110,22 +111,22 @@ export const Card: FC<CardProps> = ({
       y: 0,
       transition: {
         duration: 0.4,
-        ease: [0.2, 0.65, 0.3, 0.9],
-        when: "beforeChildren",
+        ease: [0.2, 0.65, 0.3, 0.9] as const,
+        when: 'beforeChildren',
         staggerChildren: 0.08,
-        delayChildren: 0.1
-      }
+        delayChildren: 0.1,
+      },
     },
     ...(slug && {
       hover: {
         y: -5,
         transition: {
           duration: 0.2,
-          ease: "easeInOut"
-        }
-      }
-    })
-  };
+          ease: easeInOut,
+        },
+      },
+    }),
+  } as const;
 
   const childVariants = {
     hidden: { opacity: 0, y: 5 },
@@ -134,10 +135,10 @@ export const Card: FC<CardProps> = ({
       y: 0,
       transition: {
         duration: 0.3,
-        ease: [0.2, 0.65, 0.3, 0.9]
-      }
-    }
-  };
+        ease: [0.2, 0.65, 0.3, 0.9] as const,
+      },
+    },
+  } as const;
 
   const imageVariants = {
     hidden: { scale: 1.1, opacity: 0 },
@@ -146,39 +147,38 @@ export const Card: FC<CardProps> = ({
       opacity: 1,
       transition: {
         duration: 0.5,
-        ease: [0.2, 0.65, 0.3, 0.9]
-      }
+        ease: [0.2, 0.65, 0.3, 0.9] as const,
+      },
     },
     ...(slug && {
       hover: {
         scale: 1.05,
         transition: {
           duration: 0.3,
-          ease: "easeInOut"
-        }
-      }
-    })
-  };
+          ease: easeInOut,
+        },
+      },
+    }),
+  } as const;
 
   const content = (
     <motion.div
       variants={cardVariants}
       initial="hidden"
       whileInView="visible"
-      whileHover={slug ? "hover" : undefined}
-      viewport={{ once: true, margin: "-100px" }}
+      whileHover={slug ? 'hover' : undefined}
+      viewport={{ once: true, margin: '-100px' }}
       className="h-full"
     >
       <Flex className="h-full flex-col @lg:flex-row">
         {image && (
-          <Box className={twMerge(
-            "relative border-b @lg:border-b-0 @lg:border-l-0 @lg:border-r border-foreground/80 h-48 @lg:h-auto w-full @lg:w-1/3 @4xl:w-1/2 shrink-0 overflow-hidden",
-            reverse && "@lg:order-last @lg:border-r-0 @lg:border-l"
-          )}>
-            <motion.div
-              variants={imageVariants}
-              className="h-full w-full"
-            >
+          <Box
+            className={twMerge(
+              'relative border-b @lg:border-b-0 @lg:border-l-0 @lg:border-r border-foreground/80 h-48 @lg:h-auto w-full @lg:w-1/3 @4xl:w-1/2 shrink-0 overflow-hidden',
+              reverse && '@lg:order-last @lg:border-r-0 @lg:border-l',
+            )}
+          >
+            <motion.div variants={imageVariants} className="h-full w-full">
               <Image src={image} alt={title} fill className="object-cover" />
             </motion.div>
           </Box>
@@ -186,7 +186,10 @@ export const Card: FC<CardProps> = ({
 
         <Box className="flex-1 p-4 @md:p-8 h-full">
           <Flex direction="column" className="h-full">
-            <motion.div variants={childVariants} className="flex flex-col h-full">
+            <motion.div
+              variants={childVariants}
+              className="flex flex-col h-full"
+            >
               {featured && (
                 <Box className="relative mb-6">
                   <Text variant="card-meta" weight="medium" className="mb-2">
@@ -276,4 +279,3 @@ export const Card: FC<CardProps> = ({
 
   return <Box className={cardClasses}>{content}</Box>;
 };
-
