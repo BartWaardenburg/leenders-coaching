@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { FiLinkedin, FiInstagram } from 'react-icons/fi';
-import { motion } from 'motion/react';
+import { motion, easeOut } from 'motion/react';
 import { Text } from '@/components/ui/Text';
 import { Heading } from '@/components/ui/Heading';
 import { Box } from '@/components/ui/Box';
@@ -70,7 +70,7 @@ const sectionVariants = {
     y: 0,
     transition: {
       duration: 0.4,
-      ease: "easeOut",
+      ease: easeOut,
     },
   },
 };
@@ -153,7 +153,7 @@ export const MenuFooter = ({ sections }: MenuFooterProps) => {
         animate="visible"
         className="h-full"
       >
-        <Grid columns={{ default: 1, 'md': 3 }} gap={0} className="h-full">
+        <Grid columns={{ default: 1, md: 3 }} gap={0} className="h-full">
           <FooterSection title={sections.about.title || ''}>
             <Flex direction="column" className="h-full">
               <motion.div variants={linkVariants} className="flex-1">
@@ -168,13 +168,15 @@ export const MenuFooter = ({ sections }: MenuFooterProps) => {
             <Flex direction="column" className="h-full">
               <Box as="ul" className="flex-1">
                 <Stack space={4}>
-                  {sections.social?.links.map(link => (
-                    link.platform && link.url && (
-                      <Box as="li" key={link._key}>
-                        <SocialLink href={link.url} label={link.platform} />
-                      </Box>
-                    )
-                  ))}
+                  {sections.social?.links.map(
+                    (link) =>
+                      link.platform &&
+                      link.url && (
+                        <Box as="li" key={link._key}>
+                          <SocialLink href={link.url} label={link.platform} />
+                        </Box>
+                      ),
+                  )}
                 </Stack>
               </Box>
             </Flex>

@@ -1,7 +1,12 @@
 'use client';
 
 import { twMerge } from 'tailwind-merge';
-import { motion, AnimatePresence, type HTMLMotionProps } from 'motion/react';
+import {
+  motion,
+  AnimatePresence,
+  easeOut,
+  type HTMLMotionProps,
+} from 'motion/react';
 import { Icon } from '@/components/ui/Icon';
 
 type TransitionSpeed = 'quick' | 'slow';
@@ -57,7 +62,7 @@ export const IconToggleButton = ({
             initial={{ rotate: -90, opacity: 0 }}
             animate={{ rotate: 0, opacity: 1 }}
             exit={{ rotate: 90, opacity: 0 }}
-            transition={{ duration: duration, ease: 'easeOut' }}
+            transition={{ duration: duration, ease: easeOut }}
           />
         ) : (
           <MotionIcon
@@ -67,7 +72,7 @@ export const IconToggleButton = ({
             initial={{ rotate: -90, opacity: 0 }}
             animate={{ rotate: 0, opacity: 1 }}
             exit={{ rotate: 90, opacity: 0 }}
-            transition={{ duration: duration, ease: 'easeOut' }}
+            transition={{ duration: duration, ease: easeOut }}
           />
         )}
       </AnimatePresence>
