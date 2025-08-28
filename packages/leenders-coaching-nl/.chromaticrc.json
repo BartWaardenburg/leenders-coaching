@@ -1,0 +1,13 @@
+{
+  "storybookBuildDir": "storybook-static",
+  "storybookBaseDir": ".",
+  "untraced": [
+    "node_modules/**",
+    ".git/**",
+    "dist/**",
+    "build/**",
+    ".next/**",
+    "coverage/**"
+  ],
+  "buildScriptName": "build-storybook"
+}
