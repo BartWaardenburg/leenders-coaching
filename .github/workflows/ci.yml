@@ -24,46 +24,59 @@ jobs:
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
         with:
           version: 9.15.9
           run_install: false
-
-      - name: Verify lockfile
-        run: |
-          ls -la
-          cat pnpm-lock.yaml | head -n 1
 
       - name: Get pnpm store directory
         shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
-      - uses: actions/cache@v4
-        name: Setup pnpm cache
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
         with:
-          path: ~/.pnpm-store
+          path: ${{ env.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        working-directory: ${{ github.workspace }}
+
+      - name: Verify lockfile
+        run: |
+          pnpm list --depth=0
+          echo "Lockfile verification completed"
 
       - name: Lint
         run: pnpm lint
+        continue-on-error: false
 
       - name: Type check
         run: pnpm type-check
+        continue-on-error: false
 
       - name: Build
         run: pnpm build
+        continue-on-error: false
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: build-artifacts
+          path: |
+            packages/leenders-coaching-nl/.next/
+            packages/studio-leenders-coaching-nl/dist/
+          retention-days: 7

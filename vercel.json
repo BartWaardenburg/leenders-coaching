@@ -1,6 +1,18 @@
 {
   "buildCommand": "pnpm build",
-  "installCommand": "pnpm install",
+  "installCommand": "corepack enable && corepack prepare pnpm@9.15.9 --activate && pnpm install",
   "framework": "nextjs",
-  "version": 3
+  "version": 3,
+  "builds": [
+    {
+      "src": "packages/leenders-coaching-nl/package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/packages/leenders-coaching-nl/$1"
+    }
+  ]
 }
