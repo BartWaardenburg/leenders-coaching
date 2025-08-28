@@ -1,6 +1,6 @@
 import { type ComponentPropsWithoutRef, type ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { motion } from 'motion/react';
+import { motion, easeOut } from 'motion/react';
 
 import { Box } from '@/components/ui/Box';
 import { Stack } from '@/components/ui/Stack';
@@ -45,12 +45,12 @@ const transitions = {
   },
   dot: {
     duration: 0.3,
-    ease: 'easeOut',
+    ease: easeOut,
   },
   connector: {
     duration: 0.2,
-    ease: 'easeOut',
-  }
+    ease: easeOut,
+  },
 } as const;
 
 /* Animation sequence timing */
