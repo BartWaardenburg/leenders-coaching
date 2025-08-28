@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/react';
 import { SectionForm } from './SectionForm';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';

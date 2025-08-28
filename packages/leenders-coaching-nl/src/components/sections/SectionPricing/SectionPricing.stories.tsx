@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/nextjs'
-import { SectionPricing } from './SectionPricing'
+import type { Meta, StoryObj } from '@storybook/react';
+import { SectionPricing } from './SectionPricing';
 
 const meta = {
   title: 'Sections/SectionPricing',
@@ -8,15 +8,16 @@ const meta = {
     layout: 'fullscreen',
   },
   tags: ['autodocs'],
-} satisfies Meta<typeof SectionPricing>
+} satisfies Meta<typeof SectionPricing>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 const defaultPackages = [
   {
     title: 'Kennismakingsgesprek',
-    description: 'Een vrijblijvend gesprek om kennis te maken en je doelen te bespreken.',
+    description:
+      'Een vrijblijvend gesprek om kennis te maken en je doelen te bespreken.',
     price: 'Gratis',
     features: [
       { text: '30 minuten' },
@@ -42,7 +43,8 @@ const defaultPackages = [
   },
   {
     title: 'Intensief traject',
-    description: 'Een uitgebreid coachingstraject voor diepgaande transformatie.',
+    description:
+      'Een uitgebreid coachingstraject voor diepgaande transformatie.',
     price: '€75',
     features: [
       { text: '10 sessies van 1 uur' },
@@ -54,13 +56,14 @@ const defaultPackages = [
     ctaLabel: 'Start traject',
     variant: 'blue' as const,
   },
-]
+];
 
 export const Default: Story = {
   args: {
     title: 'Coaching pakketten',
-    description: 'Kies het pakket dat het beste bij jou past. Alle pakketten zijn inclusief een persoonlijke aanpak en flexibele planning.',
+    description:
+      'Kies het pakket dat het beste bij jou past. Alle pakketten zijn inclusief een persoonlijke aanpak en flexibele planning.',
     packages: defaultPackages,
     onBooking: () => console.log('Booking clicked'),
   },
-} 
+};

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/react';
 import { useEffect, useState } from 'react';
 import { ToastProvider, useToast } from './ToastManager';
 import type { ModalVariant } from '../Modal/Modal';

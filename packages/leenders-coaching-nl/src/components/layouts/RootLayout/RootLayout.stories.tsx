@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/react';
 import { SectionBlog } from '@/components/sections/SectionBlog';
 import { SectionCalendar } from '@/components/sections/SectionCalendar';
 import { SectionCards } from '@/components/sections/SectionCards';
