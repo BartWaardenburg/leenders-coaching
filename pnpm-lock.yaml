@@ -9790,9 +9790,9 @@ snapshots:
 
   '@polka/url@1.0.0-next.29': {}
 
-  '@portabletext/block-tools@3.5.0(@sanity/schema@4.6.0(@types/react@19.1.12))(@sanity/types@4.6.0(@types/react@19.1.12))(@types/react@19.1.12)':
+  '@portabletext/block-tools@3.5.0(@sanity/schema@4.6.0(@types/react@19.1.12)(debug@4.4.1))(@sanity/types@4.6.0(@types/react@19.1.12))(@types/react@19.1.12)':
     dependencies:
-      '@portabletext/sanity-bridge': 1.1.7(@sanity/schema@4.6.0(@types/react@19.1.12))(@sanity/types@4.6.0(@types/react@19.1.12))
+      '@portabletext/sanity-bridge': 1.1.7(@sanity/schema@4.6.0(@types/react@19.1.12)(debug@4.4.1))(@sanity/types@4.6.0(@types/react@19.1.12))
       '@portabletext/schema': 1.2.0
       '@sanity/types': 4.6.0(@types/react@19.1.12)(debug@4.4.1)
       '@types/react': 19.1.12
@@ -9801,12 +9801,12 @@ snapshots:
     transitivePeerDependencies:
       - '@sanity/schema'
 
-  '@portabletext/editor@2.6.6(@portabletext/sanity-bridge@1.1.7(@sanity/schema@4.6.0(@types/react@19.1.12))(@sanity/types@4.6.0(@types/react@19.1.12)))(@sanity/schema@4.6.0(@types/react@19.1.12))(@sanity/types@4.6.0(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(rxjs@7.8.2)':
+  '@portabletext/editor@2.6.6(@portabletext/sanity-bridge@1.1.7(@sanity/schema@4.6.0(@types/react@19.1.12))(@sanity/types@4.6.0(@types/react@19.1.12)))(@sanity/schema@4.6.0(@types/react@19.1.12)(debug@4.4.1))(@sanity/types@4.6.0(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(rxjs@7.8.2)':
     dependencies:
-      '@portabletext/block-tools': 3.5.0(@sanity/schema@4.6.0(@types/react@19.1.12))(@sanity/types@4.6.0(@types/react@19.1.12))(@types/react@19.1.12)
+      '@portabletext/block-tools': 3.5.0(@sanity/schema@4.6.0(@types/react@19.1.12)(debug@4.4.1))(@sanity/types@4.6.0(@types/react@19.1.12))(@types/react@19.1.12)
       '@portabletext/keyboard-shortcuts': 1.1.1
       '@portabletext/patches': 1.1.8
-      '@portabletext/sanity-bridge': 1.1.7(@sanity/schema@4.6.0(@types/react@19.1.12))(@sanity/types@4.6.0(@types/react@19.1.12))
+      '@portabletext/sanity-bridge': 1.1.7(@sanity/schema@4.6.0(@types/react@19.1.12)(debug@4.4.1))(@sanity/types@4.6.0(@types/react@19.1.12))
       '@portabletext/schema': 1.2.0
       '@portabletext/to-html': 3.0.0
       '@sanity/schema': 4.6.0(@types/react@19.1.12)(debug@4.4.1)
@@ -9842,7 +9842,7 @@ snapshots:
       '@portabletext/types': 2.0.15
       react: 19.1.1
 
-  '@portabletext/sanity-bridge@1.1.7(@sanity/schema@4.6.0(@types/react@19.1.12))(@sanity/types@4.6.0(@types/react@19.1.12))':
+  '@portabletext/sanity-bridge@1.1.7(@sanity/schema@4.6.0(@types/react@19.1.12)(debug@4.4.1))(@sanity/types@4.6.0(@types/react@19.1.12))':
     dependencies:
       '@portabletext/schema': 1.2.0
       '@sanity/schema': 4.6.0(@types/react@19.1.12)(debug@4.4.1)
@@ -15460,8 +15460,8 @@ snapshots:
       '@dnd-kit/utilities': 3.2.2(react@19.1.1)
       '@juggle/resize-observer': 3.4.0
       '@mux/mux-player-react': 3.5.3(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@portabletext/block-tools': 3.5.0(@sanity/schema@4.6.0(@types/react@19.1.12))(@sanity/types@4.6.0(@types/react@19.1.12))(@types/react@19.1.12)
-      '@portabletext/editor': 2.6.6(@portabletext/sanity-bridge@1.1.7(@sanity/schema@4.6.0(@types/react@19.1.12))(@sanity/types@4.6.0(@types/react@19.1.12)))(@sanity/schema@4.6.0(@types/react@19.1.12))(@sanity/types@4.6.0(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(rxjs@7.8.2)
+      '@portabletext/block-tools': 3.5.0(@sanity/schema@4.6.0(@types/react@19.1.12)(debug@4.4.1))(@sanity/types@4.6.0(@types/react@19.1.12))(@types/react@19.1.12)
+      '@portabletext/editor': 2.6.6(@portabletext/sanity-bridge@1.1.7(@sanity/schema@4.6.0(@types/react@19.1.12))(@sanity/types@4.6.0(@types/react@19.1.12)))(@sanity/schema@4.6.0(@types/react@19.1.12)(debug@4.4.1))(@sanity/types@4.6.0(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(rxjs@7.8.2)
       '@portabletext/react': 4.0.2(react@19.1.1)
       '@portabletext/toolkit': 3.0.0
       '@rexxars/react-json-inspector': 9.0.1(react@19.1.1)
