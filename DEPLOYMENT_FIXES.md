@@ -56,6 +56,17 @@ This document outlines the fixes made to resolve installation, building, and dep
 - Added troubleshooting section
 - Documented all available scripts and commands
 
+### 6. Static Generation Issue with Toast Provider
+
+**Problem**: The contact page was failing during static generation because the `SectionForm` component was trying to use `useToast` hook without the `ToastProvider` being available during build time.
+
+**Solution**:
+
+- Modified `SectionForm` component to safely handle cases where `ToastProvider` is not available
+- Added try-catch block around `useToast()` call to prevent build failures
+- Made toast functionality optional during static generation while preserving functionality in client-side rendering
+- Added proper TypeScript types for toast options
+
 ## Files Created/Modified
 
 ### New Files
@@ -71,6 +82,7 @@ This document outlines the fixes made to resolve installation, building, and dep
 - `packages/leenders-coaching-nl/vercel.json` - Enhanced configuration
 - `.github/workflows/ci.yml` - Improved CI workflow
 - `README.md` - Updated with better documentation
+- `packages/leenders-coaching-nl/src/components/sections/SectionForm/SectionForm.tsx` - Fixed toast provider issue
 
 ## Required Environment Variables
 
@@ -119,6 +131,7 @@ To verify the fixes work:
 2. **CI Pipeline**: GitHub Actions should pass all checks
 3. **Deployment**: Automatic deployment should work on push to main
 4. **Environment**: All environment variables should be properly loaded
+5. **Static Generation**: All pages including contact page should generate successfully
 
 ## Troubleshooting
 
@@ -129,6 +142,7 @@ If issues persist:
 3. Ensure Node.js 20+ and pnpm 9.15.9+ are used
 4. Check GitHub Actions logs for CI/CD issues
 5. Verify Sanity project configuration
+6. Check for any client-side hooks being used during static generation
 
 ## Next Steps
 
@@ -137,3 +151,4 @@ If issues persist:
 3. Test deployment with a small change
 4. Monitor build and deployment logs
 5. Verify the live site functionality
+6. Test the contact form functionality in production

@@ -12,12 +12,18 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { submitContactForm } from '@/lib/api/contact';
 import { useToast } from '@/components/providers/ToastProvider';
+import type { ModalVariant } from '@/components/ui/Modal/Modal';
 
 export type ContactFormData = {
   name: string;
   email: string;
   subject: string;
   message: string;
+};
+
+type ToastOptions = {
+  variant?: ModalVariant;
+  duration?: number;
 };
 
 type SectionFormProps = {
@@ -46,28 +52,42 @@ export const SectionForm = ({
     formState: { errors, isSubmitting },
     reset,
   } = reactHookForm.useForm<ContactFormData>();
-  const { showToast } = useToast();
+
+  // Safely use toast - handle case where ToastProvider is not available during SSG
+  let showToast: ((message: string, options?: ToastOptions) => void) | null =
+    null;
+  try {
+    const toast = useToast();
+    showToast = toast.showToast;
+  } catch (error) {
+    // Toast provider not available (e.g., during static generation)
+    console.warn('Toast provider not available:', error);
+  }
 
   const handleFormSubmit = async (data: ContactFormData) => {
     try {
       await submitContactForm(data);
       reset();
-      showToast(
-        'Bedankt voor je bericht! We nemen zo snel mogelijk contact met je op.',
-        {
-          variant: 'green',
-          duration: 5000,
-        },
-      );
+      if (showToast) {
+        showToast(
+          'Bedankt voor je bericht! We nemen zo snel mogelijk contact met je op.',
+          {
+            variant: 'green',
+            duration: 5000,
+          },
+        );
+      }
     } catch (error) {
       console.error('Error submitting form:', error);
-      showToast(
-        'Er is iets misgegaan bij het versturen van je bericht. Probeer het later opnieuw.',
-        {
-          variant: 'pink',
-          duration: 5000,
-        },
-      );
+      if (showToast) {
+        showToast(
+          'Er is iets misgegaan bij het versturen van je bericht. Probeer het later opnieuw.',
+          {
+            variant: 'pink',
+            duration: 5000,
+          },
+        );
+      }
     }
   };
 
