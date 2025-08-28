@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { motion } from 'motion/react';
+import { motion, easeOut } from 'motion/react';
 import { Box } from '@/components/ui/Box';
 import { Stack } from '@/components/ui/Stack';
 import { Text } from '@/components/ui/Text';
@@ -38,13 +38,17 @@ const itemVariants = {
     x: 0,
     transition: {
       duration: 0.3,
-      ease: "easeOut",
+      ease: easeOut,
     },
   },
 };
 
-export const NavigationItems = ({ links, onItemClick }: NavigationItemsProps) => (
-  <Box as={motion.ul}
+export const NavigationItems = ({
+  links,
+  onItemClick,
+}: NavigationItemsProps) => (
+  <Box
+    as={motion.ul}
     variants={containerVariants}
     initial="hidden"
     animate="visible"
@@ -56,11 +60,7 @@ export const NavigationItems = ({ links, onItemClick }: NavigationItemsProps) =>
           return null;
         }
         return (
-          <Box
-            as={motion.li}
-            variants={itemVariants}
-            key={link._key}
-          >
+          <Box as={motion.li} variants={itemVariants} key={link._key}>
             <Link
               href={link.href}
               onClick={onItemClick}
