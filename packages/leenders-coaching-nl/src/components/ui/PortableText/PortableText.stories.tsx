@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { PortableText } from './PortableText';
 
 const meta = {
@@ -35,7 +35,10 @@ export const AllFeatures: Story = {
         _type: 'block',
         style: 'normal',
         children: [
-          { _type: 'span', text: 'This story showcases all available features of the PortableText component. ' },
+          {
+            _type: 'span',
+            text: 'This story showcases all available features of the PortableText component. ',
+          },
           { _type: 'span', marks: ['strong'], text: 'Bold text, ' },
           { _type: 'span', marks: ['em'], text: 'italic text, ' },
           { _type: 'span', marks: ['underline'], text: 'underlined text, ' },
@@ -121,7 +124,11 @@ export const AllFeatures: Story = {
         style: 'blockquote',
         children: [
           { _type: 'span', text: 'This is a blockquote with styled content. ' },
-          { _type: 'span', marks: ['em'], text: 'It can also contain formatted text.' },
+          {
+            _type: 'span',
+            marks: ['em'],
+            text: 'It can also contain formatted text.',
+          },
         ],
       },
       {

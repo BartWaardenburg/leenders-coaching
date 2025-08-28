@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { SectionCards } from './SectionCards';
 import { Card } from '@/components/ui/Card';
 import { ComponentProps } from 'react';

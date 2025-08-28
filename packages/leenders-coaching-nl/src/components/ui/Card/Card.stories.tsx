@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Card } from './Card';
 
 import { Section } from '@/components/ui/Section';
@@ -164,46 +164,22 @@ export const AllVariantsNonClickable: Story = {
   },
   render: () => (
     <Grid>
-      <Card
-        image={exampleImage}
-        variant="blue"
-        title="Blauwe Variant"
-      >
+      <Card image={exampleImage} variant="blue" title="Blauwe Variant">
         <Text>Voorbeeldinhoud voor blauwe variant</Text>
       </Card>
-      <Card
-        image={exampleImage}
-        variant="purple"
-        title="Paarse Variant"
-      >
+      <Card image={exampleImage} variant="purple" title="Paarse Variant">
         <Text>Voorbeeldinhoud voor paarse variant</Text>
       </Card>
-      <Card
-        image={exampleImage}
-        variant="green"
-        title="Groene Variant"
-      >
+      <Card image={exampleImage} variant="green" title="Groene Variant">
         <Text>Voorbeeldinhoud voor groene variant</Text>
       </Card>
-      <Card
-        image={exampleImage}
-        variant="pink"
-        title="Roze Variant"
-      >
+      <Card image={exampleImage} variant="pink" title="Roze Variant">
         <Text>Voorbeeldinhoud voor roze variant</Text>
       </Card>
-      <Card
-        image={exampleImage}
-        variant="yellow"
-        title="Gele Variant"
-      >
+      <Card image={exampleImage} variant="yellow" title="Gele Variant">
         <Text>Voorbeeldinhoud voor gele variant</Text>
       </Card>
-      <Card
-        image={exampleImage}
-        variant="teal"
-        title="Turquoise Variant"
-      >
+      <Card image={exampleImage} variant="teal" title="Turquoise Variant">
         <Text>Voorbeeldinhoud voor turquoise variant</Text>
       </Card>
     </Grid>
@@ -256,7 +232,8 @@ export const NonClickable: Story = {
     border: true,
     children: (
       <Text>
-        Dit is een informatieve kaart zonder link. De kaart heeft geen hover effecten omdat deze niet klikbaar is.
+        Dit is een informatieve kaart zonder link. De kaart heeft geen hover
+        effecten omdat deze niet klikbaar is.
       </Text>
     ),
   },
