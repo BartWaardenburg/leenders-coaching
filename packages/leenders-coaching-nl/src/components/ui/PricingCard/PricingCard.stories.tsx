@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { PricingCard } from './PricingCard'
+import type { Meta, StoryObj } from '@storybook/nextjs';
+import { PricingCard } from './PricingCard';
 
 const meta = {
   title: 'UI/PricingCard',
@@ -14,15 +14,16 @@ const meta = {
       options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
     },
   },
-} satisfies Meta<typeof PricingCard>
+} satisfies Meta<typeof PricingCard>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
     title: 'Kennismakingsgesprek',
-    description: 'Een vrijblijvend gesprek om kennis te maken en je doelen te bespreken.',
+    description:
+      'Een vrijblijvend gesprek om kennis te maken en je doelen te bespreken.',
     price: 'Gratis',
     features: [
       { text: '30 minuten' },
@@ -33,7 +34,7 @@ export const Default: Story = {
     onCtaClick: () => console.log('CTA clicked'),
     variant: 'blue',
   },
-}
+};
 
 export const Popular: Story = {
   args: {
@@ -51,12 +52,13 @@ export const Popular: Story = {
     onCtaClick: () => console.log('CTA clicked'),
     variant: 'purple',
   },
-}
+};
 
 export const Extended: Story = {
   args: {
     title: 'Intensief traject',
-    description: 'Een uitgebreid coachingstraject voor diepgaande transformatie.',
+    description:
+      'Een uitgebreid coachingstraject voor diepgaande transformatie.',
     price: '€75',
     features: [
       { text: '10 sessies van 1 uur' },
@@ -69,4 +71,4 @@ export const Extended: Story = {
     onCtaClick: () => console.log('CTA clicked'),
     variant: 'teal',
   },
-} 
+};

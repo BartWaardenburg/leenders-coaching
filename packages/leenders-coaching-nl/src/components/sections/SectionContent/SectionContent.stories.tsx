@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { SectionContent } from './SectionContent';
 import type { PortableTextBlock } from '@portabletext/react';
 

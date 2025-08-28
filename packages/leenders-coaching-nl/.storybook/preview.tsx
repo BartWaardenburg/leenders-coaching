@@ -1,46 +1,45 @@
 import React from 'react';
-import type { Preview } from '@storybook/react';
-import { ThemeProvider } from 'next-themes';
-import { useDarkMode } from 'storybook-dark-mode';
-import { ConfigProvider, defaultConfig as baseConfig } from '../src/components/providers/ConfigProvider';
+import type { Preview } from '@storybook/nextjs';
+import { withThemeByClassName } from '@storybook/addon-themes';
+import {
+  ConfigProvider,
+  defaultConfig as baseConfig,
+} from '../src/components/providers/ConfigProvider';
 import { ToastProvider } from '../src/components/ui/Toast/ToastManager';
 import '../src/app/globals.css';
 
 const preview: Preview = {
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
-    controls: {},
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/,
+      },
+    },
     layout: 'fullscreen',
     backgrounds: {
       disable: true,
-    },
-    darkMode: {
-      current: 'light',
-      dark: { className: 'dark' },
-      light: { className: 'light' },
-      stylePreview: true,
-      classTarget: 'html',
     },
     nextjs: {
       appDirectory: true,
     },
   },
   decorators: [
+    withThemeByClassName({
+      themes: {
+        light: '',
+        dark: 'dark',
+      },
+      defaultTheme: 'light',
+    }),
     (Story) => {
-      const isDarkMode = useDarkMode();
-
       return (
-        <ThemeProvider
-          attribute="class"
-          enableSystem={false}
-          forcedTheme={isDarkMode ? 'dark' : 'light'}
-        >
-          <ConfigProvider config={baseConfig}>
-            <ToastProvider>
-              <Story />
-            </ToastProvider>
-          </ConfigProvider>
-        </ThemeProvider>
+        <ConfigProvider config={baseConfig}>
+          <ToastProvider>
+            <Story />
+          </ToastProvider>
+        </ConfigProvider>
       );
     },
   ],

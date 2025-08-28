@@ -15,12 +15,12 @@ type BorderColor =
 
 const borderColors: Record<BorderColor, string> = {
   default: 'bg-foreground dark:bg-foreground',
-  blue: 'bg-pastel-blue-dark dark:bg-pastel-blue-light',
-  purple: 'bg-pastel-purple-dark dark:bg-pastel-purple-light',
-  green: 'bg-pastel-green-dark dark:bg-pastel-green-light',
-  pink: 'bg-pastel-pink-dark dark:bg-pastel-pink-light',
-  yellow: 'bg-pastel-yellow-dark dark:bg-pastel-yellow-light',
-  teal: 'bg-pastel-teal-dark dark:bg-pastel-teal-light',
+  blue: 'bg-pastel-blue-dark dark:bg-pastel-blue',
+  purple: 'bg-pastel-purple-dark dark:bg-pastel-purple',
+  green: 'bg-pastel-green-dark dark:bg-pastel-green',
+  pink: 'bg-pastel-pink-dark dark:bg-pastel-pink',
+  yellow: 'bg-pastel-yellow-dark dark:bg-pastel-yellow',
+  teal: 'bg-pastel-teal-dark dark:bg-pastel-teal',
 };
 
 type HeadingProps = {
@@ -74,7 +74,7 @@ export const Heading = ({
           variant === 'default' && 'text-3xl md:text-4xl',
           variant === 'large' && 'text-5xl md:text-7xl',
           variant === 'medium' &&
-          'text-3xl sm:text-4xl md:text-[42px] leading-[1.1]',
+            'text-3xl sm:text-4xl md:text-[42px] leading-[1.1]',
           variant === 'small' && 'text-lg md:text-xl',
           /* Text alignment */
           textAlign === 'center' && 'text-center',
