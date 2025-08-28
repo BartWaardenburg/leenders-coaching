@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Modal } from './Modal';
 import { Stack } from '@/components/ui/Stack';
 import { Box } from '@/components/ui/Box';

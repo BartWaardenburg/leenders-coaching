@@ -27,16 +27,22 @@ type FooterProps = ComponentPropsWithoutRef<'footer'> & {
 /**
  * Footer component using Sanity data
  */
-export const Footer = ({ className, copyright, contact, socialLinks, ...props }: FooterProps) => {
+export const Footer = ({
+  className,
+  copyright,
+  contact,
+  socialLinks,
+  ...props
+}: FooterProps) => {
   const instagramLink = socialLinks?.find(
-    (link) => link.platform?.toLowerCase() === 'instagram'
+    (link) => link.platform?.toLowerCase() === 'instagram',
   );
 
   return (
     <Box
       as="footer"
       className={twMerge(
-        'mt-auto dark:bg-menu transition-theme bg-background',
+        'mt-auto bg-background dark:bg-menu transition-theme',
         className,
       )}
       {...props}

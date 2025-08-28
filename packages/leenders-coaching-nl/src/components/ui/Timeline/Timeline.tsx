@@ -145,12 +145,12 @@ export const Timeline = ({
           return (
             <Box
               key={index}
-              className="relative grid grid-cols-[auto,1fr] md:grid-cols-[1fr,auto,1fr] items-center"
+              className="relative flex flex-col md:flex-row md:items-center"
             >
               {/* Mobile view */}
               <Box className="flex md:hidden">
                 {/* Center marker */}
-                <Box className="flex justify-center w-8 relative">
+                <Box className="flex justify-center items-center w-8 relative">
                   {/* Horizontal connector line */}
                   <MotionBox
                     className={twMerge(
@@ -181,54 +181,54 @@ export const Timeline = ({
                     }}
                   />
                 </Box>
-              </Box>
 
-              {/* Mobile content */}
-              <MotionBox
-                className="flex flex-col md:hidden pl-4"
-                initial={{ x: -100, opacity: 0 }}
-                whileInView={{ x: 0, opacity: 1 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{
-                  ...transitions.content,
-                  delay: sequence.content,
-                }}
-              >
-                {step.date && (
-                  <Box className="mb-2">
-                    <Text variant="small" color="muted">
-                      {step.date}
-                    </Text>
-                  </Box>
-                )}
-
-                <Stack
-                  gap={2}
-                  className={twMerge(
-                    'p-6 border',
-                    colorClasses[stepColor].bg,
-                    colorClasses[stepColor].border,
-                    'text-left',
-                  )}
+                {/* Mobile content */}
+                <MotionBox
+                  className="flex flex-col pl-4 flex-1"
+                  initial={{ x: -100, opacity: 0 }}
+                  whileInView={{ x: 0, opacity: 1 }}
+                  viewport={{ once: true, margin: '-100px' }}
+                  transition={{
+                    ...transitions.content,
+                    delay: sequence.content,
+                  }}
                 >
-                  <Heading level="h3" variant="small" className="font-medium">
-                    {step.title}
-                  </Heading>
-                  <Text variant="default" color="muted">
-                    {step.description}
-                  </Text>
-                  {step.content && (
-                    <Box className="mt-2 flex justify-start">
-                      {step.content}
+                  {step.date && (
+                    <Box className="mb-2">
+                      <Text variant="small" color="muted">
+                        {step.date}
+                      </Text>
                     </Box>
                   )}
-                </Stack>
-              </MotionBox>
+
+                  <Stack
+                    gap={2}
+                    className={twMerge(
+                      'p-6 border',
+                      colorClasses[stepColor].bg,
+                      colorClasses[stepColor].border,
+                      'text-left',
+                    )}
+                  >
+                    <Heading level="h3" variant="small" className="font-medium">
+                      {step.title}
+                    </Heading>
+                    <Text variant="default" color="muted">
+                      {step.description}
+                    </Text>
+                    {step.content && (
+                      <Box className="mt-2 flex justify-start">
+                        {step.content}
+                      </Box>
+                    )}
+                  </Stack>
+                </MotionBox>
+              </Box>
 
               {/* Desktop view */}
               <>
                 {/* Left side */}
-                <Box className="hidden md:block">
+                <Box className="hidden md:block md:flex-1">
                   {isEven ? (
                     <Box className="overflow-hidden">
                       <MotionBox
@@ -298,7 +298,7 @@ export const Timeline = ({
 
                 {/* Center dot */}
                 <MotionBox
-                  className="hidden md:flex justify-center w-4"
+                  className="hidden md:flex justify-center w-4 relative"
                   initial={{ opacity: 0, scale: 0 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true, margin: '-100px' }}
@@ -309,7 +309,7 @@ export const Timeline = ({
                 >
                   <Box
                     className={twMerge(
-                      'w-4 h-4 rounded-full border z-10',
+                      'w-4 h-4 rounded-full border-2 z-10',
                       'bg-background dark:bg-background-dark',
                       colorClasses[stepColor].border,
                     )}
@@ -317,7 +317,7 @@ export const Timeline = ({
                 </MotionBox>
 
                 {/* Right side */}
-                <Box className="hidden md:block">
+                <Box className="hidden md:block md:flex-1">
                   {!isEven ? (
                     <Box className="overflow-hidden">
                       <MotionBox

@@ -46,8 +46,11 @@ export const IconToggleButton = ({
   return (
     <motion.button
       type="button"
-      className={twMerge('w-10 h-10 p-0 rounded-full relative', className)}
-      whileHover={{ backgroundColor: 'var(--secondary-10)' }}
+      className={twMerge(
+        'w-10 h-10 p-0 rounded-full relative cursor-pointer',
+        className,
+      )}
+      whileHover={{ backgroundColor: 'hsl(20 30% 96% / 0.1)' }}
       transition={{ duration: duration }}
       aria-label={label}
       onClick={onClick}

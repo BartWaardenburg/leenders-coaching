@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { SectionBlog } from './SectionBlog'
+import type { Meta, StoryObj } from '@storybook/nextjs';
+import { SectionBlog } from './SectionBlog';
 
 const meta = {
   title: 'Sections/SectionBlog',
@@ -8,26 +8,35 @@ const meta = {
     layout: 'fullscreen',
   },
   tags: ['autodocs'],
-} satisfies Meta<typeof SectionBlog>
+} satisfies Meta<typeof SectionBlog>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 /* Generate more posts for pagination demo */
 const generatePosts = (count: number) => {
-  const variants = ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'] as const
+  const variants = [
+    'blue',
+    'purple',
+    'green',
+    'pink',
+    'yellow',
+    'teal',
+  ] as const;
   return Array.from({ length: count }, (_, i) => ({
     title: `Blog Post ${i + 1}: ${i % 2 === 0 ? 'Persoonlijke Groei' : 'Professionele Ontwikkeling'}`,
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     slug: `blog-post-${i + 1}`,
     date: `${i + 1} maart 2024`,
-    categories: [i % 2 === 0 ? 'Persoonlijke Groei' : 'Professionele Ontwikkeling'],
+    categories: [
+      i % 2 === 0 ? 'Persoonlijke Groei' : 'Professionele Ontwikkeling',
+    ],
     image: `https://picsum.photos/800/600?random=${i + 1}`,
     featured: i === 0,
     variant: variants[i % variants.length],
-  }))
-}
+  }));
+};
 
 export const Default: Story = {
   args: {
@@ -37,7 +46,7 @@ export const Default: Story = {
     posts: generatePosts(3),
     postsPerPage: 6,
   },
-}
+};
 
 export const WithPagination: Story = {
   args: {
@@ -45,7 +54,7 @@ export const WithPagination: Story = {
     posts: generatePosts(10),
     postsPerPage: 4,
   },
-}
+};
 
 export const ManyPosts: Story = {
   args: {
@@ -53,4 +62,4 @@ export const ManyPosts: Story = {
     posts: generatePosts(20),
     postsPerPage: 6,
   },
-}
+};

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useEffect, useRef, useState } from 'react';
 import { render } from '@react-email/render';
 import { Box } from '@/components/ui/Box';
@@ -27,7 +27,8 @@ const sampleData = {
   name: 'John Doe',
   email: 'john.doe@example.com',
   subject: 'Vraag over coaching',
-  message: 'Beste Leenders Coaching,\n\nIk zou graag meer informatie willen over jullie coaching diensten en hoe deze mij kunnen helpen. Kunnen jullie wat meer informatie verstrekken?\n\nBij voorbaat dank,\nJohn'
+  message:
+    'Beste Leenders Coaching,\n\nIk zou graag meer informatie willen over jullie coaching diensten en hoe deze mij kunnen helpen. Kunnen jullie wat meer informatie verstrekken?\n\nBij voorbaat dank,\nJohn',
 };
 
 /**
@@ -45,7 +46,8 @@ const EmailFrame = ({ title, description, html }: EmailFrameProps) => {
   useEffect(() => {
     if (iframeRef.current) {
       const iframe = iframeRef.current;
-      const iframeDocument = iframe.contentDocument || iframe.contentWindow?.document;
+      const iframeDocument =
+        iframe.contentDocument || iframe.contentWindow?.document;
 
       if (iframeDocument) {
         // Add default styling to the iframe document
@@ -81,7 +83,7 @@ const EmailFrame = ({ title, description, html }: EmailFrameProps) => {
             body.offsetHeight,
             html.clientHeight,
             html.scrollHeight,
-            html.offsetHeight
+            html.offsetHeight,
           );
           iframe.style.height = `${height}px`;
         };
@@ -94,8 +96,12 @@ const EmailFrame = ({ title, description, html }: EmailFrameProps) => {
 
   return (
     <Box className="w-full max-w-[700px] mx-auto">
-      <Text variant="large" weight="bold" className="mb-4">{title}</Text>
-      <Text variant="default" className="mb-6">{description}</Text>
+      <Text variant="large" weight="bold" className="mb-4">
+        {title}
+      </Text>
+      <Text variant="default" className="mb-6">
+        {description}
+      </Text>
       <Box className="border rounded-lg overflow-hidden shadow-md">
         <iframe
           ref={iframeRef}
@@ -118,7 +124,9 @@ export const NotificationEmail: Story = {
     useEffect(() => {
       const renderEmail = async () => {
         try {
-          const rendered = await render(<ContactNotification {...sampleData} />);
+          const rendered = await render(
+            <ContactNotification {...sampleData} />,
+          );
           setHtml(rendered);
         } catch (error) {
           console.error('Error rendering email:', error);
@@ -135,7 +143,7 @@ export const NotificationEmail: Story = {
         html={html}
       />
     );
-  }
+  },
 };
 
 /**
@@ -148,7 +156,12 @@ export const ConfirmationEmail: Story = {
     useEffect(() => {
       const renderEmail = async () => {
         try {
-          const rendered = await render(<ContactConfirmation name={sampleData.name} subject={sampleData.subject} />);
+          const rendered = await render(
+            <ContactConfirmation
+              name={sampleData.name}
+              subject={sampleData.subject}
+            />,
+          );
           setHtml(rendered);
         } catch (error) {
           console.error('Error rendering email:', error);
@@ -165,5 +178,5 @@ export const ConfirmationEmail: Story = {
         html={html}
       />
     );
-  }
-}; 
+  },
+};
