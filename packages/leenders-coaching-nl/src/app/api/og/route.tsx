@@ -5,13 +5,19 @@ import { metadataConfig } from '@/config/metadata.config';
 
 export const runtime = 'edge';
 
-/* Font loading */
+/* Font loading - using optimized subset fonts */
 const playfairDisplayData = fetch(
-  new URL('../../../assets/fonts/PlayfairDisplay-Bold.ttf', import.meta.url),
+  new URL(
+    '../../../assets/fonts/PlayfairDisplay-Bold-subset.ttf',
+    import.meta.url,
+  ),
 ).then((res) => res.arrayBuffer());
 
 const montserratData = fetch(
-  new URL('../../../assets/fonts/Montserrat-Regular.ttf', import.meta.url),
+  new URL(
+    '../../../assets/fonts/Montserrat-Regular-subset.ttf',
+    import.meta.url,
+  ),
 ).then((res) => res.arrayBuffer());
 
 // Default image configuration
@@ -47,7 +53,7 @@ export async function GET(request: Request) {
   };
 
   try {
-    /* Load fonts */
+    /* Load optimized fonts */
     const [playfairDisplay, montserrat] = await Promise.all([
       playfairDisplayData,
       montserratData,
