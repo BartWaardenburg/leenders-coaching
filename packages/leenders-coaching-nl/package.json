@@ -16,6 +16,7 @@
     "test": "vitest",
     "test:watch": "vitest watch",
     "test:coverage": "vitest run --coverage",
+    "test:coverage:ci": "vitest run --coverage --reporter=verbose",
     "test:ui": "vitest --ui",
     "update-types": "cd ../studio-leenders-coaching-nl && pnpm run update-types"
   },
