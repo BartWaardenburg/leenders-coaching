@@ -35,10 +35,10 @@
     "sanity"
   ],
   "dependencies": {
-    "@sanity/client": "6.28.3",
+    "@sanity/client": "7.10.0",
     "@sanity/types": "3.80.1",
     "@sanity/vision": "3.80.1",
-    "dotenv": "16.4.7",
+    "dotenv": "17.2.1",
     "lodash.defaults": "4.2.0",
     "lodash.difference": "4.5.0",
     "lodash.flatten": "4.4.0",
