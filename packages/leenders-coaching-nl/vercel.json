@@ -6,7 +6,6 @@
   },
   "buildCommand": "pnpm build",
   "devCommand": "pnpm dev",
-  "installCommand": "corepack enable && corepack prepare pnpm@10.15.0 --activate && pnpm install",
   "framework": "nextjs",
   "headers": [
     {
