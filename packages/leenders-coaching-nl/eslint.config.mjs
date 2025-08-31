@@ -23,7 +23,8 @@ const eslintConfig = [
       "**/.next/**",
       "**/dist/**",
       "**/generated/**",
-      "**/lib/gql/generated/**"
+      "**/lib/gql/generated/**",
+      "**/next-env.d.ts"
     ]
   },
   // Extend recommended configs
