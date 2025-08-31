@@ -1,0 +1,10 @@
+{
+  "moderate": true,
+  "whitelist": [],
+  "report-type": "important",
+  "package-manager": "pnpm",
+  "skip-dev": false,
+  "show-found": true,
+  "show-not-found": false,
+  "registry": "https://registry.npmjs.org/"
+}
