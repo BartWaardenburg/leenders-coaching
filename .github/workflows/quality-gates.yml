@@ -32,6 +32,12 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  actions: read
+
 env:
   NODE_VERSION: "20"
   PNPM_VERSION: "10.15.0"
@@ -108,12 +114,22 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '⚠️ **Security Alert**: Vulnerabilities detected in dependencies. Please review the audit results in the workflow logs.'
-            })
+            try {
+              console.log('🔍 Attempting to post security alert comment...');
+              console.log(`📊 Context: issue_number=${context.issue.number}, owner=${context.repo.owner}, repo=${context.repo.repo}`);
+              
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: '⚠️ **Security Alert**: Vulnerabilities detected in dependencies. Please review the audit results in the workflow logs.'
+              });
+              console.log('✅ Security alert comment posted successfully');
+            } catch (error) {
+              console.error('❌ Failed to post security alert comment:', error.message);
+              console.error('🔍 Error details:', JSON.stringify(error, null, 2));
+              // Don't fail the workflow if comment posting fails
+            }
 
   # License compliance check
   license-compliance:
