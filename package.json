@@ -10,7 +10,7 @@
     "build:frontend": "pnpm --filter leenders-coaching-nl build",
     "build:studio": "pnpm --filter studio-leenders-coaching-nl build",
     "lint": "pnpm --parallel run lint",
-    "lint:format": "pnpm lint --format json",
+    "lint:format": "pnpm --filter leenders-coaching-nl run lint:format",
     "type-check": "pnpm --parallel run type-check",
     "test": "pnpm --filter leenders-coaching-nl test",
     "test:coverage": "pnpm --filter leenders-coaching-nl test:coverage",

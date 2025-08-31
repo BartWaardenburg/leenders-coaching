@@ -267,11 +267,47 @@ jobs:
       - name: "🔍 ESLint analysis"
         run: |
           echo "🔍 Running comprehensive ESLint analysis..."
-          pnpm run lint:format > eslint-results.json || echo "ESLint issues found"
 
-          if [ -f eslint-results.json ]; then
-            echo "📊 ESLint Summary:"
-            cat eslint-results.json | jq -r 'length as $total | if $total == 0 then "✅ No ESLint issues found" else "⚠️ \($total) files with ESLint issues" end'
+          # Run ESLint and capture output, allowing it to fail
+          if pnpm run lint:format > eslint-raw-output.txt 2>&1; then
+            echo "✅ No ESLint issues found"
+            ESLINT_STATUS="success"
+          else
+            echo "⚠️ ESLint issues detected"
+            ESLINT_STATUS="issues"
+          fi
+
+          # Extract JSON from the output (skip pnpm wrapper lines)
+          if [ -f eslint-raw-output.txt ]; then
+            # Find the line that starts with '[' (beginning of JSON array) and extract from there
+            sed -n '/^\[/,$p' eslint-raw-output.txt > eslint-results.json
+            
+            # Validate and parse JSON output
+            if jq empty eslint-results.json 2>/dev/null; then
+              echo "📊 ESLint Summary:"
+              
+              # Count files with errors and warnings
+              TOTAL_FILES=$(cat eslint-results.json | jq 'length')
+              ERROR_COUNT=$(cat eslint-results.json | jq 'map(.errorCount) | add // 0')
+              WARNING_COUNT=$(cat eslint-results.json | jq 'map(.warningCount) | add // 0')
+              
+              echo "Files analyzed: $TOTAL_FILES"
+              echo "Total errors: $ERROR_COUNT"
+              echo "Total warnings: $WARNING_COUNT"
+              
+              # Show files with issues
+              if [ "$ERROR_COUNT" -gt 0 ] || [ "$WARNING_COUNT" -gt 0 ]; then
+                echo ""
+                echo "Files with issues:"
+                cat eslint-results.json | jq -r '.[] | select(.errorCount > 0 or .warningCount > 0) | "  - \(.filePath | split("/") | last): \(.errorCount) errors, \(.warningCount) warnings"'
+              fi
+            else
+              echo "❌ Failed to extract valid ESLint JSON from output"
+              echo "Raw output:"
+              cat eslint-raw-output.txt 2>/dev/null || echo "No output file generated"
+            fi
+          else
+            echo "❌ No ESLint output file generated"
           fi
 
       - name: "📊 TypeScript strict check"

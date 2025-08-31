@@ -12,6 +12,9 @@ out/
 build
 dist
 
+# Storybook
+storybook-static/
+
 # Misc
 .DS_Store
 *.pem
@@ -25,6 +28,8 @@ yarn-error.log*
 # Local env files
 .env*.local
 .env
+.env.development
+.env.example
 
 # Vercel
 .vercel
@@ -37,3 +42,41 @@ next-env.d.ts
 .idea
 .vscode 
 .cursor
+
+# Quality Gates & CI Generated Files
+audit-results.json
+license-summary.txt
+dependency-tree.txt
+eslint-results.json
+eslint-raw-output.txt
+typescript-results.txt
+complexity-analysis.txt
+build-metrics.json
+
+# Build Artifacts
+*.tar.gz
+frontend-build.tar.gz
+studio-build.tar.gz
+
+# Temporary Files
+/tmp/
+*.tmp
+*.temp
+
+# Cache
+.cache/
+*.cache
+
+# Sanity Studio
+sanity-typegen.json
+.sanity/
+
+# Bundle Analysis
+.analyze/
+
+# Logs
+*.log
+build-storybook.log
+
+# Husky
+.husky/_
