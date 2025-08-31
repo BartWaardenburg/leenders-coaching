@@ -390,13 +390,60 @@ jobs:
           echo "{\"frontend_build_time\": $frontend_duration, \"studio_build_time\": $studio_duration}" > build-metrics.json
 
       - name: "📊 Bundle size analysis"
-        run: pnpm run analyze:size
+        run: pnpm run analyze:size:ci
+
+      - name: "🔍 Performance audit"
+        run: pnpm run perf:audit:ci
+
+      - name: "📋 Capture bundle size summary"
+        run: |
+          echo "📦 Bundle Size Analysis Summary"
+          echo "=============================="
+
+          # Check if build was successful
+          if [ -d "packages/leenders-coaching-nl/.next" ]; then
+            echo "✅ Frontend build completed successfully"
+            
+            # Capture basic build stats
+            if [ -d "packages/leenders-coaching-nl/.next/static/chunks" ]; then
+              echo ""
+              echo "📊 Chunk Statistics:"
+              echo "Total JS chunks: $(find packages/leenders-coaching-nl/.next/static/chunks -name "*.js" | wc -l)"
+              echo "Total CSS files: $(find packages/leenders-coaching-nl/.next/static/css -name "*.css" | wc -l)"
+              
+              # Calculate total sizes
+              JS_SIZE=$(find packages/leenders-coaching-nl/.next/static/chunks -name "*.js" -exec du -ch {} + | tail -1 | cut -f1)
+              CSS_SIZE=$(find packages/leenders-coaching-nl/.next/static/css -name "*.css" -exec du -ch {} + | tail -1 | cut -f1)
+              
+              echo "Total JS size: $JS_SIZE"
+              echo "Total CSS size: $CSS_SIZE"
+            fi
+            
+            # Display size-limit results if available
+            if [ -f "packages/leenders-coaching-nl/size-limit.json" ]; then
+              echo ""
+              echo "📏 Size Limit Results:"
+              cat packages/leenders-coaching-nl/size-limit.json | jq -r '.[] | "\(.name): \(.size) (\(.percent)% of limit)"' || echo "Could not parse size-limit results"
+            fi
+            
+            # Check for analyze directory (if bundle analyzer was used)
+            if [ -d "packages/leenders-coaching-nl/.next/analyze" ]; then
+              echo ""
+              echo "📁 Bundle analysis files available in packages/leenders-coaching-nl/.next/analyze/"
+              ls -la packages/leenders-coaching-nl/.next/analyze/ || echo "No analysis files found"
+            fi
+          else
+            echo "❌ Frontend build failed or not found"
+            exit 1
+          fi
 
       - name: "📤 Upload performance metrics"
         uses: actions/upload-artifact@v4
         with:
           name: performance-metrics-${{ github.sha }}
-          path: build-metrics.json
+          path: |
+            build-metrics.json
+            packages/leenders-coaching-nl/.next/static/
           retention-days: 90
 
   # Summary report

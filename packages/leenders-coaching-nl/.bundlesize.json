@@ -1,0 +1,22 @@
+[
+  {
+    "path": ".next/static/chunks/*.js",
+    "maxSize": "250kb",
+    "name": "JavaScript chunks"
+  },
+  {
+    "path": ".next/static/css/*.css",
+    "maxSize": "50kb",
+    "name": "CSS files"
+  },
+  {
+    "path": ".next/static/media/*",
+    "maxSize": "100kb",
+    "name": "Media files"
+  },
+  {
+    "path": ".next/static/images/*",
+    "maxSize": "200kb",
+    "name": "Image files"
+  }
+]
