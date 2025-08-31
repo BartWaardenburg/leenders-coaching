@@ -75,7 +75,7 @@ jobs:
 
       - name: "📊 Collect all metrics"
         run: |
-          cd .github/scripts && npm install
+          cd .github/scripts && pnpm install
           cd ../..
           node .github/scripts/metrics-collector.js all
 
@@ -106,10 +106,9 @@ jobs:
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
     steps:
-      - name: "🔄 Checkout main branch"
+      - name: "🔄 Checkout current branch (temporary for testing)"
         uses: actions/checkout@v5
         with:
-          ref: main
           fetch-depth: 1
 
       - name: "🔧 Setup Node.js"
@@ -142,7 +141,7 @@ jobs:
 
       - name: "📊 Collect baseline metrics"
         run: |
-          cd .github/scripts && npm install
+          cd .github/scripts && pnpm install
           cd ../..
           node .github/scripts/metrics-collector.js all
 
@@ -167,6 +166,22 @@ jobs:
     timeout-minutes: 5
 
     steps:
+      - name: "🔄 Checkout repository"
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: "🔧 Setup Node.js"
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: "📦 Setup pnpm"
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          run_install: false
+
       - name: "📥 Download PR metrics"
         uses: actions/download-artifact@v4
         with:
@@ -181,7 +196,7 @@ jobs:
 
       - name: "📊 Generate metrics comparison"
         run: |
-          cd .github/scripts && npm install
+          cd .github/scripts && pnpm install
           cd ../..
           node .github/scripts/generate-pr-comment.js
 

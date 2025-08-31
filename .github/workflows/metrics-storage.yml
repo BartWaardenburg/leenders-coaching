@@ -121,8 +121,8 @@ jobs:
             }' > lighthouse-metrics.json
           fi
 
-          # Run ESLint and collect metrics
-          pnpm run lint:format > eslint-output.txt 2>&1 || echo "ESLint completed"
+          # Run ESLint and collect metrics (use direct command to avoid npm script headers)
+          pnpm --filter leenders-coaching-nl run lint:format > eslint-output.txt 2>&1 || echo "ESLint completed"
           if [ -f eslint-output.txt ] && grep -q "^\[" eslint-output.txt; then
             sed -n '/^\[/,$p' eslint-output.txt > eslint-results.json
             if jq empty eslint-results.json 2>/dev/null; then
@@ -140,8 +140,8 @@ jobs:
             echo '{"total_files": 0, "error_count": 0, "warning_count": 0, "files_with_issues": 0, "status": "success"}' > eslint-metrics.json
           fi
 
-          # Run TypeScript check and collect metrics
-          pnpm run type-check > typescript-output.txt 2>&1
+          # Run TypeScript check and collect metrics (use direct command to avoid npm script headers)
+          pnpm --parallel run type-check > typescript-output.txt 2>&1
           if [ $? -eq 0 ]; then
             echo '{"status": "success", "error_count": 0, "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"}' > typescript-metrics.json
           else
