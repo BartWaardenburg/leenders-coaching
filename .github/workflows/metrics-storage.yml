@@ -65,11 +65,89 @@ jobs:
           npx puppeteer browsers install chrome
           timeout 300 pnpm --filter leenders-coaching-nl run perf:lighthouse:ci || echo "Lighthouse completed with warnings"
 
-      - name: "📊 Collect all metrics"
+      - name: "📊 Collect metrics manually"
         run: |
-          cd .github/scripts && npm install
-          cd ../..
-          node .github/scripts/metrics-collector.js all
+          # Extract coverage metrics
+          if [ -f "packages/leenders-coaching-nl/coverage/coverage-summary.json" ]; then
+            cat packages/leenders-coaching-nl/coverage/coverage-summary.json | jq '{
+              statements: .total.statements.pct,
+              branches: .total.branches.pct,
+              functions: .total.functions.pct,
+              lines: .total.lines.pct,
+              covered_lines: .total.lines.covered,
+              total_lines: .total.lines.total
+            }' > coverage-metrics.json
+          else
+            echo '{"statements": 0, "branches": 0, "functions": 0, "lines": 0, "covered_lines": 0, "total_lines": 0}' > coverage-metrics.json
+          fi
+
+          # Calculate bundle metrics
+          if [ -d "packages/leenders-coaching-nl/.next/static" ]; then
+            JS_SIZE=$(find packages/leenders-coaching-nl/.next/static/chunks -name "*.js" -type f -exec du -b {} + 2>/dev/null | awk '{sum += $1} END {print (sum > 0 ? int(sum/1024) : 0)}')
+            CSS_SIZE=$(find packages/leenders-coaching-nl/.next/static/css -name "*.css" -type f -exec du -b {} + 2>/dev/null | awk '{sum += $1} END {print (sum > 0 ? int(sum/1024) : 0)}')
+            TOTAL_CHUNKS=$(find packages/leenders-coaching-nl/.next/static/chunks -name "*.js" -type f 2>/dev/null | wc -l)
+            
+            echo "{
+              \"js_size_kb\": $JS_SIZE,
+              \"css_size_kb\": $CSS_SIZE,
+              \"total_chunks\": $TOTAL_CHUNKS,
+              \"total_size_kb\": $((JS_SIZE + CSS_SIZE)),
+              \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
+            }" > bundle-stats.json
+          else
+            echo '{"js_size_kb": 0, "css_size_kb": 0, "total_chunks": 0, "total_size_kb": 0}' > bundle-stats.json
+          fi
+
+          # Extract lighthouse metrics
+          if [ -f "packages/leenders-coaching-nl/.lighthouseci/lhr-*.json" ]; then
+            LATEST_LHR=$(ls -t packages/leenders-coaching-nl/.lighthouseci/lhr-*.json | head -1)
+            cat "$LATEST_LHR" | jq '{
+              performance: .categories.performance.score,
+              accessibility: .categories.accessibility.score,
+              "best-practices": .categories["best-practices"].score,
+              seo: .categories.seo.score,
+              "first-contentful-paint": .audits["first-contentful-paint"].numericValue,
+              "largest-contentful-paint": .audits["largest-contentful-paint"].numericValue,
+              "cumulative-layout-shift": .audits["cumulative-layout-shift"].numericValue,
+              "total-blocking-time": .audits["total-blocking-time"].numericValue,
+              "speed-index": .audits["speed-index"].numericValue,
+              timestamp: now
+            }' > lighthouse-metrics.json
+          else
+            echo '{
+              "performance": 0, "accessibility": 0, "best-practices": 0, "seo": 0,
+              "first-contentful-paint": 0, "largest-contentful-paint": 0,
+              "cumulative-layout-shift": 0, "total-blocking-time": 0, "speed-index": 0
+            }' > lighthouse-metrics.json
+          fi
+
+          # Run ESLint and collect metrics
+          pnpm run lint:format > eslint-output.txt 2>&1 || echo "ESLint completed"
+          if [ -f eslint-output.txt ] && grep -q "^\[" eslint-output.txt; then
+            sed -n '/^\[/,$p' eslint-output.txt > eslint-results.json
+            if jq empty eslint-results.json 2>/dev/null; then
+              cat eslint-results.json | jq '{
+                total_files: length,
+                error_count: map(.errorCount) | add // 0,
+                warning_count: map(.warningCount) | add // 0,
+                files_with_issues: map(select(.errorCount > 0 or .warningCount > 0)) | length,
+                status: "success"
+              }' > eslint-metrics.json
+            else
+              echo '{"total_files": 0, "error_count": 0, "warning_count": 0, "files_with_issues": 0, "status": "success"}' > eslint-metrics.json
+            fi
+          else
+            echo '{"total_files": 0, "error_count": 0, "warning_count": 0, "files_with_issues": 0, "status": "success"}' > eslint-metrics.json
+          fi
+
+          # Run TypeScript check and collect metrics
+          pnpm run type-check > typescript-output.txt 2>&1
+          if [ $? -eq 0 ]; then
+            echo '{"status": "success", "error_count": 0, "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"}' > typescript-metrics.json
+          else
+            ERROR_COUNT=$(grep -c "error TS" typescript-output.txt || echo "0")
+            echo "{\"status\": \"error\", \"error_count\": $ERROR_COUNT, \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" > typescript-metrics.json
+          fi
 
       - name: "🗄️ Store baseline metrics"
         run: |
