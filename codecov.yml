@@ -1,0 +1,97 @@
+# Codecov configuration
+# https://docs.codecov.com/docs/codecovyml-reference
+
+codecov:
+  require_ci_to_pass: true
+  notify:
+    wait_for_ci: true
+
+coverage:
+  precision: 2
+  round: down
+  range: "70...100"
+
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+        base: auto
+    patch:
+      default:
+        target: auto
+        threshold: 5%
+        base: auto
+
+ignore:
+  # Configuration files
+  - "**/*.config.js"
+  - "**/*.config.ts"
+  - "**/*.config.mjs"
+  - "**/lighthouserc.js"
+  - "**/postcss.config.mjs"
+  - "**/tailwind.config.ts"
+  - "**/next.config.ts"
+  - "**/eslint.config.mjs"
+  - "**/vitest.config.ts"
+
+  # Build and output directories
+  - "**/dist/**"
+  - "**/.next/**"
+  - "**/build/**"
+  - "**/coverage/**"
+  - "**/storybook-static/**"
+
+  # Type definitions and schemas
+  - "**/*.d.ts"
+  - "**/schema.json"
+  - "**/sanity-typegen.json"
+
+  # Stories and test files (already tested)
+  - "**/*.stories.{js,jsx,ts,tsx}"
+  - "**/*.test.{js,jsx,ts,tsx}"
+  - "**/*.spec.{js,jsx,ts,tsx}"
+  - "**/test/**"
+  - "**/__tests__/**"
+
+  # Documentation and README files
+  - "**/*.md"
+  - "**/README.*"
+
+  # GitHub workflows and scripts
+  - ".github/**"
+
+  # Package management
+  - "**/package.json"
+  - "**/pnpm-lock.yaml"
+  - "**/node_modules/**"
+
+  # Environment and dotfiles
+  - "**/.env*"
+  - "**/.*"
+
+  # Sanity Studio specific
+  - "**/schemaTypes/**"
+  - "**/structure.ts"
+  - "**/sanity.cli.ts"
+  - "**/sanity.config.ts"
+
+  # Scripts and seeding
+  - "**/scripts/**"
+
+comment:
+  layout: "reach,diff,flags,tree"
+  behavior: default
+  require_changes: false
+  require_base: false
+  require_head: true
+
+flags:
+  frontend:
+    paths:
+      - packages/leenders-coaching-nl/src
+    carryforward: true
+  studio:
+    paths:
+      - packages/studio-leenders-coaching-nl
+    carryforward: true

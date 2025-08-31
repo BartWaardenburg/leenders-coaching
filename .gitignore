@@ -55,6 +55,21 @@ build-metrics.json
 performance-metrics.json
 lighthouse-ci-results.json
 
+# PR Metrics and temporary files
+**/pr-metrics*.json
+**/baseline-metrics*.json
+**/coverage-summary.json
+**/bundle-stats.json
+**/lighthouse-summary.json
+**/eslint-summary.json
+**/size-limit-results.json
+**/*-output.txt
+**/*-results.json
+**/pr-comment.md
+
+# Lighthouse CI reports
+**/.lighthouseci/
+
 # Build Artifacts
 *.tar.gz
 frontend-build.tar.gz
