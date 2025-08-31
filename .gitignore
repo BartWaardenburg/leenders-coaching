@@ -86,7 +86,6 @@ lighthouse-report*.json
 .lhci-build/
 size-limit.json
 .size-limit-cache/
-
 # Logs
 *.log
 build-storybook.log

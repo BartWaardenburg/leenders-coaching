@@ -69,6 +69,8 @@
       "webpack": false
     }
   ],
+    }
+  ],
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
