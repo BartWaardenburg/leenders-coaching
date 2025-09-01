@@ -111,10 +111,148 @@ jobs:
             ${{ steps.get_url.outputs.preview-url }}/coaching
             ${{ steps.get_url.outputs.preview-url }}/contact
           configPath: packages/leenders-coaching-nl/lighthouserc.ci.cjs
+          budgetPath: packages/leenders-coaching-nl/budget.json
           uploadArtifacts: true
           temporaryPublicStorage: true
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: '📊 Parse Lighthouse results'
+        id: parse_results
+        if: always()
+        run: |
+          # Install bc for floating point calculations
+          sudo apt-get update && sudo apt-get install -y bc
+
+          # Parse assertion results to extract key metrics
+          results_file="${{ steps.lhci.outputs.resultsPath }}/assertion-results.json"
+
+          if [ -f "$results_file" ]; then
+            echo "✅ Found assertion results file"
+            
+            # Extract overall status
+            overall_status=$(jq -r 'if any(.level == "error") then "❌ FAILED" else "✅ PASSED" end' "$results_file")
+            echo "overall_status=$overall_status" >> $GITHUB_OUTPUT
+            
+            # Count assertions by level
+            error_count=$(jq '[.[] | select(.level == "error")] | length' "$results_file")
+            warn_count=$(jq '[.[] | select(.level == "warn")] | length' "$results_file")
+            pass_count=$(jq '[.[] | select(.level == "pass")] | length' "$results_file")
+            
+            echo "error_count=$error_count" >> $GITHUB_OUTPUT
+            echo "warn_count=$warn_count" >> $GITHUB_OUTPUT
+            echo "pass_count=$pass_count" >> $GITHUB_OUTPUT
+            
+            # Extract key metrics for summary (if available)
+            performance_score=$(jq -r '[.[] | select(.auditId == "categories:performance")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
+            accessibility_score=$(jq -r '[.[] | select(.auditId == "categories:accessibility")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
+            seo_score=$(jq -r '[.[] | select(.auditId == "categories:seo")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
+            best_practices_score=$(jq -r '[.[] | select(.auditId == "categories:best-practices")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
+            
+            # Extract Core Web Vitals
+            fcp=$(jq -r '[.[] | select(.auditId == "first-contentful-paint")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
+            lcp=$(jq -r '[.[] | select(.auditId == "largest-contentful-paint")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
+            cls=$(jq -r '[.[] | select(.auditId == "cumulative-layout-shift")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
+            
+            # Check budget violations (these will be in assertion results as 'error' level)
+            budget_violations=$(jq '[.[] | select(.level == "error" and (.auditId | contains("resource-summary") or contains("performance-budget")))] | length' "$results_file")
+            
+            echo "performance_score=$performance_score" >> $GITHUB_OUTPUT
+            echo "accessibility_score=$accessibility_score" >> $GITHUB_OUTPUT
+            echo "seo_score=$seo_score" >> $GITHUB_OUTPUT
+            echo "best_practices_score=$best_practices_score" >> $GITHUB_OUTPUT
+            echo "fcp=$fcp" >> $GITHUB_OUTPUT
+            echo "lcp=$lcp" >> $GITHUB_OUTPUT
+            echo "cls=$cls" >> $GITHUB_OUTPUT
+            echo "budget_violations=$budget_violations" >> $GITHUB_OUTPUT
+            
+            # Format scores for display
+            format_score() {
+              if [ "$1" != "N/A" ] && [ "$1" != "null" ]; then
+                printf "%.0f" $(echo "$1 * 100" | bc -l)
+              else
+                echo "N/A"
+              fi
+            }
+            
+            perf_display=$(format_score "$performance_score")
+            a11y_display=$(format_score "$accessibility_score")
+            seo_display=$(format_score "$seo_score")
+            bp_display=$(format_score "$best_practices_score")
+            
+            echo "perf_display=$perf_display" >> $GITHUB_OUTPUT
+            echo "a11y_display=$a11y_display" >> $GITHUB_OUTPUT
+            echo "seo_display=$seo_display" >> $GITHUB_OUTPUT
+            echo "bp_display=$bp_display" >> $GITHUB_OUTPUT
+            
+          else
+            echo "⚠️ No assertion results file found"
+            echo "overall_status=⚠️ NO RESULTS" >> $GITHUB_OUTPUT
+            echo "error_count=0" >> $GITHUB_OUTPUT
+            echo "warn_count=0" >> $GITHUB_OUTPUT
+            echo "pass_count=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: '💬 Post detailed Lighthouse comment'
+        if: always()
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: lighthouse-report
+          message: |
+            ## 🚀 Lighthouse Performance Report
+
+            **Preview URL:** ${{ steps.get_url.outputs.preview-url }}
+            **Status:** ${{ steps.parse_results.outputs.overall_status }}
+            **Generated:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+
+            ### 📊 Performance Scores
+
+            | Category | Score | Status |
+            |----------|-------|--------|
+            | 🚀 Performance | ${{ steps.parse_results.outputs.perf_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.perf_display) || 'N/A' }} | ${{ steps.parse_results.outputs.perf_display != 'N/A' && (steps.parse_results.outputs.perf_display >= '80' && '✅' || (steps.parse_results.outputs.perf_display >= '50' && '⚠️' || '❌')) || '❓' }} |
+            | ♿ Accessibility | ${{ steps.parse_results.outputs.a11y_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.a11y_display) || 'N/A' }} | ${{ steps.parse_results.outputs.a11y_display != 'N/A' && (steps.parse_results.outputs.a11y_display >= '95' && '✅' || (steps.parse_results.outputs.a11y_display >= '80' && '⚠️' || '❌')) || '❓' }} |
+            | 🔍 SEO | ${{ steps.parse_results.outputs.seo_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.seo_display) || 'N/A' }} | ${{ steps.parse_results.outputs.seo_display != 'N/A' && (steps.parse_results.outputs.seo_display >= '90' && '✅' || (steps.parse_results.outputs.seo_display >= '70' && '⚠️' || '❌')) || '❓' }} |
+            | ⚡ Best Practices | ${{ steps.parse_results.outputs.bp_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.bp_display) || 'N/A' }} | ${{ steps.parse_results.outputs.bp_display != 'N/A' && (steps.parse_results.outputs.bp_display >= '90' && '✅' || (steps.parse_results.outputs.bp_display >= '70' && '⚠️' || '❌')) || '❓' }} |
+
+            ### ⚡ Core Web Vitals
+
+            | Metric | Value | Target | Status |
+            |--------|-------|--------|--------|
+            | 🎨 First Contentful Paint | ${{ steps.parse_results.outputs.fcp != 'N/A' && format('{0}ms', steps.parse_results.outputs.fcp) || 'N/A' }} | ≤2000ms | ${{ steps.parse_results.outputs.fcp != 'N/A' && (steps.parse_results.outputs.fcp <= '2000' && '✅' || '❌') || '❓' }} |
+            | 🖼️ Largest Contentful Paint | ${{ steps.parse_results.outputs.lcp != 'N/A' && format('{0}ms', steps.parse_results.outputs.lcp) || 'N/A' }} | ≤2500ms | ${{ steps.parse_results.outputs.lcp != 'N/A' && (steps.parse_results.outputs.lcp <= '2500' && '✅' || '❌') || '❓' }} |
+            | 📐 Cumulative Layout Shift | ${{ steps.parse_results.outputs.cls != 'N/A' && steps.parse_results.outputs.cls || 'N/A' }} | ≤0.1 | ${{ steps.parse_results.outputs.cls != 'N/A' && (steps.parse_results.outputs.cls <= '0.1' && '✅' || '❌') || '❓' }} |
+
+            ### 📋 Assertion Results
+
+            - ✅ **Passed:** ${{ steps.parse_results.outputs.pass_count }} assertions
+            - ⚠️ **Warnings:** ${{ steps.parse_results.outputs.warn_count }} assertions  
+            - ❌ **Failed:** ${{ steps.parse_results.outputs.error_count }} assertions
+            ${{ steps.parse_results.outputs.budget_violations > '0' && format('- 💰 **Budget violations:** {0}', steps.parse_results.outputs.budget_violations) || '' }}
+
+            ### 🔗 Detailed Reports
+
+            ${{ steps.lhci.outputs.links && format('- 📊 [View interactive reports]({0})', steps.lhci.outputs.links) || '- 📊 Interactive reports not available' }}
+            - ✅ Check PR status checks for pass/fail details
+            - 📄 Download HTML reports from job artifacts
+
+            **Pages analyzed:**
+            - 🏠 Home page (`/`)
+            - 👤 Over mij (`/over-mij`)
+            - 🎯 Aanpak (`/aanpak`)
+            - 💼 Coaching (`/coaching`)
+            - 📧 Contact (`/contact`)
+
+            ---
+            <details>
+            <summary>📖 Understanding the scores</summary>
+
+            - **Performance** (Target: ≥80): Measures loading speed and runtime performance
+            - **Accessibility** (Target: ≥95): Ensures the site is usable by people with disabilities
+            - **SEO** (Target: ≥90): Checks search engine optimization best practices  
+            - **Best Practices** (Target: ≥90): Follows web development best practices
+
+            *This comment updates automatically on each push.*
+            </details>
 
       - name: '📊 Display Lighthouse summary'
         if: always()
