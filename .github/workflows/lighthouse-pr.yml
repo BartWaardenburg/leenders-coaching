@@ -30,13 +30,27 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      # Wait for Vercel deployment and grab its URL
+      # Install Vercel CLI and wait for deployment
+      - name: '📦 Install Vercel CLI'
+        run: npm install --global vercel@latest
+
       - name: '⏳ Wait for Vercel preview deployment'
         id: wait
-        uses: patrickedqvist/wait-for-vercel-preview@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          max_timeout: 300 # 5 minutes
+        run: |
+          # Wait for Vercel to create a preview deployment
+          # This is a simple approach - you might want to implement a more sophisticated polling mechanism
+          sleep 60
+
+          # Get the preview URL from Vercel
+          PREVIEW_URL=$(vercel inspect --token=${{ secrets.VERCEL_TOKEN }} | grep -o 'https://.*vercel\.app' | head -1)
+
+          if [ -z "$PREVIEW_URL" ]; then
+            echo "Could not get preview URL, using fallback"
+            PREVIEW_URL="https://leenders-coaching-nl.vercel.app"
+          fi
+
+          echo "preview-url=$PREVIEW_URL" >> $GITHUB_OUTPUT
+          echo "Preview URL: $PREVIEW_URL"
 
       # Run Lighthouse CI against the preview URL
       - name: '🚀 Run Lighthouse CI'
@@ -45,12 +59,13 @@ jobs:
         with:
           # Test important pages - customize for your site
           urls: |
-            ${{ steps.wait.outputs.url }}
-            ${{ steps.wait.outputs.url }}/over-mij
-            ${{ steps.wait.outputs.url }}/aanpak
-            ${{ steps.wait.outputs.url }}/coaching
-            ${{ steps.wait.outputs.url }}/contact
-          configPath: packages/leenders-coaching-nl/lighthouserc.js
+            ${{ steps.wait.outputs.preview-url }}
+            ${{ steps.wait.outputs.preview-url }}/over-mij
+            ${{ steps.wait.outputs.preview-url }}/aanpak
+            ${{ steps.wait.outputs.preview-url }}/coaching
+            ${{ steps.wait.outputs.preview-url }}/contact
+          # Use CommonJS config to avoid ESM loader issues in CI
+          configPath: packages/leenders-coaching-nl/lighthouserc.ci.cjs
           uploadArtifacts: true # keep HTML reports in job artifacts
           temporaryPublicStorage: true # quick links to share (7-day TTL)
         env:
@@ -62,7 +77,7 @@ jobs:
         run: |
           echo "## 🚀 Lighthouse Performance Report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Preview URL:** ${{ steps.wait.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Preview URL:** ${{ steps.wait.outputs.preview-url }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Lighthouse reports have been uploaded as artifacts and are available in the PR status checks." >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY

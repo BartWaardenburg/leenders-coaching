@@ -15,4 +15,3 @@ export const generateMetadata = (): Promise<Metadata> => getMetadata();
 
 /* Default export is the page component */
 export default PageComponent;
-// Test comment
