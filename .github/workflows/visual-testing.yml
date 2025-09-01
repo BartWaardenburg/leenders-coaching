@@ -219,9 +219,6 @@ jobs:
       - name: '📥 Install dependencies'
         run: pnpm run ci:install:frozen
 
-      - name: '🏗️ Build Storybook'
-        run: pnpm run storybook:build
-
       - name: '⚡ Analyze bundle performance'
         run: pnpm --filter leenders-coaching-nl run verify:performance
 
