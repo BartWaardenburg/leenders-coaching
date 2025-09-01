@@ -1,0 +1,22 @@
+[
+  {
+    "path": "storybook-static/*.iframe.bundle.js",
+    "maxSize": "1.5mb",
+    "name": "Storybook iframe bundles"
+  },
+  {
+    "path": "storybook-static/main.*.iframe.bundle.js",
+    "maxSize": "250kb",
+    "name": "Storybook main bundle"
+  },
+  {
+    "path": "storybook-static/runtime~main.*.iframe.bundle.js",
+    "maxSize": "50kb",
+    "name": "Storybook runtime bundle"
+  },
+  {
+    "path": "storybook-static/*.woff2",
+    "maxSize": "100kb",
+    "name": "Storybook fonts"
+  }
+]

@@ -24,7 +24,7 @@
     "ci:install-playwright": "pnpm dlx playwright install --with-deps chromium",
     "ci:test-a11y": "pnpm dlx start-server-and-test 'pnpm dlx http-server storybook-static -p 6006' http://localhost:6006 'pnpm dlx @storybook/test-runner --url http://localhost:6006'",
     "validate:tailwind": "postcss src/app/globals.css -o /tmp/test.css --config postcss.config.mjs && echo '✅ Tailwind CSS configuration is valid' && rm -f /tmp/test.css",
-    "analyze:storybook": "pnpm dlx bundlesize2 check storybook-static/**/*.js",
+    "analyze:storybook": "pnpm dlx bundlesize2 check --config bundlesize.config.json",
     "verify:build": "test -d .next && test -f .next/BUILD_ID && echo '✅ Frontend build verified'",
     "verify:performance": "size-limit",
     "package:build": "tar -czf frontend-build.tar.gz -C . .next 2>/dev/null || echo 'No build artifacts to package'",
