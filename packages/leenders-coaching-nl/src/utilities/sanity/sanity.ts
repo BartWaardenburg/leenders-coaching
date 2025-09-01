@@ -3,6 +3,18 @@ import type { QueryParams } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
+
+/**
+ * Returns true if the hostname matches 'chromatic.com' or is a subdomain of 'chromatic.com'.
+ */
+function isChromaticHost(hostname: string): boolean {
+  if (!hostname) return false;
+  return (
+    hostname === 'chromatic.com' ||
+    (hostname.endsWith('.chromatic.com') && hostname.length > '.chromatic.com'.length)
+  );
+}
+
 /* Check if we're running on the server or client */
 const isServer = typeof window === 'undefined';
 
@@ -41,9 +53,10 @@ const isNonProductionEnvironment = () => {
     const hostname = window.location.hostname;
     const href = window.location.href;
 
+    // Use explicit check function for chromatic hostnames
     return (
-      hostname.includes('chromatic.com') ||
-      hostname.includes('capture-loopback.chromatic.com') ||
+      isChromaticHost(hostname) ||
+      hostname === 'capture-loopback.chromatic.com' ||
       href.includes('iframe.html') || // Storybook iframe
       (hostname === 'localhost' && window.parent !== window) // Storybook localhost
     );
