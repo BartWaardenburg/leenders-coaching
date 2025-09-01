@@ -1,22 +1,17 @@
 [
   {
-    "name": "Main JS Bundle",
-    "path": ".next/static/chunks/pages/_app-*.js",
-    "limit": "250 KB"
+    "name": "Main JS bundle",
+    "path": ".next/static/chunks/*.js",
+    "limit": "320 KB"
   },
   {
-    "name": "Main CSS Bundle",
+    "name": "CSS bundle",
     "path": ".next/static/css/*.css",
-    "limit": "50 KB"
+    "limit": "15 KB"
   },
   {
-    "name": "Vendor JS Bundle",
-    "path": ".next/static/chunks/framework-*.js",
-    "limit": "200 KB"
-  },
-  {
-    "name": "Commons JS Bundle",
-    "path": ".next/static/chunks/commons-*.js",
-    "limit": "100 KB"
+    "name": "App chunks",
+    "path": ".next/static/chunks/app/**/*.js",
+    "limit": "15 KB"
   }
 ]

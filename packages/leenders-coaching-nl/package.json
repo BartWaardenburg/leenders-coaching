@@ -10,16 +10,15 @@
     "lint": "eslint .",
     "lint:format": "eslint . --format json",
     "type-check": "tsc --noEmit",
-    "analyze": "ANALYZE=true next build",
+    "analyze": "cross-env ANALYZE=true next build",
     "analyze:bundle": "npx @next/bundle-analyzer",
     "storybook": "storybook dev -p 6006",
-    "storybook:build": "storybook build",
     "build-storybook": "storybook build",
     "chromatic": "chromatic",
     "test": "vitest",
     "test:watch": "vitest watch",
     "test:coverage": "vitest run --coverage",
-    "test:coverage:ci": "vitest run --coverage --reporter=verbose",
+    "test:coverage:ci": "vitest run --config vitest.ci.config.ts --coverage --reporter=verbose",
     "test:ui": "vitest --ui",
     "update-types": "cd ../studio-leenders-coaching-nl && pnpm run update-types",
     "ci:install-playwright": "npx playwright install --with-deps chromium",
@@ -28,45 +27,22 @@
     "validate:next": "npx next info",
     "analyze:storybook": "pnpm dlx bundlesize2 check storybook-static/**/*.js",
     "analyze:performance": "pnpm dlx webpack-bundle-analyzer .next/static/chunks/*.js --port 8888 --no-open",
-    "analyze:lighthouse": "pnpm dlx lhci autorun",
     "verify:build": "test -d .next && test -f .next/BUILD_ID && echo '✅ Frontend build verified'",
-    "verify:performance": "pnpm dlx bundlesize",
+    "verify:performance": "size-limit",
     "package:build": "tar -czf frontend-build.tar.gz -C . .next 2>/dev/null || echo 'No build artifacts to package'",
+    "clean": "rm -rf .next && rm -rf node_modules/.cache",
     "check:deps": "pnpm dlx depcheck",
     "check:security": "pnpm dlx audit-ci",
     "check:duplicates": "pnpm dlx jscpd src",
-    "report:size": "pnpm dlx size-limit"
+    "verify:size": "size-limit",
+    "perf:lighthouse": "lhci autorun",
+    "perf:lighthouse:ci": "lhci autorun --collect.settings.preset=desktop",
+    "perf:audit": "pnpm run perf:lighthouse"
   },
-  "bundlesize": [
-    {
-      "path": ".next/static/chunks/*.js",
-      "maxSize": "250kb"
-    },
-    {
-      "path": ".next/static/css/*.css",
-      "maxSize": "50kb"
-    }
-  ],
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
     ]
-  },
-  "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write",
-      "pnpm type-check"
-    ],
-    "src/**/*.{json,css,scss,md}": [
-      "prettier --write"
-    ],
-    "*.{json,md}": [
-      "prettier --write"
-    ]
-  },
-  "prettier": {
-    "tabWidth": 2
   },
   "browserslist": {
     "production": [
@@ -101,10 +77,12 @@
   },
   "devDependencies": {
     "@eslint/js": "9.34.0",
+    "@lhci/cli": "0.14.0",
     "@next/bundle-analyzer": "15.5.2",
     "@next/env": "15.5.2",
     "@next/eslint-plugin-next": "15.5.2",
     "@portabletext/types": "2.0.15",
+    "@size-limit/preset-app": "11.2.0",
     "@storybook/addon-a11y": "9.1.3",
     "@storybook/addon-links": "9.1.3",
     "@storybook/addon-themes": "9.1.3",
@@ -118,6 +96,7 @@
     "@vitest/coverage-v8": "3.2.4",
     "autoprefixer": "10.4.21",
     "chromatic": "13.1.3",
+    "cross-env": "7.0.3",
     "css-loader": "7.1.2",
     "dotenv": "17.2.1",
     "eslint-config-next": "15.5.2",
@@ -129,10 +108,13 @@
     "postcss": "8.5.6",
     "postcss-loader": "8.1.1",
     "prettier-plugin-tailwindcss": "0.6.14",
+    "size-limit": "11.2.0",
     "storybook": "9.1.3",
     "style-loader": "4.0.0",
     "tailwindcss": "4.1.12",
-    "vitest": "3.2.4"
+    "vitest": "3.2.4",
+    "web-vitals": "5.1.0",
+    "webpack-bundle-analyzer": "4.10.1"
   },
   "engines": {
     "node": ">=20.0.0",

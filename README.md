@@ -58,7 +58,6 @@ A modern coaching website built with Next.js, Sanity CMS, and Tailwind CSS.
 4. Get Required API Keys:
 
    **Sanity CMS Setup:**
-
    - Go to [sanity.io](https://sanity.io) and create an account
    - Create a new project
    - Get your project ID from the project settings
@@ -66,7 +65,6 @@ A modern coaching website built with Next.js, Sanity CMS, and Tailwind CSS.
    - Create an editor token for content seeding
 
    **Resend Email Setup:**
-
    - Go to [resend.com](https://resend.com) and create an account
    - Get your API key from the dashboard
    - Verify your domain (optional, for production)
@@ -269,6 +267,7 @@ This project uses GitHub Actions for continuous integration:
 - **Tests & Coverage**: Runs on every push and PR
 - **Chromatic**: Visual testing for Storybook components
 - **Codecov**: Code coverage tracking and reporting
+- **Lighthouse CI**: Performance monitoring with GitHub status checks
 - **Vercel**: Automatic deployment on push to main branch
 
 ### Required GitHub Secrets
@@ -279,3 +278,28 @@ For CI/CD to work properly, set these repository secrets:
 - `CODECOV_TOKEN` - Your Codecov repository token
 - `SANITY_API_TOKEN` - Your Sanity API token (for content seeding)
 - `RESEND_API_KEY` - Your Resend API key (for email functionality)
+- `LHCI_GITHUB_APP_TOKEN` - Your Lighthouse CI GitHub App token (for performance monitoring)
+
+### 🚀 Lighthouse CI Setup
+
+To enable performance monitoring with GitHub status checks:
+
+1. **Install the Lighthouse CI GitHub App**:
+   - Go to: https://github.com/apps/lighthouse-ci
+   - Click "Install" and authorize for your repository
+   - Copy the provided app token
+
+2. **Add the token to GitHub Secrets**:
+   - Go to Settings → Secrets and variables → Actions
+   - Add new secret: `LHCI_GITHUB_APP_TOKEN`
+   - Paste the token from step 1
+
+3. **Performance Monitoring Features**:
+   - ✅ Automatic performance audits on every PR
+   - ✅ GitHub status checks with pass/fail results
+   - ✅ Detailed HTML reports via artifacts
+   - ✅ Core Web Vitals tracking (LCP, FCP, CLS, TBT)
+   - ✅ Accessibility and SEO audits
+   - ✅ Production monitoring on main branch
+
+The system tests both Vercel preview deployments (PRs) and production URLs with strict performance budgets.

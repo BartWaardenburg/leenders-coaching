@@ -111,6 +111,11 @@ jobs:
           directory: ./packages/leenders-coaching-nl/coverage
           fail_ci_if_error: false
           verbose: true
+          flags: frontend
+          exclude: |
+            packages/leenders-coaching-nl/lighthouserc.js
+            packages/leenders-coaching-nl/*.config.*
+            packages/leenders-coaching-nl/next-env.d.ts
 
   # Studio validation
   studio-validation:

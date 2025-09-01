@@ -1,0 +1,83 @@
+name: 'Size Limit'
+
+on:
+  pull_request:
+    branches: ['main', 'develop']
+    paths:
+      - 'packages/leenders-coaching-nl/src/**'
+      - 'packages/leenders-coaching-nl/package.json'
+      - 'packages/leenders-coaching-nl/.size-limit.json'
+      - 'packages/leenders-coaching-nl/next.config.ts'
+      - 'packages/leenders-coaching-nl/tailwind.config.ts'
+      - 'pnpm-lock.yaml'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '10.15.0'
+  PNPM_HOME: /home/runner/.local/share/pnpm
+
+jobs:
+  size-limit:
+    name: 'Bundle Size Check'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+      NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
+      NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
+      SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+
+    steps:
+      - name: '🔄 Checkout repository'
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: '🔧 Setup Node.js'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: '📦 Setup pnpm'
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          run_install: false
+
+      - name: '🎯 Generate cache key'
+        id: cache-key
+        run: |
+          echo "key=pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}" >> $GITHUB_OUTPUT
+
+      - name: '💾 Cache pnpm store'
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.PNPM_HOME }}
+          key: ${{ steps.cache-key.outputs.key }}
+          restore-keys: |
+            pnpm-${{ runner.os }}-
+
+      - name: '📥 Install dependencies'
+        run: pnpm run ci:install:frozen
+
+      - name: '🏗️ Build frontend (pnpm)'
+        run: pnpm --filter leenders-coaching-nl run build
+
+      - name: '📊 Run Size Limit'
+        uses: andresz1/size-limit-action@v1.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          directory: 'packages/leenders-coaching-nl'
+          skip_step: 'build'
+          clean_script: 'clean'
+          package_manager: 'pnpm'
