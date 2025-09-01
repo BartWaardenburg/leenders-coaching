@@ -22,29 +22,108 @@ const validateEnv = () => {
   }
 };
 
-/* Initialize environment */
-validateEnv();
+/* Check if we're in a Storybook, test, or mock environment */
+const isNonProductionEnvironment = () => {
+  // Check for test environments (Jest, Vitest)
+  if (typeof process !== 'undefined' && process.env) {
+    if (
+      process.env.NODE_ENV === 'test' ||
+      process.env.VITEST === 'true' ||
+      process.env.JEST_WORKER_ID !== undefined ||
+      process.env.STORYBOOK === 'true'
+    ) {
+      return true;
+    }
+  }
 
-/* Sanity configuration */
+  // Check for browser-based Storybook/Chromatic environments
+  if (typeof window !== 'undefined' && window.location) {
+    const hostname = window.location.hostname;
+    const href = window.location.href;
+
+    return (
+      hostname.includes('chromatic.com') ||
+      hostname.includes('capture-loopback.chromatic.com') ||
+      href.includes('iframe.html') || // Storybook iframe
+      (hostname === 'localhost' && window.parent !== window) // Storybook localhost
+    );
+  }
+
+  return false;
+};
+
+/* Initialize environment - skip validation in non-production environments */
+if (!isNonProductionEnvironment()) {
+  validateEnv();
+}
+
+/* Default fallback values for non-production environments */
+const FALLBACK_CONFIG = {
+  projectId: 'storybook-fallback',
+  dataset: 'production',
+  apiVersion: '2024-02-14',
+} as const;
+
+/* Sanity configuration with fallbacks for non-production environments */
 export const sanityConfig = {
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID as string,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET as string,
-  apiToken: isServer ? (process.env.SANITY_API_TOKEN as string) : '',
-  apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-02-14',
+  projectId:
+    process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
+    (isNonProductionEnvironment() ? FALLBACK_CONFIG.projectId : ''),
+  dataset:
+    process.env.NEXT_PUBLIC_SANITY_DATASET ||
+    (isNonProductionEnvironment() ? FALLBACK_CONFIG.dataset : ''),
+  apiToken: isServer ? process.env.SANITY_API_TOKEN || '' : '',
+  apiVersion:
+    process.env.NEXT_PUBLIC_SANITY_API_VERSION || FALLBACK_CONFIG.apiVersion,
   useCdn: process.env.NODE_ENV === 'production',
 };
 
-/* Create Sanity client */
-export const client = createClient({
-  projectId: sanityConfig.projectId,
-  dataset: sanityConfig.dataset,
-  apiVersion: sanityConfig.apiVersion,
-  useCdn: sanityConfig.useCdn,
-  token: isServer ? sanityConfig.apiToken : undefined, // Only include token on server
-});
+/* Create Sanity client with graceful fallbacks */
+const createSanityClient = () => {
+  try {
+    return createClient({
+      projectId: sanityConfig.projectId,
+      dataset: sanityConfig.dataset,
+      apiVersion: sanityConfig.apiVersion,
+      useCdn: sanityConfig.useCdn,
+      token: isServer ? sanityConfig.apiToken : undefined, // Only include token on server
+    });
+  } catch (error) {
+    // In non-production environments, create a fallback client if the real one fails
+    if (isNonProductionEnvironment()) {
+      return createClient({
+        projectId: FALLBACK_CONFIG.projectId,
+        dataset: FALLBACK_CONFIG.dataset,
+        apiVersion: FALLBACK_CONFIG.apiVersion,
+        useCdn: false,
+      });
+    }
+    throw error;
+  }
+};
 
-/* Create image URL builder instance */
-const imageBuilder = imageUrlBuilder(client);
+export const client = createSanityClient();
+
+/* Create image URL builder instance with graceful fallbacks */
+const createImageBuilder = () => {
+  try {
+    return imageUrlBuilder(client);
+  } catch (error) {
+    // In non-production environments, create a fallback image builder if the real one fails
+    if (isNonProductionEnvironment()) {
+      const fallbackClient = createClient({
+        projectId: FALLBACK_CONFIG.projectId,
+        dataset: FALLBACK_CONFIG.dataset,
+        apiVersion: FALLBACK_CONFIG.apiVersion,
+        useCdn: false,
+      });
+      return imageUrlBuilder(fallbackClient);
+    }
+    throw error;
+  }
+};
+
+const imageBuilder = createImageBuilder();
 
 /**
  * Get image URL for a Sanity image reference
