@@ -1,13 +1,8 @@
 {
-  "git": {
-    "deploymentEnabled": {
-      "main": true
-    }
-  },
   "buildCommand": "pnpm build",
   "devCommand": "pnpm dev",
   "framework": "nextjs",
-  "nodeVersion": "22.x",
+  "relatedProjects": ["prj_vLjXpDMI68XDniXcGQpg0fotd1pB"],
   "headers": [
     {
       "source": "/api/og",
