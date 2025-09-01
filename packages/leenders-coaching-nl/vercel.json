@@ -4,14 +4,10 @@
       "main": true
     }
   },
-  "functions": {
-    "packages/leenders-coaching-nl/src/app/api/**/*.{ts,tsx}": {
-      "maxDuration": 30
-    }
-  },
   "buildCommand": "pnpm build",
   "devCommand": "pnpm dev",
   "framework": "nextjs",
+  "nodeVersion": "22.x",
   "headers": [
     {
       "source": "/api/og",
