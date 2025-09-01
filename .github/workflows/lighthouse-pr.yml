@@ -17,6 +17,9 @@ jobs:
     name: 'Lighthouse CI (Preview)'
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: read
+      deployments: read
 
     steps:
       - name: '🔄 Checkout repository'
@@ -30,41 +33,86 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      # Install Vercel CLI and wait for deployment
-      - name: '📦 Install Vercel CLI'
-        run: npm install --global vercel@latest
-
       - name: '⏳ Wait for Vercel preview deployment'
         id: wait
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          # Wait for Vercel to create a preview deployment
-          # This is a simple approach - you might want to implement a more sophisticated polling mechanism
-          sleep 60
+          set -euo pipefail
 
-          # Get the preview URL from Vercel
-          PREVIEW_URL=$(vercel inspect --token=${{ secrets.VERCEL_TOKEN }} | grep -o 'https://.*vercel\.app' | head -1)
+          echo "Waiting for Vercel preview deployment for $SHA..."
 
-          if [ -z "$PREVIEW_URL" ]; then
-            echo "Could not get preview URL, using fallback"
-            PREVIEW_URL="https://leenders-coaching-nl.vercel.app"
+          # Find the deployment with environment "Preview" for this SHA
+          attempt=0
+          deployment_id=""
+          while [ $attempt -lt 60 ]; do
+            deployments=$(curl -sSf -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/$REPO/deployments?sha=$SHA&environment=Preview")
+
+            deployment_id=$(echo "$deployments" | jq -r '.[0].id // empty')
+            if [ -n "$deployment_id" ] && [ "$deployment_id" != "null" ]; then
+              echo "Found deployment id: $deployment_id"
+              break
+            fi
+
+            attempt=$((attempt+1))
+            sleep 5
+          done
+
+          if [ -z "$deployment_id" ]; then
+            echo "Failed to find Preview deployment for $SHA"
+            exit 1
           fi
 
-          echo "preview-url=$PREVIEW_URL" >> $GITHUB_OUTPUT
-          echo "Preview URL: $PREVIEW_URL"
+          # Wait for the deployment status to become success and capture environment_url
+          attempt=0
+          preview_url=""
+          while [ $attempt -lt 120 ]; do
+            statuses=$(curl -sSf -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/$REPO/deployments/$deployment_id/statuses")
 
-      # Run Lighthouse CI against the preview URL
+            state=$(echo "$statuses" | jq -r '.[0].state // empty')
+            env_url=$(echo "$statuses" | jq -r '.[0].environment_url // empty')
+
+            echo "Current state: ${state:-unknown}"
+
+            if [ "$state" = "success" ] && [ -n "$env_url" ] && [ "$env_url" != "null" ]; then
+              preview_url="$env_url"
+              break
+            fi
+
+            if [ "$state" = "failure" ] || [ "$state" = "inactive" ] || [ "$state" = "error" ]; then
+              echo "Deployment failed with state: $state"
+              exit 1
+            fi
+
+            attempt=$((attempt+1))
+            sleep 5
+          done
+
+          if [ -z "$preview_url" ]; then
+            echo "Timed out waiting for successful deployment URL"
+            exit 1
+          fi
+
+          echo "preview-url=$preview_url" >> $GITHUB_OUTPUT
+          echo "Preview URL: $preview_url"
+
+      # Run Lighthouse CI against the Vercel preview URL
       - name: '🚀 Run Lighthouse CI'
         id: lhci
         uses: treosh/lighthouse-ci-action@v12
         with:
-          # Test important pages - customize for your site
           urls: |
             ${{ steps.wait.outputs.preview-url }}
             ${{ steps.wait.outputs.preview-url }}/over-mij
             ${{ steps.wait.outputs.preview-url }}/aanpak
             ${{ steps.wait.outputs.preview-url }}/coaching
             ${{ steps.wait.outputs.preview-url }}/contact
-          # Use CommonJS config to avoid ESM loader issues in CI
           configPath: packages/leenders-coaching-nl/lighthouserc.ci.cjs
           uploadArtifacts: true # keep HTML reports in job artifacts
           temporaryPublicStorage: true # quick links to share (7-day TTL)
