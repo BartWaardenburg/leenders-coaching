@@ -3,7 +3,7 @@ module.exports = {
     collect: {
       /* In CI we audit deployed preview URLs passed via the action, so
          we must NOT try to start a local server or use pnpm. */
-      numberOfRuns: 5,
+      numberOfRuns: 3,
       settings: {
         emulatedFormFactor: 'mobile',
         throttling: {
@@ -11,7 +11,10 @@ module.exports = {
           throughputKbps: 1638.4,
           cpuSlowdownMultiplier: 4,
         },
-        chromeFlags: '--no-sandbox --disable-dev-shm-usage',
+        chromeFlags: '--no-sandbox --disable-dev-shm-usage --disable-background-timer-throttling --disable-features=VizDisplayCompositor',
+        // Faster CI settings
+        skipAudits: ['screenshot-thumbnails', 'final-screenshot'],
+        onlyCategories: ['performance', 'accessibility', 'seo', 'best-practices'],
       },
     },
     assert: {

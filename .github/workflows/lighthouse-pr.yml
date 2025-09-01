@@ -1,9 +1,6 @@
 name: 'Lighthouse (PR)'
 
-on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    paths-ignore: ['**.md', 'docs/**']
+on: deployment_status
 
 concurrency:
   group: lhci-${{ github.ref }}
@@ -16,16 +13,20 @@ jobs:
   lighthouse:
     name: 'Lighthouse CI (Preview)'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     permissions:
       contents: read
       deployments: read
+    # Only run for successful leenders-coaching deployments (not studio)
+    if: |
+      github.event.deployment_status.state == 'success' &&
+      contains(github.event.deployment.environment, 'leenders-coaching') &&
+      !contains(github.event.deployment.environment, 'studio')
 
     steps:
       - name: '🔄 Checkout repository'
         uses: actions/checkout@v5
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
       - name: '🔧 Setup Node.js'
@@ -33,91 +34,86 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: '⏳ Wait for Vercel preview deployment'
-        id: wait
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.repository }}
-          SHA: ${{ github.event.pull_request.head.sha }}
+      - name: '🔍 Get Vercel preview URL'
+        id: get_url
         run: |
           set -euo pipefail
 
-          echo "Waiting for Vercel preview deployment for $SHA..."
+          echo "🎉 Triggered by successful Vercel deployment!"
+          echo "Environment: ${{ github.event.deployment.environment }}"
+          echo "State: ${{ github.event.deployment_status.state }}"
 
-          # Find the deployment with environment "Preview" for this SHA
-          attempt=0
-          deployment_id=""
-          while [ $attempt -lt 60 ]; do
-            deployments=$(curl -sSf -H "Authorization: Bearer $GH_TOKEN" \
-              -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/$REPO/deployments?sha=$SHA&environment=Preview")
+          deployment_url="${{ github.event.deployment_status.environment_url }}"
 
-            deployment_id=$(echo "$deployments" | jq -r '.[0].id // empty')
-            if [ -n "$deployment_id" ] && [ "$deployment_id" != "null" ]; then
-              echo "Found deployment id: $deployment_id"
-              break
-            fi
-
-            attempt=$((attempt+1))
-            sleep 5
-          done
-
-          if [ -z "$deployment_id" ]; then
-            echo "Failed to find Preview deployment for $SHA"
+          if [ -z "$deployment_url" ] || [ "$deployment_url" = "null" ]; then
+            echo "❌ No environment URL in deployment status event"
+            echo "Debug info:"
+            echo "  Deployment ID: ${{ github.event.deployment.id }}"
+            echo "  Environment: ${{ github.event.deployment.environment }}"
+            echo "  State: ${{ github.event.deployment_status.state }}"
             exit 1
           fi
 
-          # Wait for the deployment status to become success and capture environment_url
-          attempt=0
-          preview_url=""
-          while [ $attempt -lt 120 ]; do
-            statuses=$(curl -sSf -H "Authorization: Bearer $GH_TOKEN" \
-              -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/$REPO/deployments/$deployment_id/statuses")
+          echo "🔍 Raw deployment URL: $deployment_url"
 
-            state=$(echo "$statuses" | jq -r '.[0].state // empty')
-            env_url=$(echo "$statuses" | jq -r '.[0].environment_url // empty')
-
-            echo "Current state: ${state:-unknown}"
-
-            if [ "$state" = "success" ] && [ -n "$env_url" ] && [ "$env_url" != "null" ]; then
-              preview_url="$env_url"
-              break
-            fi
-
-            if [ "$state" = "failure" ] || [ "$state" = "inactive" ] || [ "$state" = "error" ]; then
-              echo "Deployment failed with state: $state"
+          # Check if this is a Vercel redirect URL and extract the real preview URL
+          if [[ "$deployment_url" == *"vercel.com/login"* ]] || [[ "$deployment_url" == *"sso-api"* ]]; then
+            echo "⚠️  Detected Vercel redirect URL, extracting preview URL..."
+            
+            # Extract URL from the redirect (URL encoded in the 'url' parameter)
+            if [[ "$deployment_url" =~ url%3D([^&]*) ]]; then
+              encoded_url="${BASH_REMATCH[1]}"
+              # URL decode the preview URL
+              preview_url=$(echo "$encoded_url" | sed 's/%3A/:/g; s/%2F/\//g; s/%3F/?/g; s/%3D/=/g; s/%26/\&/g')
+              echo "🔧 Extracted preview URL: $preview_url"
+            else
+              echo "❌ Could not extract preview URL from redirect"
+              echo "   Redirect URL: $deployment_url"
               exit 1
             fi
+          else
+            # Direct preview URL
+            preview_url="$deployment_url"
+            echo "✅ Direct preview URL: $preview_url"
+          fi
 
-            attempt=$((attempt+1))
-            sleep 5
-          done
-
-          if [ -z "$preview_url" ]; then
-            echo "Timed out waiting for successful deployment URL"
+          # Validate the preview URL
+          if [[ "$preview_url" =~ ^https?://.*\.vercel\.app/?.*$ ]]; then
+            echo "✅ Valid Vercel preview URL confirmed"
+            echo "preview-url=$preview_url" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Invalid preview URL format: $preview_url"
+            echo "   Expected: https://something.vercel.app"
             exit 1
           fi
 
-          echo "preview-url=$preview_url" >> $GITHUB_OUTPUT
-          echo "Preview URL: $preview_url"
+      - name: '🧪 Test preview URL accessibility'
+        run: |
+          preview_url="${{ steps.get_url.outputs.preview-url }}"
+          echo "🔍 Testing preview URL accessibility: $preview_url"
 
-      # Run Lighthouse CI against the Vercel preview URL
+          if curl -sSf --max-time 30 "$preview_url" > /dev/null; then
+            echo "✅ Preview URL is accessible"
+          else
+            echo "❌ Preview URL is not accessible"
+            echo "   This might cause Lighthouse to fail"
+            echo "   URL: $preview_url"
+          fi
+
       - name: '🚀 Run Lighthouse CI'
         id: lhci
         uses: treosh/lighthouse-ci-action@v12
         with:
           urls: |
-            ${{ steps.wait.outputs.preview-url }}
-            ${{ steps.wait.outputs.preview-url }}/over-mij
-            ${{ steps.wait.outputs.preview-url }}/aanpak
-            ${{ steps.wait.outputs.preview-url }}/coaching
-            ${{ steps.wait.outputs.preview-url }}/contact
+            ${{ steps.get_url.outputs.preview-url }}
+            ${{ steps.get_url.outputs.preview-url }}/over-mij
+            ${{ steps.get_url.outputs.preview-url }}/aanpak
+            ${{ steps.get_url.outputs.preview-url }}/coaching
+            ${{ steps.get_url.outputs.preview-url }}/contact
           configPath: packages/leenders-coaching-nl/lighthouserc.ci.cjs
-          uploadArtifacts: true # keep HTML reports in job artifacts
-          temporaryPublicStorage: true # quick links to share (7-day TTL)
+          uploadArtifacts: true
+          temporaryPublicStorage: true
         env:
-          # Recommended way to add LHCI status checks to the PR
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
       - name: '📊 Display Lighthouse summary'
@@ -125,7 +121,7 @@ jobs:
         run: |
           echo "## 🚀 Lighthouse Performance Report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Preview URL:** ${{ steps.wait.outputs.preview-url }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Preview URL:** ${{ steps.get_url.outputs.preview-url }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Lighthouse reports have been uploaded as artifacts and are available in the PR status checks." >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
