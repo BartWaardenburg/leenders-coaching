@@ -69,12 +69,12 @@ describe('calculateReadingTime', () => {
   });
 
   it('should handle non-block types', () => {
-    const blocks: any[] = [
+    const blocks: PortableTextBlock[] = [
       {
         _type: 'image',
         _key: '1',
         asset: { _ref: 'image-1', _type: 'reference' },
-      },
+      } as unknown as PortableTextBlock,
     ];
 
     const result = calculateReadingTime(blocks);
@@ -128,7 +128,7 @@ describe('calculateReadingTime', () => {
   });
 
   it('should handle mixed content types', () => {
-    const blocks: any[] = [
+    const blocks: PortableTextBlock[] = [
       {
         _type: 'block',
         _key: '1',
@@ -138,7 +138,7 @@ describe('calculateReadingTime', () => {
         _type: 'image',
         _key: '2',
         asset: { _ref: 'image-1', _type: 'reference' },
-      },
+      } as unknown as PortableTextBlock,
       {
         _type: 'block',
         _key: '3',

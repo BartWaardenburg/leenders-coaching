@@ -19,11 +19,13 @@ const createSanityDoc = (
  */
 describe('transformContentSection', () => {
   it('should transform valid content section data with all fields', () => {
-    const mockContent: any[] = [
+    const mockContent = [
       {
-        _type: 'block',
+        _type: 'block' as const,
         _key: '1',
-        children: [{ _type: 'span', _key: '1-1', text: 'Test content' }],
+        children: [
+          { _type: 'span' as const, _key: '1-1', text: 'Test content' },
+        ],
       },
     ];
 

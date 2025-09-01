@@ -19,11 +19,13 @@ const createSanityDoc = (
  */
 describe('transformFAQSection', () => {
   it('should transform valid FAQ section data with all fields', () => {
-    const mockAnswer: any[] = [
+    const mockAnswer = [
       {
-        _type: 'block',
+        _type: 'block' as const,
         _key: '1',
-        children: [{ _type: 'span', _key: '1-1', text: 'Test answer' }],
+        children: [
+          { _type: 'span' as const, _key: '1-1', text: 'Test answer' },
+        ],
       },
     ];
 
@@ -103,11 +105,13 @@ describe('transformFAQSection', () => {
   });
 
   it('should filter out invalid FAQ items', () => {
-    const mockAnswer: any[] = [
+    const mockAnswer = [
       {
-        _type: 'block',
+        _type: 'block' as const,
         _key: '1',
-        children: [{ _type: 'span', _key: '1-1', text: 'Test answer' }],
+        children: [
+          { _type: 'span' as const, _key: '1-1', text: 'Test answer' },
+        ],
       },
     ];
 
