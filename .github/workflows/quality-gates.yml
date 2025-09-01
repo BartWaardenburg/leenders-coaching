@@ -1,32 +1,32 @@
-name: "Quality Gates & Security"
+name: 'Quality Gates & Security'
 
 on:
   schedule:
     # Run daily at 6 AM UTC
-    - cron: "0 6 * * *"
+    - cron: '0 6 * * *'
   push:
-    branches: ["main"]
+    branches: ['main']
     paths:
-      - "**/package.json"
-      - "pnpm-lock.yaml"
+      - '**/package.json'
+      - 'pnpm-lock.yaml'
   pull_request:
-    branches: ["main", "develop"]
+    branches: ['main', 'develop']
     paths:
-      - "**/package.json"
-      - "pnpm-lock.yaml"
+      - '**/package.json'
+      - 'pnpm-lock.yaml'
   workflow_dispatch:
     inputs:
       severity:
-        description: "Minimum severity level for security audit"
+        description: 'Minimum severity level for security audit'
         required: false
-        default: "moderate"
+        default: 'moderate'
         type: choice
         options:
-          - "info"
-          - "low"
-          - "moderate"
-          - "high"
-          - "critical"
+          - 'info'
+          - 'low'
+          - 'moderate'
+          - 'high'
+          - 'critical'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -39,14 +39,14 @@ permissions:
   actions: read
 
 env:
-  NODE_VERSION: "20"
-  PNPM_VERSION: "10.15.0"
+  NODE_VERSION: '20'
+  PNPM_VERSION: '10.15.0'
   PNPM_HOME: /home/runner/.local/share/pnpm
 
 jobs:
   # Dependency security audit
   security-audit:
-    name: "Security Audit"
+    name: 'Security Audit'
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -54,21 +54,21 @@ jobs:
       vulnerabilities-found: ${{ steps.audit.outputs.vulnerabilities }}
 
     steps:
-      - name: "🔄 Checkout repository"
+      - name: '🔄 Checkout repository'
         uses: actions/checkout@v5
 
-      - name: "🔧 Setup Node.js"
+      - name: '🔧 Setup Node.js'
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: "📦 Setup pnpm"
+      - name: '📦 Setup pnpm'
         uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
-      - name: "💾 Cache pnpm store"
+      - name: '💾 Cache pnpm store'
         uses: actions/cache@v4
         with:
           path: ${{ env.PNPM_HOME }}
@@ -76,10 +76,10 @@ jobs:
           restore-keys: |
             pnpm-${{ runner.os }}-
 
-      - name: "📥 Install dependencies"
+      - name: '📥 Install dependencies'
         run: pnpm run ci:install:frozen
 
-      - name: "🔒 Run security audit"
+      - name: '🔒 Run security audit'
         id: audit
         run: |
           SEVERITY="${{ github.event.inputs.severity || 'moderate' }}"
@@ -101,7 +101,7 @@ jobs:
           fi
         continue-on-error: true
 
-      - name: "📤 Upload audit results"
+      - name: '📤 Upload audit results'
         uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -109,7 +109,7 @@ jobs:
           path: audit-results.json
           retention-days: 30
 
-      - name: "📊 Generate security report"
+      - name: '📊 Generate security report'
         if: steps.audit.outputs.vulnerabilities == 'true' && github.event_name == 'pull_request'
         run: |
           echo "🔍 Generating detailed security report..."
@@ -162,7 +162,7 @@ jobs:
             echo "⚠️ No audit results file found"
           fi
 
-      - name: "💬 Post security report"
+      - name: '💬 Post security report'
         if: steps.audit.outputs.vulnerabilities == 'true' && github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
@@ -192,26 +192,26 @@ jobs:
 
   # License compliance check
   license-compliance:
-    name: "License Compliance"
+    name: 'License Compliance'
     runs-on: ubuntu-latest
     timeout-minutes: 8
 
     steps:
-      - name: "🔄 Checkout repository"
+      - name: '🔄 Checkout repository'
         uses: actions/checkout@v5
 
-      - name: "🔧 Setup Node.js"
+      - name: '🔧 Setup Node.js'
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: "📦 Setup pnpm"
+      - name: '📦 Setup pnpm'
         uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
-      - name: "💾 Cache pnpm store"
+      - name: '💾 Cache pnpm store'
         uses: actions/cache@v4
         with:
           path: ${{ env.PNPM_HOME }}
@@ -219,10 +219,10 @@ jobs:
           restore-keys: |
             pnpm-${{ runner.os }}-
 
-      - name: "📥 Install dependencies"
+      - name: '📥 Install dependencies'
         run: pnpm run ci:install:frozen
 
-      - name: "📜 Generate license report"
+      - name: '📜 Generate license report'
         run: |
           echo "📋 Generating license compliance report..."
           npx license-checker --summary > license-summary.txt || echo "License checker not available, skipping..."
@@ -232,7 +232,7 @@ jobs:
             cat license-summary.txt
           fi
 
-      - name: "📤 Upload license report"
+      - name: '📤 Upload license report'
         uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -242,26 +242,26 @@ jobs:
 
   # Dependency analysis and updates
   dependency-analysis:
-    name: "Dependency Analysis"
+    name: 'Dependency Analysis'
     runs-on: ubuntu-latest
     timeout-minutes: 12
 
     steps:
-      - name: "🔄 Checkout repository"
+      - name: '🔄 Checkout repository'
         uses: actions/checkout@v5
 
-      - name: "🔧 Setup Node.js"
+      - name: '🔧 Setup Node.js'
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: "📦 Setup pnpm"
+      - name: '📦 Setup pnpm'
         uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
-      - name: "💾 Cache pnpm store"
+      - name: '💾 Cache pnpm store'
         uses: actions/cache@v4
         with:
           path: ${{ env.PNPM_HOME }}
@@ -269,10 +269,10 @@ jobs:
           restore-keys: |
             pnpm-${{ runner.os }}-
 
-      - name: "📥 Install dependencies"
+      - name: '📥 Install dependencies'
         run: pnpm run ci:install:frozen
 
-      - name: "📊 Analyze dependencies"
+      - name: '📊 Analyze dependencies'
         run: |
           echo "📦 Dependency Analysis Report"
           echo "=========================="
@@ -286,13 +286,13 @@ jobs:
           echo "Frontend: $(cat packages/leenders-coaching-nl/package.json | jq '.dependencies | length')"
           echo "Studio: $(cat packages/studio-leenders-coaching-nl/package.json | jq '.dependencies | length')"
 
-      - name: "🔍 Check for duplicate dependencies"
+      - name: '🔍 Check for duplicate dependencies'
         run: pnpm run dedupe:check || echo "ℹ️ Some dependencies could be deduplicated"
 
-      - name: "📊 Generate dependency tree"
+      - name: '📊 Generate dependency tree'
         run: pnpm list --depth=2 > dependency-tree.txt || echo "Dependency tree generated with warnings"
 
-      - name: "📤 Upload dependency analysis"
+      - name: '📤 Upload dependency analysis'
         uses: actions/upload-artifact@v4
         with:
           name: dependency-analysis-${{ github.sha }}
@@ -301,7 +301,7 @@ jobs:
 
   # Code quality metrics
   code-quality:
-    name: "Code Quality Metrics"
+    name: 'Code Quality Metrics'
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -313,23 +313,23 @@ jobs:
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
     steps:
-      - name: "🔄 Checkout repository"
+      - name: '🔄 Checkout repository'
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - name: "🔧 Setup Node.js"
+      - name: '🔧 Setup Node.js'
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: "📦 Setup pnpm"
+      - name: '📦 Setup pnpm'
         uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
-      - name: "💾 Cache pnpm store"
+      - name: '💾 Cache pnpm store'
         uses: actions/cache@v4
         with:
           path: ${{ env.PNPM_HOME }}
@@ -337,10 +337,10 @@ jobs:
           restore-keys: |
             pnpm-${{ runner.os }}-
 
-      - name: "📥 Install dependencies"
+      - name: '📥 Install dependencies'
         run: pnpm run ci:install:frozen
 
-      - name: "🔍 ESLint analysis"
+      - name: '🔍 ESLint analysis'
         run: |
           echo "🔍 Running comprehensive ESLint analysis..."
 
@@ -386,13 +386,13 @@ jobs:
             echo "❌ No ESLint output file generated"
           fi
 
-      - name: "📊 TypeScript strict check"
+      - name: '📊 TypeScript strict check'
         run: pnpm --parallel run type-check 2>&1 | tee typescript-results.txt || echo "TypeScript issues found"
 
-      - name: "📈 Code complexity analysis"
+      - name: '📈 Code complexity analysis'
         run: pnpm dlx complexity-report --output json --format json packages/*/src | sort -nr -k2 > complexity-analysis.txt
 
-      - name: "📤 Upload quality metrics"
+      - name: '📤 Upload quality metrics'
         uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -405,7 +405,7 @@ jobs:
 
   # Performance benchmarks
   performance-benchmarks:
-    name: "Performance Benchmarks"
+    name: 'Performance Benchmarks'
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule' || github.ref == 'refs/heads/main'
     timeout-minutes: 20
@@ -418,21 +418,21 @@ jobs:
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
     steps:
-      - name: "🔄 Checkout repository"
+      - name: '🔄 Checkout repository'
         uses: actions/checkout@v5
 
-      - name: "🔧 Setup Node.js"
+      - name: '🔧 Setup Node.js'
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: "📦 Setup pnpm"
+      - name: '📦 Setup pnpm'
         uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
-      - name: "💾 Cache pnpm store"
+      - name: '💾 Cache pnpm store'
         uses: actions/cache@v4
         with:
           path: ${{ env.PNPM_HOME }}
@@ -440,10 +440,10 @@ jobs:
           restore-keys: |
             pnpm-${{ runner.os }}-
 
-      - name: "📥 Install dependencies"
+      - name: '📥 Install dependencies'
         run: pnpm run ci:install:frozen
 
-      - name: "⏱️ Build time benchmark"
+      - name: '⏱️ Build time benchmark'
         run: |
           echo "⏱️ Measuring build performance..."
 
@@ -464,13 +464,13 @@ jobs:
           # Save metrics
           echo "{\"frontend_build_time\": $frontend_duration, \"studio_build_time\": $studio_duration}" > build-metrics.json
 
-      - name: "📊 Bundle size analysis"
-        run: pnpm run analyze:size:ci
+      - name: '📊 Bundle size analysis'
+        run: pnpm run analyze:bundle
 
-      - name: "🔍 Performance audit"
-        run: pnpm run perf:audit:ci
+      - name: '🔍 Performance audit'
+        run: pnpm run perf:audit
 
-      - name: "📋 Capture bundle size summary"
+      - name: '📋 Capture bundle size summary'
         run: |
           echo "📦 Bundle Size Analysis Summary"
           echo "=============================="
@@ -494,12 +494,9 @@ jobs:
               echo "Total CSS size: $CSS_SIZE"
             fi
             
-            # Display size-limit results if available
-            if [ -f "packages/leenders-coaching-nl/size-limit.json" ]; then
-              echo ""
-              echo "📏 Size Limit Results:"
-              cat packages/leenders-coaching-nl/size-limit.json | jq -r '.[] | "\(.name): \(.size) (\(.percent)% of limit)"' || echo "Could not parse size-limit results"
-            fi
+            # Note: Bundle size limits are now enforced by the Size Limit GitHub Action
+            echo ""
+            echo "📏 Bundle size limits are enforced by the Size Limit GitHub Action on PRs"
             
             # Check for analyze directory (if bundle analyzer was used)
             if [ -d "packages/leenders-coaching-nl/.next/analyze" ]; then
@@ -512,7 +509,7 @@ jobs:
             exit 1
           fi
 
-      - name: "📤 Upload performance metrics"
+      - name: '📤 Upload performance metrics'
         uses: actions/upload-artifact@v4
         with:
           name: performance-metrics-${{ github.sha }}
@@ -523,7 +520,7 @@ jobs:
 
   # Summary report
   quality-summary:
-    name: "Quality Summary"
+    name: 'Quality Summary'
     runs-on: ubuntu-latest
     needs:
       [security-audit, license-compliance, dependency-analysis, code-quality]
@@ -531,7 +528,7 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - name: "📋 Generate quality report"
+      - name: '📋 Generate quality report'
         run: |
           echo "## 🎯 Quality Gates Report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -551,7 +548,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Generated**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
 
-      - name: "🚨 Fail on critical issues"
+      - name: '🚨 Fail on critical issues'
         if: needs.security-audit.outputs.vulnerabilities-found == 'true' && github.event.inputs.severity == 'critical'
         run: |
           echo "❌ Critical security vulnerabilities found!"

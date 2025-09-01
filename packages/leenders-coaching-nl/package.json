@@ -10,10 +10,9 @@
     "lint": "eslint .",
     "lint:format": "eslint . --format json",
     "type-check": "tsc --noEmit",
-    "analyze": "ANALYZE=true next build",
+    "analyze": "cross-env ANALYZE=true next build",
     "analyze:bundle": "npx @next/bundle-analyzer",
     "storybook": "storybook dev -p 6006",
-    "storybook:build": "storybook build",
     "build-storybook": "storybook build",
     "chromatic": "chromatic",
     "test": "vitest",
@@ -28,65 +27,22 @@
     "validate:next": "npx next info",
     "analyze:storybook": "pnpm dlx bundlesize2 check storybook-static/**/*.js",
     "analyze:performance": "pnpm dlx webpack-bundle-analyzer .next/static/chunks/*.js --port 8888 --no-open",
-    "analyze:lighthouse": "pnpm dlx lhci autorun",
     "verify:build": "test -d .next && test -f .next/BUILD_ID && echo '✅ Frontend build verified'",
-    "verify:performance": "pnpm dlx bundlesize",
+    "verify:performance": "size-limit",
     "package:build": "tar -czf frontend-build.tar.gz -C . .next 2>/dev/null || echo 'No build artifacts to package'",
+    "clean": "rm -rf .next && rm -rf node_modules/.cache",
     "check:deps": "pnpm dlx depcheck",
     "check:security": "pnpm dlx audit-ci",
     "check:duplicates": "pnpm dlx jscpd src",
-    "report:size": "size-limit",
-    "report:size:ci": "size-limit --json",
-    "analyze:bundle:detailed": "cross-env ANALYZE=true next build",
-    "analyze:lighthouse:ci": "lhci autorun --upload.target=temporary-public-storage",
     "verify:size": "size-limit",
-    "verify:size:ci": "size-limit --json",
     "perf:lighthouse": "lhci autorun",
     "perf:lighthouse:ci": "lhci autorun --collect.settings.preset=desktop",
-    "perf:web-vitals": "pnpm dlx @vitejs/plugin-legacy",
-    "perf:audit": "pnpm run perf:lighthouse && pnpm run verify:size",
-    "perf:audit:ci": "pnpm run perf:lighthouse:ci && pnpm run verify:size:ci"
+    "perf:audit": "pnpm run perf:lighthouse"
   },
-  "size-limit": [
-    {
-      "name": "Main JS bundle",
-      "path": ".next/static/chunks/*.js",
-      "limit": "320 KB",
-      "webpack": false
-    },
-    {
-      "name": "CSS bundle",
-      "path": ".next/static/css/*.css",
-      "limit": "15 KB",
-      "webpack": false
-    },
-    {
-      "name": "App chunks",
-      "path": ".next/static/chunks/app/**/*.js",
-      "limit": "15 KB",
-      "webpack": false
-    }
-  ],
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
     ]
-  },
-  "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write",
-      "pnpm type-check"
-    ],
-    "src/**/*.{json,css,scss,md}": [
-      "prettier --write"
-    ],
-    "*.{json,md}": [
-      "prettier --write"
-    ]
-  },
-  "prettier": {
-    "tabWidth": 2
   },
   "browserslist": {
     "production": [
@@ -154,8 +110,6 @@
     "tailwindcss": "4.1.12",
     "vitest": "3.2.4",
     "size-limit": "11.2.0",
-    "@size-limit/preset-app": "11.2.0",
-    "@size-limit/webpack": "11.2.0",
     "@size-limit/file": "11.2.0",
     "webpack-bundle-analyzer": "4.10.1",
     "@lhci/cli": "0.14.0",

@@ -1,22 +1,39 @@
 module.exports = {
-  // Format and lint TypeScript/JavaScript files in packages
-  'packages/**/*.{ts,tsx,js,jsx}': [
+  // Frontend package TypeScript/JavaScript files
+  'packages/leenders-coaching-nl/src/**/*.{ts,tsx,js,jsx}': [
     'prettier --write',
-    'eslint --fix'
+    (filenames) => {
+      const relativeFiles = filenames.map(f => f.replace('packages/leenders-coaching-nl/', ''));
+      return `cd packages/leenders-coaching-nl && npx eslint --fix ${relativeFiles.join(' ')}`;
+    }
   ],
   
-  // Format JSON files
+  // Studio package TypeScript/JavaScript files - if any exist
+  'packages/studio-leenders-coaching-nl/**/*.{ts,tsx,js,jsx}': [
+    'prettier --write',
+    (filenames) => {
+      const relativeFiles = filenames.map(f => f.replace('packages/studio-leenders-coaching-nl/', ''));
+      return `cd packages/studio-leenders-coaching-nl && npx eslint --fix ${relativeFiles.join(' ')}`;
+    }
+  ],
+  
+  // JSON files across the monorepo
   '**/*.json': [
     'prettier --write'
   ],
   
-  // Format Markdown files
+  // Markdown files across the monorepo
   '**/*.md': [
     'prettier --write'
   ],
   
-  // Format YAML files
+  // YAML files (GitHub workflows, etc.)
   '**/*.{yml,yaml}': [
+    'prettier --write'
+  ],
+
+  // CSS files in packages
+  'packages/**/*.{css,scss}': [
     'prettier --write'
   ]
 };

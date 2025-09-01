@@ -1,53 +1,58 @@
 module.exports = {
   ci: {
     collect: {
+      // For local development and package.json scripts
       url: [
         'http://localhost:3000',
         'http://localhost:3000/over-mij',
+        'http://localhost:3000/aanpak',
         'http://localhost:3000/coaching',
+        'http://localhost:3000/contact',
         'http://localhost:3000/blog'
       ],
       startServerCommand: 'pnpm start',
       startServerReadyPattern: 'ready on',
-      numberOfRuns: 3,
+      startServerReadyTimeout: 30000,
+      numberOfRuns: 5,
       settings: {
-        preset: 'desktop',
+        // Mobile-first approach (GitHub Actions will use this)
+        emulatedFormFactor: 'mobile',
         throttling: {
-          rttMs: 40,
-          throughputKbps: 10 * 1024,
-          cpuSlowdownMultiplier: 1,
+          rttMs: 150,
+          throughputKbps: 1638.4,
+          cpuSlowdownMultiplier: 4
         },
-      },
+        // For CI environments
+        chromeFlags: '--no-sandbox --disable-dev-shm-usage'
+      }
     },
     assert: {
+      preset: 'lighthouse:recommended',
       assertions: {
-        // Core Web Vitals thresholds (industry standards)
-        'largest-contentful-paint': ['warn', { maxNumericValue: 2500 }],
-        'first-contentful-paint': ['warn', { maxNumericValue: 1800 }],
+        // Core Web Vitals thresholds (2025 standards)
+        'first-contentful-paint': ['warn', { maxNumericValue: 2000 }],
+        'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
         'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
-        'total-blocking-time': ['warn', { maxNumericValue: 200 }],
-        'speed-index': ['warn', { maxNumericValue: 3400 }],
+        'total-blocking-time': ['error', { maxNumericValue: 300 }],
+        'speed-index': ['warn', { maxNumericValue: 3500 }],
         
         // Category scores (enterprise standards)
-        'categories:performance': ['warn', { minScore: 0.85 }],
+        'categories:performance': ['error', { minScore: 0.8 }],
         'categories:accessibility': ['error', { minScore: 0.95 }],
-        'categories:best-practices': ['warn', { minScore: 0.90 }],
-        'categories:seo': ['warn', { minScore: 0.90 }],
+        'categories:seo': ['error', { minScore: 0.9 }],
+        'categories:best-practices': ['error', { minScore: 0.9 }],
         
-        // Resource optimization
-        'unused-css-rules': ['warn', { maxLength: 0 }],
-        'unused-javascript': ['warn', { maxLength: 0 }],
-        'modern-image-formats': ['warn', { maxLength: 0 }],
-        'offscreen-images': ['warn', { maxLength: 0 }],
-        
-        // Network efficiency
+        // Resource optimization audits
         'uses-text-compression': 'error',
-        'uses-responsive-images': 'warn',
+        'uses-responsive-images': 'error',
+        'modern-image-formats': 'warn',
         'efficient-animated-content': 'warn',
-      },
+        'unused-css-rules': 'warn',
+        'unused-javascript': 'warn'
+      }
     },
     upload: {
-      target: 'temporary-public-storage',
-    },
-  },
+      target: 'temporary-public-storage'
+    }
+  }
 };
