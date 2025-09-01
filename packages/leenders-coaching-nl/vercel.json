@@ -5,7 +5,7 @@
     }
   },
   "functions": {
-    "packages/leenders-coaching-nl/src/app/api/**/*.ts": {
+    "packages/leenders-coaching-nl/src/app/api/**/*.{ts,tsx}": {
       "maxDuration": 30
     }
   },
