@@ -35,12 +35,12 @@ jobs:
         with:
           # Update these URLs to match your production domain
           urls: |
-            https://leenderscoaching.nl/
-            https://leenderscoaching.nl/over-mij
-            https://leenderscoaching.nl/aanpak
-            https://leenderscoaching.nl/coaching
-            https://leenderscoaching.nl/contact
-          configPath: packages/leenders-coaching-nl/lighthouserc.js
+            https://leenders-coaching.vercel.app/
+            https://leenders-coaching.vercel.app/over-mij
+            https://leenders-coaching.vercel.app/aanpak
+            https://leenders-coaching.vercel.app/coaching
+            https://leenders-coaching.vercel.app/contact
+          configPath: packages/leenders-coaching-nl/lighthouserc.ci.cjs
           uploadArtifacts: true
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}

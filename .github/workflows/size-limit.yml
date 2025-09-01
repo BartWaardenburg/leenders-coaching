@@ -74,11 +74,10 @@ jobs:
         run: pnpm --filter leenders-coaching-nl run build
 
       - name: '📊 Run Size Limit'
-        run: |
-          cd packages/leenders-coaching-nl
-          pnpm exec size-limit --json
-
-      - name: '🧹 Clean build artifacts'
-        run: |
-          cd packages/leenders-coaching-nl
-          pnpm run clean
+        uses: andresz1/size-limit-action@v1.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          directory: 'packages/leenders-coaching-nl'
+          skip_step: 'build'
+          clean_script: 'clean'
+          package_manager: 'pnpm'
