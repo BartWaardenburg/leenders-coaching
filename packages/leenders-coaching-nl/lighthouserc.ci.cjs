@@ -12,9 +12,19 @@ module.exports = {
           cpuSlowdownMultiplier: 4,
         },
         chromeFlags: '--no-sandbox --disable-dev-shm-usage --disable-background-timer-throttling --disable-features=VizDisplayCompositor',
+        // Add extra headers for Vercel authentication if token is available
+        extraHeaders: process.env.VERCEL_TOKEN ? {
+          'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`,
+          'User-Agent': 'Lighthouse-CI-GitHub-Actions'
+        } : undefined,
         // Faster CI settings
         skipAudits: ['screenshot-thumbnails', 'final-screenshot'],
         onlyCategories: ['performance', 'accessibility', 'seo', 'best-practices'],
+        // Increased timeouts for slower preview deployments
+        maxWaitForLoad: 45000,
+        maxWaitForFcp: 15000,
+        networkQuietThresholdMs: 1000,
+        cpuQuietThresholdMs: 1000,
       },
     },
     assert: {

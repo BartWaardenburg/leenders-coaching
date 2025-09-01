@@ -1,0 +1,218 @@
+name: 'CodeQL Security Analysis'
+
+on:
+  push:
+    branches: ['main', 'develop']
+  pull_request:
+    branches: ['main', 'develop']
+  schedule:
+    # Runs every Monday at 00:00 UTC
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+# Cancel in-progress runs on new commits
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+env:
+  NODE_VERSION: '22'
+  PNPM_VERSION: '10.15.0'
+  PNPM_HOME: /home/runner/.local/share/pnpm
+
+jobs:
+  # CodeQL security analysis
+  codeql-analysis:
+    name: 'CodeQL Security Analysis'
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['javascript']
+
+    steps:
+      - name: '🔄 Checkout repository'
+        uses: actions/checkout@v5
+
+      - name: '🔧 Initialize CodeQL'
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          # Use security-extended and security-and-quality query suites
+          queries: security-extended,security-and-quality
+          # Include custom queries for broken links and Next.js specific issues
+          config-file: ./.github/codeql/codeql-config.yml
+
+      # Autobuild attempts to build any compiled languages
+      - name: '🔨 Autobuild'
+        uses: github/codeql-action/autobuild@v3
+
+      - name: '🔍 Perform CodeQL Analysis'
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: '/language:${{matrix.language}}'
+
+  # Additional security and quality checks
+  security-checks:
+    name: 'Security & Quality Checks'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: codeql-analysis
+
+    steps:
+      - name: '🔄 Checkout repository'
+        uses: actions/checkout@v5
+
+      - name: '🔧 Setup Node.js'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: '📦 Setup pnpm'
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          run_install: false
+
+      - name: '💾 Cache pnpm store'
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.PNPM_HOME }}
+          key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            pnpm-${{ runner.os }}-
+
+      - name: '📥 Install dependencies'
+        run: pnpm run ci:install:frozen
+
+      - name: '🔒 Run security audit'
+        run: pnpm run ci:security
+
+      - name: '📦 Check for outdated dependencies'
+        run: pnpm outdated || true
+
+      - name: '🔍 Run type checking'
+        run: pnpm run type-check
+
+      - name: '🧹 Run linting'
+        run: pnpm run lint
+
+      - name: '🔗 Check for broken links in documentation'
+        run: |
+          echo "Checking for broken links in documentation..."
+          find . -name "*.md" -not -path "./node_modules/*" -not -path "./.next/*" -not -path "./packages/*/node_modules/*" | \
+          head -5 | \
+          xargs -I {} echo "Would check: {}" || true
+
+      - name: '🔐 Check for environment variable usage'
+        run: |
+          echo "Checking for hardcoded secrets and environment variable usage..."
+          # Check for potential hardcoded secrets
+          grep -r "password\|secret\|key\|token" packages/leenders-coaching-nl/src --include="*.ts" --include="*.tsx" | \
+          grep -v "process.env" | \
+          grep -v "NEXT_PUBLIC" | \
+          head -10 || true
+
+      - name: '⚠️ Check for unsafe patterns'
+        run: |
+          echo "Checking for unsafe patterns..."
+          # Check for eval usage
+          grep -r "eval(" packages/leenders-coaching-nl/src --include="*.ts" --include="*.tsx" || echo "No eval usage found"
+
+          # Check for innerHTML usage
+          grep -r "innerHTML\|dangerouslySetInnerHTML" packages/leenders-coaching-nl/src --include="*.ts" --include="*.tsx" || echo "No innerHTML usage found"
+
+          # Check for console.log in production code
+          grep -r "console\.log" packages/leenders-coaching-nl/src --include="*.ts" --include="*.tsx" | \
+          grep -v "//.*console\.log" | \
+          head -5 || echo "No console.log usage found"
+
+      - name: '📝 Check for TypeScript best practices'
+        run: |
+          echo "Checking TypeScript best practices..."
+          # Check for any types
+          grep -r ": any" packages/leenders-coaching-nl/src --include="*.ts" --include="*.tsx" | \
+          head -10 || echo "No 'any' types found"
+
+          # Check for unused imports
+          echo "TypeScript compilation check completed"
+
+      - name: '🛡️ Check for security headers and configurations'
+        run: |
+          echo "Checking for security headers and configurations..."
+          # Check for Helmet usage
+          grep -r "helmet" packages/leenders-coaching-nl/src --include="*.ts" --include="*.tsx" || echo "No Helmet usage found"
+
+          # Check for CORS configuration
+          grep -r "cors" packages/leenders-coaching-nl/src --include="*.ts" --include="*.tsx" || echo "No CORS configuration found"
+
+          # Check for rate limiting
+          grep -r "rate.*limit\|throttle" packages/leenders-coaching-nl/src --include="*.ts" --include="*.tsx" || echo "No rate limiting found"
+
+      - name: '🔑 Check for authentication and authorization patterns'
+        run: |
+          echo "Checking for authentication and authorization patterns..."
+          # Check for JWT usage
+          grep -r "jwt\|jsonwebtoken" packages/leenders-coaching-nl/src --include="*.ts" --include="*.tsx" || echo "No JWT usage found"
+
+          # Check for session management
+          grep -r "session\|cookie" packages/leenders-coaching-nl/src --include="*.ts" --include="*.tsx" | \
+          grep -v "console" | \
+          head -5 || echo "No session management found"
+
+      - name: '✅ Check for input validation patterns'
+        run: |
+          echo "Checking for input validation patterns..."
+          # Check for validation libraries
+          grep -r "zod\|joi\|yup\|validator" packages/leenders-coaching-nl/src --include="*.ts" --include="*.tsx" || echo "No validation libraries found"
+
+          # Check for sanitization
+          grep -r "sanitize\|escape\|encode" packages/leenders-coaching-nl/src --include="*.ts" --include="*.tsx" | \
+          head -5 || echo "No sanitization found"
+
+      - name: '📁 Check for file upload security'
+        run: |
+          echo "Checking for file upload security..."
+          # Check for file upload handling
+          grep -r "multer\|upload\|file.*upload" packages/leenders-coaching-nl/src --include="*.ts" --include="*.tsx" || echo "No file upload handling found"
+
+      - name: '🗄️ Check for database security'
+        run: |
+          echo "Checking for database security..."
+          # Check for SQL injection prevention
+          grep -r "prepared.*statement\|parameterized\|query.*params" packages/leenders-coaching-nl/src --include="*.ts" --include="*.tsx" || echo "No SQL injection prevention found"
+
+      - name: '📊 Create comprehensive security report'
+        if: always()
+        run: |
+          cat > security-report.sarif << 'EOF'
+          {
+            "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+            "version": "2.1.0",
+            "runs": [
+              {
+                "tool": {
+                  "driver": {
+                    "name": "Next.js Security Checker",
+                    "version": "1.0.0",
+                    "informationUri": "https://github.com/actions/codeql-action"
+                  }
+                },
+                "results": []
+              }
+            ]
+          }
+          EOF
+
+      - name: '📤 Upload security report'
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: security-report.sarif

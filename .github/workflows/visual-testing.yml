@@ -1,38 +1,38 @@
-name: "Visual Testing & Design System"
+name: 'Visual Testing & Design System'
 
 on:
   push:
-    branches: ["main", "develop"]
+    branches: ['main', 'develop']
     paths:
-      - "packages/leenders-coaching-nl/src/components/**/*.stories.*"
-      - "packages/leenders-coaching-nl/src/components/**/*.tsx"
-      - "packages/leenders-coaching-nl/src/emails/**/*.stories.*"
-      - "packages/leenders-coaching-nl/.storybook/**"
-      - "packages/leenders-coaching-nl/tailwind.config.*"
-      - "packages/leenders-coaching-nl/src/config/**"
+      - 'packages/leenders-coaching-nl/src/components/**/*.stories.*'
+      - 'packages/leenders-coaching-nl/src/components/**/*.tsx'
+      - 'packages/leenders-coaching-nl/src/emails/**/*.stories.*'
+      - 'packages/leenders-coaching-nl/.storybook/**'
+      - 'packages/leenders-coaching-nl/tailwind.config.*'
+      - 'packages/leenders-coaching-nl/src/config/**'
   pull_request:
-    branches: ["main", "develop"]
+    branches: ['main', 'develop']
     paths:
-      - "packages/leenders-coaching-nl/src/components/**/*.stories.*"
-      - "packages/leenders-coaching-nl/src/components/**/*.tsx"
-      - "packages/leenders-coaching-nl/src/emails/**/*.stories.*"
-      - "packages/leenders-coaching-nl/.storybook/**"
-      - "packages/leenders-coaching-nl/tailwind.config.*"
-      - "packages/leenders-coaching-nl/src/config/**"
+      - 'packages/leenders-coaching-nl/src/components/**/*.stories.*'
+      - 'packages/leenders-coaching-nl/src/components/**/*.tsx'
+      - 'packages/leenders-coaching-nl/src/emails/**/*.stories.*'
+      - 'packages/leenders-coaching-nl/.storybook/**'
+      - 'packages/leenders-coaching-nl/tailwind.config.*'
+      - 'packages/leenders-coaching-nl/src/config/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: "20"
-  PNPM_VERSION: "10.15.0"
+  NODE_VERSION: '22'
+  PNPM_VERSION: '10.15.0'
   PNPM_HOME: /home/runner/.local/share/pnpm
 
 jobs:
   # Storybook build and visual regression testing
   visual-testing:
-    name: "Visual Regression Testing"
+    name: 'Visual Regression Testing'
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -44,23 +44,23 @@ jobs:
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
     steps:
-      - name: "🔄 Checkout repository"
+      - name: '🔄 Checkout repository'
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - name: "🔧 Setup Node.js"
+      - name: '🔧 Setup Node.js'
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: "📦 Setup pnpm"
+      - name: '📦 Setup pnpm'
         uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
-      - name: "💾 Cache pnpm store"
+      - name: '💾 Cache pnpm store'
         uses: actions/cache@v4
         with:
           path: ${{ env.PNPM_HOME }}
@@ -68,7 +68,7 @@ jobs:
           restore-keys: |
             pnpm-${{ runner.os }}-
 
-      - name: "🗂️ Cache Storybook build"
+      - name: '🗂️ Cache Storybook build'
         uses: actions/cache@v4
         with:
           path: packages/leenders-coaching-nl/storybook-static
@@ -76,29 +76,30 @@ jobs:
           restore-keys: |
             storybook-${{ runner.os }}-
 
-      - name: "📥 Install dependencies"
+      - name: '📥 Install dependencies'
         run: pnpm run ci:install:frozen
 
-      - name: "🏗️ Build Storybook"
+      - name: '🏗️ Build Storybook'
         run: pnpm run storybook:build
         env:
-          NODE_OPTIONS: "--max_old_space_size=4096"
+          NODE_OPTIONS: '--max_old_space_size=4096'
 
-      - name: "📊 Analyze Storybook build"
+      - name: '📊 Analyze Storybook build'
         run: pnpm --filter leenders-coaching-nl run analyze:storybook
 
-      - name: "🎨 Run Chromatic"
+      - name: '🎨 Run Chromatic'
         uses: chromaui/action@latest
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           workingDir: packages/leenders-coaching-nl
-          buildScriptName: build-storybook
+          storybookBuildDir: storybook-static
           onlyChanged: true
           exitZeroOnChanges: true
           exitOnceUploaded: true
           ignoreLastBuildOnBranch: ${{ github.event_name == 'pull_request' }}
+          skip: ${{ github.event_name == 'push' && github.ref != 'refs/heads/main' && github.ref != 'refs/heads/develop' }}
 
-      - name: "📤 Upload Storybook artifacts"
+      - name: '📤 Upload Storybook artifacts'
         uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -108,7 +109,7 @@ jobs:
 
   # Component accessibility testing
   accessibility-testing:
-    name: "Accessibility Testing"
+    name: 'Accessibility Testing'
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -120,21 +121,21 @@ jobs:
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
     steps:
-      - name: "🔄 Checkout repository"
+      - name: '🔄 Checkout repository'
         uses: actions/checkout@v5
 
-      - name: "🔧 Setup Node.js"
+      - name: '🔧 Setup Node.js'
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: "📦 Setup pnpm"
+      - name: '📦 Setup pnpm'
         uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
-      - name: "💾 Cache pnpm store"
+      - name: '💾 Cache pnpm store'
         uses: actions/cache@v4
         with:
           path: ${{ env.PNPM_HOME }}
@@ -142,20 +143,20 @@ jobs:
           restore-keys: |
             pnpm-${{ runner.os }}-
 
-      - name: "📥 Install dependencies"
+      - name: '📥 Install dependencies'
         run: pnpm run ci:install:frozen
 
-      - name: "🏗️ Build Storybook for testing"
+      - name: '🏗️ Build Storybook for testing'
         run: pnpm run storybook:build
 
-      - name: "🔍 Install Playwright browsers"
+      - name: '🔍 Install Playwright browsers'
         run: pnpm --filter leenders-coaching-nl run ci:install-playwright
 
-      - name: "♿ Run accessibility tests"
+      - name: '♿ Run accessibility tests'
         run: pnpm --filter leenders-coaching-nl run ci:test-a11y
         continue-on-error: true
 
-      - name: "📊 Generate accessibility report"
+      - name: '📊 Generate accessibility report'
         run: |
           echo "## ♿ Accessibility Test Results" >> $GITHUB_STEP_SUMMARY
           echo "Accessibility tests completed for component library" >> $GITHUB_STEP_SUMMARY
@@ -163,7 +164,7 @@ jobs:
 
   # Performance testing for components
   performance-testing:
-    name: "Component Performance"
+    name: 'Component Performance'
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
     timeout-minutes: 15
@@ -176,21 +177,21 @@ jobs:
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
     steps:
-      - name: "🔄 Checkout repository"
+      - name: '🔄 Checkout repository'
         uses: actions/checkout@v5
 
-      - name: "🔧 Setup Node.js"
+      - name: '🔧 Setup Node.js'
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: "📦 Setup pnpm"
+      - name: '📦 Setup pnpm'
         uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
-      - name: "💾 Cache pnpm store"
+      - name: '💾 Cache pnpm store'
         uses: actions/cache@v4
         with:
           path: ${{ env.PNPM_HOME }}
@@ -198,16 +199,16 @@ jobs:
           restore-keys: |
             pnpm-${{ runner.os }}-
 
-      - name: "📥 Install dependencies"
+      - name: '📥 Install dependencies'
         run: pnpm run ci:install:frozen
 
-      - name: "🏗️ Build Storybook"
+      - name: '🏗️ Build Storybook'
         run: pnpm run storybook:build
 
-      - name: "⚡ Analyze bundle performance"
+      - name: '⚡ Analyze bundle performance'
         run: pnpm --filter leenders-coaching-nl run verify:performance
 
-      - name: "📈 Performance summary"
+      - name: '📈 Performance summary'
         run: |
           echo "## ⚡ Performance Analysis" >> $GITHUB_STEP_SUMMARY
           echo "Component library performance metrics have been analyzed" >> $GITHUB_STEP_SUMMARY
@@ -215,26 +216,26 @@ jobs:
 
   # Design token validation
   design-system-validation:
-    name: "Design System Validation"
+    name: 'Design System Validation'
     runs-on: ubuntu-latest
     timeout-minutes: 8
 
     steps:
-      - name: "🔄 Checkout repository"
+      - name: '🔄 Checkout repository'
         uses: actions/checkout@v5
 
-      - name: "🔧 Setup Node.js"
+      - name: '🔧 Setup Node.js'
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: "📦 Setup pnpm"
+      - name: '📦 Setup pnpm'
         uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
-      - name: "💾 Cache pnpm store"
+      - name: '💾 Cache pnpm store'
         uses: actions/cache@v4
         with:
           path: ${{ env.PNPM_HOME }}
@@ -242,13 +243,13 @@ jobs:
           restore-keys: |
             pnpm-${{ runner.os }}-
 
-      - name: "📥 Install dependencies"
+      - name: '📥 Install dependencies'
         run: pnpm run ci:install:frozen
 
-      - name: "🎨 Validate Tailwind configuration"
+      - name: '🎨 Validate Tailwind configuration'
         run: pnpm --filter leenders-coaching-nl run validate:tailwind
 
-      - name: "📊 Design system summary"
+      - name: '📊 Design system summary'
         run: |
           echo "## 🎨 Design System Status" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Tailwind configuration validated" >> $GITHUB_STEP_SUMMARY

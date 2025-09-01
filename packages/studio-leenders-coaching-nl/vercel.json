@@ -1,7 +1,7 @@
 {
-  "version": 2,
+  "buildCommand": "pnpm build",
+  "devCommand": "pnpm dev",
   "framework": "sanity",
-  "buildCommand": "pnpm run build",
-  "devCommand": "pnpm run dev",
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "regions": ["fra1"]
 }

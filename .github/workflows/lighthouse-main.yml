@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: '22'
 
 jobs:
   lighthouse:
@@ -41,6 +41,7 @@ jobs:
             https://leenders-coaching.vercel.app/coaching
             https://leenders-coaching.vercel.app/contact
           configPath: packages/leenders-coaching-nl/lighthouserc.ci.cjs
+          budgetPath: packages/leenders-coaching-nl/budget.json
           uploadArtifacts: true
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
