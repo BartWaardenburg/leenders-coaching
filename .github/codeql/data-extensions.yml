@@ -1,0 +1,137 @@
+extensions:
+  # Next.js specific models
+  - addsTo:
+      pack: codeql/javascript-all
+      extensible: sourceModel
+    data:
+      # Next.js API routes as remote flow sources
+      - [
+          'global',
+          'Member[getServerSideProps].Parameter[0].Member[query]',
+          'remote',
+        ]
+      - [
+          'global',
+          'Member[getStaticProps].Parameter[0].Member[params]',
+          'remote',
+        ]
+      - [
+          'global',
+          'Member[getInitialProps].Parameter[0].Member[query]',
+          'remote',
+        ]
+
+  # Next.js specific sinks
+  - addsTo:
+      pack: codeql/javascript-all
+      extensible: sinkModel
+    data:
+      # Next.js redirect as potential open redirect sink
+      - ['next', 'Member[redirect].Argument[0]', 'url-redirection']
+      - ['next', 'Member[permanentRedirect].Argument[0]', 'url-redirection']
+
+      # Next.js headers as potential header injection sink
+      - ['next', 'Member[setHeader].Argument[1]', 'header-injection']
+
+      # Next.js cookies as potential cookie injection sink
+      - ['next', 'Member[setCookie].Argument[1]', 'cookie-injection']
+
+  # Sanity CMS models (since this project uses Sanity)
+  - addsTo:
+      pack: codeql/javascript-all
+      extensible: sourceModel
+    data:
+      # Sanity client queries as potential sources
+      - ['@sanity/client', 'Member[fetch].Argument[0]', 'remote']
+      - ['@sanity/client', 'Member[createClient].Argument[0]', 'remote']
+
+  # TypeScript type models
+  - addsTo:
+      pack: codeql/javascript-all
+      extensible: typeModel
+    data:
+      # Next.js types
+      - ['next.NextPage', 'next', 'Member[NextPage]']
+      - ['next.GetServerSideProps', 'next', 'Member[GetServerSideProps]']
+      - ['next.GetStaticProps', 'next', 'Member[GetStaticProps]']
+
+      # React types
+      - ['react.FC', 'react', 'Member[FC]']
+      - ['react.Component', 'react', 'Member[Component]']
+
+      # Sanity types
+      - [
+          '@sanity/client.SanityClient',
+          '@sanity/client',
+          'Member[createClient].ReturnValue',
+        ]
+
+  # Flow summaries for common operations
+  - addsTo:
+      pack: codeql/javascript-all
+      extensible: summaryModel
+    data:
+      # Next.js router operations
+      - [
+          'next/router',
+          'Member[useRouter]',
+          'ReturnValue',
+          'ReturnValue',
+          'value',
+        ]
+      - ['next/router', 'Member[push]', 'Argument[0]', 'ReturnValue', 'taint']
+
+      # Sanity client operations
+      - [
+          '@sanity/client',
+          'Member[fetch]',
+          'Argument[0]',
+          'ReturnValue',
+          'taint',
+        ]
+
+      # String operations
+      - [
+          'global',
+          'Member[encodeURIComponent]',
+          'Argument[0]',
+          'ReturnValue',
+          'taint',
+        ]
+      - [
+          'global',
+          'Member[decodeURIComponent]',
+          'Argument[0]',
+          'ReturnValue',
+          'taint',
+        ]
+
+      # Path operations
+      - ['path', 'Member[join]', 'Argument[0..]', 'ReturnValue', 'value']
+      - ['path', 'Member[resolve]', 'Argument[0..]', 'ReturnValue', 'value']
+
+  # Additional security sinks for Next.js patterns
+  - addsTo:
+      pack: codeql/javascript-all
+      extensible: sinkModel
+    data:
+      # File system operations
+      - ['fs', 'Member[readFileSync].Argument[0]', 'path-injection']
+      - ['fs', 'Member[writeFileSync].Argument[0]', 'path-injection']
+      - ['fs', 'Member[readFile].Argument[0]', 'path-injection']
+      - ['fs', 'Member[writeFile].Argument[0]', 'path-injection']
+
+      # Database operations
+      - ['mysql', 'Member[query].Argument[0]', 'sql-injection']
+      - ['pg', 'Member[query].Argument[0]', 'sql-injection']
+      - ['sqlite3', 'Member[run].Argument[0]', 'sql-injection']
+
+      # Command execution
+      - ['child_process', 'Member[exec].Argument[0]', 'command-injection']
+      - ['child_process', 'Member[spawn].Argument[0]', 'command-injection']
+      - ['child_process', 'Member[execSync].Argument[0]', 'command-injection']
+
+      # Template engines
+      - ['ejs', 'Member[render].Argument[0]', 'html-injection']
+      - ['handlebars', 'Member[compile].Argument[0]', 'html-injection']
+      - ['pug', 'Member[render].Argument[0]', 'html-injection']
