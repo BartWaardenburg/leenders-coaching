@@ -2,5 +2,6 @@
   "buildCommand": "pnpm build",
   "devCommand": "pnpm dev",
   "framework": "sanity",
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "regions": ["fra1"]
 }

@@ -3,6 +3,7 @@
   "devCommand": "pnpm dev",
   "framework": "nextjs",
   "relatedProjects": ["prj_vLjXpDMI68XDniXcGQpg0fotd1pB"],
+  "regions": ["fra1"],
   "headers": [
     {
       "source": "/api/og",
