@@ -50,7 +50,6 @@ describe('transformFeaturedSection', () => {
       image: 'https://example.com/image.jpg',
       imageAlt: 'Featured image alt text',
       cta: {
-        _type: 'callToAction',
         href: '/featured',
         label: 'Learn More',
         variant: 'blue',

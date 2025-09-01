@@ -24,7 +24,8 @@ const eslintConfig = [
       "**/dist/**",
       "**/generated/**",
       "**/lib/gql/generated/**",
-      "**/next-env.d.ts"
+      "**/next-env.d.ts",
+      "**/coverage/**"
     ]
   },
   // Extend recommended configs
