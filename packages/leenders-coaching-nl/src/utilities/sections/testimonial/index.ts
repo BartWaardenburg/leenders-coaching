@@ -1,0 +1,1 @@
+export { transformTestimonialSection } from './testimonial';

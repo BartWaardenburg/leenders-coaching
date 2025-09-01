@@ -1,0 +1,1 @@
+export { transformPricingSection } from './pricing';

@@ -1,0 +1,19 @@
+{
+  "files": [
+    {
+      "path": "storybook-static/*.iframe.bundle.js",
+      "maxSize": "1.5 MB",
+      "name": "Storybook iframe bundles"
+    },
+    {
+      "path": "storybook-static/main.*.iframe.bundle.js",
+      "maxSize": "250 kB",
+      "name": "Storybook main bundle"
+    },
+    {
+      "path": "storybook-static/runtime~main.*.iframe.bundle.js",
+      "maxSize": "50 kB",
+      "name": "Storybook runtime bundle"
+    }
+  ]
+}
