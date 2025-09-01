@@ -1,4 +1,4 @@
-export default {
+const lighthouseConfig = {
   ci: {
     collect: {
       // For local development and package.json scripts
@@ -56,3 +56,5 @@ export default {
     }
   }
 };
+
+export default lighthouseConfig;
