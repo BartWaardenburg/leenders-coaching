@@ -2,19 +2,16 @@
   {
     "name": "Main JS bundle",
     "path": ".next/static/chunks/*.js",
-    "limit": "320 KB",
-    "running": false
+    "limit": "320 KB"
   },
   {
     "name": "CSS bundle",
     "path": ".next/static/css/*.css",
-    "limit": "15 KB",
-    "running": false
+    "limit": "15 KB"
   },
   {
     "name": "App chunks",
     "path": ".next/static/chunks/app/**/*.js",
-    "limit": "15 KB",
-    "running": false
+    "limit": "15 KB"
   }
 ]
