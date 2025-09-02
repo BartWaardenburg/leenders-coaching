@@ -30,6 +30,8 @@
     "validate:tailwind": "postcss src/app/globals.css -o /tmp/test.css --config postcss.config.mjs && echo '✅ Tailwind CSS configuration is valid' && rm -f /tmp/test.css",
     "perf:lighthouse": "lhci autorun",
     "perf:audit": "pnpm run perf:lighthouse",
+    "perf:local": "lhci autorun --config=lighthouserc.js",
+    "perf:ci": "lhci autorun --config=lighthouserc.ci.cjs",
     "update-types": "cd ../studio-leenders-coaching-nl && pnpm run update-types"
   },
   "commitlint": {
