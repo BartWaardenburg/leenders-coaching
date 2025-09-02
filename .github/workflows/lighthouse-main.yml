@@ -93,9 +93,6 @@ jobs:
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           LHCI_FORM_FACTOR: ${{ matrix.formFactor }}
-          # OPTIONAL: If you run a private LHCI server, uncomment these:
-          # LHCI_SERVER_BASE_URL: ${{ secrets.LHCI_SERVER_URL }}
-          # LHCI_TOKEN: ${{ secrets.LHCI_SERVER_BUILD_TOKEN }}
 
       - name: '📊 Summarize key scores'
         if: always()

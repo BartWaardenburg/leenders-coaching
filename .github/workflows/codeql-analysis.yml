@@ -17,6 +17,7 @@ permissions:
   actions: read
   contents: read
   security-events: write
+  pull-requests: write
 
 env:
   NODE_VERSION: '22'
@@ -183,3 +184,24 @@ jobs:
         if: always()
         with:
           sarif_file: security-report.sarif
+
+  pr-comment:
+    name: 'PR Comment (Security & Quality)'
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    needs: [codeql-analysis, security-checks]
+    permissions:
+      pull-requests: write
+    steps:
+      - name: '💬 Sticky PR comment – CodeQL & Checks'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: codeql-quality
+          number: ${{ github.event.pull_request.number }}
+          message: |
+            ## 🛡️ Security & Quality (summary)
+            - **CodeQL Analysis:** ${{ needs.codeql-analysis.result == 'success' && '✅ Completed' || '❌ Failed' }}
+            - **Security/Quality Checks:** ${{ needs.security-checks.result == 'success' && '✅ Completed' || '❌ Failed' }}
+            - SARIF uploaded to the **Security** tab.
+
+            _This comment updates automatically on new commits to this PR._

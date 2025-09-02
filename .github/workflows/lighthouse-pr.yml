@@ -6,6 +6,11 @@ concurrency:
   group: lhci-${{ github.event.deployment.id }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  deployments: read
+  pull-requests: write
+
 env:
   NODE_VERSION: '22'
 
@@ -14,487 +19,156 @@ jobs:
     name: 'Lighthouse CI (Preview)'
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    permissions:
-      contents: read
-      deployments: read
-      pull-requests: write
-      issues: write
     if: |
       github.event.deployment_status.state == 'success' &&
       contains(github.event.deployment.environment, 'leenders-coaching') &&
       !contains(github.event.deployment.environment, 'studio')
 
     steps:
-      - name: '🔄 Checkout repository'
+      - name: '🔄 Checkout'
         uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
 
       - name: '🔧 Setup Node.js'
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: '🔑 Verify Vercel API authentication'
-        run: |
-          if [ -n "${{ secrets.VERCEL_TOKEN }}" ]; then
-            user_response=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-              "https://api.vercel.com/v2/user" || echo "AUTH_FAILED")
-            
-            if [ "$user_response" = "AUTH_FAILED" ]; then
-              echo "❌ Vercel API authentication failed"
-              echo "⚠️ This may cause issues accessing protected preview deployments"
-            else
-              username=$(echo "$user_response" | jq -r '.user.username // "unknown"')
-              echo "✅ Vercel API authentication successful"
-              echo "📋 Authenticated as: $username"
-            fi
-          else
-            echo "⚠️ No VERCEL_TOKEN available - preview protection bypass unavailable"
-          fi
-
-      - name: '🔍 Get Vercel preview URL with API authentication'
-        id: get_url
+      - name: '🔗 Resolve preview URL (environment_url)'
+        id: url
+        shell: bash
         run: |
           set -euo pipefail
-
-          deployment_id="${{ github.event.deployment.id }}"
-
-          if [ -n "${{ secrets.VERCEL_TOKEN }}" ] && [ -n "${{ secrets.VERCEL_PROJECT_ID }}" ]; then
-            vercel_response=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-              "https://api.vercel.com/v13/deployments/$deployment_id" || echo "API_FAILED")
-            
-            if [ "$vercel_response" != "API_FAILED" ]; then
-              api_url=$(echo "$vercel_response" | jq -r '.url // empty')
-              if [ -n "$api_url" ] && [ "$api_url" != "null" ] && [ "$api_url" != "empty" ]; then
-                deployment_url="https://$api_url"
-              else
-                list_url="https://api.vercel.com/v6/deployments?projectId=${{ secrets.VERCEL_PROJECT_ID }}&limit=10"
-                if [ -n "${{ secrets.VERCEL_ORG_ID }}" ]; then
-                  list_url="$list_url&teamId=${{ secrets.VERCEL_ORG_ID }}"
-                fi
-                
-                deployments_response=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-                  "$list_url" || echo "LIST_FAILED")
-                
-                if [ "$deployments_response" != "LIST_FAILED" ]; then
-                  found_url=$(echo "$deployments_response" | jq -r --arg id "$deployment_id" \
-                    '.deployments[] | select(.uid == $id) | .url // empty')
-                  
-                  if [ -n "$found_url" ] && [ "$found_url" != "null" ] && [ "$found_url" != "empty" ]; then
-                    deployment_url="https://$found_url"
-                  else
-                    deployment_url="${{ github.event.deployment_status.environment_url }}"
-                  fi
-                else
-                  deployment_url="${{ github.event.deployment_status.environment_url }}"
-                fi
-              fi
-            else
-              deployment_url="${{ github.event.deployment_status.environment_url }}"
-            fi
-          else
-            deployment_url="${{ github.event.deployment_status.environment_url }}"
-          fi
-
-          if [ -z "$deployment_url" ] || [ "$deployment_url" = "null" ]; then
-            exit 1
-          fi
-
-          if [[ "$deployment_url" == *"vercel.com/login"* ]] || [[ "$deployment_url" == *"sso-api"* ]]; then
-            if [[ "$deployment_url" =~ url%3D([^&]*) ]]; then
-              encoded_url="${BASH_REMATCH[1]}"
-              preview_url=$(echo "$encoded_url" | sed 's/%3A/:/g; s/%2F/\//g; s/%3F/?/g; s/%3D/=/g; s/%26/\&/g')
-            else
-              exit 1
-            fi
-          else
-            preview_url="$deployment_url"
-          fi
-
-          if [[ "$preview_url" =~ ^https?://.*\.vercel\.app/?.*$ ]]; then
-            echo "preview-url=$preview_url" >> $GITHUB_OUTPUT
-          else
-            exit 1
-          fi
-
-      - name: '🧪 Test preview URL accessibility'
-        run: |
-          preview_url="${{ steps.get_url.outputs.preview-url }}"
-
-          # Build headers array for Vercel protection bypass
-          headers=()
-          if [ -n "${{ secrets.VERCEL_PROTECTION_BYPASS }}" ]; then
-            headers=(-H "x-vercel-protection-bypass: ${{ secrets.VERCEL_PROTECTION_BYPASS }}" -H "x-vercel-set-bypass-cookie: true")
-          fi
-
-          # Test URL accessibility with protection bypass headers
-          response=$(curl -sL --max-time 30 --max-redirs 5 "${headers[@]}" "$preview_url" || echo "CURL_FAILED")
-          final_url=$(curl -sLI --max-time 30 --max-redirs 5 "${headers[@]}" "$preview_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
-
-          echo "🔍 Final URL after redirects: $final_url"
-
-          # Check for authentication issues
-          if [[ "$final_url" == *"vercel.com/login"* ]] || [[ "$final_url" == *"sso-api"* ]]; then
-            echo "❌ Preview URL redirects to Vercel login page!"
-            echo "   This indicates Preview Deployment Protection is enabled."
-            echo ""
-            if [ -n "${{ secrets.VERCEL_TOKEN }}" ]; then
-              echo "🔧 We have a VERCEL_TOKEN but authentication still failed."
-              echo "   The token might not have sufficient permissions or the protection method has changed."
-            else
-              echo "🔑 No VERCEL_TOKEN available for authentication."
-            fi
-            echo ""
-            echo "📝 Possible solutions:"
-            echo "   1. Disable Preview Deployment Protection in Vercel:"
-            echo "      Project Settings → General → Preview Deployment Protection → Set to 'Off'"
-            echo "   2. Ensure VERCEL_TOKEN has proper team/project permissions"
-            echo "   3. Use a personal access token with deployment read permissions"
-            echo ""
-            echo "🚨 Continuing anyway - Lighthouse will attempt to test with authentication"
-          elif [[ "$response" == "CURL_FAILED" ]]; then
-            exit 1
-          elif echo "$response" | grep -qi "404\|not found"; then
-            echo "⚠️ Preview URL returns 404 - deployment might not be complete"
-            echo "   URL: $preview_url"
-            echo "   Waiting 30 seconds for deployment to stabilize..."
-            sleep 30
-          else
-            echo "✅ Preview URL is accessible and serves content"
-            
-            # Check if we still got login-related content despite success
-            if echo "$response" | grep -qi "vercel.*login\|sign.*in\|authenticate"; then
-              echo "⚠️ Response contains authentication-related content"
-              echo "   This might indicate partial protection bypass"
-            else
-              echo "✅ Content appears to be the actual application"
+          url="${{ github.event.deployment_status.environment_url || '' }}"
+          if [[ "$url" == *"vercel.com/login"* || "$url" == *"sso-api"* ]]; then
+            if [[ "$url" =~ url=([^&]+) ]]; then
+              enc="${BASH_REMATCH[1]}"
+              url="$(python3 -c "import sys,urllib.parse;print(urllib.parse.unquote(sys.argv[1]))" "$enc")"
             fi
           fi
-
-      - name: '🔐 Test authentication for all URLs'
-        run: |
-          echo "🔍 Testing authentication for all Lighthouse URLs..."
-          preview_url="${{ steps.get_url.outputs.preview-url }}"
-
-          # Build headers array for Vercel protection bypass
-          headers=()
-          if [ -n "${{ secrets.VERCEL_PROTECTION_BYPASS }}" ]; then
-            headers=(-H "x-vercel-protection-bypass: ${{ secrets.VERCEL_PROTECTION_BYPASS }}" -H "x-vercel-set-bypass-cookie: true")
-          fi
-
-          # Test all URLs that Lighthouse will check
-          urls=(
-            "$preview_url"
-            "$preview_url/over-mij" 
-            "$preview_url/aanpak"
-            "$preview_url/coaching"
-            "$preview_url/contact"
-          )
-
-          auth_failures=0
-          for url in "${urls[@]}"; do
-            echo "🔍 Testing: $url"
-            
-            response=$(curl -sL --max-time 20 --write-out "%{http_code}" \
-              "${headers[@]}" \
-              "$url" || echo "CURL_FAILED")
-            
-            if [[ "$response" == *"CURL_FAILED"* ]]; then
-              echo "❌ Network error accessing $url"
-              ((auth_failures++))
-            elif [[ "$response" == *"vercel.com/login"* ]] || [[ "$response" == *"sso-api"* ]]; then
-              echo "❌ Authentication failed for $url (redirected to login)"
-              ((auth_failures++))
-            else
-              # Extract HTTP status code (last 3 characters)
-              status_code="${response: -3}"
-              if [[ "$status_code" =~ ^[45][0-9][0-9]$ ]]; then
-                echo "⚠️ HTTP $status_code for $url"
-                ((auth_failures++))
-              else
-                echo "✅ HTTP $status_code for $url"
-              fi
-            fi
-          done
-
-          if [ $auth_failures -gt 0 ]; then
-            echo ""
-            echo "⚠️ $auth_failures URL(s) failed authentication tests"
-            echo "🔧 Lighthouse may encounter issues with protected URLs"
-            echo "   Consider disabling Preview Deployment Protection in Vercel"
-          else
-            echo ""
-            echo "✅ All URLs passed authentication tests"
-            echo "🚀 Lighthouse should be able to access all pages"
-          fi
+          [[ "$url" =~ ^https?:// ]] || { echo "No valid environment_url"; exit 1; }
+          echo "preview_url=$url" >> "$GITHUB_OUTPUT"
 
       - name: '🚀 Run Lighthouse CI'
         id: lhci
         uses: treosh/lighthouse-ci-action@v12
         with:
           urls: |
-            ${{ steps.get_url.outputs.preview-url }}
-            ${{ steps.get_url.outputs.preview-url }}/over-mij
-            ${{ steps.get_url.outputs.preview-url }}/aanpak
-            ${{ steps.get_url.outputs.preview-url }}/coaching
-            ${{ steps.get_url.outputs.preview-url }}/contact
+            ${{ steps.url.outputs.preview_url }}
+            ${{ steps.url.outputs.preview_url }}/over-mij
+            ${{ steps.url.outputs.preview_url }}/aanpak
+            ${{ steps.url.outputs.preview_url }}/coaching
+            ${{ steps.url.outputs.preview_url }}/contact
           configPath: packages/leenders-coaching-nl/lighthouserc.ci.cjs
           budgetPath: packages/leenders-coaching-nl/budget.json
           uploadArtifacts: true
           temporaryPublicStorage: true
         env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           LHCI_FORM_FACTOR: mobile
-          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_PROTECTION_BYPASS }}
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
 
       - name: '📊 Parse Lighthouse results'
-        id: parse_results
+        id: parse
         if: always()
+        shell: bash
         run: |
-          results_file="${{ steps.lhci.outputs.resultsPath }}/assertion-results.json"
-          command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq >/dev/null 2>&1; }
-
-          if [ -f "$results_file" ]; then
-            error_count=$(jq '[.[] | select(.level == "error")] | length' "$results_file")
-            warn_count=$(jq '[.[] | select(.level == "warn")] | length' "$results_file")
-            pass_count=$(jq '[.[] | select(.level == "pass")] | length' "$results_file")
-            
-            if [ "$error_count" -gt 0 ]; then
-              overall_status="❌ FAILED"
-            else
-              overall_status="✅ PASSED"
-            fi
-            echo "overall_status=$overall_status" >> $GITHUB_OUTPUT
-            
-            echo "error_count=$error_count" >> $GITHUB_OUTPUT
-            echo "warn_count=$warn_count" >> $GITHUB_OUTPUT
-            echo "pass_count=$pass_count" >> $GITHUB_OUTPUT
-            
-            performance_score=$(jq -r '[.[] | select(.auditId == "categories:performance")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
-            accessibility_score=$(jq -r '[.[] | select(.auditId == "categories:accessibility")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
-            seo_score=$(jq -r '[.[] | select(.auditId == "categories:seo")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
-            best_practices_score=$(jq -r '[.[] | select(.auditId == "categories:best-practices")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
-            
-            fcp=$(jq -r '[.[] | select(.auditId == "first-contentful-paint")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
-            lcp=$(jq -r '[.[] | select(.auditId == "largest-contentful-paint")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
-            cls=$(jq -r '[.[] | select(.auditId == "cumulative-layout-shift")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
-            
-            echo "fcp=$fcp" >> $GITHUB_OUTPUT
-            echo "lcp=$lcp" >> $GITHUB_OUTPUT
-            echo "cls=$cls" >> $GITHUB_OUTPUT
-            
-            # Compute CWV status indicators in bash to avoid string comparison issues
-            fcp_ok=$( [ "$fcp" != "N/A" ] && awk "BEGIN {exit !($fcp <= 2000)}" && echo true || echo false )
-            lcp_ok=$( [ "$lcp" != "N/A" ] && awk "BEGIN {exit !($lcp <= 2500)}" && echo true || echo false )
-            cls_ok=$( [ "$cls" != "N/A" ] && awk "BEGIN {exit !($cls <= 0.1)}"  && echo true || echo false )
-            
-            echo "fcp_ok=$fcp_ok" >> "$GITHUB_OUTPUT"
-            echo "lcp_ok=$lcp_ok" >> "$GITHUB_OUTPUT"
-            echo "cls_ok=$cls_ok" >> "$GITHUB_OUTPUT"
-            
-            budget_violations=$(jq '[.[] | select(.level == "error" and (.auditId | contains("resource-summary") or contains("performance-budget")))] | length' "$results_file")
-            
-            echo "budget_violations=$budget_violations" >> "$GITHUB_OUTPUT"
-            
-            timestamp=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
-            echo "timestamp=$timestamp" >> "$GITHUB_OUTPUT"
-            
-            format_score() {
-              if [ "$1" != "N/A" ] && [ "$1" != "null" ]; then
-                awk -v v="$1" 'BEGIN{printf "%.0f", v*100}'
-              else
-                echo "N/A"
-              fi
-            }
-            
-            perf_display=$(format_score "$performance_score")
-            a11y_display=$(format_score "$accessibility_score")
-            seo_display=$(format_score "$seo_score")
-            bp_display=$(format_score "$best_practices_score")
-            
-            # Compute status indicators in bash to avoid string comparison issues
-            perf_ok=$([ "$performance_score" != "N/A" ] && awk "BEGIN {exit !($performance_score >= 0.8)}" && echo true || echo false)
-            a11y_ok=$([ "$accessibility_score" != "N/A" ] && awk "BEGIN {exit !($accessibility_score >= 0.95)}" && echo true || echo false)
-            seo_ok=$([ "$seo_score" != "N/A" ] && awk "BEGIN {exit !($seo_score >= 0.9)}" && echo true || echo false)
-            bp_ok=$([ "$best_practices_score" != "N/A" ] && awk "BEGIN {exit !($best_practices_score >= 0.9)}" && echo true || echo false)
-            
-            echo "perf_display=$perf_display" >> "$GITHUB_OUTPUT"
-            echo "a11y_display=$a11y_display" >> "$GITHUB_OUTPUT"
-            echo "seo_display=$seo_display" >> "$GITHUB_OUTPUT"
-            echo "bp_display=$bp_display" >> "$GITHUB_OUTPUT"
-            echo "perf_ok=$perf_ok" >> "$GITHUB_OUTPUT"
-            echo "a11y_ok=$a11y_ok" >> "$GITHUB_OUTPUT"
-            echo "seo_ok=$seo_ok" >> "$GITHUB_OUTPUT"
-            echo "bp_ok=$bp_ok" >> "$GITHUB_OUTPUT"
-            
-            links_output="${{ steps.lhci.outputs.links }}"
-            if [ "$links_output" != "" ] && [ "$links_output" != "null" ]; then
-              first_url=$(echo "$links_output" | jq -r 'values[0]' 2>/dev/null || echo "$links_output")
-              echo "formatted_links=$first_url" >> "$GITHUB_OUTPUT"
-            else
-              echo "formatted_links=" >> "$GITHUB_OUTPUT"
-            fi
-            
+          set -euo pipefail
+          file="${{ steps.lhci.outputs.resultsPath }}/assertion-results.json"
+          command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq -y >/dev/null 2>&1; }
+          if [[ ! -f "$file" ]]; then
+            echo "overall=⚠️ NO RESULTS" >> $GITHUB_OUTPUT
+            echo "perf=N/A" >> $GITHUB_OUTPUT
+            echo "a11y=N/A" >> $GITHUB_OUTPUT
+            echo "seo=N/A"  >> $GITHUB_OUTPUT
+            echo "bp=N/A"   >> $GITHUB_OUTPUT
+            echo "errc=0"   >> $GITHUB_OUTPUT
+            echo "warnc=0"  >> $GITHUB_OUTPUT
+            echo "passc=0"  >> $GITHUB_OUTPUT
+            echo "report="  >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          score () { jq -r '[.[] | select(.auditId=="categories:'"$1"'")] | if length>0 then .[0].actual else "N/A" end' "$file"; }
+          to_pct () { awk -v v="$1" 'BEGIN{printf "%.0f", v*100}'; }
+          perf=$(score performance); a11y=$(score accessibility); seo=$(score seo); bp=$(score best-practices)
+          [[ "$perf" != "N/A" ]] && perf=$(to_pct "$perf") || perf="N/A"
+          [[ "$a11y" != "N/A" ]] && a11y=$(to_pct "$a11y") || a11y="N/A"
+          [[ "$seo"  != "N/A" ]] && seo=$(to_pct "$seo")   || seo="N/A"
+          [[ "$bp"   != "N/A" ]] && bp=$(to_pct "$bp")     || bp="N/A"
+          errc=$(jq '[.[] | select(.level=="error")] | length' "$file")
+          warnc=$(jq '[.[] | select(.level=="warn")]  | length' "$file")
+          passc=$(jq '[.[] | select(.level=="pass")]  | length' "$file")
+          [[ "$errc" -gt 0 ]] && overall="❌ FAILED" || overall="✅ PASSED"
+          echo "overall=$overall" >> $GITHUB_OUTPUT
+          echo "perf=$perf" >> $GITHUB_OUTPUT
+          echo "a11y=$a11y" >> $GITHUB_OUTPUT
+          echo "seo=$seo"   >> $GITHUB_OUTPUT
+          echo "bp=$bp"     >> $GITHUB_OUTPUT
+          echo "errc=$errc" >> $GITHUB_OUTPUT
+          echo "warnc=$warnc" >> $GITHUB_OUTPUT
+          echo "passc=$passc" >> $GITHUB_OUTPUT
+          links='${{ steps.lhci.outputs.links }}'
+          if [[ -n "$links" && "$links" != "null" ]]; then
+            first_url=$(echo "$links" | jq -r 'values[0]' 2>/dev/null || echo "")
+            echo "report=$first_url" >> $GITHUB_OUTPUT
           else
-            echo "overall_status=⚠️ NO RESULTS" >> "$GITHUB_OUTPUT"
-            echo "error_count=0" >> "$GITHUB_OUTPUT"
-            echo "warn_count=0" >> "$GITHUB_OUTPUT"
-            echo "pass_count=0" >> "$GITHUB_OUTPUT"
-            echo "formatted_links=" >> "$GITHUB_OUTPUT"
-            echo "perf_display=N/A" >> "$GITHUB_OUTPUT"
-            echo "a11y_display=N/A" >> "$GITHUB_OUTPUT"
-            echo "seo_display=N/A" >> "$GITHUB_OUTPUT"
-            echo "bp_display=N/A" >> "$GITHUB_OUTPUT"
-            echo "fcp=N/A" >> "$GITHUB_OUTPUT"
-            echo "lcp=N/A" >> "$GITHUB_OUTPUT"
-            echo "cls=N/A" >> "$GITHUB_OUTPUT"
-            echo "perf_ok=false" >> "$GITHUB_OUTPUT"
-            echo "a11y_ok=false" >> "$GITHUB_OUTPUT"
-            echo "seo_ok=false" >> "$GITHUB_OUTPUT"
-            echo "bp_ok=false" >> "$GITHUB_OUTPUT"
+            echo "report=" >> $GITHUB_OUTPUT
           fi
 
-      - name: '🧾 Debug deployment payload (once)'
-        run: |
-          echo "deployment.id:        ${{ github.event.deployment.id }}"
-          echo "deployment.sha:       ${{ github.event.deployment.sha }}"
-          echo "deployment.ref:       ${{ github.event.deployment.ref }}"
-          echo "environment:          ${{ github.event.deployment.environment }}"
-          echo "environment_url:      ${{ github.event.deployment_status.environment_url }}"
-
-      - name: '🔎 Resolve PR number from deployment commit'
+      - name: '🔎 Resolve PR number'
+        id: pr
         if: always()
-        id: get_pr
         env:
           REPO: ${{ github.repository }}
           SHA: ${{ github.event.deployment.sha }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
         run: |
           set -euo pipefail
+          json=$(curl -sS -H "Authorization: token ${GH_TOKEN}" -H "Accept: application/vnd.github+json" \
+                 "https://api.github.com/repos/${REPO}/commits/${SHA}/pulls")
+          pr=$(echo "$json" | jq -r 'map(select(.state!="closed")) | first | .number // empty')
+          echo "number=$pr" >> $GITHUB_OUTPUT
+          [[ -n "$pr" ]] && echo "Found PR #$pr" || echo "No open PR found for $SHA"
 
-          # Primary: find PRs for this commit
-          prs_json=$(curl -sS \
-            -H "Authorization: token ${GH_TOKEN}" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${REPO}/commits/${SHA}/pulls")
-          pr_number=$(echo "$prs_json" | jq -r 'map(select(.state != "closed")) | first | .number // empty')
-
-          # Fallback: find PR by branch name (URL-encode branch only)
-          if [ -z "$pr_number" ]; then
-            ref="${{ github.event.deployment.ref }}"
-            ref_enc=$(jq -rn --arg x "$ref" '$x|@uri')
-            owner="${REPO%%/*}"
-            prs_by_branch=$(curl -sS \
-              -H "Authorization: token ${GH_TOKEN}" \
-              -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/${REPO}/pulls?state=open&head=${owner}:${ref_enc}")
-            pr_number=$(echo "$prs_by_branch" | jq -r 'first | .number // empty')
-          fi
-
-          if [ -n "$pr_number" ]; then
-            echo "pr_number=$pr_number" >> "$GITHUB_OUTPUT"
-            echo "Resolved PR #$pr_number for commit ${SHA}"
-          else
-            echo "No PR found for commit ${SHA} (ref: ${{ github.event.deployment.ref }})"
-            echo "pr_number=" >> "$GITHUB_OUTPUT"
-          fi
-
-          # Debug: Show all available context
-          echo "🔍 Debug: Available context:"
-          echo "  Deployment ID: ${{ github.event.deployment.id }}"
-          echo "  Deployment Ref: ${{ github.event.deployment.ref }}"
-          echo "  Repository: ${{ github.repository }}"
-          echo "  Event Name: ${{ github.event_name }}"
-          echo "  Final PR Number: $pr_number"
-
-      - name: '💬 Post detailed Lighthouse comment'
-        if: always() && steps.get_pr.outputs.pr_number != ''
+      - name: '💬 Sticky Lighthouse comment'
+        if: always() && steps.pr.outputs.number != ''
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          header: lighthouse-report
-          number: ${{ steps.get_pr.outputs.pr_number }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: lighthouse-report
+          number: ${{ steps.pr.outputs.number }}
           message: |
             ## 🚀 Lighthouse Performance Report
+            **Preview URL:** ${{ steps.url.outputs.preview_url }}
+            **Status:** ${{ steps.parse.outputs.overall }}
 
-            **Preview URL:** ${{ steps.get_url.outputs.preview-url }}
-            **Status:** ${{ steps.parse_results.outputs.overall_status }}
-            **Generated:** ${{ steps.parse_results.outputs.timestamp }}
+            | Category | Score |
+            |---|---|
+            | Performance | ${{ steps.parse.outputs.perf }}/100 |
+            | Accessibility | ${{ steps.parse.outputs.a11y }}/100 |
+            | SEO | ${{ steps.parse.outputs.seo }}/100 |
+            | Best Practices | ${{ steps.parse.outputs.bp }}/100 |
 
-            ### 📊 Performance Scores
+            **Assertions:** ✅ ${{ steps.parse.outputs.passc }} · ⚠️ ${{ steps.parse.outputs.warnc }} · ❌ ${{ steps.parse.outputs.errc }}
+            ${{ steps.parse.outputs.report != '' && format('🔗 [Interactive report]({0})', steps.parse.outputs.report) || '' }}
 
-            | Category | Score | Status |
-            |----------|-------|--------|
-            | 🚀 Performance | ${{ steps.parse_results.outputs.perf_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.perf_display) || 'N/A' }} | ${{ steps.parse_results.outputs.perf_ok == 'true' && '✅' || '❌' }} |
-            | ♿ Accessibility | ${{ steps.parse_results.outputs.a11y_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.a11y_display) || 'N/A' }} | ${{ steps.parse_results.outputs.a11y_ok == 'true' && '✅' || '❌' }} |
-            | 🔍 SEO | ${{ steps.parse_results.outputs.seo_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.seo_display) || 'N/A' }} | ${{ steps.parse_results.outputs.seo_ok == 'true' && '✅' || '❌' }} |
-            | ⚡ Best Practices | ${{ steps.parse_results.outputs.bp_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.bp_display) || 'N/A' }} | ${{ steps.parse_results.outputs.bp_ok == 'true' && '✅' || '❌' }} |
-
-            ### ⚡ Core Web Vitals
-
-            | Metric | Value | Target | Status |
-            |--------|-------|--------|--------|
-            | 🎨 First Contentful Paint | ${{ steps.parse_results.outputs.fcp != 'N/A' && format('{0}ms', steps.parse_results.outputs.fcp) || 'N/A' }} | ≤2000ms | ${{ steps.parse_results.outputs.fcp_ok == 'true' && '✅' || '❌' }} |
-            | 🖼️ Largest Contentful Paint | ${{ steps.parse_results.outputs.lcp != 'N/A' && format('{0}ms', steps.parse_results.outputs.lcp) || 'N/A' }} | ≤2500ms | ${{ steps.parse_results.outputs.lcp_ok == 'true' && '✅' || '❌' }} |
-            | 📐 Cumulative Layout Shift | ${{ steps.parse_results.outputs.cls != 'N/A' && steps.parse_results.outputs.cls || 'N/A' }} | ≤0.1 | ${{ steps.parse_results.outputs.cls_ok == 'true' && '✅' || '❌' }} |
-
-            ### 📋 Assertion Results
-
-            - ✅ **Passed:** ${{ steps.parse_results.outputs.pass_count }} assertions
-            - ⚠️ **Warnings:** ${{ steps.parse_results.outputs.warn_count }} assertions  
-            - ❌ **Failed:** ${{ steps.parse_results.outputs.error_count }} assertions
-            ${{ fromJSON(steps.parse_results.outputs.budget_violations || '0') > 0 && format('- 💰 **Budget violations:** {0}', steps.parse_results.outputs.budget_violations) || '' }}
-
-            ### 🔗 Detailed Reports
-
-            ${{ steps.parse_results.outputs.formatted_links != '' && format('- 📊 [View interactive reports]({0})', steps.parse_results.outputs.formatted_links) || '- 📊 Interactive reports not available' }}
-            - ✅ Check PR status checks for pass/fail details
-            - 📄 Download HTML reports from job artifacts
-
-            **Pages analyzed:**
-            - 🏠 Home page (`/`)
-            - 👤 Over mij (`/over-mij`)
-            - 🎯 Aanpak (`/aanpak`)
-            - 💼 Coaching (`/coaching`)
-            - 📧 Contact (`/contact`)
-
-            ---
-            <details>
-            <summary>📖 Understanding the scores</summary>
-
-            - **Performance** (Target: ≥80): Measures loading speed and runtime performance
-            - **Accessibility** (Target: ≥95): Ensures the site is usable by people with disabilities
-            - **SEO** (Target: ≥90): Checks search engine optimization best practices  
-            - **Best Practices** (Target: ≥90): Follows web development best practices
-
-            *This comment updates automatically on each push.*
-            </details>
-      - name: '⚠️ Fallback notification (no PR found)'
-        if: always() && steps.get_pr.outputs.pr_number == ''
-        run: |
-          echo "## ⚠️ Lighthouse Results Available" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Could not post comment to PR, but Lighthouse analysis completed:" >> $GITHUB_STEP_SUMMARY
-          echo "- **Status:** ${{ steps.parse_results.outputs.overall_status }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Failed assertions:** ${{ steps.parse_results.outputs.error_count }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Budget violations:** ${{ steps.parse_results.outputs.budget_violations }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Preview URL:** ${{ steps.get_url.outputs.preview-url }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Check job artifacts for detailed HTML reports." >> $GITHUB_STEP_SUMMARY
-
-      - name: '📊 Display Lighthouse summary'
+      - name: '📋 Job summary'
         if: always()
+        shell: bash
         run: |
-          echo "## 🚀 Lighthouse Performance Report" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Preview URL:** ${{ steps.get_url.outputs.preview-url }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Lighthouse reports have been uploaded as artifacts and are available in the PR status checks." >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "📈 **View detailed reports:**" >> $GITHUB_STEP_SUMMARY
-          echo "- Check the PR status checks for individual page results" >> $GITHUB_STEP_SUMMARY
-          echo "- Download HTML reports from job artifacts" >> $GITHUB_STEP_SUMMARY
-          if [[ "${{ steps.lhci.outputs.links }}" != "" ]]; then
-            echo "- [Temporary public reports](${{ steps.lhci.outputs.links }})" >> $GITHUB_STEP_SUMMARY
-          fi
+          {
+            echo "## 🚀 Lighthouse (Preview)";
+            echo "- URL: ${{ steps.url.outputs.preview_url }}";
+            echo "- Status: ${{ steps.parse.outputs.overall }}";
+            echo "";
+            echo "| Category | Score |";
+            echo "|---|---|";
+            echo "| Performance | ${{ steps.parse.outputs.perf }}/100 |";
+            echo "| Accessibility | ${{ steps.parse.outputs.a11y }}/100 |";
+            echo "| SEO | ${{ steps.parse.outputs.seo }}/100 |";
+            echo "| Best Practices | ${{ steps.parse.outputs.bp }}/100 |";
+            if [[ -n "${{ steps.parse.outputs.report }}" ]]; then
+              echo "";
+              echo "- [Interactive report](${{ steps.parse.outputs.report }})";
+            fi
+          } >> $GITHUB_STEP_SUMMARY

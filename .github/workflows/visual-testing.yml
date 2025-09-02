@@ -24,6 +24,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  pull-requests: write
+
 env:
   NODE_VERSION: '22'
   PNPM_VERSION: '10.15.0'
@@ -93,6 +97,7 @@ jobs:
         run: pnpm --filter leenders-coaching-nl run analyze:storybook
 
       - name: '🎨 Run Chromatic'
+        id: chromatic
         uses: chromaui/action@latest
         env:
           NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
@@ -109,6 +114,18 @@ jobs:
           exitOnceUploaded: true
           ignoreLastBuildOnBranch: ${{ github.event_name == 'pull_request' }}
           skip: ${{ github.event_name == 'push' && github.ref != 'refs/heads/main' && github.ref != 'refs/heads/develop' }}
+
+      - name: '💬 Sticky PR comment – Visual/Chromatic'
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: visual-testing
+          number: ${{ github.event.pull_request.number }}
+          message: |
+            ## 🎨 Visual Regression & Storybook
+            - **Chromatic build:** ${{ steps.chromatic.outputs.buildUrl || steps.chromatic.outputs.storybookUrl || 'See workflow checks' }}
+            - **Artifacts:** Storybook build uploaded for this run.
+            - **Branch:** `${{ github.ref_name }}` • **Commit:** `${{ github.sha }}`
 
       - name: '📤 Upload Storybook artifacts'
         uses: actions/upload-artifact@v4
@@ -172,6 +189,17 @@ jobs:
       - name: '♿ Run accessibility tests'
         run: pnpm --filter leenders-coaching-nl run ci:test-a11y
         continue-on-error: true
+
+      - name: '💬 Sticky PR comment – A11y'
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: a11y-tests
+          number: ${{ github.event.pull_request.number }}
+          message: |
+            ## ♿ Component Accessibility
+            - Playwright/axe tests executed against Storybook.
+            - Review job logs for any violations (this job is non-blocking).
 
       - name: '📊 Generate accessibility report'
         run: |
@@ -268,3 +296,15 @@ jobs:
           echo "- ✅ Tailwind configuration validated" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Component styles verified" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Design tokens consistent" >> $GITHUB_STEP_SUMMARY
+
+      - name: '💬 Sticky PR comment – Design System'
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: design-system
+          number: ${{ github.event.pull_request.number }}
+          message: |
+            ## 🎨 Design System Validation
+            - ✅ Tailwind configuration validated  
+            - ✅ Component styles verified  
+            - ✅ Design tokens consistent

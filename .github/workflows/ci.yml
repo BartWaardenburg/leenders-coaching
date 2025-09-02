@@ -9,6 +9,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  pull-requests: write
+
 env:
   NODE_VERSION: '22'
   PNPM_VERSION: '10.15.0'
@@ -200,3 +204,25 @@ jobs:
 
       - name: '✅ Verify build artifacts'
         run: pnpm run ci:verify
+
+  pr-comment:
+    name: 'PR Comment (CI Summary)'
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    needs: [quality-gate, frontend-tests, studio-validation, build-verification]
+    permissions:
+      pull-requests: write
+    steps:
+      - name: '💬 Sticky PR comment – CI'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: ci-summary
+          number: ${{ github.event.pull_request.number }}
+          message: |
+            ## ✅ CI Summary
+            - **Quality Gate:** ${{ needs.quality-gate.result == 'success' && '✅' || '❌' }}
+            - **Frontend Tests:** ${{ needs.frontend-tests.result == 'success' && '✅' || '❌' }}
+            - **Studio Validation:** ${{ needs.studio-validation.result == 'success' && '✅' || '❌' }}
+            - **Build Verification:** ${{ needs.build-verification.result == 'success' && '✅' || '❌' }}
+
+            _This comment updates automatically on new commits to this PR._
