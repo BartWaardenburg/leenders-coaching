@@ -19,7 +19,6 @@ jobs:
       deployments: read
       pull-requests: write
       issues: write
-    # Only run for successful leenders-coaching deployments (not studio)
     if: |
       github.event.deployment_status.state == 'success' &&
       contains(github.event.deployment.environment, 'leenders-coaching') &&
@@ -39,9 +38,6 @@ jobs:
       - name: '🔑 Verify Vercel API authentication'
         run: |
           if [ -n "${{ secrets.VERCEL_TOKEN }}" ]; then
-            echo "🔍 Testing Vercel API authentication..."
-            
-            # Test API access with user info
             user_response=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
               "https://api.vercel.com/v2/user" || echo "AUTH_FAILED")
             
@@ -62,41 +58,17 @@ jobs:
         run: |
           set -euo pipefail
 
-          echo "🎉 Triggered by successful Vercel deployment!"
-          echo "Environment: ${{ github.event.deployment.environment }}"
-          echo "State: ${{ github.event.deployment_status.state }}"
-
-          # Extract deployment ID from the deployment event
           deployment_id="${{ github.event.deployment.id }}"
-          echo "🔍 Deployment ID: $deployment_id"
 
-          # Get deployment details using Vercel API
           if [ -n "${{ secrets.VERCEL_TOKEN }}" ] && [ -n "${{ secrets.VERCEL_PROJECT_ID }}" ]; then
-            echo "🔑 Using Vercel API to get deployment details..."
-            echo "📋 Project ID: ${{ secrets.VERCEL_PROJECT_ID }}"
-            echo "📋 Team ID: ${{ secrets.VERCEL_ORG_ID }}"
-            
-            # Try multiple API approaches to get the deployment URL
-            
-            # Method 1: Direct deployment lookup
-            echo "🔍 Method 1: Direct deployment API call..."
             vercel_response=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
               "https://api.vercel.com/v13/deployments/$deployment_id" || echo "API_FAILED")
             
             if [ "$vercel_response" != "API_FAILED" ]; then
-              echo "✅ Got deployment response"
-              # Debug: Show partial response (first 200 chars)
-              echo "📋 Response preview: $(echo "$vercel_response" | cut -c1-200)..."
-              
               api_url=$(echo "$vercel_response" | jq -r '.url // empty')
               if [ -n "$api_url" ] && [ "$api_url" != "null" ] && [ "$api_url" != "empty" ]; then
                 deployment_url="https://$api_url"
-                echo "✅ Got URL from direct API: $deployment_url"
               else
-                echo "⚠️ No URL in direct API response"
-                
-                # Method 2: List deployments for project
-                echo "🔍 Method 2: Listing project deployments..."
                 list_url="https://api.vercel.com/v6/deployments?projectId=${{ secrets.VERCEL_PROJECT_ID }}&limit=10"
                 if [ -n "${{ secrets.VERCEL_ORG_ID }}" ]; then
                   list_url="$list_url&teamId=${{ secrets.VERCEL_ORG_ID }}"
@@ -106,117 +78,63 @@ jobs:
                   "$list_url" || echo "LIST_FAILED")
                 
                 if [ "$deployments_response" != "LIST_FAILED" ]; then
-                  # Find our deployment in the list
                   found_url=$(echo "$deployments_response" | jq -r --arg id "$deployment_id" \
                     '.deployments[] | select(.uid == $id) | .url // empty')
                   
                   if [ -n "$found_url" ] && [ "$found_url" != "null" ] && [ "$found_url" != "empty" ]; then
                     deployment_url="https://$found_url"
-                    echo "✅ Got URL from deployments list: $deployment_url"
                   else
-                    echo "⚠️ Deployment not found in list, using event URL"
                     deployment_url="${{ github.event.deployment_status.environment_url }}"
                   fi
                 else
-                  echo "⚠️ Failed to list deployments, using event URL"
                   deployment_url="${{ github.event.deployment_status.environment_url }}"
                 fi
               fi
             else
-              echo "⚠️ Direct API call failed, using deployment event URL"
               deployment_url="${{ github.event.deployment_status.environment_url }}"
             fi
           else
-            echo "⚠️ Missing VERCEL_TOKEN or VERCEL_PROJECT_ID secrets, using deployment event URL"
             deployment_url="${{ github.event.deployment_status.environment_url }}"
           fi
 
           if [ -z "$deployment_url" ] || [ "$deployment_url" = "null" ]; then
-            echo "❌ No deployment URL found"
-            echo "Debug info:"
-            echo "  Deployment ID: $deployment_id"
-            echo "  Environment: ${{ github.event.deployment.environment }}"
-            echo "  State: ${{ github.event.deployment_status.state }}"
             exit 1
           fi
 
-          echo "🔍 Raw deployment URL: $deployment_url"
-
-          # Check if this is a Vercel redirect URL and extract the real preview URL
           if [[ "$deployment_url" == *"vercel.com/login"* ]] || [[ "$deployment_url" == *"sso-api"* ]]; then
-            echo "⚠️  Detected Vercel redirect URL, extracting preview URL..."
-            
-            # Extract URL from the redirect (URL encoded in the 'url' parameter)
             if [[ "$deployment_url" =~ url%3D([^&]*) ]]; then
               encoded_url="${BASH_REMATCH[1]}"
-              # URL decode the preview URL
               preview_url=$(echo "$encoded_url" | sed 's/%3A/:/g; s/%2F/\//g; s/%3F/?/g; s/%3D/=/g; s/%26/\&/g')
-              echo "🔧 Extracted preview URL: $preview_url"
             else
-              echo "❌ Could not extract preview URL from redirect"
-              echo "   Redirect URL: $deployment_url"
               exit 1
             fi
           else
-            # Direct preview URL
             preview_url="$deployment_url"
-            echo "✅ Direct preview URL: $preview_url"
           fi
 
-          # Validate the preview URL
           if [[ "$preview_url" =~ ^https?://.*\.vercel\.app/?.*$ ]]; then
-            echo "✅ Valid Vercel preview URL confirmed"
             echo "preview-url=$preview_url" >> $GITHUB_OUTPUT
           else
-            echo "❌ Invalid preview URL format: $preview_url"
-            echo "   Expected: https://something.vercel.app"
             exit 1
           fi
 
       - name: '🧪 Test preview URL accessibility'
         run: |
           preview_url="${{ steps.get_url.outputs.preview-url }}"
-          echo "🔍 Testing preview URL accessibility: $preview_url"
 
-          # Set up authentication headers if Vercel token is available
-          if [ -n "${{ secrets.VERCEL_TOKEN }}" ]; then
-            auth_header="-H 'Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}'"
-            echo "🔑 Using Vercel token for authenticated requests"
+          if [ -n "${{ secrets.VERCEL_PROTECTION_BYPASS }}" ]; then
+            auth_header="-H 'x-vercel-protection-bypass: ${{ secrets.VERCEL_PROTECTION_BYPASS }}' -H 'x-vercel-set-bypass-cookie: true'"
           else
             auth_header=""
-            echo "ℹ️ No Vercel token available, using unauthenticated requests"
           fi
 
-          # Check if URL redirects to login page
           response=$(curl -sL --max-time 30 --max-redirs 5 $auth_header "$preview_url" || echo "CURL_FAILED")
           final_url=$(curl -sLI --max-time 30 --max-redirs 5 $auth_header "$preview_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
 
-          echo "🔍 Final URL after redirects: $final_url"
-
           if [[ "$final_url" == *"vercel.com/login"* ]] || [[ "$final_url" == *"sso-api"* ]]; then
-            echo "❌ Preview URL still redirects to Vercel login page!"
-            echo "   This means your preview deployment requires additional authentication."
-            echo ""
-            echo "📝 Possible solutions:"
-            echo "   1. Disable Preview Deployment Protection in Vercel:"
-            echo "      Settings → General → Preview Deployment Protection → Set to 'Off'"
-            echo "   2. Or ensure VERCEL_TOKEN has proper permissions"
-            echo ""
-            echo "🚨 LIGHTHOUSE WILL FAIL - Testing protected pages"
             exit 1
           elif [[ "$response" == "CURL_FAILED" ]]; then
-            echo "❌ Preview URL is not accessible (network error)"
-            echo "   URL: $preview_url"
             exit 1
-          elif echo "$response" | grep -qi "404\|not found"; then
-            echo "⚠️ Preview URL returns 404 - deployment might not be complete"
-            echo "   URL: $preview_url"
-          else
-            echo "✅ Preview URL is accessible and serves content"
-            # Check if we got actual content or still a login page
-            if echo "$response" | grep -qi "vercel.*login\|sign.*in\|authenticate"; then
-              echo "⚠️ Response seems to contain login-related content, but proceeding..."
-            fi
           fi
 
       - name: '🚀 Run Lighthouse CI'
@@ -235,27 +153,21 @@ jobs:
           temporaryPublicStorage: true
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-          # Pass Vercel token to potentially bypass preview protection
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          # Use Vercel's official environment variable name for Protection Bypass
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_PROTECTION_BYPASS }}
 
       - name: '📊 Parse Lighthouse results'
         id: parse_results
         if: always()
         run: |
-          # Install bc for floating point calculations
           sudo apt-get update && sudo apt-get install -y bc
 
-          # Parse assertion results to extract key metrics
           results_file="${{ steps.lhci.outputs.resultsPath }}/assertion-results.json"
 
           if [ -f "$results_file" ]; then
-            echo "✅ Found assertion results file"
-            
-            # Extract overall status
             overall_status=$(jq -r 'if any(.level == "error") then "❌ FAILED" else "✅ PASSED" end' "$results_file")
             echo "overall_status=$overall_status" >> $GITHUB_OUTPUT
             
-            # Count assertions by level
             error_count=$(jq '[.[] | select(.level == "error")] | length' "$results_file")
             warn_count=$(jq '[.[] | select(.level == "warn")] | length' "$results_file")
             pass_count=$(jq '[.[] | select(.level == "pass")] | length' "$results_file")
@@ -264,38 +176,20 @@ jobs:
             echo "warn_count=$warn_count" >> $GITHUB_OUTPUT
             echo "pass_count=$pass_count" >> $GITHUB_OUTPUT
             
-            # Extract key metrics for summary (if available)
             performance_score=$(jq -r '[.[] | select(.auditId == "categories:performance")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
             accessibility_score=$(jq -r '[.[] | select(.auditId == "categories:accessibility")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
             seo_score=$(jq -r '[.[] | select(.auditId == "categories:seo")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
             best_practices_score=$(jq -r '[.[] | select(.auditId == "categories:best-practices")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
             
-            # Extract Core Web Vitals
             fcp=$(jq -r '[.[] | select(.auditId == "first-contentful-paint")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
             lcp=$(jq -r '[.[] | select(.auditId == "largest-contentful-paint")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
             cls=$(jq -r '[.[] | select(.auditId == "cumulative-layout-shift")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
             
-            # Check budget violations (these will be in assertion results as 'error' level)
             budget_violations=$(jq '[.[] | select(.level == "error" and (.auditId | contains("resource-summary") or contains("performance-budget")))] | length' "$results_file")
             
-            # Debug: Log first few results to understand the structure
-            echo "🔍 First 3 assertion results:"
-            jq -r '.[0:3] | .[] | "  - \(.auditId): \(.level) (actual: \(.actual))"' "$results_file" || echo "  No results to display"
-            
-            echo "performance_score=$performance_score" >> $GITHUB_OUTPUT
-            echo "accessibility_score=$accessibility_score" >> $GITHUB_OUTPUT
-            echo "seo_score=$seo_score" >> $GITHUB_OUTPUT
-            echo "best_practices_score=$best_practices_score" >> $GITHUB_OUTPUT
-            echo "fcp=$fcp" >> $GITHUB_OUTPUT
-            echo "lcp=$lcp" >> $GITHUB_OUTPUT
-            echo "cls=$cls" >> $GITHUB_OUTPUT
-            echo "budget_violations=$budget_violations" >> $GITHUB_OUTPUT
-            
-            # Generate timestamp
             timestamp=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
             echo "timestamp=$timestamp" >> $GITHUB_OUTPUT
             
-            # Format scores for display
             format_score() {
               if [ "$1" != "N/A" ] && [ "$1" != "null" ]; then
                 printf "%.0f" $(echo "$1 * 100" | bc -l)
@@ -314,10 +208,8 @@ jobs:
             echo "seo_display=$seo_display" >> $GITHUB_OUTPUT
             echo "bp_display=$bp_display" >> $GITHUB_OUTPUT
             
-            # Parse links output for clean formatting
             links_output="${{ steps.lhci.outputs.links }}"
             if [ "$links_output" != "" ] && [ "$links_output" != "null" ]; then
-              # Try to extract first URL from JSON if it's JSON format
               first_url=$(echo "$links_output" | jq -r 'values[0]' 2>/dev/null || echo "$links_output")
               echo "formatted_links=$first_url" >> $GITHUB_OUTPUT
             else
@@ -325,7 +217,6 @@ jobs:
             fi
             
           else
-            echo "⚠️ No assertion results file found"
             echo "overall_status=⚠️ NO RESULTS" >> $GITHUB_OUTPUT
             echo "error_count=0" >> $GITHUB_OUTPUT
             echo "warn_count=0" >> $GITHUB_OUTPUT
@@ -336,23 +227,18 @@ jobs:
       - name: '🔍 Get PR number from deployment'
         id: get_pr
         run: |
-          # Get PR number from deployment context using GitHub API
           pr_number=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             "https://api.github.com/repos/${{ github.repository }}/deployments/${{ github.event.deployment.id }}" \
             | jq -r '.payload.pull_request.number // empty')
 
           if [ -n "$pr_number" ] && [ "$pr_number" != "null" ]; then
             echo "pr_number=$pr_number" >> $GITHUB_OUTPUT
-            echo "✅ Found PR number: $pr_number"
           else
-            # Fallback: try to extract from deployment environment or ref
             ref="${{ github.event.deployment.ref }}"
             if [[ "$ref" =~ refs/pull/([0-9]+)/merge ]]; then
               pr_number="${BASH_REMATCH[1]}"
               echo "pr_number=$pr_number" >> $GITHUB_OUTPUT
-              echo "✅ Extracted PR number from ref: $pr_number"
             else
-              echo "⚠️ Could not determine PR number"
               echo "pr_number=" >> $GITHUB_OUTPUT
             fi
           fi

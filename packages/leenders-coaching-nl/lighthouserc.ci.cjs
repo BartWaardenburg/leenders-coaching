@@ -12,9 +12,10 @@ module.exports = {
           cpuSlowdownMultiplier: 4,
         },
         chromeFlags: '--no-sandbox --disable-dev-shm-usage --disable-background-timer-throttling --disable-features=VizDisplayCompositor',
-        // Add extra headers for Vercel authentication if token is available
-        extraHeaders: process.env.VERCEL_TOKEN ? {
-          'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`,
+        // Add extra headers for Vercel Protection Bypass if secret is available
+        extraHeaders: process.env.VERCEL_AUTOMATION_BYPASS_SECRET ? {
+          'x-vercel-protection-bypass': process.env.VERCEL_AUTOMATION_BYPASS_SECRET,
+          'x-vercel-set-bypass-cookie': 'true',
           'User-Agent': 'Lighthouse-CI-GitHub-Actions'
         } : undefined,
         // Faster CI settings

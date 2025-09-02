@@ -15,7 +15,6 @@ env:
   PNPM_HOME: /home/runner/.local/share/pnpm
 
 jobs:
-  # Comprehensive testing and quality assurance
   test-and-coverage:
     name: 'Test & Coverage Analysis'
     runs-on: ubuntu-latest
@@ -106,7 +105,6 @@ jobs:
             packages/leenders-coaching-nl/test-results/
           retention-days: 30
 
-  # Production build verification
   production-build:
     name: 'Production Build'
     runs-on: ubuntu-latest
@@ -196,7 +194,6 @@ jobs:
           retention-days: 7
           compression-level: 6
 
-  # Content management validation
   content-validation:
     name: 'Content & Schema Validation'
     runs-on: ubuntu-latest
@@ -250,7 +247,6 @@ jobs:
             packages/studio-leenders-coaching-nl/sanity-typegen.json
           retention-days: 30
 
-  # Security and dependency analysis
   security-analysis:
     name: 'Security Analysis'
     runs-on: ubuntu-latest
@@ -289,7 +285,6 @@ jobs:
       - name: '📊 Check for outdated dependencies'
         run: pnpm run outdated || echo "📈 Some dependencies can be updated"
 
-  # Deployment readiness check
   deployment-readiness:
     name: 'Deployment Readiness'
     runs-on: ubuntu-latest

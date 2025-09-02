@@ -262,7 +262,6 @@ jobs:
 
       - name: '🎨 Validate Tailwind configuration'
         run: pnpm --filter leenders-coaching-nl run validate:tailwind
-
       - name: '📊 Design system summary'
         run: |
           echo "## 🎨 Design System Status" >> $GITHUB_STEP_SUMMARY

@@ -33,7 +33,6 @@ jobs:
       - name: '🚀 Run Lighthouse CI (Production)'
         uses: treosh/lighthouse-ci-action@v12
         with:
-          # Update these URLs to match your production domain
           urls: |
             https://leenders-coaching.vercel.app/
             https://leenders-coaching.vercel.app/over-mij
@@ -45,9 +44,8 @@ jobs:
           uploadArtifacts: true
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-          # OPTIONAL: If you run a private LHCI server, uncomment these:
-          # LHCI_SERVER_BASE_URL: ${{ secrets.LHCI_SERVER_URL }}
-          # LHCI_TOKEN: ${{ secrets.LHCI_SERVER_BUILD_TOKEN }}
+          # Use Vercel's official environment variable name for Protection Bypass
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_PROTECTION_BYPASS }}
 
       - name: '📊 Display production metrics summary'
         if: always()

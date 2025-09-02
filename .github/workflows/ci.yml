@@ -15,7 +15,6 @@ env:
   PNPM_HOME: /home/runner/.local/share/pnpm
 
 jobs:
-  # Fast quality checks for immediate feedback
   quality-gate:
     name: 'Quality Gate'
     runs-on: ubuntu-latest
@@ -60,7 +59,6 @@ jobs:
       - name: '🔍 Quality checks'
         run: pnpm run ci:quality
 
-  # Frontend-specific tests
   frontend-tests:
     name: 'Frontend Tests'
     runs-on: ubuntu-latest
@@ -117,7 +115,6 @@ jobs:
             packages/leenders-coaching-nl/*.config.*
             packages/leenders-coaching-nl/next-env.d.ts
 
-  # Studio validation
   studio-validation:
     name: 'Studio Validation'
     runs-on: ubuntu-latest
@@ -159,7 +156,6 @@ jobs:
       - name: '🔍 Validate schema'
         run: pnpm --filter studio-leenders-coaching-nl run validate:schema
 
-  # Build verification
   build-verification:
     name: 'Build Verification'
     runs-on: ubuntu-latest
