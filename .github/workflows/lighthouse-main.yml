@@ -162,6 +162,13 @@ jobs:
             ' "${lhrs[@]}"
           )
 
+          # Debug: show what URLs we got from the LHRs
+          echo "🔍 URLs processed from LHRs:"
+          echo "$rows_md" | grep -o '^| [^|]* |' | sed 's/^| \([^|]*\) |/\1/' | sort
+          echo "🔍 Ordered URLs to match:"
+          printf '%s\n' "${urls[@]}"
+          echo "---"
+
           # --- Robust link extraction (object / array / newline list) ---
           links_raw='${{ steps.lhci.outputs.links }}'
           declare -A url2link=()

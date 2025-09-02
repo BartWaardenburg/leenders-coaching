@@ -222,9 +222,11 @@ jobs:
           done
 
           # Write as a multiline output (no escaping needed)
-          echo "md<<'EOF'" >> "$GITHUB_OUTPUT"
-          echo "$table" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
+          {
+            echo "md<<EOF"
+            echo "$table"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: '🔎 Resolve PR number'
         id: pr

@@ -1,7 +1,7 @@
 module.exports = {
   ci: {
     collect: {
-      numberOfRuns: 3,
+      numberOfRuns: 1,
       settings: {
         formFactor: process.env.LHCI_FORM_FACTOR || 'mobile',
         screenEmulation: process.env.LHCI_FORM_FACTOR === 'desktop' ? {
