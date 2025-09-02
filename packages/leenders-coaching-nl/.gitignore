@@ -40,4 +40,22 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# storybook
 *storybook.log
+storybook-static/
+
+# bundle analysis
+.bundle-analysis/
+size-output.txt
+
+# build logs
+build-storybook.log
+*.log
+
+# cache
+.cache/
+.parcel-cache/
+
+# temporary files
+*.tmp
+*.temp

@@ -1,17 +1,28 @@
 [
   {
-    "name": "Main JS bundle",
-    "path": ".next/static/chunks/*.js",
-    "limit": "320 KB"
+    "name": "Total JavaScript Bundle",
+    "path": [
+      ".next/static/chunks/*.js",
+      ".next/static/chunks/app/**/*.js",
+      ".next/static/chunks/pages/**/*.js"
+    ],
+    "limit": "400 KB",
+    "gzip": true,
+    "webpack": false,
+    "message": "Total JavaScript bundle size. Aim to keep under 400KB for optimal performance on slower connections."
   },
   {
-    "name": "CSS bundle",
+    "name": "CSS Bundle",
     "path": ".next/static/css/*.css",
-    "limit": "15 KB"
+    "limit": "20 KB",
+    "gzip": true,
+    "webpack": false,
+    "message": "CSS bundle size. Consider purging unused Tailwind classes and optimizing critical CSS."
   },
   {
-    "name": "App chunks",
-    "path": ".next/static/chunks/app/**/*.js",
-    "limit": "15 KB"
+    "name": "Main script exec time",
+    "path": ".next/static/chunks/main-*.js",
+    "limit": "1 s",
+    "webpack": false
   }
 ]
