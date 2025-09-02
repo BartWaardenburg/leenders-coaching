@@ -44,7 +44,6 @@ jobs:
           uploadArtifacts: true
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-          # Use Vercel's official environment variable name for Protection Bypass
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_PROTECTION_BYPASS }}
 
       - name: '📊 Display production metrics summary'

@@ -3,7 +3,7 @@ name: 'Lighthouse (PR)'
 on: deployment_status
 
 concurrency:
-  group: lhci-${{ github.ref }}
+  group: lhci-${{ github.event.deployment.id }}
   cancel-in-progress: true
 
 env:
@@ -122,14 +122,14 @@ jobs:
         run: |
           preview_url="${{ steps.get_url.outputs.preview-url }}"
 
+          # Build headers array for Vercel protection bypass
+          headers=()
           if [ -n "${{ secrets.VERCEL_PROTECTION_BYPASS }}" ]; then
-            auth_header="-H 'x-vercel-protection-bypass: ${{ secrets.VERCEL_PROTECTION_BYPASS }}' -H 'x-vercel-set-bypass-cookie: true'"
-          else
-            auth_header=""
+            headers=(-H "x-vercel-protection-bypass: ${{ secrets.VERCEL_PROTECTION_BYPASS }}" -H "x-vercel-set-bypass-cookie: true")
           fi
 
-          response=$(curl -sL --max-time 30 --max-redirs 5 $auth_header "$preview_url" || echo "CURL_FAILED")
-          final_url=$(curl -sLI --max-time 30 --max-redirs 5 $auth_header "$preview_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
+          response=$(curl -sL --max-time 30 --max-redirs 5 "${headers[@]}" "$preview_url" || echo "CURL_FAILED")
+          final_url=$(curl -sLI --max-time 30 --max-redirs 5 "${headers[@]}" "$preview_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
 
           if [[ "$final_url" == *"vercel.com/login"* ]] || [[ "$final_url" == *"sso-api"* ]]; then
             exit 1
@@ -153,7 +153,6 @@ jobs:
           temporaryPublicStorage: true
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-          # Use Vercel's official environment variable name for Protection Bypass
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_PROTECTION_BYPASS }}
 
       - name: '📊 Parse Lighthouse results'
@@ -185,10 +184,25 @@ jobs:
             lcp=$(jq -r '[.[] | select(.auditId == "largest-contentful-paint")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
             cls=$(jq -r '[.[] | select(.auditId == "cumulative-layout-shift")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
             
+            echo "fcp=$fcp" >> $GITHUB_OUTPUT
+            echo "lcp=$lcp" >> $GITHUB_OUTPUT
+            echo "cls=$cls" >> $GITHUB_OUTPUT
+            
+            # Compute CWV status indicators in bash to avoid string comparison issues
+            fcp_ok=$( [ "$fcp" != "N/A" ] && echo "$fcp <= 2000" | bc -l | grep -q 1 && echo true || echo false )
+            lcp_ok=$( [ "$lcp" != "N/A" ] && echo "$lcp <= 2500" | bc -l | grep -q 1 && echo true || echo false )
+            cls_ok=$( [ "$cls" != "N/A" ] && echo "$cls <= 0.1"  | bc -l | grep -q 1 && echo true || echo false )
+            
+            echo "fcp_ok=$fcp_ok" >> "$GITHUB_OUTPUT"
+            echo "lcp_ok=$lcp_ok" >> "$GITHUB_OUTPUT"
+            echo "cls_ok=$cls_ok" >> "$GITHUB_OUTPUT"
+            
             budget_violations=$(jq '[.[] | select(.level == "error" and (.auditId | contains("resource-summary") or contains("performance-budget")))] | length' "$results_file")
             
+            echo "budget_violations=$budget_violations" >> "$GITHUB_OUTPUT"
+            
             timestamp=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
-            echo "timestamp=$timestamp" >> $GITHUB_OUTPUT
+            echo "timestamp=$timestamp" >> "$GITHUB_OUTPUT"
             
             format_score() {
               if [ "$1" != "N/A" ] && [ "$1" != "null" ]; then
@@ -203,44 +217,79 @@ jobs:
             seo_display=$(format_score "$seo_score")
             bp_display=$(format_score "$best_practices_score")
             
-            echo "perf_display=$perf_display" >> $GITHUB_OUTPUT
-            echo "a11y_display=$a11y_display" >> $GITHUB_OUTPUT
-            echo "seo_display=$seo_display" >> $GITHUB_OUTPUT
-            echo "bp_display=$bp_display" >> $GITHUB_OUTPUT
+            # Compute status indicators in bash to avoid string comparison issues
+            perf_ok=$(echo "$performance_score >= 0.8" | bc -l | grep -q "1" && echo "true" || echo "false")
+            a11y_ok=$(echo "$accessibility_score >= 0.95" | bc -l | grep -q "1" && echo "true" || echo "false")
+            seo_ok=$(echo "$seo_score >= 0.9" | bc -l | grep -q "1" && echo "true" || echo "false")
+            bp_ok=$(echo "$best_practices_score >= 0.9" | bc -l | grep -q "1" && echo "true" || echo "false")
+            
+            echo "perf_display=$perf_display" >> "$GITHUB_OUTPUT"
+            echo "a11y_display=$a11y_display" >> "$GITHUB_OUTPUT"
+            echo "seo_display=$seo_display" >> "$GITHUB_OUTPUT"
+            echo "bp_display=$bp_display" >> "$GITHUB_OUTPUT"
+            echo "perf_ok=$perf_ok" >> "$GITHUB_OUTPUT"
+            echo "a11y_ok=$a11y_ok" >> "$GITHUB_OUTPUT"
+            echo "seo_ok=$seo_ok" >> "$GITHUB_OUTPUT"
+            echo "bp_ok=$bp_ok" >> "$GITHUB_OUTPUT"
             
             links_output="${{ steps.lhci.outputs.links }}"
             if [ "$links_output" != "" ] && [ "$links_output" != "null" ]; then
               first_url=$(echo "$links_output" | jq -r 'values[0]' 2>/dev/null || echo "$links_output")
-              echo "formatted_links=$first_url" >> $GITHUB_OUTPUT
+              echo "formatted_links=$first_url" >> "$GITHUB_OUTPUT"
             else
-              echo "formatted_links=" >> $GITHUB_OUTPUT
+              echo "formatted_links=" >> "$GITHUB_OUTPUT"
             fi
             
           else
-            echo "overall_status=⚠️ NO RESULTS" >> $GITHUB_OUTPUT
-            echo "error_count=0" >> $GITHUB_OUTPUT
-            echo "warn_count=0" >> $GITHUB_OUTPUT
-            echo "pass_count=0" >> $GITHUB_OUTPUT
-            echo "formatted_links=" >> $GITHUB_OUTPUT
+            echo "overall_status=⚠️ NO RESULTS" >> "$GITHUB_OUTPUT"
+            echo "error_count=0" >> "$GITHUB_OUTPUT"
+            echo "warn_count=0" >> "$GITHUB_OUTPUT"
+            echo "pass_count=0" >> "$GITHUB_OUTPUT"
+            echo "formatted_links=" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: '🔍 Get PR number from deployment'
-        id: get_pr
+      - name: '🧾 Debug deployment payload (once)'
         run: |
-          pr_number=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/deployments/${{ github.event.deployment.id }}" \
-            | jq -r '.payload.pull_request.number // empty')
+          echo "deployment.id:        ${{ github.event.deployment.id }}"
+          echo "deployment.sha:       ${{ github.event.deployment.sha }}"
+          echo "deployment.ref:       ${{ github.event.deployment.ref }}"
+          echo "environment:          ${{ github.event.deployment.environment }}"
+          echo "environment_url:      ${{ github.event.deployment_status.environment_url }}"
 
-          if [ -n "$pr_number" ] && [ "$pr_number" != "null" ]; then
-            echo "pr_number=$pr_number" >> $GITHUB_OUTPUT
-          else
+      - name: '🔎 Resolve PR number from deployment commit'
+        id: get_pr
+        env:
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.event.deployment.sha }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          # Primary: find PRs for this commit
+          prs_json=$(curl -sS \
+            -H "Authorization: token ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${REPO}/commits/${SHA}/pulls")
+          pr_number=$(echo "$prs_json" | jq -r 'map(select(.state != "closed")) | first | .number // empty')
+
+          # Fallback: find PR by branch name (URL-encode branch only)
+          if [ -z "$pr_number" ]; then
             ref="${{ github.event.deployment.ref }}"
-            if [[ "$ref" =~ refs/pull/([0-9]+)/merge ]]; then
-              pr_number="${BASH_REMATCH[1]}"
-              echo "pr_number=$pr_number" >> $GITHUB_OUTPUT
-            else
-              echo "pr_number=" >> $GITHUB_OUTPUT
-            fi
+            ref_enc=$(jq -rn --arg x "$ref" '$x|@uri')
+            owner="${REPO%%/*}"
+            prs_by_branch=$(curl -sS \
+              -H "Authorization: token ${GH_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${REPO}/pulls?state=open&head=${owner}:${ref_enc}")
+            pr_number=$(echo "$prs_by_branch" | jq -r 'first | .number // empty')
+          fi
+
+          if [ -n "$pr_number" ]; then
+            echo "pr_number=$pr_number" >> "$GITHUB_OUTPUT"
+            echo "Resolved PR #$pr_number for commit ${SHA}"
+          else
+            echo "No PR found for commit ${SHA} (ref: ${{ github.event.deployment.ref }})"
+            echo "pr_number=" >> "$GITHUB_OUTPUT"
           fi
 
       - name: '💬 Post detailed Lighthouse comment'
@@ -249,6 +298,7 @@ jobs:
         with:
           header: lighthouse-report
           number: ${{ steps.get_pr.outputs.pr_number }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           message: |
             ## 🚀 Lighthouse Performance Report
 
@@ -260,18 +310,18 @@ jobs:
 
             | Category | Score | Status |
             |----------|-------|--------|
-            | 🚀 Performance | ${{ steps.parse_results.outputs.perf_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.perf_display) || 'N/A' }} | ${{ steps.parse_results.outputs.perf_display != 'N/A' && (steps.parse_results.outputs.perf_display >= '80' && '✅' || (steps.parse_results.outputs.perf_display >= '50' && '⚠️' || '❌')) || '❓' }} |
-            | ♿ Accessibility | ${{ steps.parse_results.outputs.a11y_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.a11y_display) || 'N/A' }} | ${{ steps.parse_results.outputs.a11y_display != 'N/A' && (steps.parse_results.outputs.a11y_display >= '95' && '✅' || (steps.parse_results.outputs.a11y_display >= '80' && '⚠️' || '❌')) || '❓' }} |
-            | 🔍 SEO | ${{ steps.parse_results.outputs.seo_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.seo_display) || 'N/A' }} | ${{ steps.parse_results.outputs.seo_display != 'N/A' && (steps.parse_results.outputs.seo_display >= '90' && '✅' || (steps.parse_results.outputs.seo_display >= '70' && '⚠️' || '❌')) || '❓' }} |
-            | ⚡ Best Practices | ${{ steps.parse_results.outputs.bp_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.bp_display) || 'N/A' }} | ${{ steps.parse_results.outputs.bp_display != 'N/A' && (steps.parse_results.outputs.bp_display >= '90' && '✅' || (steps.parse_results.outputs.bp_display >= '70' && '⚠️' || '❌')) || '❓' }} |
+            | 🚀 Performance | ${{ steps.parse_results.outputs.perf_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.perf_display) || 'N/A' }} | ${{ steps.parse_results.outputs.perf_ok == 'true' && '✅' || '❌' }} |
+            | ♿ Accessibility | ${{ steps.parse_results.outputs.a11y_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.a11y_display) || 'N/A' }} | ${{ steps.parse_results.outputs.a11y_ok == 'true' && '✅' || '❌' }} |
+            | 🔍 SEO | ${{ steps.parse_results.outputs.seo_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.seo_display) || 'N/A' }} | ${{ steps.parse_results.outputs.seo_ok == 'true' && '✅' || '❌' }} |
+            | ⚡ Best Practices | ${{ steps.parse_results.outputs.bp_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.bp_display) || 'N/A' }} | ${{ steps.parse_results.outputs.bp_ok == 'true' && '✅' || '❌' }} |
 
             ### ⚡ Core Web Vitals
 
             | Metric | Value | Target | Status |
             |--------|-------|--------|--------|
-            | 🎨 First Contentful Paint | ${{ steps.parse_results.outputs.fcp != 'N/A' && format('{0}ms', steps.parse_results.outputs.fcp) || 'N/A' }} | ≤2000ms | ${{ steps.parse_results.outputs.fcp != 'N/A' && (steps.parse_results.outputs.fcp <= '2000' && '✅' || '❌') || '❓' }} |
-            | 🖼️ Largest Contentful Paint | ${{ steps.parse_results.outputs.lcp != 'N/A' && format('{0}ms', steps.parse_results.outputs.lcp) || 'N/A' }} | ≤2500ms | ${{ steps.parse_results.outputs.lcp != 'N/A' && (steps.parse_results.outputs.lcp <= '2500' && '✅' || '❌') || '❓' }} |
-            | 📐 Cumulative Layout Shift | ${{ steps.parse_results.outputs.cls != 'N/A' && steps.parse_results.outputs.cls || 'N/A' }} | ≤0.1 | ${{ steps.parse_results.outputs.cls != 'N/A' && (steps.parse_results.outputs.cls <= '0.1' && '✅' || '❌') || '❓' }} |
+            | 🎨 First Contentful Paint | ${{ steps.parse_results.outputs.fcp != 'N/A' && format('{0}ms', steps.parse_results.outputs.fcp) || 'N/A' }} | ≤2000ms | ${{ steps.parse_results.outputs.fcp_ok == 'true' && '✅' || '❌' }} |
+            | 🖼️ Largest Contentful Paint | ${{ steps.parse_results.outputs.lcp != 'N/A' && format('{0}ms', steps.parse_results.outputs.lcp) || 'N/A' }} | ≤2500ms | ${{ steps.parse_results.outputs.lcp_ok == 'true' && '✅' || '❌' }} |
+            | 📐 Cumulative Layout Shift | ${{ steps.parse_results.outputs.cls != 'N/A' && steps.parse_results.outputs.cls || 'N/A' }} | ≤0.1 | ${{ steps.parse_results.outputs.cls_ok == 'true' && '✅' || '❌' }} |
 
             ### 📋 Assertion Results
 
