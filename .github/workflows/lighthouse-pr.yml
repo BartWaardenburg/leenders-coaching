@@ -155,19 +155,22 @@ jobs:
           # The order you passed to the action:
           ordered_urls=("$base" "$base/over-mij" "$base/aanpak" "$base/coaching" "$base/contact")
 
-          # Build a URL -> {p,a,s,b} map with averages across runs (no `//` operator used)
+          # Build a URL -> {p,a,s,b} map with averages across runs (robust, no [0] indexing)
           scores_json="$(jq -sr '
-            def key(x): ( if (x|has("finalDisplayedUrl") and x.finalDisplayedUrl!=null) then x.finalDisplayedUrl else x.finalUrl end );
+            def url(x): ( (x.finalDisplayedUrl // x.finalUrl) );
             def avg: (length as $n | if $n==0 then null else (add / $n) end);
-            sort_by(key(.))
-            | group_by(key(.))
-            | map({
-                url: key(.[0]),
-                p: (map(try .categories.performance.score        catch null) | map(select(.!=null)) | avg),
-                a: (map(try .categories.accessibility.score      catch null) | map(select(.!=null)) | avg),
-                s: (map(try .categories.seo.score                catch null) | map(select(.!=null)) | avg),
-                b: (map(try .categories["best-practices"].score catch null) | map(select(.!=null)) | avg)
-              })
+
+            sort_by(url(.))
+            | group_by(url(.))
+            | map(. as $g |
+                {
+                  url: ($g | first | url(.)),
+                  p: ([ $g[] | try .categories.performance.score        catch empty ] | map(select(.!=null)) | avg),
+                  a: ([ $g[] | try .categories.accessibility.score      catch empty ] | map(select(.!=null)) | avg),
+                  s: ([ $g[] | try .categories.seo.score                catch empty ] | map(select(.!=null)) | avg),
+                  b: ([ $g[] | try .categories["best-practices"].score catch empty ] | map(select(.!=null)) | avg)
+                }
+              )
             | map({ (.url): {p:.p,a:.a,s:.s,b:.b} })
             | add // {}
           ' "$results_dir"/lhr-*.json)"
