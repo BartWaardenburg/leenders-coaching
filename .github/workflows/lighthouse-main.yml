@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths-ignore: ['**.md', 'docs/**']
   workflow_dispatch:
+  schedule:
+    - cron: '0 5 * * *'
 
 concurrency:
   group: lhci-main
@@ -13,11 +15,18 @@ concurrency:
 env:
   NODE_VERSION: '22'
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   lighthouse:
-    name: 'Lighthouse CI (Production)'
+    name: 'Lighthouse CI (Production) – ${{ matrix.formFactor }}'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
+    strategy:
+      matrix:
+        formFactor: [mobile, desktop]
 
     steps:
       - name: '🔄 Checkout repository'
@@ -30,7 +39,27 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: '🩺 Preflight (200 check)'
+        run: |
+          set -e
+          headers=()
+          if [ -n "${{ secrets.VERCEL_PROTECTION_BYPASS }}" ]; then
+            headers+=(-H "x-vercel-protection-bypass: ${{ secrets.VERCEL_PROTECTION_BYPASS }}" -H "x-vercel-set-bypass-cookie: true")
+          fi
+          for u in \
+            https://leenders-coaching.vercel.app/ \
+            https://leenders-coaching.vercel.app/over-mij \
+            https://leenders-coaching.vercel.app/aanpak \
+            https://leenders-coaching.vercel.app/coaching \
+            https://leenders-coaching.vercel.app/contact
+          do
+            code=$(curl -s --retry 2 --retry-delay 3 -o /dev/null -w "%{http_code}" "${headers[@]}" "$u")
+            echo "$code  $u"
+            [ "$code" -ge 200 ] && [ "$code" -lt 400 ] || (echo "Non-2xx/3xx for $u"; exit 1)
+          done
+
       - name: '🚀 Run Lighthouse CI (Production)'
+        id: lhci
         uses: treosh/lighthouse-ci-action@v12
         with:
           urls: |
@@ -42,20 +71,60 @@ jobs:
           configPath: packages/leenders-coaching-nl/lighthouserc.ci.cjs
           budgetPath: packages/leenders-coaching-nl/budget.json
           uploadArtifacts: true
+          artifactName: lighthouse-${{ matrix.formFactor }}
+          temporaryPublicStorage: true
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_PROTECTION_BYPASS }}
+          LHCI_FORM_FACTOR: ${{ matrix.formFactor }}
 
-      - name: '📊 Display production metrics summary'
+      - name: '📊 Summarize key scores'
         if: always()
         run: |
-          echo "## 🚀 Production Lighthouse Report" >> $GITHUB_STEP_SUMMARY
+          set -e
+          sudo apt-get update -y >/dev/null 2>&1 || true
+          sudo apt-get install -y jq >/dev/null 2>&1 || true
+          results_dir="${{ steps.lhci.outputs.resultsPath }}"
+          file="$results_dir/assertion-results.json"
+          if [ ! -f "$file" ]; then
+            echo "No assertion-results.json"; exit 0
+          fi
+
+          getScore () { jq -r '[.[] | select(.auditId == "categories:'"$1"'")] | if length>0 then .[0].actual else "N/A" end' "$file"; }
+          fmtPct () {
+            if [ "$1" = "N/A" ]; then
+              echo "N/A"
+            else
+              awk -v v="$1" 'BEGIN{printf "%.0f/100", v*100}'
+            fi
+          }
+
+          perf=$(getScore performance); a11y=$(getScore accessibility); seo=$(getScore seo); bp=$(getScore best-practices)
+
+          echo "## 🚀 Production Lighthouse – ${{ matrix.formFactor }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "**Timestamp:** $(date -u)" >> $GITHUB_STEP_SUMMARY
+          echo "| Category | Score |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|---|" >> $GITHUB_STEP_SUMMARY
+          echo "| Performance | $(fmtPct "$perf") |" >> $GITHUB_STEP_SUMMARY
+          echo "| Accessibility | $(fmtPct "$a11y") |" >> $GITHUB_STEP_SUMMARY
+          echo "| SEO | $(fmtPct "$seo") |" >> $GITHUB_STEP_SUMMARY
+          echo "| Best Practices | $(fmtPct "$bp") |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Production Lighthouse audit completed. Results available in:" >> $GITHUB_STEP_SUMMARY
-          echo "- Job artifacts (HTML reports)" >> $GITHUB_STEP_SUMMARY
-          echo "- GitHub status checks" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "📈 **Performance trends** tracked over time to monitor regressions." >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ steps.lhci.outputs.links }}" ]; then
+            echo "- Temporary public report: ${{ steps.lhci.outputs.links }}" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: '🚨 Open regression issue when failed'
+        if: failure() && github.event_name != 'schedule'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const title = `Lighthouse regression on main – ${{ matrix.formFactor }} (${new Date().toISOString().slice(0,10)})`;
+            const body = `The production Lighthouse check failed for **${{ matrix.formFactor }}**.
+
+            Commit: \`${{ github.sha }}\`
+            Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            Please review the artifacts and the temporary report link in the job summary.`;
+            await github.rest.issues.create({ owner: context.repo.owner, repo: context.repo.repo, title, body, labels: ['performance','lighthouse'] });

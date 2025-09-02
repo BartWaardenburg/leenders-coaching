@@ -154,22 +154,26 @@ jobs:
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_PROTECTION_BYPASS }}
+          LHCI_FORM_FACTOR: mobile
 
       - name: '📊 Parse Lighthouse results'
         id: parse_results
         if: always()
         run: |
-          sudo apt-get update && sudo apt-get install -y bc
-
           results_file="${{ steps.lhci.outputs.resultsPath }}/assertion-results.json"
+          command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq >/dev/null 2>&1; }
 
           if [ -f "$results_file" ]; then
-            overall_status=$(jq -r 'if any(.level == "error") then "❌ FAILED" else "✅ PASSED" end' "$results_file")
-            echo "overall_status=$overall_status" >> $GITHUB_OUTPUT
-            
             error_count=$(jq '[.[] | select(.level == "error")] | length' "$results_file")
             warn_count=$(jq '[.[] | select(.level == "warn")] | length' "$results_file")
             pass_count=$(jq '[.[] | select(.level == "pass")] | length' "$results_file")
+            
+            if [ "$error_count" -gt 0 ]; then
+              overall_status="❌ FAILED"
+            else
+              overall_status="✅ PASSED"
+            fi
+            echo "overall_status=$overall_status" >> $GITHUB_OUTPUT
             
             echo "error_count=$error_count" >> $GITHUB_OUTPUT
             echo "warn_count=$warn_count" >> $GITHUB_OUTPUT
@@ -189,9 +193,9 @@ jobs:
             echo "cls=$cls" >> $GITHUB_OUTPUT
             
             # Compute CWV status indicators in bash to avoid string comparison issues
-            fcp_ok=$( [ "$fcp" != "N/A" ] && echo "$fcp <= 2000" | bc -l | grep -q 1 && echo true || echo false )
-            lcp_ok=$( [ "$lcp" != "N/A" ] && echo "$lcp <= 2500" | bc -l | grep -q 1 && echo true || echo false )
-            cls_ok=$( [ "$cls" != "N/A" ] && echo "$cls <= 0.1"  | bc -l | grep -q 1 && echo true || echo false )
+            fcp_ok=$( [ "$fcp" != "N/A" ] && awk "BEGIN {exit !($fcp <= 2000)}" && echo true || echo false )
+            lcp_ok=$( [ "$lcp" != "N/A" ] && awk "BEGIN {exit !($lcp <= 2500)}" && echo true || echo false )
+            cls_ok=$( [ "$cls" != "N/A" ] && awk "BEGIN {exit !($cls <= 0.1)}"  && echo true || echo false )
             
             echo "fcp_ok=$fcp_ok" >> "$GITHUB_OUTPUT"
             echo "lcp_ok=$lcp_ok" >> "$GITHUB_OUTPUT"
@@ -206,7 +210,7 @@ jobs:
             
             format_score() {
               if [ "$1" != "N/A" ] && [ "$1" != "null" ]; then
-                printf "%.0f" $(echo "$1 * 100" | bc -l)
+                awk -v v="$1" 'BEGIN{printf "%.0f", v*100}'
               else
                 echo "N/A"
               fi
@@ -218,10 +222,10 @@ jobs:
             bp_display=$(format_score "$best_practices_score")
             
             # Compute status indicators in bash to avoid string comparison issues
-            perf_ok=$(echo "$performance_score >= 0.8" | bc -l | grep -q "1" && echo "true" || echo "false")
-            a11y_ok=$(echo "$accessibility_score >= 0.95" | bc -l | grep -q "1" && echo "true" || echo "false")
-            seo_ok=$(echo "$seo_score >= 0.9" | bc -l | grep -q "1" && echo "true" || echo "false")
-            bp_ok=$(echo "$best_practices_score >= 0.9" | bc -l | grep -q "1" && echo "true" || echo "false")
+            perf_ok=$(awk "BEGIN {exit !($performance_score >= 0.8)}" && echo "true" || echo "false")
+            a11y_ok=$(awk "BEGIN {exit !($accessibility_score >= 0.95)}" && echo "true" || echo "false")
+            seo_ok=$(awk "BEGIN {exit !($seo_score >= 0.9)}" && echo "true" || echo "false")
+            bp_ok=$(awk "BEGIN {exit !($best_practices_score >= 0.9)}" && echo "true" || echo "false")
             
             echo "perf_display=$perf_display" >> "$GITHUB_OUTPUT"
             echo "a11y_display=$a11y_display" >> "$GITHUB_OUTPUT"
@@ -257,6 +261,7 @@ jobs:
           echo "environment_url:      ${{ github.event.deployment_status.environment_url }}"
 
       - name: '🔎 Resolve PR number from deployment commit'
+        if: always()
         id: get_pr
         env:
           REPO: ${{ github.repository }}
@@ -328,7 +333,7 @@ jobs:
             - ✅ **Passed:** ${{ steps.parse_results.outputs.pass_count }} assertions
             - ⚠️ **Warnings:** ${{ steps.parse_results.outputs.warn_count }} assertions  
             - ❌ **Failed:** ${{ steps.parse_results.outputs.error_count }} assertions
-            ${{ steps.parse_results.outputs.budget_violations > '0' && format('- 💰 **Budget violations:** {0}', steps.parse_results.outputs.budget_violations) || '' }}
+            ${{ fromJSON(steps.parse_results.outputs.budget_violations) > 0 && format('- 💰 **Budget violations:** {0}', steps.parse_results.outputs.budget_violations) || '' }}
 
             ### 🔗 Detailed Reports
 
