@@ -1,4 +1,4 @@
-name: 'Size Limit'
+name: 'Bundle Size Analysis & Limits'
 
 on:
   pull_request:
@@ -21,14 +21,14 @@ concurrency:
 
 env:
   NODE_VERSION: '22'
-  PNPM_VERSION: '10.15.0'
+  PNPM_VERSION: '10.15.1'
   PNPM_HOME: /home/runner/.local/share/pnpm
 
 jobs:
-  size-limit:
-    name: 'Bundle Size Check'
+  bundle-analysis:
+    name: '📊 Bundle Size Analysis & Limits'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     env:
       NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
@@ -73,14 +73,61 @@ jobs:
       - name: '📥 Install dependencies'
         run: pnpm run ci:install:frozen
 
-      - name: '🏗️ Build frontend (pnpm)'
+      - name: '🏗️ Build frontend'
         run: pnpm --filter leenders-coaching-nl run build
 
-      - name: '📊 Run Size Limit'
+      - name: '📊 Run Size Limit Analysis'
         uses: andresz1/size-limit-action@v1.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           directory: 'packages/leenders-coaching-nl'
-          skip_step: 'build'
-          clean_script: 'clean'
           package_manager: 'pnpm'
+          skip_step: 'build'
+
+      - name: '🔍 Generate Detailed Bundle Analysis (from JSON)'
+        working-directory: packages/leenders-coaching-nl
+        run: |
+          mkdir -p .bundle-analysis
+          pnpm exec size-limit --json > .bundle-analysis/size-results.json
+          node -e "
+            const fs = require('fs');
+            const results = JSON.parse(fs.readFileSync('.bundle-analysis/size-results.json', 'utf8'));
+            const rows = results.map(x => 
+              \`| \${x.name} | \${x.limit || '-'} | \${x.size} | \${x.passed ? '✅' : '❌'} |\`
+            ).join('\n');
+            
+            const report = \`# Bundle Analysis Report
+
+          ## 📊 Size Limit Results
+
+          | Check | Limit | Size | Passed |
+          |-------|-------|------|--------|
+          \${rows}
+
+          ## 🔍 Analysis Summary
+
+          - **Total Checks**: \${results.length}
+          - **Passed**: \${results.filter(x => x.passed).length}
+          - **Failed**: \${results.filter(x => !x.passed).length}
+
+          ## 🛠️ Next Steps
+
+          \${results.filter(x => !x.passed).length > 0 
+            ? '❌ Some bundles exceed limits. Consider code splitting or optimization.'
+            : '✅ All bundles are within limits. Great job!'}
+
+          ---
+          *Generated on \${new Date().toISOString()}*
+          \`;
+
+            fs.writeFileSync('.bundle-analysis/analysis-report.md', report);
+            console.log('✅ Analysis report generated from JSON');
+          "
+
+      - name: '📁 Upload Bundle Analysis Artifacts'
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'bundle-analysis-${{ github.run_number }}'
+          path: |
+            packages/leenders-coaching-nl/.bundle-analysis/
+          retention-days: 30
