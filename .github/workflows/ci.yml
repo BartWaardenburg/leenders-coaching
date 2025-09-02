@@ -9,13 +9,17 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 env:
   NODE_VERSION: '22'
   PNPM_VERSION: '10.15.0'
   PNPM_HOME: /home/runner/.local/share/pnpm
 
 jobs:
-  # Fast quality checks for immediate feedback
   quality-gate:
     name: 'Quality Gate'
     runs-on: ubuntu-latest
@@ -46,10 +50,13 @@ jobs:
         run: |
           echo "key=pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}" >> $GITHUB_OUTPUT
 
+      - name: 'Get pnpm store path'
+        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
       - name: '💾 Cache pnpm store'
         uses: actions/cache@v4
         with:
-          path: ${{ env.PNPM_HOME }}
+          path: ${{ env.PNPM_STORE_PATH }}
           key: ${{ steps.cache-key.outputs.key }}
           restore-keys: |
             pnpm-${{ runner.os }}-
@@ -60,7 +67,6 @@ jobs:
       - name: '🔍 Quality checks'
         run: pnpm run ci:quality
 
-  # Frontend-specific tests
   frontend-tests:
     name: 'Frontend Tests'
     runs-on: ubuntu-latest
@@ -89,10 +95,13 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
+      - name: 'Get pnpm store path'
+        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
       - name: '💾 Restore pnpm cache'
         uses: actions/cache@v4
         with:
-          path: ${{ env.PNPM_HOME }}
+          path: ${{ env.PNPM_STORE_PATH }}
           key: ${{ needs.quality-gate.outputs.cache-key }}
           restore-keys: |
             pnpm-${{ runner.os }}-
@@ -112,12 +121,7 @@ jobs:
           fail_ci_if_error: false
           verbose: true
           flags: frontend
-          exclude: |
-            packages/leenders-coaching-nl/lighthouserc.js
-            packages/leenders-coaching-nl/*.config.*
-            packages/leenders-coaching-nl/next-env.d.ts
 
-  # Studio validation
   studio-validation:
     name: 'Studio Validation'
     runs-on: ubuntu-latest
@@ -142,10 +146,13 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
+      - name: 'Get pnpm store path'
+        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
       - name: '💾 Restore pnpm cache'
         uses: actions/cache@v4
         with:
-          path: ${{ env.PNPM_HOME }}
+          path: ${{ env.PNPM_STORE_PATH }}
           key: ${{ needs.quality-gate.outputs.cache-key }}
           restore-keys: |
             pnpm-${{ runner.os }}-
@@ -159,7 +166,6 @@ jobs:
       - name: '🔍 Validate schema'
         run: pnpm --filter studio-leenders-coaching-nl run validate:schema
 
-  # Build verification
   build-verification:
     name: 'Build Verification'
     runs-on: ubuntu-latest
@@ -188,10 +194,13 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
+      - name: 'Get pnpm store path'
+        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
       - name: '💾 Restore pnpm cache'
         uses: actions/cache@v4
         with:
-          path: ${{ env.PNPM_HOME }}
+          path: ${{ env.PNPM_STORE_PATH }}
           key: ${{ needs.quality-gate.outputs.cache-key }}
           restore-keys: |
             pnpm-${{ runner.os }}-
@@ -204,3 +213,27 @@ jobs:
 
       - name: '✅ Verify build artifacts'
         run: pnpm run ci:verify
+
+  pr-comment:
+    name: 'PR Comment (CI Summary)'
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    needs: [quality-gate, frontend-tests, studio-validation, build-verification]
+    permissions:
+      pull-requests: write
+      issues: write
+    steps:
+      - name: '💬 Sticky PR comment – CI'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: ci-summary
+          number: ${{ github.event.pull_request.number }}
+          message: |
+            ## ✅ CI Summary
+            - **Quality Gate:** ${{ needs.quality-gate.result == 'success' && '✅' || '❌' }}
+            - **Frontend Tests:** ${{ needs.frontend-tests.result == 'success' && '✅' || '❌' }}
+            - **Studio Validation:** ${{ needs.studio-validation.result == 'success' && '✅' || '❌' }}
+            - **Build Verification:** ${{ needs.build-verification.result == 'success' && '✅' || '❌' }}
+
+            _This comment updates automatically on new commits to this PR._

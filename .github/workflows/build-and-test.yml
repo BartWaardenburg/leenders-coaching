@@ -15,7 +15,6 @@ env:
   PNPM_HOME: /home/runner/.local/share/pnpm
 
 jobs:
-  # Comprehensive testing and quality assurance
   test-and-coverage:
     name: 'Test & Coverage Analysis'
     runs-on: ubuntu-latest
@@ -53,10 +52,13 @@ jobs:
         run: |
           echo "key=pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}" >> $GITHUB_OUTPUT
 
+      - name: 'Get pnpm store path'
+        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
       - name: '💾 Cache pnpm store'
         uses: actions/cache@v4
         with:
-          path: ${{ env.PNPM_HOME }}
+          path: ${{ env.PNPM_STORE_PATH }}
           key: ${{ steps.cache-key.outputs.key }}
           restore-keys: |
             pnpm-${{ runner.os }}-
@@ -102,7 +104,6 @@ jobs:
             packages/leenders-coaching-nl/test-results/
           retention-days: 30
 
-  # Production build verification
   production-build:
     name: 'Production Build'
     runs-on: ubuntu-latest
@@ -147,10 +148,13 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
+      - name: 'Get pnpm store path'
+        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
       - name: '💾 Restore pnpm cache'
         uses: actions/cache@v4
         with:
-          path: ${{ env.PNPM_HOME }}
+          path: ${{ env.PNPM_STORE_PATH }}
           key: ${{ needs.test-and-coverage.outputs.cache-key }}
           restore-keys: |
             pnpm-${{ runner.os }}-
@@ -192,7 +196,6 @@ jobs:
           retention-days: 7
           compression-level: 6
 
-  # Content management validation
   content-validation:
     name: 'Content & Schema Validation'
     runs-on: ubuntu-latest
@@ -217,10 +220,13 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
+      - name: 'Get pnpm store path'
+        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
       - name: '💾 Restore pnpm cache'
         uses: actions/cache@v4
         with:
-          path: ${{ env.PNPM_HOME }}
+          path: ${{ env.PNPM_STORE_PATH }}
           key: ${{ needs.test-and-coverage.outputs.cache-key }}
           restore-keys: |
             pnpm-${{ runner.os }}-
@@ -246,7 +252,6 @@ jobs:
             packages/studio-leenders-coaching-nl/sanity-typegen.json
           retention-days: 30
 
-  # Security and dependency analysis
   security-analysis:
     name: 'Security Analysis'
     runs-on: ubuntu-latest
@@ -268,10 +273,13 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
+      - name: 'Get pnpm store path'
+        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
       - name: '💾 Restore pnpm cache'
         uses: actions/cache@v4
         with:
-          path: ${{ env.PNPM_HOME }}
+          path: ${{ env.PNPM_STORE_PATH }}
           key: ${{ needs.test-and-coverage.outputs.cache-key }}
           restore-keys: |
             pnpm-${{ runner.os }}-
@@ -285,7 +293,6 @@ jobs:
       - name: '📊 Check for outdated dependencies'
         run: pnpm run outdated || echo "📈 Some dependencies can be updated"
 
-  # Deployment readiness check
   deployment-readiness:
     name: 'Deployment Readiness'
     runs-on: ubuntu-latest

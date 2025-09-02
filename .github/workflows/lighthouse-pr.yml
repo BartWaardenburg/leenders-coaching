@@ -3,8 +3,14 @@ name: 'Lighthouse (PR)'
 on: deployment_status
 
 concurrency:
-  group: lhci-${{ github.ref }}
+  group: lhci-${{ github.event.deployment.id }}
   cancel-in-progress: true
+
+permissions:
+  contents: read
+  deployments: read
+  pull-requests: write
+  issues: write
 
 env:
   NODE_VERSION: '22'
@@ -14,522 +20,257 @@ jobs:
     name: 'Lighthouse CI (Preview)'
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    permissions:
-      contents: read
-      deployments: read
-      pull-requests: write
-      issues: write
-    # Only run for successful leenders-coaching deployments (not studio)
     if: |
       github.event.deployment_status.state == 'success' &&
       contains(github.event.deployment.environment, 'leenders-coaching') &&
       !contains(github.event.deployment.environment, 'studio')
 
     steps:
-      - name: '🔄 Checkout repository'
+      - name: '🔄 Checkout'
         uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
 
       - name: '🔧 Setup Node.js'
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: '🔑 Verify Vercel API authentication'
-        run: |
-          if [ -n "${{ secrets.VERCEL_TOKEN }}" ]; then
-            echo "🔍 Testing Vercel API authentication..."
-            
-            # Test API access with user info
-            user_response=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-              "https://api.vercel.com/v2/user" || echo "AUTH_FAILED")
-            
-            if [ "$user_response" = "AUTH_FAILED" ]; then
-              echo "❌ Vercel API authentication failed"
-              echo "⚠️ This may cause issues accessing protected preview deployments"
-            else
-              username=$(echo "$user_response" | jq -r '.user.username // "unknown"')
-              echo "✅ Vercel API authentication successful"
-              echo "📋 Authenticated as: $username"
-            fi
-          else
-            echo "⚠️ No VERCEL_TOKEN available - preview protection bypass unavailable"
-          fi
-
-      - name: '🔍 Get Vercel preview URL with API authentication'
-        id: get_url
+      - name: '🔗 Resolve preview URL (environment_url)'
+        id: url
+        shell: bash
         run: |
           set -euo pipefail
-
-          echo "🎉 Triggered by successful Vercel deployment!"
-          echo "Environment: ${{ github.event.deployment.environment }}"
-          echo "State: ${{ github.event.deployment_status.state }}"
-
-          # Extract deployment ID from the deployment event
-          deployment_id="${{ github.event.deployment.id }}"
-          echo "🔍 Deployment ID: $deployment_id"
-
-          # Get deployment details using Vercel API
-          if [ -n "${{ secrets.VERCEL_TOKEN }}" ] && [ -n "${{ secrets.VERCEL_PROJECT_ID }}" ]; then
-            echo "🔑 Using Vercel API to get deployment details..."
-            echo "📋 Project ID: ${{ secrets.VERCEL_PROJECT_ID }}"
-            echo "📋 Team ID: ${{ secrets.VERCEL_ORG_ID }}"
-            
-            # Try multiple API approaches to get the deployment URL
-            
-            # Method 1: Direct deployment lookup
-            echo "🔍 Method 1: Direct deployment API call..."
-            vercel_response=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-              "https://api.vercel.com/v13/deployments/$deployment_id" || echo "API_FAILED")
-            
-            if [ "$vercel_response" != "API_FAILED" ]; then
-              echo "✅ Got deployment response"
-              # Debug: Show partial response (first 200 chars)
-              echo "📋 Response preview: $(echo "$vercel_response" | cut -c1-200)..."
-              
-              api_url=$(echo "$vercel_response" | jq -r '.url // empty')
-              if [ -n "$api_url" ] && [ "$api_url" != "null" ] && [ "$api_url" != "empty" ]; then
-                deployment_url="https://$api_url"
-                echo "✅ Got URL from direct API: $deployment_url"
-              else
-                echo "⚠️ No URL in direct API response"
-                
-                # Method 2: List deployments for project
-                echo "🔍 Method 2: Listing project deployments..."
-                list_url="https://api.vercel.com/v6/deployments?projectId=${{ secrets.VERCEL_PROJECT_ID }}&limit=10"
-                if [ -n "${{ secrets.VERCEL_ORG_ID }}" ]; then
-                  list_url="$list_url&teamId=${{ secrets.VERCEL_ORG_ID }}"
-                fi
-                
-                deployments_response=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-                  "$list_url" || echo "LIST_FAILED")
-                
-                if [ "$deployments_response" != "LIST_FAILED" ]; then
-                  # Find our deployment in the list
-                  found_url=$(echo "$deployments_response" | jq -r --arg id "$deployment_id" \
-                    '.deployments[] | select(.uid == $id) | .url // empty')
-                  
-                  if [ -n "$found_url" ] && [ "$found_url" != "null" ] && [ "$found_url" != "empty" ]; then
-                    deployment_url="https://$found_url"
-                    echo "✅ Got URL from deployments list: $deployment_url"
-                  else
-                    echo "⚠️ Deployment not found in list, using event URL"
-                    deployment_url="${{ github.event.deployment_status.environment_url }}"
-                  fi
-                else
-                  echo "⚠️ Failed to list deployments, using event URL"
-                  deployment_url="${{ github.event.deployment_status.environment_url }}"
-                fi
-              fi
-            else
-              echo "⚠️ Direct API call failed, using deployment event URL"
-              deployment_url="${{ github.event.deployment_status.environment_url }}"
-            fi
-          else
-            echo "⚠️ Missing VERCEL_TOKEN or VERCEL_PROJECT_ID secrets, using deployment event URL"
-            deployment_url="${{ github.event.deployment_status.environment_url }}"
-          fi
-
-          if [ -z "$deployment_url" ] || [ "$deployment_url" = "null" ]; then
-            echo "❌ No deployment URL found"
-            echo "Debug info:"
-            echo "  Deployment ID: $deployment_id"
-            echo "  Environment: ${{ github.event.deployment.environment }}"
-            echo "  State: ${{ github.event.deployment_status.state }}"
-            exit 1
-          fi
-
-          echo "🔍 Raw deployment URL: $deployment_url"
-
-          # Check if this is a Vercel redirect URL and extract the real preview URL
-          if [[ "$deployment_url" == *"vercel.com/login"* ]] || [[ "$deployment_url" == *"sso-api"* ]]; then
-            echo "⚠️  Detected Vercel redirect URL, extracting preview URL..."
-            
-            # Extract URL from the redirect (URL encoded in the 'url' parameter)
-            if [[ "$deployment_url" =~ url%3D([^&]*) ]]; then
-              encoded_url="${BASH_REMATCH[1]}"
-              # URL decode the preview URL
-              preview_url=$(echo "$encoded_url" | sed 's/%3A/:/g; s/%2F/\//g; s/%3F/?/g; s/%3D/=/g; s/%26/\&/g')
-              echo "🔧 Extracted preview URL: $preview_url"
-            else
-              echo "❌ Could not extract preview URL from redirect"
-              echo "   Redirect URL: $deployment_url"
-              exit 1
-            fi
-          else
-            # Direct preview URL
-            preview_url="$deployment_url"
-            echo "✅ Direct preview URL: $preview_url"
-          fi
-
-          # Validate the preview URL
-          if [[ "$preview_url" =~ ^https?://.*\.vercel\.app/?.*$ ]]; then
-            echo "✅ Valid Vercel preview URL confirmed"
-            echo "preview-url=$preview_url" >> $GITHUB_OUTPUT
-          else
-            echo "❌ Invalid preview URL format: $preview_url"
-            echo "   Expected: https://something.vercel.app"
-            exit 1
-          fi
-
-      - name: '🧪 Test preview URL accessibility'
-        run: |
-          preview_url="${{ steps.get_url.outputs.preview-url }}"
-          echo "🔍 Testing preview URL accessibility: $preview_url"
-
-          # Test URL accessibility with proper authentication
-          if [ -n "${{ secrets.VERCEL_TOKEN }}" ]; then
-            echo "🔑 Using Vercel token for authenticated requests"
-            
-            # Test with authentication header
-            response=$(curl -sL --max-time 30 --max-redirs 5 \
-              -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-              "$preview_url" || echo "CURL_FAILED")
-            
-            final_url=$(curl -sLI --max-time 30 --max-redirs 5 \
-              -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-              "$preview_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
-          else
-            echo "ℹ️ No Vercel token available, using unauthenticated requests"
-            
-            # Test without authentication
-            response=$(curl -sL --max-time 30 --max-redirs 5 "$preview_url" || echo "CURL_FAILED")
-            final_url=$(curl -sLI --max-time 30 --max-redirs 5 "$preview_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
-          fi
-
-          echo "🔍 Final URL after redirects: $final_url"
-
-          # Check for authentication issues
-          if [[ "$final_url" == *"vercel.com/login"* ]] || [[ "$final_url" == *"sso-api"* ]]; then
-            echo "❌ Preview URL redirects to Vercel login page!"
-            echo "   This indicates Preview Deployment Protection is enabled."
-            echo ""
-            if [ -n "${{ secrets.VERCEL_TOKEN }}" ]; then
-              echo "🔧 We have a VERCEL_TOKEN but authentication still failed."
-              echo "   The token might not have sufficient permissions or the protection method has changed."
-            else
-              echo "🔑 No VERCEL_TOKEN available for authentication."
-            fi
-            echo ""
-            echo "📝 Possible solutions:"
-            echo "   1. Disable Preview Deployment Protection in Vercel:"
-            echo "      Project Settings → General → Preview Deployment Protection → Set to 'Off'"
-            echo "   2. Ensure VERCEL_TOKEN has proper team/project permissions"
-            echo "   3. Use a personal access token with deployment read permissions"
-            echo ""
-            echo "🚨 Continuing anyway - Lighthouse will attempt to test with authentication"
-          elif [[ "$response" == "CURL_FAILED" ]]; then
-            echo "❌ Preview URL is not accessible (network error)"
-            echo "   URL: $preview_url"
-            exit 1
-          elif echo "$response" | grep -qi "404\|not found"; then
-            echo "⚠️ Preview URL returns 404 - deployment might not be complete"
-            echo "   URL: $preview_url"
-            echo "   Waiting 30 seconds for deployment to stabilize..."
-            sleep 30
-          else
-            echo "✅ Preview URL is accessible and serves content"
-            
-            # Check if we still got login-related content despite success
-            if echo "$response" | grep -qi "vercel.*login\|sign.*in\|authenticate"; then
-              echo "⚠️ Response contains authentication-related content"
-              echo "   This might indicate partial protection bypass"
-            else
-              echo "✅ Content appears to be the actual application"
+          url="${{ github.event.deployment_status.environment_url || '' }}"
+          if [[ "$url" == *"vercel.com/login"* || "$url" == *"sso-api"* ]]; then
+            if [[ "$url" =~ url=([^&]+) ]]; then
+              enc="${BASH_REMATCH[1]}"
+              url="$(python3 -c "import sys,urllib.parse;print(urllib.parse.unquote(sys.argv[1]))" "$enc")"
             fi
           fi
-
-      - name: '🔐 Test authentication for all URLs'
-        run: |
-          if [ -n "${{ secrets.VERCEL_TOKEN }}" ]; then
-            echo "🔍 Testing authentication for all Lighthouse URLs..."
-            preview_url="${{ steps.get_url.outputs.preview-url }}"
-            
-            # Test all URLs that Lighthouse will check
-            urls=(
-              "$preview_url"
-              "$preview_url/over-mij" 
-              "$preview_url/aanpak"
-              "$preview_url/coaching"
-              "$preview_url/contact"
-            )
-            
-            auth_failures=0
-            for url in "${urls[@]}"; do
-              echo "🔍 Testing: $url"
-              
-              response=$(curl -sL --max-time 20 --write-out "%{http_code}" \
-                -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-                "$url" || echo "CURL_FAILED")
-              
-              if [[ "$response" == *"CURL_FAILED"* ]]; then
-                echo "❌ Network error accessing $url"
-                ((auth_failures++))
-              elif [[ "$response" == *"vercel.com/login"* ]] || [[ "$response" == *"sso-api"* ]]; then
-                echo "❌ Authentication failed for $url (redirected to login)"
-                ((auth_failures++))
-              else
-                # Extract HTTP status code (last 3 characters)
-                status_code="${response: -3}"
-                if [[ "$status_code" =~ ^[45][0-9][0-9]$ ]]; then
-                  echo "⚠️ HTTP $status_code for $url"
-                  ((auth_failures++))
-                else
-                  echo "✅ HTTP $status_code for $url"
-                fi
-              fi
-            done
-            
-            if [ $auth_failures -gt 0 ]; then
-              echo ""
-              echo "⚠️ $auth_failures URL(s) failed authentication tests"
-              echo "🔧 Lighthouse may encounter issues with protected URLs"
-              echo "   Consider disabling Preview Deployment Protection in Vercel"
-            else
-              echo ""
-              echo "✅ All URLs passed authentication tests"
-              echo "🚀 Lighthouse should be able to access all pages"
-            fi
-          else
-            echo "ℹ️ No VERCEL_TOKEN available - skipping authentication tests"
-          fi
+          [[ "$url" =~ ^https?:// ]] || { echo "No valid environment_url"; exit 1; }
+          echo "preview_url=$url" >> "$GITHUB_OUTPUT"
 
       - name: '🚀 Run Lighthouse CI'
         id: lhci
         uses: treosh/lighthouse-ci-action@v12
         with:
           urls: |
-            ${{ steps.get_url.outputs.preview-url }}
-            ${{ steps.get_url.outputs.preview-url }}/over-mij
-            ${{ steps.get_url.outputs.preview-url }}/aanpak
-            ${{ steps.get_url.outputs.preview-url }}/coaching
-            ${{ steps.get_url.outputs.preview-url }}/contact
+            ${{ steps.url.outputs.preview_url }}
+            ${{ steps.url.outputs.preview_url }}/over-mij
+            ${{ steps.url.outputs.preview_url }}/aanpak
+            ${{ steps.url.outputs.preview_url }}/coaching
+            ${{ steps.url.outputs.preview_url }}/contact
           configPath: packages/leenders-coaching-nl/lighthouserc.ci.cjs
           budgetPath: packages/leenders-coaching-nl/budget.json
           uploadArtifacts: true
           temporaryPublicStorage: true
         env:
+          LHCI_FORM_FACTOR: mobile
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-          # Pass Vercel token for preview protection bypass (used by lighthouserc.ci.cjs)
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
 
       - name: '📊 Parse Lighthouse results'
-        id: parse_results
+        id: parse
         if: always()
+        shell: bash
         run: |
-          # Install bc for floating point calculations
-          sudo apt-get update && sudo apt-get install -y bc
+          set -euo pipefail
+          command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq -y >/dev/null 2>&1; }
 
-          # Parse assertion results to extract key metrics
-          results_file="${{ steps.lhci.outputs.resultsPath }}/assertion-results.json"
+          results_dir="${{ steps.lhci.outputs.resultsPath }}"
+          assertion_file="$results_dir/assertion-results.json"
 
-          if [ -f "$results_file" ]; then
-            echo "✅ Found assertion results file"
-            
-            # Extract overall status
-            overall_status=$(jq -r 'if any(.level == "error") then "❌ FAILED" else "✅ PASSED" end' "$results_file")
-            echo "overall_status=$overall_status" >> $GITHUB_OUTPUT
-            
-            # Count assertions by level
-            error_count=$(jq '[.[] | select(.level == "error")] | length' "$results_file")
-            warn_count=$(jq '[.[] | select(.level == "warn")] | length' "$results_file")
-            pass_count=$(jq '[.[] | select(.level == "pass")] | length' "$results_file")
-            
-            echo "error_count=$error_count" >> $GITHUB_OUTPUT
-            echo "warn_count=$warn_count" >> $GITHUB_OUTPUT
-            echo "pass_count=$pass_count" >> $GITHUB_OUTPUT
-            
-            # Extract key metrics for summary (if available)
-            performance_score=$(jq -r '[.[] | select(.auditId == "categories:performance")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
-            accessibility_score=$(jq -r '[.[] | select(.auditId == "categories:accessibility")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
-            seo_score=$(jq -r '[.[] | select(.auditId == "categories:seo")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
-            best_practices_score=$(jq -r '[.[] | select(.auditId == "categories:best-practices")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
-            
-            # Extract Core Web Vitals
-            fcp=$(jq -r '[.[] | select(.auditId == "first-contentful-paint")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
-            lcp=$(jq -r '[.[] | select(.auditId == "largest-contentful-paint")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
-            cls=$(jq -r '[.[] | select(.auditId == "cumulative-layout-shift")] | if length > 0 then .[0].actual else "N/A" end' "$results_file")
-            
-            # Check budget violations (these will be in assertion results as 'error' level)
-            budget_violations=$(jq '[.[] | select(.level == "error" and (.auditId | contains("resource-summary") or contains("performance-budget")))] | length' "$results_file")
-            
-            # Debug: Log first few results to understand the structure
-            echo "🔍 First 3 assertion results:"
-            jq -r '.[0:3] | .[] | "  - \(.auditId): \(.level) (actual: \(.actual))"' "$results_file" || echo "  No results to display"
-            
-            echo "performance_score=$performance_score" >> $GITHUB_OUTPUT
-            echo "accessibility_score=$accessibility_score" >> $GITHUB_OUTPUT
-            echo "seo_score=$seo_score" >> $GITHUB_OUTPUT
-            echo "best_practices_score=$best_practices_score" >> $GITHUB_OUTPUT
-            echo "fcp=$fcp" >> $GITHUB_OUTPUT
-            echo "lcp=$lcp" >> $GITHUB_OUTPUT
-            echo "cls=$cls" >> $GITHUB_OUTPUT
-            echo "budget_violations=$budget_violations" >> $GITHUB_OUTPUT
-            
-            # Generate timestamp
-            timestamp=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
-            echo "timestamp=$timestamp" >> $GITHUB_OUTPUT
-            
-            # Format scores for display
-            format_score() {
-              if [ "$1" != "N/A" ] && [ "$1" != "null" ]; then
-                printf "%.0f" $(echo "$1 * 100" | bc -l)
-              else
-                echo "N/A"
-              fi
-            }
-            
-            perf_display=$(format_score "$performance_score")
-            a11y_display=$(format_score "$accessibility_score")
-            seo_display=$(format_score "$seo_score")
-            bp_display=$(format_score "$best_practices_score")
-            
-            echo "perf_display=$perf_display" >> $GITHUB_OUTPUT
-            echo "a11y_display=$a11y_display" >> $GITHUB_OUTPUT
-            echo "seo_display=$seo_display" >> $GITHUB_OUTPUT
-            echo "bp_display=$bp_display" >> $GITHUB_OUTPUT
-            
-            # Parse links output for clean formatting
-            links_output="${{ steps.lhci.outputs.links }}"
-            if [ "$links_output" != "" ] && [ "$links_output" != "null" ]; then
-              # Try to extract first URL from JSON if it's JSON format
-              first_url=$(echo "$links_output" | jq -r 'values[0]' 2>/dev/null || echo "$links_output")
-              echo "formatted_links=$first_url" >> $GITHUB_OUTPUT
-            else
-              echo "formatted_links=" >> $GITHUB_OUTPUT
-            fi
-            
-          else
-            echo "⚠️ No assertion results file found"
-            echo "overall_status=⚠️ NO RESULTS" >> $GITHUB_OUTPUT
-            echo "error_count=0" >> $GITHUB_OUTPUT
-            echo "warn_count=0" >> $GITHUB_OUTPUT
-            echo "pass_count=0" >> $GITHUB_OUTPUT
-            echo "formatted_links=" >> $GITHUB_OUTPUT
+          # defaults
+          echo "errc=0"   >> $GITHUB_OUTPUT
+          echo "warnc=0"  >> $GITHUB_OUTPUT
+          echo "passc=0"  >> $GITHUB_OUTPUT
+
+          # assertions counts (if file exists)
+          if [[ -f "$assertion_file" ]]; then
+            errc=$(jq '[.[] | select(.level=="error")] | length' "$assertion_file")
+            warnc=$(jq '[.[] | select(.level=="warn")]  | length' "$assertion_file")
+            passc=$(jq '[.[] | select(.level=="pass")]  | length' "$assertion_file")
+            echo "errc=$errc"  >> $GITHUB_OUTPUT
+            echo "warnc=$warnc" >> $GITHUB_OUTPUT
+            echo "passc=$passc" >> $GITHUB_OUTPUT
           fi
 
-      - name: '🔍 Get PR number from deployment'
-        id: get_pr
-        run: |
-          # Get PR number from deployment context using GitHub API
-          pr_number=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/deployments/${{ github.event.deployment.id }}" \
-            | jq -r '.payload.pull_request.number // empty')
-
-          if [ -n "$pr_number" ] && [ "$pr_number" != "null" ]; then
-            echo "pr_number=$pr_number" >> $GITHUB_OUTPUT
-            echo "✅ Found PR number: $pr_number"
+          # derive category scores from raw LHRs (robust)
+          shopt -s nullglob
+          lhrs=("$results_dir"/lhr-*.json)
+          if [[ ${#lhrs[@]} -eq 0 ]]; then
+            echo "perf=N/A" >> $GITHUB_OUTPUT
+            echo "a11y=N/A" >> $GITHUB_OUTPUT
+            echo "seo=N/A"  >> $GITHUB_OUTPUT
+            echo "bp=N/A"   >> $GITHUB_OUTPUT
+            echo "overall=⚠️ NO RESULTS" >> $GITHUB_OUTPUT
           else
-            # Fallback: try to extract from deployment environment or ref
-            ref="${{ github.event.deployment.ref }}"
-            if [[ "$ref" =~ refs/pull/([0-9]+)/merge ]]; then
-              pr_number="${BASH_REMATCH[1]}"
-              echo "pr_number=$pr_number" >> $GITHUB_OUTPUT
-              echo "✅ Extracted PR number from ref: $pr_number"
+            readarray -t vals < <(jq -s '
+              def avg: (length as $n | if $n==0 then null else (add / $n) end);
+              {
+                perf: (map(try .categories.performance.score catch null) | map(select(.!=null)) | avg),
+                a11y: (map(try .categories.accessibility.score catch null) | map(select(.!=null)) | avg),
+                seo:  (map(try .categories.seo.score catch null) | map(select(.!=null)) | avg),
+                bp:   (map(try .categories["best-practices"].score catch null) | map(select(.!=null)) | avg)
+              } | [.perf,.a11y,.seo,.bp] | map(if .==null then "N/A" else . end) | .[]
+            ' "${lhrs[@]}")
+
+            to_pct () { awk -v v="$1" 'BEGIN{printf "%.0f", v*100}'; }
+            perf="${vals[0]}"; a11y="${vals[1]}"; seo="${vals[2]}"; bp="${vals[3]}"
+
+            [[ "$perf" != "N/A" ]] && echo "perf=$(to_pct "$perf")" >> $GITHUB_OUTPUT || echo "perf=N/A" >> $GITHUB_OUTPUT
+            [[ "$a11y" != "N/A" ]] && echo "a11y=$(to_pct "$a11y")" >> $GITHUB_OUTPUT || echo "a11y=N/A" >> $GITHUB_OUTPUT
+            [[ "$seo"  != "N/A" ]] && echo "seo=$(to_pct "$seo")"   >> $GITHUB_OUTPUT || echo "seo=N/A"  >> $GITHUB_OUTPUT
+            [[ "$bp"   != "N/A" ]] && echo "bp=$(to_pct "$bp")"     >> $GITHUB_OUTPUT || echo "bp=N/A"   >> $GITHUB_OUTPUT
+
+            # overall from assertions if present; else pass
+            if [[ -f "$assertion_file" ]] && [[ "${errc:-0}" -gt 0 ]]; then
+              echo "overall=❌ FAILED" >> $GITHUB_OUTPUT
             else
-              echo "⚠️ Could not determine PR number"
-              echo "pr_number=" >> $GITHUB_OUTPUT
+              echo "overall=✅ PASSED" >> $GITHUB_OUTPUT
             fi
           fi
 
-          # Debug: Show all available context
-          echo "🔍 Debug: Available context:"
-          echo "  Deployment ID: ${{ github.event.deployment.id }}"
-          echo "  Deployment Ref: ${{ github.event.deployment.ref }}"
-          echo "  Repository: ${{ github.repository }}"
-          echo "  Event Name: ${{ github.event_name }}"
-          echo "  Final PR Number: $pr_number"
+          # robust link extraction
+          links='${{ steps.lhci.outputs.links }}'
+          report=""
+          if [[ -n "$links" && "$links" != "null" ]]; then
+            if echo "$links" | grep -q '^\s*\['; then
+              report="$(echo "$links" | jq -r 'first // empty' 2>/dev/null || true)"
+            else
+              report="$(echo "$links" | head -n1 | tr -d '[:space:]')"
+            fi
+          fi
+          echo "report=$report" >> $GITHUB_OUTPUT
 
-      - name: '💬 Post detailed Lighthouse comment'
-        if: always() && steps.get_pr.outputs.pr_number != ''
+      - name: '🧾 Build per-page table'
+        id: table
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq -y >/dev/null 2>&1; }
+
+          results_dir="${{ steps.lhci.outputs.resultsPath }}"
+          base="${{ steps.url.outputs.preview_url }}"
+          # keep your order
+          ordered_urls=("$base" "$base/over-mij" "$base/aanpak" "$base/coaching" "$base/contact")
+
+          # Build URL -> {p,a,s,b} with query/hash/trailing-slash normalization
+          scores_json="$(jq -sr '
+            # strip ?query and #hash, then trailing slash
+            def norm(u):
+              if u==null then null else (u | sub("[?#].*$"; "") | sub("/$"; "")) end;
+            # prefer finalDisplayedUrl, fall back if needed
+            def key(x): norm(x.finalDisplayedUrl // x.finalUrl // x.requestedUrl);
+            def avg: (length as $n | if $n==0 then null else (add / $n) end);
+            sort_by(key(.))
+            | group_by(key(.))
+            | map(. as $g | {
+                url: ($g | first | key(.)),
+                p: ([ $g[] | try .categories.performance.score        catch empty ] | map(select(.!=null)) | avg),
+                a: ([ $g[] | try .categories.accessibility.score      catch empty ] | map(select(.!=null)) | avg),
+                s: ([ $g[] | try .categories.seo.score                catch empty ] | map(select(.!=null)) | avg),
+                b: ([ $g[] | try .categories["best-practices"].score catch empty ] | map(select(.!=null)) | avg)
+              })
+            | map({ (.url): {p:.p,a:.a,s:.s,b:.b} })
+            | add // {}
+          ' "$results_dir"/lhr-*.json)"
+
+          fpct() { v="$1"; if [[ "$v" == "null" || -z "$v" ]]; then echo "N/A"; else awk -v n="$v" 'BEGIN{printf "%.0f", n*100}'; fi; }
+
+          # Parse links (object / array / newline list) and normalize root key
+          raw_links='${{ steps.lhci.outputs.links }}'
+          declare -A url2link=()
+          declare -a link_list=()
+          if [[ -n "$raw_links" && "$raw_links" != "null" ]]; then
+            if echo "$raw_links" | grep -q '^{'; then
+              while IFS=$'\t' read -r k v; do
+                # normalize: drop ?…/#… and then trailing slash
+                k="${k%%[\?#]*}"
+                k="${k%/}"
+                url2link["$k"]="$v"
+              done < <(printf '%s' "$raw_links" | jq -r 'to_entries[] | [.key,.value] | @tsv')
+            elif echo "$raw_links" | grep -q '^\s*\['; then
+              mapfile -t link_list < <(printf '%s' "$raw_links" | jq -r '.[]')
+            else
+              mapfile -t link_list < <(printf '%s\n' "$raw_links")
+            fi
+          fi
+
+          # Build the markdown table (real newlines)
+          table="| Page | Perf | A11y | SEO | BP | Report |"$'\n'"|---|---:|---:|---:|---:|---|"$'\n'
+          idx=0
+          for u in "${ordered_urls[@]}"; do
+            # alt key with/without trailing slash
+            if [[ "$u" == */ ]]; then alt="${u%/}"; else alt="$u/"; fi
+            key="${u%/}" ; altkey="${alt%/}"
+
+            p=$(jq -r --arg k "$key" --arg a "$altkey" -n --argjson m "$scores_json" '($m[$k].p // $m[$a].p // "null")')
+            a=$(jq -r --arg k "$key" --arg a "$altkey" -n --argjson m "$scores_json" '($m[$k].a // $m[$a].a // "null")')
+            s=$(jq -r --arg k "$key" --arg a "$altkey" -n --argjson m "$scores_json" '($m[$k].s // $m[$a].s // "null")')
+            b=$(jq -r --arg k "$key" --arg a "$altkey" -n --argjson m "$scores_json" '($m[$k].b // $m[$a].b // "null")')
+
+            ps=$(fpct "$p"); as=$(fpct "$a"); ss=$(fpct "$s"); bs=$(fpct "$b")
+
+            link="${url2link[$key]-}"
+            [[ -z "$link" ]] && link="${url2link[$altkey]-}"
+            if [[ -z "$link" && ${#link_list[@]} -gt 0 ]]; then link="${link_list[$idx]-}"; fi
+            [[ -n "$link" ]] && report_cell="[Report]($link)" || report_cell="-"
+
+            table+="| $u | $ps | $as | $ss | $bs | $report_cell |"$'\n'
+            idx=$((idx+1))
+          done
+
+          # Write as a multiline output (no escaping needed)
+          {
+            echo "md<<EOF"
+            echo "$table"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: '🔎 Resolve PR number'
+        id: pr
+        if: always()
+        env:
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.event.deployment.sha }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq >/dev/null 2>&1; }
+          json=$(curl -sS -H "Authorization: token ${GH_TOKEN}" -H "Accept: application/vnd.github+json" \
+                 "https://api.github.com/repos/${REPO}/commits/${SHA}/pulls")
+          pr=$(echo "$json" | jq -r 'map(select(.state!="closed")) | first | .number // empty')
+          echo "number=$pr" >> $GITHUB_OUTPUT
+          [[ -n "$pr" ]] && echo "Found PR #$pr" || echo "No open PR found for $SHA"
+
+      - name: '💬 Sticky Lighthouse comment'
+        if: always() && steps.pr.outputs.number != ''
         uses: marocchino/sticky-pull-request-comment@v2
         with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: lighthouse-report
-          number: ${{ steps.get_pr.outputs.pr_number }}
+          number: ${{ steps.pr.outputs.number }}
           message: |
             ## 🚀 Lighthouse Performance Report
+            **Preview URL:** ${{ steps.url.outputs.preview_url }}
+            **Status:** ${{ steps.parse.outputs.overall }}
 
-            **Preview URL:** ${{ steps.get_url.outputs.preview-url }}
-            **Status:** ${{ steps.parse_results.outputs.overall_status }}
-            **Generated:** ${{ steps.parse_results.outputs.timestamp }}
+            ${{ steps.table.outputs.md }}
 
-            ### 📊 Performance Scores
+            **Assertions:** ✅ ${{ steps.parse.outputs.passc }} · ⚠️ ${{ steps.parse.outputs.warnc }} · ❌ ${{ steps.parse.outputs.errc }}
 
-            | Category | Score | Status |
-            |----------|-------|--------|
-            | 🚀 Performance | ${{ steps.parse_results.outputs.perf_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.perf_display) || 'N/A' }} | ${{ steps.parse_results.outputs.perf_display != 'N/A' && (steps.parse_results.outputs.perf_display >= '80' && '✅' || (steps.parse_results.outputs.perf_display >= '50' && '⚠️' || '❌')) || '❓' }} |
-            | ♿ Accessibility | ${{ steps.parse_results.outputs.a11y_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.a11y_display) || 'N/A' }} | ${{ steps.parse_results.outputs.a11y_display != 'N/A' && (steps.parse_results.outputs.a11y_display >= '95' && '✅' || (steps.parse_results.outputs.a11y_display >= '80' && '⚠️' || '❌')) || '❓' }} |
-            | 🔍 SEO | ${{ steps.parse_results.outputs.seo_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.seo_display) || 'N/A' }} | ${{ steps.parse_results.outputs.seo_display != 'N/A' && (steps.parse_results.outputs.seo_display >= '90' && '✅' || (steps.parse_results.outputs.seo_display >= '70' && '⚠️' || '❌')) || '❓' }} |
-            | ⚡ Best Practices | ${{ steps.parse_results.outputs.bp_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.bp_display) || 'N/A' }} | ${{ steps.parse_results.outputs.bp_display != 'N/A' && (steps.parse_results.outputs.bp_display >= '90' && '✅' || (steps.parse_results.outputs.bp_display >= '70' && '❌')) || '❓' }} |
-
-            ### ⚡ Core Web Vitals
-
-            | Metric | Value | Target | Status |
-            |--------|-------|--------|--------|
-            | 🎨 First Contentful Paint | ${{ steps.parse_results.outputs.fcp != 'N/A' && format('{0}ms', steps.parse_results.outputs.fcp) || 'N/A' }} | ≤2000ms | ${{ steps.parse_results.outputs.fcp != 'N/A' && (steps.parse_results.outputs.fcp <= '2000' && '✅' || '❌') || '❓' }} |
-            | 🖼️ Largest Contentful Paint | ${{ steps.parse_results.outputs.lcp != 'N/A' && format('{0}ms', steps.parse_results.outputs.lcp) || 'N/A' }} | ≤2500ms | ${{ steps.parse_results.outputs.lcp != 'N/A' && (steps.parse_results.outputs.lcp <= '2500' && '✅' || '❌') || '❓' }} |
-            | 📐 Cumulative Layout Shift | ${{ steps.parse_results.outputs.cls != 'N/A' && steps.parse_results.outputs.cls || 'N/A' }} | ≤0.1 | ${{ steps.parse_results.outputs.cls != 'N/A' && (steps.parse_results.outputs.cls <= '0.1' && '✅' || '❌') || '❓' }} |
-
-            ### 📋 Assertion Results
-
-            - ✅ **Passed:** ${{ steps.parse_results.outputs.pass_count }} assertions
-            - ⚠️ **Warnings:** ${{ steps.parse_results.outputs.warn_count }} assertions  
-            - ❌ **Failed:** ${{ steps.parse_results.outputs.error_count }} assertions
-            ${{ steps.parse_results.outputs.budget_violations > '0' && format('- 💰 **Budget violations:** {0}', steps.parse_results.outputs.budget_violations) || '' }}
-
-            ### 🔗 Detailed Reports
-
-            ${{ steps.parse_results.outputs.formatted_links != '' && format('- 📊 [View interactive reports]({0})', steps.parse_results.outputs.formatted_links) || '- 📊 Interactive reports not available' }}
-            - ✅ Check PR status checks for pass/fail details
-            - 📄 Download HTML reports from job artifacts
-
-            **Pages analyzed:**
-            - 🏠 Home page (`/`)
-            - 👤 Over mij (`/over-mij`)
-            - 🎯 Aanpak (`/aanpak`)
-            - 💼 Coaching (`/coaching`)
-            - 📧 Contact (`/contact`)
-
-            ---
-            <details>
-            <summary>📖 Understanding the scores</summary>
-
-            - **Performance** (Target: ≥80): Measures loading speed and runtime performance
-            - **Accessibility** (Target: ≥95): Ensures the site is usable by people with disabilities
-            - **SEO** (Target: ≥90): Checks search engine optimization best practices  
-            - **Best Practices** (Target: ≥90): Follows web development best practices
-
-            *This comment updates automatically on each push.*
-            </details>
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: '⚠️ Fallback notification (no PR found)'
-        if: always() && steps.get_pr.outputs.pr_number == ''
-        run: |
-          echo "## ⚠️ Lighthouse Results Available" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Could not post comment to PR, but Lighthouse analysis completed:" >> $GITHUB_STEP_SUMMARY
-          echo "- **Status:** ${{ steps.parse_results.outputs.overall_status }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Failed assertions:** ${{ steps.parse_results.outputs.error_count }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Budget violations:** ${{ steps.parse_results.outputs.budget_violations }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Preview URL:** ${{ steps.get_url.outputs.preview-url }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Check job artifacts for detailed HTML reports." >> $GITHUB_STEP_SUMMARY
-
-      - name: '📊 Display Lighthouse summary'
+      - name: '📋 Job summary'
         if: always()
+        shell: bash
         run: |
-          echo "## 🚀 Lighthouse Performance Report" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Preview URL:** ${{ steps.get_url.outputs.preview-url }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Lighthouse reports have been uploaded as artifacts and are available in the PR status checks." >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "📈 **View detailed reports:**" >> $GITHUB_STEP_SUMMARY
-          echo "- Check the PR status checks for individual page results" >> $GITHUB_STEP_SUMMARY
-          echo "- Download HTML reports from job artifacts" >> $GITHUB_STEP_SUMMARY
-          if [[ "${{ steps.lhci.outputs.links }}" != "" ]]; then
-            echo "- [Temporary public reports](${{ steps.lhci.outputs.links }})" >> $GITHUB_STEP_SUMMARY
-          fi
+          {
+            echo "## 🚀 Lighthouse (Preview)";
+            echo "- URL: ${{ steps.url.outputs.preview_url }}";
+            echo "- Status: ${{ steps.parse.outputs.overall }}";
+            echo "";
+            echo "${{ steps.table.outputs.md }}";
+            echo "";
+            echo "**Assertions:** ✅ ${{ steps.parse.outputs.passc }} · ⚠️ ${{ steps.parse.outputs.warnc }} · ❌ ${{ steps.parse.outputs.errc }}";
+          } >> $GITHUB_STEP_SUMMARY

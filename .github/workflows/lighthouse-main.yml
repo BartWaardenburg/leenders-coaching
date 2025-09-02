@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths-ignore: ['**.md', 'docs/**']
   workflow_dispatch:
+  schedule:
+    - cron: '0 5 * * *'
 
 concurrency:
   group: lhci-main
@@ -13,11 +15,18 @@ concurrency:
 env:
   NODE_VERSION: '22'
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   lighthouse:
-    name: 'Lighthouse CI (Production)'
+    name: 'Lighthouse CI (Production) – ${{ matrix.formFactor }}'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
+    strategy:
+      matrix:
+        formFactor: [mobile, desktop]
 
     steps:
       - name: '🔄 Checkout repository'
@@ -32,31 +41,44 @@ jobs:
 
       - name: '🧪 Test production URL accessibility'
         run: |
-          production_url="https://leenders-coaching.vercel.app"
-          echo "🔍 Testing production URL accessibility: $production_url"
+          urls=( "https://leenders-coaching.vercel.app/"
+                 "https://leenders-coaching.vercel.app/over-mij"
+                 "https://leenders-coaching.vercel.app/aanpak"
+                 "https://leenders-coaching.vercel.app/coaching"
+                 "https://leenders-coaching.vercel.app/contact" )
 
-          # Test production URL accessibility (should not need authentication)
-          response=$(curl -sL --max-time 30 --max-redirs 5 "$production_url" || echo "CURL_FAILED")
-          final_url=$(curl -sLI --max-time 30 --max-redirs 5 "$production_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
+          echo "🔍 Testing production URL accessibility for all pages:"
 
-          echo "🔍 Final URL after redirects: $final_url"
+          for production_url in "${urls[@]}"; do
+            echo "  Testing: $production_url"
+            
+            # Test production URL accessibility (should not need authentication)
+            response=$(curl -sL --max-time 30 --max-redirs 5 "$production_url" || echo "CURL_FAILED")
+            final_url=$(curl -sLI --max-time 30 --max-redirs 5 "$production_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
 
-          if [[ "$response" == "CURL_FAILED" ]]; then
-            echo "❌ Production URL is not accessible (network error)"
-            echo "   URL: $production_url"
-            exit 1
-          elif echo "$response" | grep -qi "404\|not found"; then
-            echo "⚠️ Production URL returns 404"
-            echo "   URL: $production_url"
-            exit 1
-          else
-            echo "✅ Production URL is accessible and serves content"
-          fi
+            if [[ "$response" == "CURL_FAILED" ]]; then
+              echo "❌ Production URL is not accessible (network error)"
+              echo "   URL: $production_url"
+              exit 1
+            else
+              # Check HTTP status code
+              code=$(curl -s -o /dev/null -w "%{http_code}" "$production_url")
+              if [[ "$code" -ge 200 ]] && [[ "$code" -lt 400 ]]; then
+                echo "✅ HTTP $code - accessible"
+              else
+                echo "⚠️ Production URL returns HTTP $code"
+                echo "   URL: $production_url"
+                exit 1
+              fi
+            fi
+          done
+
+          echo "🎯 All production pages are accessible and ready for Lighthouse testing"
 
       - name: '🚀 Run Lighthouse CI (Production)'
+        id: lhci
         uses: treosh/lighthouse-ci-action@v12
         with:
-          # Update these URLs to match your production domain
           urls: |
             https://leenders-coaching.vercel.app/
             https://leenders-coaching.vercel.app/over-mij
@@ -66,24 +88,171 @@ jobs:
           configPath: packages/leenders-coaching-nl/lighthouserc.ci.cjs
           budgetPath: packages/leenders-coaching-nl/budget.json
           uploadArtifacts: true
+          artifactName: lighthouse-${{ matrix.formFactor }}
+          temporaryPublicStorage: true
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-          # Pass Vercel token for potential authentication (even on production)
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          # OPTIONAL: If you run a private LHCI server, uncomment these:
-          # LHCI_SERVER_BASE_URL: ${{ secrets.LHCI_SERVER_URL }}
-          # LHCI_TOKEN: ${{ secrets.LHCI_SERVER_BUILD_TOKEN }}
+          LHCI_FORM_FACTOR: ${{ matrix.formFactor }}
 
-      - name: '📊 Display production metrics summary'
+      - name: '📊 Parse & summarize Lighthouse results'
         if: always()
+        shell: bash
         run: |
-          echo "## 🚀 Production Lighthouse Report" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "**Timestamp:** $(date -u)" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Production Lighthouse audit completed. Results available in:" >> $GITHUB_STEP_SUMMARY
-          echo "- Job artifacts (HTML reports)" >> $GITHUB_STEP_SUMMARY
-          echo "- GitHub status checks" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "📈 **Performance trends** tracked over time to monitor regressions." >> $GITHUB_STEP_SUMMARY
+          set -euo pipefail
+          sudo apt-get update -y >/dev/null 2>&1 || true
+          sudo apt-get install -y jq >/dev/null 2>&1 || true
+
+          results_dir="${{ steps.lhci.outputs.resultsPath }}"
+          shopt -s nullglob
+          lhrs=("$results_dir"/lhr-*.json)
+
+          if [[ ${#lhrs[@]} -eq 0 ]]; then
+            {
+              echo "## 🚀 Production Lighthouse – ${{ matrix.formFactor }}";
+              echo "";
+              echo "_No Lighthouse result files were found (lhr-*.json)._";
+            } >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+          # --- Averages across all runs for this form factor ---
+          readarray -t agg < <(jq -s '
+            def avg: (length as $n | if $n==0 then null else (add / $n) end);
+            {
+              perf: (map(try .categories.performance.score catch null) | map(select(.!=null)) | avg),
+              a11y: (map(try .categories.accessibility.score catch null) | map(select(.!=null)) | avg),
+              seo:  (map(try .categories.seo.score catch null) | map(select(.!=null)) | avg),
+              bp:   (map(try .categories["best-practices"].score catch null) | map(select(.!=null)) | avg)
+            } | [.perf,.a11y,.seo,.bp] | map(if .==null then "N/A" else . end) | .[]
+          ' "${lhrs[@]}")
+
+          fmt() { if [[ "$1" == "N/A" ]]; then echo "N/A"; else awk -v v="$1" 'BEGIN{printf "%.0f/100", v*100}'; fi; }
+          avg_perf="$(fmt "${agg[0]}")"
+          avg_a11y="$(fmt "${agg[1]}")"
+          avg_seo="$(fmt "${agg[2]}")"
+          avg_bp="$(fmt "${agg[3]}")"
+
+          # --- Per-page rows from LHRs (dedup by final URL, average per page) ---
+          # We average multiple runs of the same URL so each page shows one row.
+          rows_md=$(
+            jq -s -r '
+              # strip ?query and #hash, then trailing slash
+              def norm(u):
+                if u==null then null else (u | sub("[?#].*$"; "") | sub("/$"; "")) end;
+              # prefer finalDisplayedUrl, fall back if needed
+              def key(x): norm(x.finalDisplayedUrl // x.finalUrl // x.requestedUrl);
+              def avg: (length as $n | if $n==0 then null else (add / $n) end);
+              # group all runs by final URL with query/hash/trailing-slash normalization
+              group_by(key(.)) |
+              map(. as $g |
+                {
+                  url: ($g | first | key(.)),
+                  p: ([ $g[] | try .categories.performance.score catch empty ] | map(select(.!=null)) | avg),
+                  a: ([ $g[] | try .categories.accessibility.score catch empty ] | map(select(.!=null)) | avg),
+                  s: ([ $g[] | try .categories.seo.score catch empty ] | map(select(.!=null)) | avg),
+                  b: ([ $g[] | try .categories["best-practices"].score catch empty ] | map(select(.!=null)) | avg)
+                }
+              )
+              | sort_by(.url)
+              | map("| \(.url) | " +
+                    (if .p then ((.p*100)|tostring) else "N/A" end) + " | " +
+                    (if .a then ((.a*100)|tostring) else "N/A" end) + " | " +
+                    (if .s then ((.s*100)|tostring) else "N/A" end) + " | " +
+                    (if .b then ((.b*100)|tostring) else "N/A" end) + " |")[]
+            ' "${lhrs[@]}"
+          )
+
+          # Debug: show what URLs we got from the LHRs
+          echo "🔍 URLs processed from LHRs:"
+          echo "$rows_md" | grep -o '^| [^|]* |' | sed 's/^| \([^|]*\) |/\1/' | sort
+          echo "🔍 Ordered URLs to match:"
+          printf '%s\n' "${urls[@]}"
+          echo "---"
+
+          # --- Robust link extraction (object / array / newline list) ---
+          links_raw='${{ steps.lhci.outputs.links }}'
+          declare -A url2link=()
+          declare -a link_list=()
+          if [[ -n "$links_raw" && "$links_raw" != "null" ]]; then
+            if echo "$links_raw" | grep -q '^{'; then
+              # JSON object: { "url": "reportUrl", ... }
+              while IFS=$'\t' read -r k v; do
+                # normalize: drop ?…/#… and then trailing slash
+                k="${k%%[\?#]*}"
+                k="${k%/}"
+                url2link["$k"]="$v"
+              done < <(printf '%s' "$links_raw" | jq -r 'to_entries[] | [.key,.value] | @tsv')
+            elif echo "$links_raw" | grep -q '^\s*\['; then
+              # JSON array
+              mapfile -t link_list < <(printf '%s' "$links_raw" | jq -r '.[]')
+            else
+              # newline-separated strings
+              mapfile -t link_list < <(printf '%s\n' "$links_raw")
+            fi
+          fi
+
+          # Attach one link per row by index (same run order). If fewer links than rows, fill with "-".
+          i=0
+          table="| Page | Perf | A11y | SEO | BP | Report |"$'\n'"|---|---:|---:|---:|---:|---|"$'\n'
+          while IFS= read -r row; do
+            # Extract URL from the row to try URL-based mapping first
+            row_url=$(echo "$row" | sed 's/^| \([^|]*\) |.*/\1/')
+            # Try both with and without trailing slash for URL matching
+            key="${row_url%/}"
+            altkey="${row_url%/}/"
+            if [[ "$row_url" == */ ]]; then altkey="${row_url%/}"; else altkey="$row_url/"; fi
+            
+            link="${url2link[$key]-}"
+            [[ -z "$link" ]] && link="${url2link[$altkey]-}"
+            if [[ -z "$link" && ${#link_list[@]} -gt 0 ]]; then 
+              link="${link_list[$i]-}"
+            fi
+            link="${link%%[[:space:]]*}"
+            report_cell="-"
+            [[ -n "$link" ]] && report_cell="[Report](${link})"
+            table+="${row} ${report_cell} |"$'\n'
+            i=$((i+1))
+          done <<< "$rows_md"
+
+          # First report link for quick access
+          first_link=""
+          if [[ ${#link_list[@]} -gt 0 ]]; then
+            first_link="${link_list[0]-}"
+          elif [[ ${#url2link[@]} -gt 0 ]]; then
+            # Get first value from associative array
+            first_link=$(printf '%s\n' "${url2link[@]}" | head -n1)
+          fi
+
+          {
+            echo "## 🚀 Production Lighthouse – ${{ matrix.formFactor }}";
+            echo "";
+            echo "**Averages (all pages/runs):**";
+            echo "";
+            echo "| Category | Score |";
+            echo "|---|---|";
+            echo "| Performance | ${avg_perf} |";
+            echo "| Accessibility | ${avg_a11y} |";
+            echo "| SEO | ${avg_seo} |";
+            echo "| Best Practices | ${avg_bp} |";
+            echo "";
+            echo "${table}";
+            if [[ -n "$first_link" ]]; then
+              echo "";
+              echo "- Temporary public report (first page): ${first_link}";
+            fi
+          } >> $GITHUB_STEP_SUMMARY
+
+      - name: '🚨 Open regression issue when failed'
+        if: failure() && github.event_name != 'schedule'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const title = `Lighthouse regression on main – ${{ matrix.formFactor }} (${new Date().toISOString().slice(0,10)})`;
+            const body = `The production Lighthouse check failed for **${{ matrix.formFactor }}**.
+
+            Commit: \`${{ github.sha }}\`
+            Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            Please review the artifacts and the temporary report link in the job summary.`;
+            await github.rest.issues.create({ owner: context.repo.owner, repo: context.repo.repo, title, body, labels: ['performance','lighthouse'] });

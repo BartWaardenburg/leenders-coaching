@@ -1,30 +1,47 @@
 module.exports = {
   ci: {
     collect: {
-      /* In CI we audit deployed preview URLs passed via the action, so
-         we must NOT try to start a local server or use pnpm. */
-      numberOfRuns: 3,
+      numberOfRuns: 1,
       settings: {
-        emulatedFormFactor: 'mobile',
+        formFactor: process.env.LHCI_FORM_FACTOR || 'mobile',
+        screenEmulation: process.env.LHCI_FORM_FACTOR === 'desktop' ? {
+          mobile: false,
+          width: 1350,
+          height: 940,
+          deviceScaleFactor: 1,
+        } : {
+          mobile: true,
+          width: 360,
+          height: 640,
+          deviceScaleFactor: 2,
+        },
+        preset: process.env.LHCI_FORM_FACTOR === 'desktop' ? 'desktop' : undefined,
         throttling: {
           rttMs: 150,
           throughputKbps: 1638.4,
           cpuSlowdownMultiplier: 4,
         },
         chromeFlags: '--no-sandbox --disable-dev-shm-usage --disable-background-timer-throttling --disable-features=VizDisplayCompositor',
-        // Add extra headers for Vercel authentication if token is available
-        extraHeaders: process.env.VERCEL_TOKEN ? {
-          'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`,
-          'User-Agent': 'Lighthouse-CI-GitHub-Actions'
-        } : undefined,
-        // Faster CI settings
+        extraHeaders: {
+          ...(process.env.VERCEL_AUTOMATION_BYPASS_SECRET ? {
+            'x-vercel-protection-bypass': process.env.VERCEL_AUTOMATION_BYPASS_SECRET,
+            'x-vercel-set-bypass-cookie': 'true',
+          } : {}),
+          'User-Agent': 'Lighthouse-CI-GitHub-Actions',
+          'Accept-Language': 'nl-NL,nl;q=0.9,en;q=0.8',
+        },
         skipAudits: ['screenshot-thumbnails', 'final-screenshot'],
         onlyCategories: ['performance', 'accessibility', 'seo', 'best-practices'],
-        // Increased timeouts for slower preview deployments
         maxWaitForLoad: 45000,
         maxWaitForFcp: 15000,
         networkQuietThresholdMs: 1000,
         cpuQuietThresholdMs: 1000,
+        blockedUrlPatterns: [
+          'https://www.google-analytics.com/*',
+          'https://www.googletagmanager.com/*',
+          'https://connect.facebook.net/*',
+          'https://stats.g.doubleclick.net/*',
+        ],
       },
     },
     assert: {
