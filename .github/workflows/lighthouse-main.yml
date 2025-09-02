@@ -84,8 +84,6 @@ jobs:
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           LHCI_FORM_FACTOR: ${{ matrix.formFactor }}
-          # Pass Vercel token for potential authentication (even on production)
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           # OPTIONAL: If you run a private LHCI server, uncomment these:
           # LHCI_SERVER_BASE_URL: ${{ secrets.LHCI_SERVER_URL }}
           # LHCI_TOKEN: ${{ secrets.LHCI_SERVER_BUILD_TOKEN }}

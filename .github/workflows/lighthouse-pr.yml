@@ -342,6 +342,17 @@ jobs:
             echo "warn_count=0" >> "$GITHUB_OUTPUT"
             echo "pass_count=0" >> "$GITHUB_OUTPUT"
             echo "formatted_links=" >> "$GITHUB_OUTPUT"
+            echo "perf_display=N/A" >> "$GITHUB_OUTPUT"
+            echo "a11y_display=N/A" >> "$GITHUB_OUTPUT"
+            echo "seo_display=N/A" >> "$GITHUB_OUTPUT"
+            echo "bp_display=N/A" >> "$GITHUB_OUTPUT"
+            echo "fcp=N/A" >> "$GITHUB_OUTPUT"
+            echo "lcp=N/A" >> "$GITHUB_OUTPUT"
+            echo "cls=N/A" >> "$GITHUB_OUTPUT"
+            echo "perf_ok=false" >> "$GITHUB_OUTPUT"
+            echo "a11y_ok=false" >> "$GITHUB_OUTPUT"
+            echo "seo_ok=false" >> "$GITHUB_OUTPUT"
+            echo "bp_ok=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: '🧾 Debug deployment payload (once)'
@@ -433,7 +444,7 @@ jobs:
             - ✅ **Passed:** ${{ steps.parse_results.outputs.pass_count }} assertions
             - ⚠️ **Warnings:** ${{ steps.parse_results.outputs.warn_count }} assertions  
             - ❌ **Failed:** ${{ steps.parse_results.outputs.error_count }} assertions
-            ${{ fromJSON(steps.parse_results.outputs.budget_violations) > 0 && format('- 💰 **Budget violations:** {0}', steps.parse_results.outputs.budget_violations) || '' }}
+            ${{ fromJSON(steps.parse_results.outputs.budget_violations || '0') > 0 && format('- 💰 **Budget violations:** {0}', steps.parse_results.outputs.budget_violations) || '' }}
 
             ### 🔗 Detailed Reports
 
@@ -459,8 +470,6 @@ jobs:
 
             *This comment updates automatically on each push.*
             </details>
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: '⚠️ Fallback notification (no PR found)'
         if: always() && steps.get_pr.outputs.pr_number == ''
