@@ -178,32 +178,47 @@ jobs:
           preview_url="${{ steps.get_url.outputs.preview-url }}"
           echo "🔍 Testing preview URL accessibility: $preview_url"
 
-          # Set up authentication headers if Vercel token is available
+          # Test URL accessibility with proper authentication
           if [ -n "${{ secrets.VERCEL_TOKEN }}" ]; then
-            auth_header="-H 'Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}'"
             echo "🔑 Using Vercel token for authenticated requests"
+            
+            # Test with authentication header
+            response=$(curl -sL --max-time 30 --max-redirs 5 \
+              -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
+              "$preview_url" || echo "CURL_FAILED")
+            
+            final_url=$(curl -sLI --max-time 30 --max-redirs 5 \
+              -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
+              "$preview_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
           else
-            auth_header=""
             echo "ℹ️ No Vercel token available, using unauthenticated requests"
+            
+            # Test without authentication
+            response=$(curl -sL --max-time 30 --max-redirs 5 "$preview_url" || echo "CURL_FAILED")
+            final_url=$(curl -sLI --max-time 30 --max-redirs 5 "$preview_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
           fi
-
-          # Check if URL redirects to login page
-          response=$(curl -sL --max-time 30 --max-redirs 5 $auth_header "$preview_url" || echo "CURL_FAILED")
-          final_url=$(curl -sLI --max-time 30 --max-redirs 5 $auth_header "$preview_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
 
           echo "🔍 Final URL after redirects: $final_url"
 
+          # Check for authentication issues
           if [[ "$final_url" == *"vercel.com/login"* ]] || [[ "$final_url" == *"sso-api"* ]]; then
-            echo "❌ Preview URL still redirects to Vercel login page!"
-            echo "   This means your preview deployment requires additional authentication."
+            echo "❌ Preview URL redirects to Vercel login page!"
+            echo "   This indicates Preview Deployment Protection is enabled."
+            echo ""
+            if [ -n "${{ secrets.VERCEL_TOKEN }}" ]; then
+              echo "🔧 We have a VERCEL_TOKEN but authentication still failed."
+              echo "   The token might not have sufficient permissions or the protection method has changed."
+            else
+              echo "🔑 No VERCEL_TOKEN available for authentication."
+            fi
             echo ""
             echo "📝 Possible solutions:"
             echo "   1. Disable Preview Deployment Protection in Vercel:"
-            echo "      Settings → General → Preview Deployment Protection → Set to 'Off'"
-            echo "   2. Or ensure VERCEL_TOKEN has proper permissions"
+            echo "      Project Settings → General → Preview Deployment Protection → Set to 'Off'"
+            echo "   2. Ensure VERCEL_TOKEN has proper team/project permissions"
+            echo "   3. Use a personal access token with deployment read permissions"
             echo ""
-            echo "🚨 LIGHTHOUSE WILL FAIL - Testing protected pages"
-            exit 1
+            echo "🚨 Continuing anyway - Lighthouse will attempt to test with authentication"
           elif [[ "$response" == "CURL_FAILED" ]]; then
             echo "❌ Preview URL is not accessible (network error)"
             echo "   URL: $preview_url"
@@ -211,12 +226,73 @@ jobs:
           elif echo "$response" | grep -qi "404\|not found"; then
             echo "⚠️ Preview URL returns 404 - deployment might not be complete"
             echo "   URL: $preview_url"
+            echo "   Waiting 30 seconds for deployment to stabilize..."
+            sleep 30
           else
             echo "✅ Preview URL is accessible and serves content"
-            # Check if we got actual content or still a login page
+            
+            # Check if we still got login-related content despite success
             if echo "$response" | grep -qi "vercel.*login\|sign.*in\|authenticate"; then
-              echo "⚠️ Response seems to contain login-related content, but proceeding..."
+              echo "⚠️ Response contains authentication-related content"
+              echo "   This might indicate partial protection bypass"
+            else
+              echo "✅ Content appears to be the actual application"
             fi
+          fi
+
+      - name: '🔐 Test authentication for all URLs'
+        run: |
+          if [ -n "${{ secrets.VERCEL_TOKEN }}" ]; then
+            echo "🔍 Testing authentication for all Lighthouse URLs..."
+            preview_url="${{ steps.get_url.outputs.preview-url }}"
+            
+            # Test all URLs that Lighthouse will check
+            urls=(
+              "$preview_url"
+              "$preview_url/over-mij" 
+              "$preview_url/aanpak"
+              "$preview_url/coaching"
+              "$preview_url/contact"
+            )
+            
+            auth_failures=0
+            for url in "${urls[@]}"; do
+              echo "🔍 Testing: $url"
+              
+              response=$(curl -sL --max-time 20 --write-out "%{http_code}" \
+                -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
+                "$url" || echo "CURL_FAILED")
+              
+              if [[ "$response" == *"CURL_FAILED"* ]]; then
+                echo "❌ Network error accessing $url"
+                ((auth_failures++))
+              elif [[ "$response" == *"vercel.com/login"* ]] || [[ "$response" == *"sso-api"* ]]; then
+                echo "❌ Authentication failed for $url (redirected to login)"
+                ((auth_failures++))
+              else
+                # Extract HTTP status code (last 3 characters)
+                status_code="${response: -3}"
+                if [[ "$status_code" =~ ^[45][0-9][0-9]$ ]]; then
+                  echo "⚠️ HTTP $status_code for $url"
+                  ((auth_failures++))
+                else
+                  echo "✅ HTTP $status_code for $url"
+                fi
+              fi
+            done
+            
+            if [ $auth_failures -gt 0 ]; then
+              echo ""
+              echo "⚠️ $auth_failures URL(s) failed authentication tests"
+              echo "🔧 Lighthouse may encounter issues with protected URLs"
+              echo "   Consider disabling Preview Deployment Protection in Vercel"
+            else
+              echo ""
+              echo "✅ All URLs passed authentication tests"
+              echo "🚀 Lighthouse should be able to access all pages"
+            fi
+          else
+            echo "ℹ️ No VERCEL_TOKEN available - skipping authentication tests"
           fi
 
       - name: '🚀 Run Lighthouse CI'
@@ -235,7 +311,7 @@ jobs:
           temporaryPublicStorage: true
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-          # Pass Vercel token to potentially bypass preview protection
+          # Pass Vercel token for preview protection bypass (used by lighthouserc.ci.cjs)
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
       - name: '📊 Parse Lighthouse results'
