@@ -122,25 +122,15 @@ jobs:
         run: |
           preview_url="${{ steps.get_url.outputs.preview-url }}"
 
-          # Test URL accessibility with proper authentication
-          if [ -n "${{ secrets.VERCEL_TOKEN }}" ]; then
-            echo "🔑 Using Vercel token for authenticated requests"
-            
-            # Test with authentication header
-            response=$(curl -sL --max-time 30 --max-redirs 5 \
-              -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-              "$preview_url" || echo "CURL_FAILED")
-            
-            final_url=$(curl -sLI --max-time 30 --max-redirs 5 \
-              -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-              "$preview_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
-          else
-            echo "ℹ️ No Vercel token available, using unauthenticated requests"
-            
-            # Test without authentication
-            response=$(curl -sL --max-time 30 --max-redirs 5 "$preview_url" || echo "CURL_FAILED")
-            final_url=$(curl -sLI --max-time 30 --max-redirs 5 "$preview_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
+          # Build headers array for Vercel protection bypass
+          headers=()
+          if [ -n "${{ secrets.VERCEL_PROTECTION_BYPASS }}" ]; then
+            headers=(-H "x-vercel-protection-bypass: ${{ secrets.VERCEL_PROTECTION_BYPASS }}" -H "x-vercel-set-bypass-cookie: true")
           fi
+
+          # Test URL accessibility with protection bypass headers
+          response=$(curl -sL --max-time 30 --max-redirs 5 "${headers[@]}" "$preview_url" || echo "CURL_FAILED")
+          final_url=$(curl -sLI --max-time 30 --max-redirs 5 "${headers[@]}" "$preview_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
 
           echo "🔍 Final URL after redirects: $final_url"
 
@@ -184,57 +174,59 @@ jobs:
 
       - name: '🔐 Test authentication for all URLs'
         run: |
-          if [ -n "${{ secrets.VERCEL_TOKEN }}" ]; then
-            echo "🔍 Testing authentication for all Lighthouse URLs..."
-            preview_url="${{ steps.get_url.outputs.preview-url }}"
+          echo "🔍 Testing authentication for all Lighthouse URLs..."
+          preview_url="${{ steps.get_url.outputs.preview-url }}"
+
+          # Build headers array for Vercel protection bypass
+          headers=()
+          if [ -n "${{ secrets.VERCEL_PROTECTION_BYPASS }}" ]; then
+            headers=(-H "x-vercel-protection-bypass: ${{ secrets.VERCEL_PROTECTION_BYPASS }}" -H "x-vercel-set-bypass-cookie: true")
+          fi
+
+          # Test all URLs that Lighthouse will check
+          urls=(
+            "$preview_url"
+            "$preview_url/over-mij" 
+            "$preview_url/aanpak"
+            "$preview_url/coaching"
+            "$preview_url/contact"
+          )
+
+          auth_failures=0
+          for url in "${urls[@]}"; do
+            echo "🔍 Testing: $url"
             
-            # Test all URLs that Lighthouse will check
-            urls=(
-              "$preview_url"
-              "$preview_url/over-mij" 
-              "$preview_url/aanpak"
-              "$preview_url/coaching"
-              "$preview_url/contact"
-            )
+            response=$(curl -sL --max-time 20 --write-out "%{http_code}" \
+              "${headers[@]}" \
+              "$url" || echo "CURL_FAILED")
             
-            auth_failures=0
-            for url in "${urls[@]}"; do
-              echo "🔍 Testing: $url"
-              
-              response=$(curl -sL --max-time 20 --write-out "%{http_code}" \
-                -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-                "$url" || echo "CURL_FAILED")
-              
-              if [[ "$response" == *"CURL_FAILED"* ]]; then
-                echo "❌ Network error accessing $url"
-                ((auth_failures++))
-              elif [[ "$response" == *"vercel.com/login"* ]] || [[ "$response" == *"sso-api"* ]]; then
-                echo "❌ Authentication failed for $url (redirected to login)"
+            if [[ "$response" == *"CURL_FAILED"* ]]; then
+              echo "❌ Network error accessing $url"
+              ((auth_failures++))
+            elif [[ "$response" == *"vercel.com/login"* ]] || [[ "$response" == *"sso-api"* ]]; then
+              echo "❌ Authentication failed for $url (redirected to login)"
+              ((auth_failures++))
+            else
+              # Extract HTTP status code (last 3 characters)
+              status_code="${response: -3}"
+              if [[ "$status_code" =~ ^[45][0-9][0-9]$ ]]; then
+                echo "⚠️ HTTP $status_code for $url"
                 ((auth_failures++))
               else
-                # Extract HTTP status code (last 3 characters)
-                status_code="${response: -3}"
-                if [[ "$status_code" =~ ^[45][0-9][0-9]$ ]]; then
-                  echo "⚠️ HTTP $status_code for $url"
-                  ((auth_failures++))
-                else
-                  echo "✅ HTTP $status_code for $url"
-                fi
+                echo "✅ HTTP $status_code for $url"
               fi
-            done
-            
-            if [ $auth_failures -gt 0 ]; then
-              echo ""
-              echo "⚠️ $auth_failures URL(s) failed authentication tests"
-              echo "🔧 Lighthouse may encounter issues with protected URLs"
-              echo "   Consider disabling Preview Deployment Protection in Vercel"
-            else
-              echo ""
-              echo "✅ All URLs passed authentication tests"
-              echo "🚀 Lighthouse should be able to access all pages"
             fi
+          done
+
+          if [ $auth_failures -gt 0 ]; then
+            echo ""
+            echo "⚠️ $auth_failures URL(s) failed authentication tests"
+            echo "🔧 Lighthouse may encounter issues with protected URLs"
+            echo "   Consider disabling Preview Deployment Protection in Vercel"
           else
-            echo "ℹ️ No VERCEL_TOKEN available - skipping authentication tests"
+            echo ""
+            echo "✅ All URLs passed authentication tests"
+            echo "🚀 Lighthouse should be able to access all pages"
           fi
 
       - name: '🚀 Run Lighthouse CI'
@@ -253,8 +245,8 @@ jobs:
           temporaryPublicStorage: true
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-          # Pass Vercel token for preview protection bypass (used by lighthouserc.ci.cjs)
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          LHCI_FORM_FACTOR: mobile
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_PROTECTION_BYPASS }}
 
       - name: '📊 Parse Lighthouse results'
         id: parse_results
@@ -423,10 +415,10 @@ jobs:
 
             | Category | Score | Status |
             |----------|-------|--------|
-            | 🚀 Performance | ${{ steps.parse_results.outputs.perf_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.perf_display) || 'N/A' }} | ${{ steps.parse_results.outputs.perf_display != 'N/A' && (steps.parse_results.outputs.perf_display >= '80' && '✅' || (steps.parse_results.outputs.perf_display >= '50' && '⚠️' || '❌')) || '❓' }} |
-            | ♿ Accessibility | ${{ steps.parse_results.outputs.a11y_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.a11y_display) || 'N/A' }} | ${{ steps.parse_results.outputs.a11y_display != 'N/A' && (steps.parse_results.outputs.a11y_display >= '95' && '✅' || (steps.parse_results.outputs.a11y_display >= '80' && '⚠️' || '❌')) || '❓' }} |
-            | 🔍 SEO | ${{ steps.parse_results.outputs.seo_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.seo_display) || 'N/A' }} | ${{ steps.parse_results.outputs.seo_display != 'N/A' && (steps.parse_results.outputs.seo_display >= '90' && '✅' || (steps.parse_results.outputs.seo_display >= '70' && '⚠️' || '❌')) || '❓' }} |
-            | ⚡ Best Practices | ${{ steps.parse_results.outputs.bp_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.bp_display) || 'N/A' }} | ${{ steps.parse_results.outputs.bp_display != 'N/A' && (steps.parse_results.outputs.bp_display >= '90' && '✅' || (steps.parse_results.outputs.bp_display >= '70' && '❌')) || '❓' }} |
+            | 🚀 Performance | ${{ steps.parse_results.outputs.perf_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.perf_display) || 'N/A' }} | ${{ steps.parse_results.outputs.perf_ok == 'true' && '✅' || '❌' }} |
+            | ♿ Accessibility | ${{ steps.parse_results.outputs.a11y_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.a11y_display) || 'N/A' }} | ${{ steps.parse_results.outputs.a11y_ok == 'true' && '✅' || '❌' }} |
+            | 🔍 SEO | ${{ steps.parse_results.outputs.seo_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.seo_display) || 'N/A' }} | ${{ steps.parse_results.outputs.seo_ok == 'true' && '✅' || '❌' }} |
+            | ⚡ Best Practices | ${{ steps.parse_results.outputs.bp_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.bp_display) || 'N/A' }} | ${{ steps.parse_results.outputs.bp_ok == 'true' && '✅' || '❌' }} |
 
             ### ⚡ Core Web Vitals
 

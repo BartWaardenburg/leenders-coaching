@@ -54,12 +54,16 @@ jobs:
             echo "❌ Production URL is not accessible (network error)"
             echo "   URL: $production_url"
             exit 1
-          elif echo "$response" | grep -qi "404\|not found"; then
-            echo "⚠️ Production URL returns 404"
-            echo "   URL: $production_url"
-            exit 1
           else
-            echo "✅ Production URL is accessible and serves content"
+            # Check HTTP status code
+            code=$(curl -s -o /dev/null -w "%{http_code}" "$production_url")
+            if [[ "$code" -ge 200 ]] && [[ "$code" -lt 400 ]]; then
+              echo "✅ Production URL is accessible and serves content (HTTP $code)"
+            else
+              echo "⚠️ Production URL returns HTTP $code"
+              echo "   URL: $production_url"
+              exit 1
+            fi
           fi
 
       - name: '🚀 Run Lighthouse CI (Production)'
@@ -79,6 +83,7 @@ jobs:
           temporaryPublicStorage: true
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          LHCI_FORM_FACTOR: ${{ matrix.formFactor }}
           # Pass Vercel token for potential authentication (even on production)
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           # OPTIONAL: If you run a private LHCI server, uncomment these:
