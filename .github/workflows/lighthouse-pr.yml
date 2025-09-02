@@ -314,10 +314,10 @@ jobs:
             bp_display=$(format_score "$best_practices_score")
             
             # Compute status indicators in bash to avoid string comparison issues
-            perf_ok=$(awk "BEGIN {exit !($performance_score >= 0.8)}" && echo "true" || echo "false")
-            a11y_ok=$(awk "BEGIN {exit !($accessibility_score >= 0.95)}" && echo "true" || echo "false")
-            seo_ok=$(awk "BEGIN {exit !($seo_score >= 0.9)}" && echo "true" || echo "false")
-            bp_ok=$(awk "BEGIN {exit !($best_practices_score >= 0.9)}" && echo "true" || echo "false")
+            perf_ok=$([ "$performance_score" != "N/A" ] && awk "BEGIN {exit !($performance_score >= 0.8)}" && echo true || echo false)
+            a11y_ok=$([ "$accessibility_score" != "N/A" ] && awk "BEGIN {exit !($accessibility_score >= 0.95)}" && echo true || echo false)
+            seo_ok=$([ "$seo_score" != "N/A" ] && awk "BEGIN {exit !($seo_score >= 0.9)}" && echo true || echo false)
+            bp_ok=$([ "$best_practices_score" != "N/A" ] && awk "BEGIN {exit !($best_practices_score >= 0.9)}" && echo true || echo false)
             
             echo "perf_display=$perf_display" >> "$GITHUB_OUTPUT"
             echo "a11y_display=$a11y_display" >> "$GITHUB_OUTPUT"
@@ -470,7 +470,6 @@ jobs:
 
             *This comment updates automatically on each push.*
             </details>
-
       - name: '⚠️ Fallback notification (no PR found)'
         if: always() && steps.get_pr.outputs.pr_number == ''
         run: |

@@ -41,30 +41,39 @@ jobs:
 
       - name: '🧪 Test production URL accessibility'
         run: |
-          production_url="https://leenders-coaching.vercel.app"
-          echo "🔍 Testing production URL accessibility: $production_url"
+          urls=( "https://leenders-coaching.vercel.app/"
+                 "https://leenders-coaching.vercel.app/over-mij"
+                 "https://leenders-coaching.vercel.app/aanpak"
+                 "https://leenders-coaching.vercel.app/coaching"
+                 "https://leenders-coaching.vercel.app/contact" )
 
-          # Test production URL accessibility (should not need authentication)
-          response=$(curl -sL --max-time 30 --max-redirs 5 "$production_url" || echo "CURL_FAILED")
-          final_url=$(curl -sLI --max-time 30 --max-redirs 5 "$production_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
+          echo "🔍 Testing production URL accessibility for all pages:"
 
-          echo "🔍 Final URL after redirects: $final_url"
+          for production_url in "${urls[@]}"; do
+            echo "  Testing: $production_url"
+            
+            # Test production URL accessibility (should not need authentication)
+            response=$(curl -sL --max-time 30 --max-redirs 5 "$production_url" || echo "CURL_FAILED")
+            final_url=$(curl -sLI --max-time 30 --max-redirs 5 "$production_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
 
-          if [[ "$response" == "CURL_FAILED" ]]; then
-            echo "❌ Production URL is not accessible (network error)"
-            echo "   URL: $production_url"
-            exit 1
-          else
-            # Check HTTP status code
-            code=$(curl -s -o /dev/null -w "%{http_code}" "$production_url")
-            if [[ "$code" -ge 200 ]] && [[ "$code" -lt 400 ]]; then
-              echo "✅ Production URL is accessible and serves content (HTTP $code)"
-            else
-              echo "⚠️ Production URL returns HTTP $code"
+            if [[ "$response" == "CURL_FAILED" ]]; then
+              echo "❌ Production URL is not accessible (network error)"
               echo "   URL: $production_url"
               exit 1
+            else
+              # Check HTTP status code
+              code=$(curl -s -o /dev/null -w "%{http_code}" "$production_url")
+              if [[ "$code" -ge 200 ]] && [[ "$code" -lt 400 ]]; then
+                echo "✅ HTTP $code - accessible"
+              else
+                echo "⚠️ Production URL returns HTTP $code"
+                echo "   URL: $production_url"
+                exit 1
+              fi
             fi
-          fi
+          done
+
+          echo "🎯 All production pages are accessible and ready for Lighthouse testing"
 
       - name: '🚀 Run Lighthouse CI (Production)'
         id: lhci
@@ -121,7 +130,8 @@ jobs:
           echo "| Best Practices | $(fmtPct "$bp") |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           if [ -n "${{ steps.lhci.outputs.links }}" ]; then
-            echo "- Temporary public report: ${{ steps.lhci.outputs.links }}" >> $GITHUB_STEP_SUMMARY
+            first_url=$(echo '${{ steps.lhci.outputs.links }}' | jq -r 'values[0]' 2>/dev/null || echo '${{ steps.lhci.outputs.links }}')
+            echo "- Temporary public report: ${first_url}" >> $GITHUB_STEP_SUMMARY
           fi
 
       - name: '🚨 Open regression issue when failed'
