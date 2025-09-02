@@ -119,10 +119,10 @@ jobs:
           readarray -t agg < <(jq -s '
             def avg: (length as $n | if $n==0 then null else (add / $n) end);
             {
-              perf: (map(.categories.performance.score) | avg),
-              a11y: (map(.categories.accessibility.score) | avg),
-              seo:  (map(.categories.seo.score) | avg),
-              bp:   (map(.categories["best-practices"].score) | avg)
+              perf: (map(try .categories.performance.score catch null) | map(select(.!=null)) | avg),
+              a11y: (map(try .categories.accessibility.score catch null) | map(select(.!=null)) | avg),
+              seo:  (map(try .categories.seo.score catch null) | map(select(.!=null)) | avg),
+              bp:   (map(try .categories["best-practices"].score catch null) | map(select(.!=null)) | avg)
             } | [.perf,.a11y,.seo,.bp] | map(if .==null then "N/A" else . end) | .[]
           ' "${lhrs[@]}")
 
@@ -137,14 +137,15 @@ jobs:
           rows_md=$(
             jq -s -r '
               def avg: (length as $n | if $n==0 then null else (add / $n) end);
+              def key(x): ( if (x|has("finalDisplayedUrl") and x.finalDisplayedUrl!=null) then x.finalDisplayedUrl else x.finalUrl end );
               # group all runs by final URL
-              group_by(.finalDisplayedUrl // .finalUrl) |
+              group_by(key(.)) |
               map({
-                url: (.[0].finalDisplayedUrl // .[0].finalUrl),
-                p: (map(.categories.performance.score) | avg),
-                a: (map(.categories.accessibility.score) | avg),
-                s: (map(.categories.seo.score) | avg),
-                b: (map(.categories["best-practices"].score) | avg)
+                url: key(.[0]),
+                p: (map(try .categories.performance.score catch null) | map(select(.!=null)) | avg),
+                a: (map(try .categories.accessibility.score catch null) | map(select(.!=null)) | avg),
+                s: (map(try .categories.seo.score catch null) | map(select(.!=null)) | avg),
+                b: (map(try .categories["best-practices"].score catch null) | map(select(.!=null)) | avg)
               })
               | sort_by(.url)
               | map("| \(.url) | " +
@@ -155,23 +156,33 @@ jobs:
             ' "${lhrs[@]}"
           )
 
-          # --- Robust link extraction (JSON array OR newline list) ---
+          # --- Robust link extraction (object / array / newline list) ---
           links_raw='${{ steps.lhci.outputs.links }}'
-          mapfile -t link_lines < <(
-            if [[ -n "$links_raw" && "$links_raw" != "null" ]]; then
-              if echo "$links_raw" | grep -q '^\s*\['; then
-                echo "$links_raw" | jq -r '.[]' 2>/dev/null
-              else
-                printf '%s\n' "$links_raw"
-              fi
+          declare -A url2link=()
+          declare -a link_list=()
+          if [[ -n "$links_raw" && "$links_raw" != "null" ]]; then
+            if echo "$links_raw" | grep -q '^{'; then
+              # JSON object: { "url": "reportUrl", ... }
+              while IFS=$'\t' read -r k v; do url2link["$k"]="$v"; done < <(printf '%s' "$links_raw" | jq -r 'to_entries[] | [.key,.value] | @tsv')
+            elif echo "$links_raw" | grep -q '^\s*\['; then
+              # JSON array
+              mapfile -t link_list < <(printf '%s' "$links_raw" | jq -r '.[]')
+            else
+              # newline-separated strings
+              mapfile -t link_list < <(printf '%s\n' "$links_raw")
             fi
-          )
+          fi
 
           # Attach one link per row by index (same run order). If fewer links than rows, fill with "-".
           i=0
           table="| Page | Perf | A11y | SEO | BP | Report |\n|---|---:|---:|---:|---:|---|\n"
           while IFS= read -r row; do
-            link="${link_lines[$i]-}"
+            # Extract URL from the row to try URL-based mapping first
+            row_url=$(echo "$row" | sed 's/^| \([^|]*\) |.*/\1/')
+            link="${url2link[$row_url]-}"
+            if [[ -z "$link" && ${#link_list[@]} -gt 0 ]]; then 
+              link="${link_list[$i]-}"
+            fi
             link="${link%%[[:space:]]*}"
             report_cell="-"
             [[ -n "$link" ]] && report_cell="[Report](${link})"
@@ -180,7 +191,13 @@ jobs:
           done <<< "$rows_md"
 
           # First report link for quick access
-          first_link="${link_lines[0]-}"
+          first_link=""
+          if [[ ${#link_list[@]} -gt 0 ]]; then
+            first_link="${link_list[0]-}"
+          elif [[ ${#url2link[@]} -gt 0 ]]; then
+            # Get first value from associative array
+            first_link=$(printf '%s\n' "${url2link[@]}" | head -n1)
+          fi
 
           {
             echo "## 🚀 Production Lighthouse – ${{ matrix.formFactor }}";

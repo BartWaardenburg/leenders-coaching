@@ -107,10 +107,10 @@ jobs:
             readarray -t vals < <(jq -s '
               def avg: (length as $n | if $n==0 then null else (add / $n) end);
               {
-                perf: (map(.categories.performance.score) | avg),
-                a11y: (map(.categories.accessibility.score) | avg),
-                seo:  (map(.categories.seo.score) | avg),
-                bp:   (map(.categories["best-practices"].score) | avg)
+                perf: (map(try .categories.performance.score catch null) | map(select(.!=null)) | avg),
+                a11y: (map(try .categories.accessibility.score catch null) | map(select(.!=null)) | avg),
+                seo:  (map(try .categories.seo.score catch null) | map(select(.!=null)) | avg),
+                bp:   (map(try .categories["best-practices"].score catch null) | map(select(.!=null)) | avg)
               } | [.perf,.a11y,.seo,.bp] | map(if .==null then "N/A" else . end) | .[]
             ' "${lhrs[@]}")
 
@@ -142,43 +142,74 @@ jobs:
           fi
           echo "report=$report" >> $GITHUB_OUTPUT
 
-      - name: '🧾 Build per-page table'
+      - name: '🧾 Build per-page table (robust)'
         id: table
         if: always()
         shell: bash
         run: |
           set -euo pipefail
           command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq -y >/dev/null 2>&1; }
+
           results_dir="${{ steps.lhci.outputs.resultsPath }}"
-          # collect finalUrl -> scores map from LHRs
-          rows=$(
-            jq -r '
-              [ inputs | {url:.finalDisplayedUrl // .finalUrl,
-                           p:(.categories.performance.score//null),
-                           a:(.categories.accessibility.score//null),
-                           s:(.categories.seo.score//null),
-                           b:(.categories["best-practices"].score//null)} ]
-              | sort_by(.url)
-              | map("| \(.url) | " +
-                    (if .p then ((.p*100)|tostring) else "N/A" end) + " | " +
-                    (if .a then ((.a*100)|tostring) else "N/A" end) + " | " +
-                    (if .s then ((.s*100)|tostring) else "N/A" end) + " | " +
-                    (if .b then ((.b*100)|tostring) else "N/A" end) + " |")[]
-            ' "$results_dir"/lhr-*.json
-          )
+          base="${{ steps.url.outputs.preview_url }}"
+          # The order you passed to the action:
+          ordered_urls=("$base" "$base/over-mij" "$base/aanpak" "$base/coaching" "$base/contact")
 
-          # align report links (same order as action input)
-          mapfile -t link_lines < <(printf '%s\n' "${{ steps.lhci.outputs.links }}")
-          i=0
+          # Build a URL -> {p,a,s,b} map with averages across runs (no `//` operator used)
+          scores_json="$(jq -sr '
+            def key(x): ( if (x|has("finalDisplayedUrl") and x.finalDisplayedUrl!=null) then x.finalDisplayedUrl else x.finalUrl end );
+            def avg: (length as $n | if $n==0 then null else (add / $n) end);
+            sort_by(key(.))
+            | group_by(key(.))
+            | map({
+                url: key(.[0]),
+                p: (map(try .categories.performance.score        catch null) | map(select(.!=null)) | avg),
+                a: (map(try .categories.accessibility.score      catch null) | map(select(.!=null)) | avg),
+                s: (map(try .categories.seo.score                catch null) | map(select(.!=null)) | avg),
+                b: (map(try .categories["best-practices"].score catch null) | map(select(.!=null)) | avg)
+              })
+            | map({ (.url): {p:.p,a:.a,s:.s,b:.b} })
+            | add // {}
+          ' "$results_dir"/lhr-*.json)"
+
+          fpct() { v="$1"; if [[ "$v" == "null" || -z "$v" ]]; then echo "N/A"; else awk -v n="$v" 'BEGIN{printf "%.0f", n*100}'; fi; }
+
+          # Parse links output from the action (object / array / newline list)
+          raw_links='${{ steps.lhci.outputs.links }}'
+          declare -A url2link=()
+          declare -a link_list=()
+          if [[ -n "$raw_links" && "$raw_links" != "null" ]]; then
+            if echo "$raw_links" | grep -q '^{'; then
+              # JSON object: { "url": "reportUrl", ... }
+              while IFS=$'\t' read -r k v; do url2link["$k"]="$v"; done < <(printf '%s' "$raw_links" | jq -r 'to_entries[] | [.key,.value] | @tsv')
+            elif echo "$raw_links" | grep -q '^\s*\['; then
+              # JSON array
+              mapfile -t link_list < <(printf '%s' "$raw_links" | jq -r '.[]')
+            else
+              # newline-separated strings
+              mapfile -t link_list < <(printf '%s\n' "$raw_links")
+            fi
+          fi
+
           table="| Page | Perf | A11y | SEO | BP | Report |\n|---|---:|---:|---:|---:|---|\n"
-          while IFS= read -r line; do
-            link="${link_lines[$i]-}"
-            link="${link%%[[:space:]]*}"
-            table+="${line} $( [[ -n "$link" ]] && echo "[Report]($link)" || echo "-" ) |\n"
-            i=$((i+1))
-          done <<< "$rows"
+          idx=0
+          for u in "${ordered_urls[@]}"; do
+            p=$(jq -r --arg u "$u" -n --argjson m "$scores_json" '$m[$u].p // "null"')
+            a=$(jq -r --arg u "$u" -n --argjson m "$scores_json" '$m[$u].a // "null"')
+            s=$(jq -r --arg u "$u" -n --argjson m "$scores_json" '$m[$u].s // "null"')
+            b=$(jq -r --arg u "$u" -n --argjson m "$scores_json" '$m[$u].b // "null"')
 
-          # escape for output
+            ps=$(fpct "$p"); as=$(fpct "$a"); ss=$(fpct "$s"); bs=$(fpct "$b")
+
+            link="${url2link[$u]-}"
+            if [[ -z "$link" && ${#link_list[@]} -gt 0 ]]; then link="${link_list[$idx]-}"; fi
+            [[ -n "$link" ]] && report_cell="[Report]($link)" || report_cell="-"
+
+            table+="| $u | $ps | $as | $ss | $bs | $report_cell |\n"
+            idx=$((idx+1))
+          done
+
+          # escape for composite output
           table="${table//'%'/'%25'}"
           table="${table//$'\n'/'%0A'}"
           table="${table//$'\r'/'%0D'}"
