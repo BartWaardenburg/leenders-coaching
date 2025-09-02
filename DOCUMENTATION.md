@@ -7,8 +7,6 @@ This document provides an overview of all documentation in the Leenders Coaching
 ### Root Level
 
 - **[README.md](./README.md)** - Main project documentation with setup, usage, and contribution guidelines
-- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Detailed deployment instructions for Vercel and other platforms
-- **[DEPLOYMENT_FIXES.md](./DEPLOYMENT_FIXES.md)** - Common deployment issues and solutions
 
 ## 📦 Package Documentation
 
