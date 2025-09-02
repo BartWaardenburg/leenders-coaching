@@ -18,6 +18,7 @@ permissions:
   contents: read
   security-events: write
   pull-requests: write
+  issues: write
 
 env:
   NODE_VERSION: '22'
@@ -75,13 +76,16 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
+      - name: 'Get pnpm store path'
+        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
       - name: '💾 Cache pnpm store'
         uses: actions/cache@v4
         with:
-          path: ${{ env.PNPM_HOME }}
-          key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          path: ${{ env.PNPM_STORE_PATH }}
+          key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            pnpm-${{ runner.os }}-
+            pnpm-store-${{ runner.os }}-
 
       - name: '📥 Install dependencies'
         run: pnpm run ci:install:frozen
@@ -192,10 +196,12 @@ jobs:
     needs: [codeql-analysis, security-checks]
     permissions:
       pull-requests: write
+      issues: write
     steps:
       - name: '💬 Sticky PR comment – CodeQL & Checks'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: codeql-quality
           number: ${{ github.event.pull_request.number }}
           message: |

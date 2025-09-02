@@ -66,13 +66,16 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
+      - name: 'Get pnpm store path'
+        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
       - name: '💾 Cache pnpm store'
         uses: actions/cache@v4
         with:
-          path: ${{ env.PNPM_HOME }}
-          key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          path: ${{ env.PNPM_STORE_PATH }}
+          key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            pnpm-${{ runner.os }}-
+            pnpm-store-${{ runner.os }}-
 
       - name: '📥 Install dependencies'
         run: pnpm run ci:install:frozen
@@ -80,6 +83,7 @@ jobs:
       - name: '🔒 Run security audit'
         id: audit
         run: |
+          command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq >/dev/null 2>&1; }
           SEVERITY="${{ github.event.inputs.severity || 'moderate' }}"
           if pnpm audit --audit-level "$SEVERITY" --json > audit-results.json 2>/dev/null; then
             echo "vulnerabilities=false" >> $GITHUB_OUTPUT
@@ -103,6 +107,7 @@ jobs:
       - name: '📊 Generate security report'
         if: steps.audit.outputs.vulnerabilities == 'true' && github.event_name == 'pull_request'
         run: |
+          command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq >/dev/null 2>&1; }
           if [ -f audit-results.json ]; then
             VULN_SUMMARY=$(cat audit-results.json | jq -r '.metadata.vulnerabilities | "**Vulnerabilities Found:**\n- Info: \(.info)\n- Low: \(.low)\n- Moderate: \(.moderate)\n- High: \(.high)\n- Critical: \(.critical)"')
             
@@ -158,6 +163,7 @@ jobs:
         if: steps.audit.outputs.vulnerabilities == 'true' && github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: security-audit
           number: ${{ github.event.pull_request.number }}
           message: ${{ steps.read_report.outputs.body }}
@@ -182,13 +188,16 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
+      - name: 'Get pnpm store path'
+        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
       - name: '💾 Cache pnpm store'
         uses: actions/cache@v4
         with:
-          path: ${{ env.PNPM_HOME }}
-          key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          path: ${{ env.PNPM_STORE_PATH }}
+          key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            pnpm-${{ runner.os }}-
+            pnpm-store-${{ runner.os }}-
 
       - name: '📥 Install dependencies'
         run: pnpm run ci:install:frozen
@@ -229,19 +238,24 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
+      - name: 'Get pnpm store path'
+        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
       - name: '💾 Cache pnpm store'
         uses: actions/cache@v4
         with:
-          path: ${{ env.PNPM_HOME }}
-          key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          path: ${{ env.PNPM_STORE_PATH }}
+          key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            pnpm-${{ runner.os }}-
+            pnpm-store-${{ runner.os }}-
 
       - name: '📥 Install dependencies'
         run: pnpm run ci:install:frozen
 
       - name: '📊 Analyze dependencies'
         run: |
+          sudo apt-get update -y >/dev/null 2>&1 || true
+          sudo apt-get install -y jq >/dev/null 2>&1 || true
           echo "📦 Dependency Analysis Report"
           echo "=========================="
 
@@ -295,19 +309,24 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
+      - name: 'Get pnpm store path'
+        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
       - name: '💾 Cache pnpm store'
         uses: actions/cache@v4
         with:
-          path: ${{ env.PNPM_HOME }}
-          key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          path: ${{ env.PNPM_STORE_PATH }}
+          key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            pnpm-${{ runner.os }}-
+            pnpm-store-${{ runner.os }}-
 
       - name: '📥 Install dependencies'
         run: pnpm run ci:install:frozen
 
       - name: '🔍 ESLint analysis'
         run: |
+          sudo apt-get update -y >/dev/null 2>&1 || true
+          sudo apt-get install -y jq >/dev/null 2>&1 || true
           if pnpm --filter leenders-coaching-nl run lint:format > eslint-raw-output.txt 2>&1; then
             ESLINT_STATUS="success"
           else
@@ -379,13 +398,16 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
+      - name: 'Get pnpm store path'
+        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
       - name: '💾 Cache pnpm store'
         uses: actions/cache@v4
         with:
-          path: ${{ env.PNPM_HOME }}
-          key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          path: ${{ env.PNPM_STORE_PATH }}
+          key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            pnpm-${{ runner.os }}-
+            pnpm-store-${{ runner.os }}-
 
       - name: '📥 Install dependencies'
         run: pnpm run ci:install:frozen
@@ -477,6 +499,7 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: quality-gates
           number: ${{ github.event.pull_request.number }}
           message: |

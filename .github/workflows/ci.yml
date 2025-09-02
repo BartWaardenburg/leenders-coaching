@@ -12,6 +12,7 @@ concurrency:
 permissions:
   contents: read
   pull-requests: write
+  issues: write
 
 env:
   NODE_VERSION: '22'
@@ -49,10 +50,13 @@ jobs:
         run: |
           echo "key=pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}" >> $GITHUB_OUTPUT
 
+      - name: 'Get pnpm store path'
+        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
       - name: '💾 Cache pnpm store'
         uses: actions/cache@v4
         with:
-          path: ${{ env.PNPM_HOME }}
+          path: ${{ env.PNPM_STORE_PATH }}
           key: ${{ steps.cache-key.outputs.key }}
           restore-keys: |
             pnpm-${{ runner.os }}-
@@ -91,10 +95,13 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
+      - name: 'Get pnpm store path'
+        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
       - name: '💾 Restore pnpm cache'
         uses: actions/cache@v4
         with:
-          path: ${{ env.PNPM_HOME }}
+          path: ${{ env.PNPM_STORE_PATH }}
           key: ${{ needs.quality-gate.outputs.cache-key }}
           restore-keys: |
             pnpm-${{ runner.os }}-
@@ -114,10 +121,6 @@ jobs:
           fail_ci_if_error: false
           verbose: true
           flags: frontend
-          exclude: |
-            packages/leenders-coaching-nl/lighthouserc.js
-            packages/leenders-coaching-nl/*.config.*
-            packages/leenders-coaching-nl/next-env.d.ts
 
   studio-validation:
     name: 'Studio Validation'
@@ -143,10 +146,13 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
+      - name: 'Get pnpm store path'
+        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
       - name: '💾 Restore pnpm cache'
         uses: actions/cache@v4
         with:
-          path: ${{ env.PNPM_HOME }}
+          path: ${{ env.PNPM_STORE_PATH }}
           key: ${{ needs.quality-gate.outputs.cache-key }}
           restore-keys: |
             pnpm-${{ runner.os }}-
@@ -188,10 +194,13 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
+      - name: 'Get pnpm store path'
+        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
       - name: '💾 Restore pnpm cache'
         uses: actions/cache@v4
         with:
-          path: ${{ env.PNPM_HOME }}
+          path: ${{ env.PNPM_STORE_PATH }}
           key: ${{ needs.quality-gate.outputs.cache-key }}
           restore-keys: |
             pnpm-${{ runner.os }}-
@@ -212,10 +221,12 @@ jobs:
     needs: [quality-gate, frontend-tests, studio-validation, build-verification]
     permissions:
       pull-requests: write
+      issues: write
     steps:
       - name: '💬 Sticky PR comment – CI'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: ci-summary
           number: ${{ github.event.pull_request.number }}
           message: |

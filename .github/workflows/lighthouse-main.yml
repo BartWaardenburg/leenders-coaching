@@ -94,42 +94,112 @@ jobs:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           LHCI_FORM_FACTOR: ${{ matrix.formFactor }}
 
-      - name: '📊 Summarize key scores'
+      - name: '📊 Parse & summarize Lighthouse results (robust)'
         if: always()
+        shell: bash
         run: |
-          set -e
+          set -euo pipefail
           sudo apt-get update -y >/dev/null 2>&1 || true
           sudo apt-get install -y jq >/dev/null 2>&1 || true
+
           results_dir="${{ steps.lhci.outputs.resultsPath }}"
-          file="$results_dir/assertion-results.json"
-          if [ ! -f "$file" ]; then
-            echo "No assertion-results.json"; exit 0
+          shopt -s nullglob
+          lhrs=("$results_dir"/lhr-*.json)
+
+          if [[ ${#lhrs[@]} -eq 0 ]]; then
+            {
+              echo "## 🚀 Production Lighthouse – ${{ matrix.formFactor }}";
+              echo "";
+              echo "_No Lighthouse result files were found (lhr-*.json)._";
+            } >> $GITHUB_STEP_SUMMARY
+            exit 0
           fi
 
-          getScore () { jq -r '[.[] | select(.auditId == "categories:'"$1"'")] | if length>0 then .[0].actual else "N/A" end' "$file"; }
-          fmtPct () {
-            if [ "$1" = "N/A" ]; then
-              echo "N/A"
-            else
-              awk -v v="$1" 'BEGIN{printf "%.0f/100", v*100}'
+          # --- Averages across all runs for this form factor ---
+          readarray -t agg < <(jq -s '
+            def avg: (length as $n | if $n==0 then null else (add / $n) end);
+            {
+              perf: (map(.categories.performance.score) | avg),
+              a11y: (map(.categories.accessibility.score) | avg),
+              seo:  (map(.categories.seo.score) | avg),
+              bp:   (map(.categories["best-practices"].score) | avg)
+            } | [.perf,.a11y,.seo,.bp] | map(if .==null then "N/A" else . end) | .[]
+          ' "${lhrs[@]}")
+
+          fmt() { if [[ "$1" == "N/A" ]]; then echo "N/A"; else awk -v v="$1" 'BEGIN{printf "%.0f/100", v*100}'; fi; }
+          avg_perf="$(fmt "${agg[0]}")"
+          avg_a11y="$(fmt "${agg[1]}")"
+          avg_seo="$(fmt "${agg[2]}")"
+          avg_bp="$(fmt "${agg[3]}")"
+
+          # --- Per-page rows from LHRs (dedup by final URL, average per page) ---
+          # We average multiple runs of the same URL so each page shows one row.
+          rows_md=$(
+            jq -s -r '
+              def avg: (length as $n | if $n==0 then null else (add / $n) end);
+              # group all runs by final URL
+              group_by(.finalDisplayedUrl // .finalUrl) |
+              map({
+                url: (.[0].finalDisplayedUrl // .[0].finalUrl),
+                p: (map(.categories.performance.score) | avg),
+                a: (map(.categories.accessibility.score) | avg),
+                s: (map(.categories.seo.score) | avg),
+                b: (map(.categories["best-practices"].score) | avg)
+              })
+              | sort_by(.url)
+              | map("| \(.url) | " +
+                    (if .p then ((.p*100)|tostring) else "N/A" end) + " | " +
+                    (if .a then ((.a*100)|tostring) else "N/A" end) + " | " +
+                    (if .s then ((.s*100)|tostring) else "N/A" end) + " | " +
+                    (if .b then ((.b*100)|tostring) else "N/A" end) + " |")[]
+            ' "${lhrs[@]}"
+          )
+
+          # --- Robust link extraction (JSON array OR newline list) ---
+          links_raw='${{ steps.lhci.outputs.links }}'
+          mapfile -t link_lines < <(
+            if [[ -n "$links_raw" && "$links_raw" != "null" ]]; then
+              if echo "$links_raw" | grep -q '^\s*\['; then
+                echo "$links_raw" | jq -r '.[]' 2>/dev/null
+              else
+                printf '%s\n' "$links_raw"
+              fi
             fi
-          }
+          )
 
-          perf=$(getScore performance); a11y=$(getScore accessibility); seo=$(getScore seo); bp=$(getScore best-practices)
+          # Attach one link per row by index (same run order). If fewer links than rows, fill with "-".
+          i=0
+          table="| Page | Perf | A11y | SEO | BP | Report |\n|---|---:|---:|---:|---:|---|\n"
+          while IFS= read -r row; do
+            link="${link_lines[$i]-}"
+            link="${link%%[[:space:]]*}"
+            report_cell="-"
+            [[ -n "$link" ]] && report_cell="[Report](${link})"
+            table+="${row} ${report_cell} |\n"
+            i=$((i+1))
+          done <<< "$rows_md"
 
-          echo "## 🚀 Production Lighthouse – ${{ matrix.formFactor }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Category | Score |" >> $GITHUB_STEP_SUMMARY
-          echo "|---|---|" >> $GITHUB_STEP_SUMMARY
-          echo "| Performance | $(fmtPct "$perf") |" >> $GITHUB_STEP_SUMMARY
-          echo "| Accessibility | $(fmtPct "$a11y") |" >> $GITHUB_STEP_SUMMARY
-          echo "| SEO | $(fmtPct "$seo") |" >> $GITHUB_STEP_SUMMARY
-          echo "| Best Practices | $(fmtPct "$bp") |" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          if [ -n "${{ steps.lhci.outputs.links }}" ]; then
-            first_url=$(echo '${{ steps.lhci.outputs.links }}' | jq -r 'values[0]' 2>/dev/null || echo '${{ steps.lhci.outputs.links }}')
-            echo "- Temporary public report: ${first_url}" >> $GITHUB_STEP_SUMMARY
-          fi
+          # First report link for quick access
+          first_link="${link_lines[0]-}"
+
+          {
+            echo "## 🚀 Production Lighthouse – ${{ matrix.formFactor }}";
+            echo "";
+            echo "**Averages (all pages/runs):**";
+            echo "";
+            echo "| Category | Score |";
+            echo "|---|---|";
+            echo "| Performance | ${avg_perf} |";
+            echo "| Accessibility | ${avg_a11y} |";
+            echo "| SEO | ${avg_seo} |";
+            echo "| Best Practices | ${avg_bp} |";
+            echo "";
+            echo "${table}";
+            if [[ -n "$first_link" ]]; then
+              echo "";
+              echo "- Temporary public report (first page): ${first_link}";
+            fi
+          } >> $GITHUB_STEP_SUMMARY
 
       - name: '🚨 Open regression issue when failed'
         if: failure() && github.event_name != 'schedule'

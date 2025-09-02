@@ -10,6 +10,7 @@ permissions:
   contents: read
   deployments: read
   pull-requests: write
+  issues: write
 
 env:
   NODE_VERSION: '22'
@@ -73,46 +74,115 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          file="${{ steps.lhci.outputs.resultsPath }}/assertion-results.json"
           command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq -y >/dev/null 2>&1; }
-          if [[ ! -f "$file" ]]; then
-            echo "overall=⚠️ NO RESULTS" >> $GITHUB_OUTPUT
+
+          results_dir="${{ steps.lhci.outputs.resultsPath }}"
+          assertion_file="$results_dir/assertion-results.json"
+
+          # defaults
+          echo "errc=0"   >> $GITHUB_OUTPUT
+          echo "warnc=0"  >> $GITHUB_OUTPUT
+          echo "passc=0"  >> $GITHUB_OUTPUT
+
+          # assertions counts (if file exists)
+          if [[ -f "$assertion_file" ]]; then
+            errc=$(jq '[.[] | select(.level=="error")] | length' "$assertion_file")
+            warnc=$(jq '[.[] | select(.level=="warn")]  | length' "$assertion_file")
+            passc=$(jq '[.[] | select(.level=="pass")]  | length' "$assertion_file")
+            echo "errc=$errc"  >> $GITHUB_OUTPUT
+            echo "warnc=$warnc" >> $GITHUB_OUTPUT
+            echo "passc=$passc" >> $GITHUB_OUTPUT
+          fi
+
+          # derive category scores from raw LHRs (robust)
+          shopt -s nullglob
+          lhrs=("$results_dir"/lhr-*.json)
+          if [[ ${#lhrs[@]} -eq 0 ]]; then
             echo "perf=N/A" >> $GITHUB_OUTPUT
             echo "a11y=N/A" >> $GITHUB_OUTPUT
             echo "seo=N/A"  >> $GITHUB_OUTPUT
             echo "bp=N/A"   >> $GITHUB_OUTPUT
-            echo "errc=0"   >> $GITHUB_OUTPUT
-            echo "warnc=0"  >> $GITHUB_OUTPUT
-            echo "passc=0"  >> $GITHUB_OUTPUT
-            echo "report="  >> $GITHUB_OUTPUT
-            exit 0
-          fi
-          score () { jq -r '[.[] | select(.auditId=="categories:'"$1"'")] | if length>0 then .[0].actual else "N/A" end' "$file"; }
-          to_pct () { awk -v v="$1" 'BEGIN{printf "%.0f", v*100}'; }
-          perf=$(score performance); a11y=$(score accessibility); seo=$(score seo); bp=$(score best-practices)
-          [[ "$perf" != "N/A" ]] && perf=$(to_pct "$perf") || perf="N/A"
-          [[ "$a11y" != "N/A" ]] && a11y=$(to_pct "$a11y") || a11y="N/A"
-          [[ "$seo"  != "N/A" ]] && seo=$(to_pct "$seo")   || seo="N/A"
-          [[ "$bp"   != "N/A" ]] && bp=$(to_pct "$bp")     || bp="N/A"
-          errc=$(jq '[.[] | select(.level=="error")] | length' "$file")
-          warnc=$(jq '[.[] | select(.level=="warn")]  | length' "$file")
-          passc=$(jq '[.[] | select(.level=="pass")]  | length' "$file")
-          [[ "$errc" -gt 0 ]] && overall="❌ FAILED" || overall="✅ PASSED"
-          echo "overall=$overall" >> $GITHUB_OUTPUT
-          echo "perf=$perf" >> $GITHUB_OUTPUT
-          echo "a11y=$a11y" >> $GITHUB_OUTPUT
-          echo "seo=$seo"   >> $GITHUB_OUTPUT
-          echo "bp=$bp"     >> $GITHUB_OUTPUT
-          echo "errc=$errc" >> $GITHUB_OUTPUT
-          echo "warnc=$warnc" >> $GITHUB_OUTPUT
-          echo "passc=$passc" >> $GITHUB_OUTPUT
-          links='${{ steps.lhci.outputs.links }}'
-          if [[ -n "$links" && "$links" != "null" ]]; then
-            first_url=$(echo "$links" | jq -r 'values[0]' 2>/dev/null || echo "")
-            echo "report=$first_url" >> $GITHUB_OUTPUT
+            echo "overall=⚠️ NO RESULTS" >> $GITHUB_OUTPUT
           else
-            echo "report=" >> $GITHUB_OUTPUT
+            readarray -t vals < <(jq -s '
+              def avg: (length as $n | if $n==0 then null else (add / $n) end);
+              {
+                perf: (map(.categories.performance.score) | avg),
+                a11y: (map(.categories.accessibility.score) | avg),
+                seo:  (map(.categories.seo.score) | avg),
+                bp:   (map(.categories["best-practices"].score) | avg)
+              } | [.perf,.a11y,.seo,.bp] | map(if .==null then "N/A" else . end) | .[]
+            ' "${lhrs[@]}")
+
+            to_pct () { awk -v v="$1" 'BEGIN{printf "%.0f", v*100}'; }
+            perf="${vals[0]}"; a11y="${vals[1]}"; seo="${vals[2]}"; bp="${vals[3]}"
+
+            [[ "$perf" != "N/A" ]] && echo "perf=$(to_pct "$perf")" >> $GITHUB_OUTPUT || echo "perf=N/A" >> $GITHUB_OUTPUT
+            [[ "$a11y" != "N/A" ]] && echo "a11y=$(to_pct "$a11y")" >> $GITHUB_OUTPUT || echo "a11y=N/A" >> $GITHUB_OUTPUT
+            [[ "$seo"  != "N/A" ]] && echo "seo=$(to_pct "$seo")"   >> $GITHUB_OUTPUT || echo "seo=N/A"  >> $GITHUB_OUTPUT
+            [[ "$bp"   != "N/A" ]] && echo "bp=$(to_pct "$bp")"     >> $GITHUB_OUTPUT || echo "bp=N/A"   >> $GITHUB_OUTPUT
+
+            # overall from assertions if present; else pass
+            if [[ -f "$assertion_file" ]] && [[ "${errc:-0}" -gt 0 ]]; then
+              echo "overall=❌ FAILED" >> $GITHUB_OUTPUT
+            else
+              echo "overall=✅ PASSED" >> $GITHUB_OUTPUT
+            fi
           fi
+
+          # robust link extraction
+          links='${{ steps.lhci.outputs.links }}'
+          report=""
+          if [[ -n "$links" && "$links" != "null" ]]; then
+            if echo "$links" | grep -q '^\s*\['; then
+              report="$(echo "$links" | jq -r 'first // empty' 2>/dev/null || true)"
+            else
+              report="$(echo "$links" | head -n1 | tr -d '[:space:]')"
+            fi
+          fi
+          echo "report=$report" >> $GITHUB_OUTPUT
+
+      - name: '🧾 Build per-page table'
+        id: table
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq -y >/dev/null 2>&1; }
+          results_dir="${{ steps.lhci.outputs.resultsPath }}"
+          # collect finalUrl -> scores map from LHRs
+          rows=$(
+            jq -r '
+              [ inputs | {url:.finalDisplayedUrl // .finalUrl,
+                           p:(.categories.performance.score//null),
+                           a:(.categories.accessibility.score//null),
+                           s:(.categories.seo.score//null),
+                           b:(.categories["best-practices"].score//null)} ]
+              | sort_by(.url)
+              | map("| \(.url) | " +
+                    (if .p then ((.p*100)|tostring) else "N/A" end) + " | " +
+                    (if .a then ((.a*100)|tostring) else "N/A" end) + " | " +
+                    (if .s then ((.s*100)|tostring) else "N/A" end) + " | " +
+                    (if .b then ((.b*100)|tostring) else "N/A" end) + " |")[]
+            ' "$results_dir"/lhr-*.json
+          )
+
+          # align report links (same order as action input)
+          mapfile -t link_lines < <(printf '%s\n' "${{ steps.lhci.outputs.links }}")
+          i=0
+          table="| Page | Perf | A11y | SEO | BP | Report |\n|---|---:|---:|---:|---:|---|\n"
+          while IFS= read -r line; do
+            link="${link_lines[$i]-}"
+            link="${link%%[[:space:]]*}"
+            table+="${line} $( [[ -n "$link" ]] && echo "[Report]($link)" || echo "-" ) |\n"
+            i=$((i+1))
+          done <<< "$rows"
+
+          # escape for output
+          table="${table//'%'/'%25'}"
+          table="${table//$'\n'/'%0A'}"
+          table="${table//$'\r'/'%0D'}"
+          echo "md=$table" >> $GITHUB_OUTPUT
 
       - name: '🔎 Resolve PR number'
         id: pr
@@ -124,6 +194,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq >/dev/null 2>&1; }
           json=$(curl -sS -H "Authorization: token ${GH_TOKEN}" -H "Accept: application/vnd.github+json" \
                  "https://api.github.com/repos/${REPO}/commits/${SHA}/pulls")
           pr=$(echo "$json" | jq -r 'map(select(.state!="closed")) | first | .number // empty')
@@ -142,15 +213,9 @@ jobs:
             **Preview URL:** ${{ steps.url.outputs.preview_url }}
             **Status:** ${{ steps.parse.outputs.overall }}
 
-            | Category | Score |
-            |---|---|
-            | Performance | ${{ steps.parse.outputs.perf }}/100 |
-            | Accessibility | ${{ steps.parse.outputs.a11y }}/100 |
-            | SEO | ${{ steps.parse.outputs.seo }}/100 |
-            | Best Practices | ${{ steps.parse.outputs.bp }}/100 |
+            ${{ steps.table.outputs.md }}
 
             **Assertions:** ✅ ${{ steps.parse.outputs.passc }} · ⚠️ ${{ steps.parse.outputs.warnc }} · ❌ ${{ steps.parse.outputs.errc }}
-            ${{ steps.parse.outputs.report != '' && format('🔗 [Interactive report]({0})', steps.parse.outputs.report) || '' }}
 
       - name: '📋 Job summary'
         if: always()
@@ -161,14 +226,7 @@ jobs:
             echo "- URL: ${{ steps.url.outputs.preview_url }}";
             echo "- Status: ${{ steps.parse.outputs.overall }}";
             echo "";
-            echo "| Category | Score |";
-            echo "|---|---|";
-            echo "| Performance | ${{ steps.parse.outputs.perf }}/100 |";
-            echo "| Accessibility | ${{ steps.parse.outputs.a11y }}/100 |";
-            echo "| SEO | ${{ steps.parse.outputs.seo }}/100 |";
-            echo "| Best Practices | ${{ steps.parse.outputs.bp }}/100 |";
-            if [[ -n "${{ steps.parse.outputs.report }}" ]]; then
-              echo "";
-              echo "- [Interactive report](${{ steps.parse.outputs.report }})";
-            fi
+            echo "${{ steps.table.outputs.md }}";
+            echo "";
+            echo "**Assertions:** ✅ ${{ steps.parse.outputs.passc }} · ⚠️ ${{ steps.parse.outputs.warnc }} · ❌ ${{ steps.parse.outputs.errc }}";
           } >> $GITHUB_STEP_SUMMARY
