@@ -142,7 +142,7 @@ jobs:
           fi
           echo "report=$report" >> $GITHUB_OUTPUT
 
-      - name: '🧾 Build per-page table (robust)'
+      - name: '🧾 Build per-page table'
         id: table
         if: always()
         shell: bash
@@ -152,71 +152,79 @@ jobs:
 
           results_dir="${{ steps.lhci.outputs.resultsPath }}"
           base="${{ steps.url.outputs.preview_url }}"
-          # The order you passed to the action:
+          # keep your order
           ordered_urls=("$base" "$base/over-mij" "$base/aanpak" "$base/coaching" "$base/contact")
 
-          # Build a URL -> {p,a,s,b} map with averages across runs (robust, no [0] indexing)
+          # Build URL -> {p,a,s,b} with query/hash/trailing-slash normalization
           scores_json="$(jq -sr '
-            def url(x): ( (x.finalDisplayedUrl // x.finalUrl) );
+            # strip ?query and #hash, then trailing slash
+            def norm(u):
+              if u==null then null else (u | sub("[?#].*$"; "") | sub("/$"; "")) end;
+            # prefer finalDisplayedUrl, fall back if needed
+            def key(x): norm(x.finalDisplayedUrl // x.finalUrl // x.requestedUrl);
             def avg: (length as $n | if $n==0 then null else (add / $n) end);
-
-            sort_by(url(.))
-            | group_by(url(.))
-            | map(. as $g |
-                {
-                  url: ($g | first | url(.)),
-                  p: ([ $g[] | try .categories.performance.score        catch empty ] | map(select(.!=null)) | avg),
-                  a: ([ $g[] | try .categories.accessibility.score      catch empty ] | map(select(.!=null)) | avg),
-                  s: ([ $g[] | try .categories.seo.score                catch empty ] | map(select(.!=null)) | avg),
-                  b: ([ $g[] | try .categories["best-practices"].score catch empty ] | map(select(.!=null)) | avg)
-                }
-              )
+            sort_by(key(.))
+            | group_by(key(.))
+            | map(. as $g | {
+                url: ($g | first | key(.)),
+                p: ([ $g[] | try .categories.performance.score        catch empty ] | map(select(.!=null)) | avg),
+                a: ([ $g[] | try .categories.accessibility.score      catch empty ] | map(select(.!=null)) | avg),
+                s: ([ $g[] | try .categories.seo.score                catch empty ] | map(select(.!=null)) | avg),
+                b: ([ $g[] | try .categories["best-practices"].score catch empty ] | map(select(.!=null)) | avg)
+              })
             | map({ (.url): {p:.p,a:.a,s:.s,b:.b} })
             | add // {}
           ' "$results_dir"/lhr-*.json)"
 
           fpct() { v="$1"; if [[ "$v" == "null" || -z "$v" ]]; then echo "N/A"; else awk -v n="$v" 'BEGIN{printf "%.0f", n*100}'; fi; }
 
-          # Parse links output from the action (object / array / newline list)
+          # Parse links (object / array / newline list) and normalize root key
           raw_links='${{ steps.lhci.outputs.links }}'
           declare -A url2link=()
           declare -a link_list=()
           if [[ -n "$raw_links" && "$raw_links" != "null" ]]; then
             if echo "$raw_links" | grep -q '^{'; then
-              # JSON object: { "url": "reportUrl", ... }
-              while IFS=$'\t' read -r k v; do url2link["$k"]="$v"; done < <(printf '%s' "$raw_links" | jq -r 'to_entries[] | [.key,.value] | @tsv')
+              while IFS=$'\t' read -r k v; do
+                # normalize: drop ?…/#… and then trailing slash
+                k="${k%%[\?#]*}"
+                k="${k%/}"
+                url2link["$k"]="$v"
+              done < <(printf '%s' "$raw_links" | jq -r 'to_entries[] | [.key,.value] | @tsv')
             elif echo "$raw_links" | grep -q '^\s*\['; then
-              # JSON array
               mapfile -t link_list < <(printf '%s' "$raw_links" | jq -r '.[]')
             else
-              # newline-separated strings
               mapfile -t link_list < <(printf '%s\n' "$raw_links")
             fi
           fi
 
-          table="| Page | Perf | A11y | SEO | BP | Report |\n|---|---:|---:|---:|---:|---|\n"
+          # Build the markdown table (real newlines)
+          table="| Page | Perf | A11y | SEO | BP | Report |"$'\n'"|---|---:|---:|---:|---:|---|"$'\n'
           idx=0
           for u in "${ordered_urls[@]}"; do
-            p=$(jq -r --arg u "$u" -n --argjson m "$scores_json" '$m[$u].p // "null"')
-            a=$(jq -r --arg u "$u" -n --argjson m "$scores_json" '$m[$u].a // "null"')
-            s=$(jq -r --arg u "$u" -n --argjson m "$scores_json" '$m[$u].s // "null"')
-            b=$(jq -r --arg u "$u" -n --argjson m "$scores_json" '$m[$u].b // "null"')
+            # alt key with/without trailing slash
+            if [[ "$u" == */ ]]; then alt="${u%/}"; else alt="$u/"; fi
+            key="${u%/}" ; altkey="${alt%/}"
+
+            p=$(jq -r --arg k "$key" --arg a "$altkey" -n --argjson m "$scores_json" '($m[$k].p // $m[$a].p // "null")')
+            a=$(jq -r --arg k "$key" --arg a "$altkey" -n --argjson m "$scores_json" '($m[$k].a // $m[$a].a // "null")')
+            s=$(jq -r --arg k "$key" --arg a "$altkey" -n --argjson m "$scores_json" '($m[$k].s // $m[$a].s // "null")')
+            b=$(jq -r --arg k "$key" --arg a "$altkey" -n --argjson m "$scores_json" '($m[$k].b // $m[$a].b // "null")')
 
             ps=$(fpct "$p"); as=$(fpct "$a"); ss=$(fpct "$s"); bs=$(fpct "$b")
 
-            link="${url2link[$u]-}"
+            link="${url2link[$key]-}"
+            [[ -z "$link" ]] && link="${url2link[$altkey]-}"
             if [[ -z "$link" && ${#link_list[@]} -gt 0 ]]; then link="${link_list[$idx]-}"; fi
             [[ -n "$link" ]] && report_cell="[Report]($link)" || report_cell="-"
 
-            table+="| $u | $ps | $as | $ss | $bs | $report_cell |\n"
+            table+="| $u | $ps | $as | $ss | $bs | $report_cell |"$'\n'
             idx=$((idx+1))
           done
 
-          # escape for composite output
-          table="${table//'%'/'%25'}"
-          table="${table//$'\n'/'%0A'}"
-          table="${table//$'\r'/'%0D'}"
-          echo "md=$table" >> $GITHUB_OUTPUT
+          # Write as a multiline output (no escaping needed)
+          echo "md<<'EOF'" >> "$GITHUB_OUTPUT"
+          echo "$table" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
 
       - name: '🔎 Resolve PR number'
         id: pr

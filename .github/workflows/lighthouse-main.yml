@@ -94,7 +94,7 @@ jobs:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           LHCI_FORM_FACTOR: ${{ matrix.formFactor }}
 
-      - name: '📊 Parse & summarize Lighthouse results (robust)'
+      - name: '📊 Parse & summarize Lighthouse results'
         if: always()
         shell: bash
         run: |
@@ -136,13 +136,17 @@ jobs:
           # We average multiple runs of the same URL so each page shows one row.
           rows_md=$(
             jq -s -r '
+              # strip ?query and #hash, then trailing slash
+              def norm(u):
+                if u==null then null else (u | sub("[?#].*$"; "") | sub("/$"; "")) end;
+              # prefer finalDisplayedUrl, fall back if needed
+              def key(x): norm(x.finalDisplayedUrl // x.finalUrl // x.requestedUrl);
               def avg: (length as $n | if $n==0 then null else (add / $n) end);
-              def url(x): ( (x.finalDisplayedUrl // x.finalUrl) );
-              # group all runs by final URL
-              group_by(url(.)) |
+              # group all runs by final URL with query/hash/trailing-slash normalization
+              group_by(key(.)) |
               map(. as $g |
                 {
-                  url: ($g | first | url(.)),
+                  url: ($g | first | key(.)),
                   p: ([ $g[] | try .categories.performance.score catch empty ] | map(select(.!=null)) | avg),
                   a: ([ $g[] | try .categories.accessibility.score catch empty ] | map(select(.!=null)) | avg),
                   s: ([ $g[] | try .categories.seo.score catch empty ] | map(select(.!=null)) | avg),
@@ -165,7 +169,12 @@ jobs:
           if [[ -n "$links_raw" && "$links_raw" != "null" ]]; then
             if echo "$links_raw" | grep -q '^{'; then
               # JSON object: { "url": "reportUrl", ... }
-              while IFS=$'\t' read -r k v; do url2link["$k"]="$v"; done < <(printf '%s' "$links_raw" | jq -r 'to_entries[] | [.key,.value] | @tsv')
+              while IFS=$'\t' read -r k v; do
+                # normalize: drop ?…/#… and then trailing slash
+                k="${k%%[\?#]*}"
+                k="${k%/}"
+                url2link["$k"]="$v"
+              done < <(printf '%s' "$links_raw" | jq -r 'to_entries[] | [.key,.value] | @tsv')
             elif echo "$links_raw" | grep -q '^\s*\['; then
               # JSON array
               mapfile -t link_list < <(printf '%s' "$links_raw" | jq -r '.[]')
@@ -177,18 +186,24 @@ jobs:
 
           # Attach one link per row by index (same run order). If fewer links than rows, fill with "-".
           i=0
-          table="| Page | Perf | A11y | SEO | BP | Report |\n|---|---:|---:|---:|---:|---|\n"
+          table="| Page | Perf | A11y | SEO | BP | Report |"$'\n'"|---|---:|---:|---:|---:|---|"$'\n'
           while IFS= read -r row; do
             # Extract URL from the row to try URL-based mapping first
             row_url=$(echo "$row" | sed 's/^| \([^|]*\) |.*/\1/')
-            link="${url2link[$row_url]-}"
+            # Try both with and without trailing slash for URL matching
+            key="${row_url%/}"
+            altkey="${row_url%/}/"
+            if [[ "$row_url" == */ ]]; then altkey="${row_url%/}"; else altkey="$row_url/"; fi
+            
+            link="${url2link[$key]-}"
+            [[ -z "$link" ]] && link="${url2link[$altkey]-}"
             if [[ -z "$link" && ${#link_list[@]} -gt 0 ]]; then 
               link="${link_list[$i]-}"
             fi
             link="${link%%[[:space:]]*}"
             report_cell="-"
             [[ -n "$link" ]] && report_cell="[Report](${link})"
-            table+="${row} ${report_cell} |\n"
+            table+="${row} ${report_cell} |"$'\n'
             i=$((i+1))
           done <<< "$rows_md"
 
