@@ -9,7 +9,7 @@ A modern coaching website built with Next.js, Sanity CMS, and Tailwind CSS.
 ### Prerequisites
 
 - Node.js 20+
-- pnpm 10.15.0+
+- pnpm 10.15.1+
 - A Sanity account (for CMS functionality)
 - A Resend account (for email functionality)
 

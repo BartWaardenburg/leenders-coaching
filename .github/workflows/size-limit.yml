@@ -21,7 +21,7 @@ concurrency:
 
 env:
   NODE_VERSION: '22'
-  PNPM_VERSION: '10.15.0'
+  PNPM_VERSION: '10.15.1'
   PNPM_HOME: /home/runner/.local/share/pnpm
 
 jobs:
