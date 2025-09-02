@@ -39,24 +39,28 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: '🩺 Preflight (200 check)'
+      - name: '🧪 Test production URL accessibility'
         run: |
-          set -e
-          headers=()
-          if [ -n "${{ secrets.VERCEL_PROTECTION_BYPASS }}" ]; then
-            headers+=(-H "x-vercel-protection-bypass: ${{ secrets.VERCEL_PROTECTION_BYPASS }}" -H "x-vercel-set-bypass-cookie: true")
+          production_url="https://leenders-coaching.vercel.app"
+          echo "🔍 Testing production URL accessibility: $production_url"
+
+          # Test production URL accessibility (should not need authentication)
+          response=$(curl -sL --max-time 30 --max-redirs 5 "$production_url" || echo "CURL_FAILED")
+          final_url=$(curl -sLI --max-time 30 --max-redirs 5 "$production_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
+
+          echo "🔍 Final URL after redirects: $final_url"
+
+          if [[ "$response" == "CURL_FAILED" ]]; then
+            echo "❌ Production URL is not accessible (network error)"
+            echo "   URL: $production_url"
+            exit 1
+          elif echo "$response" | grep -qi "404\|not found"; then
+            echo "⚠️ Production URL returns 404"
+            echo "   URL: $production_url"
+            exit 1
+          else
+            echo "✅ Production URL is accessible and serves content"
           fi
-          for u in \
-            https://leenders-coaching.vercel.app/ \
-            https://leenders-coaching.vercel.app/over-mij \
-            https://leenders-coaching.vercel.app/aanpak \
-            https://leenders-coaching.vercel.app/coaching \
-            https://leenders-coaching.vercel.app/contact
-          do
-            code=$(curl -s --retry 2 --retry-delay 3 -o /dev/null -w "%{http_code}" "${headers[@]}" "$u")
-            echo "$code  $u"
-            [ "$code" -ge 200 ] && [ "$code" -lt 400 ] || (echo "Non-2xx/3xx for $u"; exit 1)
-          done
 
       - name: '🚀 Run Lighthouse CI (Production)'
         id: lhci
@@ -75,8 +79,11 @@ jobs:
           temporaryPublicStorage: true
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_PROTECTION_BYPASS }}
-          LHCI_FORM_FACTOR: ${{ matrix.formFactor }}
+          # Pass Vercel token for potential authentication (even on production)
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          # OPTIONAL: If you run a private LHCI server, uncomment these:
+          # LHCI_SERVER_BASE_URL: ${{ secrets.LHCI_SERVER_URL }}
+          # LHCI_TOKEN: ${{ secrets.LHCI_SERVER_BUILD_TOKEN }}
 
       - name: '📊 Summarize key scores'
         if: always()

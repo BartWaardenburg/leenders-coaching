@@ -9,7 +9,7 @@ codecov:
 coverage:
   precision: 2
   round: down
-  range: "70...100"
+  range: '70...100'
 
   status:
     project:
@@ -25,62 +25,71 @@ coverage:
 
 ignore:
   # Configuration files
-  - "**/*.config.js"
-  - "**/*.config.ts"
-  - "**/*.config.mjs"
-  - "**/lighthouserc.js"
-  - "**/postcss.config.mjs"
-  - "**/tailwind.config.ts"
-  - "**/next.config.ts"
-  - "**/eslint.config.mjs"
-  - "**/vitest.config.ts"
+  - '**/*.config.js'
+  - '**/*.config.ts'
+  - '**/*.config.mjs'
+  - '**/*.config.cjs'
+  - '**/lighthouserc.*'
+  - '**/postcss.config.*'
+  - '**/tailwind.config.*'
+  - '**/next.config.*'
+  - '**/eslint.config.*'
+  - '**/vitest.config.*'
+  - '**/vitest.ci.config.*'
 
   # Build and output directories
-  - "**/dist/**"
-  - "**/.next/**"
-  - "**/build/**"
-  - "**/coverage/**"
-  - "**/storybook-static/**"
+  - '**/dist/**'
+  - '**/.next/**'
+  - '**/build/**'
+  - '**/coverage/**'
+  - '**/storybook-static/**'
 
   # Type definitions and schemas
-  - "**/*.d.ts"
-  - "**/schema.json"
-  - "**/sanity-typegen.json"
+  - '**/*.d.ts'
+  - '**/next-env.d.ts'
+  - '**/schema.json'
+  - '**/sanity-typegen.json'
 
   # Stories and test files (already tested)
-  - "**/*.stories.{js,jsx,ts,tsx}"
-  - "**/*.test.{js,jsx,ts,tsx}"
-  - "**/*.spec.{js,jsx,ts,tsx}"
-  - "**/test/**"
-  - "**/__tests__/**"
+  - '**/*.stories.{js,jsx,ts,tsx}'
+  - '**/*.test.{js,jsx,ts,tsx}'
+  - '**/*.spec.{js,jsx,ts,tsx}'
+  - '**/test/**'
+  - '**/__tests__/**'
 
   # Documentation and README files
-  - "**/*.md"
-  - "**/README.*"
+  - '**/*.md'
+  - '**/README.*'
 
   # GitHub workflows and scripts
-  - ".github/**"
+  - '.github/**'
+  - '**/scripts/**'
 
   # Package management
-  - "**/package.json"
-  - "**/pnpm-lock.yaml"
-  - "**/node_modules/**"
+  - '**/package.json'
+  - '**/pnpm-lock.yaml'
+  - '**/node_modules/**'
 
   # Environment and dotfiles
-  - "**/.env*"
-  - "**/.*"
+  - '**/.env*'
+  - '**/.*'
 
   # Sanity Studio specific
-  - "**/schemaTypes/**"
-  - "**/structure.ts"
-  - "**/sanity.cli.ts"
-  - "**/sanity.config.ts"
+  - '**/schemaTypes/**'
+  - '**/structure.ts'
+  - '**/sanity.cli.ts'
+  - '**/sanity.config.ts'
 
-  # Scripts and seeding
-  - "**/scripts/**"
+  # Log files
+  - '**/*.log'
+
+  # Coverage reports and build artifacts
+  - '**/coverage/**'
+  - '**/lcov.info'
+  - '**/lcov-report/**'
 
 comment:
-  layout: "reach,diff,flags,tree"
+  layout: 'reach,diff,flags,tree'
   behavior: default
   require_changes: false
   require_base: false

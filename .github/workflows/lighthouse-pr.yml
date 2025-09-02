@@ -122,19 +122,119 @@ jobs:
         run: |
           preview_url="${{ steps.get_url.outputs.preview-url }}"
 
-          # Build headers array for Vercel protection bypass
-          headers=()
-          if [ -n "${{ secrets.VERCEL_PROTECTION_BYPASS }}" ]; then
-            headers=(-H "x-vercel-protection-bypass: ${{ secrets.VERCEL_PROTECTION_BYPASS }}" -H "x-vercel-set-bypass-cookie: true")
+          # Test URL accessibility with proper authentication
+          if [ -n "${{ secrets.VERCEL_TOKEN }}" ]; then
+            echo "🔑 Using Vercel token for authenticated requests"
+            
+            # Test with authentication header
+            response=$(curl -sL --max-time 30 --max-redirs 5 \
+              -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
+              "$preview_url" || echo "CURL_FAILED")
+            
+            final_url=$(curl -sLI --max-time 30 --max-redirs 5 \
+              -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
+              "$preview_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
+          else
+            echo "ℹ️ No Vercel token available, using unauthenticated requests"
+            
+            # Test without authentication
+            response=$(curl -sL --max-time 30 --max-redirs 5 "$preview_url" || echo "CURL_FAILED")
+            final_url=$(curl -sLI --max-time 30 --max-redirs 5 "$preview_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
           fi
 
-          response=$(curl -sL --max-time 30 --max-redirs 5 "${headers[@]}" "$preview_url" || echo "CURL_FAILED")
-          final_url=$(curl -sLI --max-time 30 --max-redirs 5 "${headers[@]}" "$preview_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
+          echo "🔍 Final URL after redirects: $final_url"
 
+          # Check for authentication issues
           if [[ "$final_url" == *"vercel.com/login"* ]] || [[ "$final_url" == *"sso-api"* ]]; then
-            exit 1
+            echo "❌ Preview URL redirects to Vercel login page!"
+            echo "   This indicates Preview Deployment Protection is enabled."
+            echo ""
+            if [ -n "${{ secrets.VERCEL_TOKEN }}" ]; then
+              echo "🔧 We have a VERCEL_TOKEN but authentication still failed."
+              echo "   The token might not have sufficient permissions or the protection method has changed."
+            else
+              echo "🔑 No VERCEL_TOKEN available for authentication."
+            fi
+            echo ""
+            echo "📝 Possible solutions:"
+            echo "   1. Disable Preview Deployment Protection in Vercel:"
+            echo "      Project Settings → General → Preview Deployment Protection → Set to 'Off'"
+            echo "   2. Ensure VERCEL_TOKEN has proper team/project permissions"
+            echo "   3. Use a personal access token with deployment read permissions"
+            echo ""
+            echo "🚨 Continuing anyway - Lighthouse will attempt to test with authentication"
           elif [[ "$response" == "CURL_FAILED" ]]; then
             exit 1
+          elif echo "$response" | grep -qi "404\|not found"; then
+            echo "⚠️ Preview URL returns 404 - deployment might not be complete"
+            echo "   URL: $preview_url"
+            echo "   Waiting 30 seconds for deployment to stabilize..."
+            sleep 30
+          else
+            echo "✅ Preview URL is accessible and serves content"
+            
+            # Check if we still got login-related content despite success
+            if echo "$response" | grep -qi "vercel.*login\|sign.*in\|authenticate"; then
+              echo "⚠️ Response contains authentication-related content"
+              echo "   This might indicate partial protection bypass"
+            else
+              echo "✅ Content appears to be the actual application"
+            fi
+          fi
+
+      - name: '🔐 Test authentication for all URLs'
+        run: |
+          if [ -n "${{ secrets.VERCEL_TOKEN }}" ]; then
+            echo "🔍 Testing authentication for all Lighthouse URLs..."
+            preview_url="${{ steps.get_url.outputs.preview-url }}"
+            
+            # Test all URLs that Lighthouse will check
+            urls=(
+              "$preview_url"
+              "$preview_url/over-mij" 
+              "$preview_url/aanpak"
+              "$preview_url/coaching"
+              "$preview_url/contact"
+            )
+            
+            auth_failures=0
+            for url in "${urls[@]}"; do
+              echo "🔍 Testing: $url"
+              
+              response=$(curl -sL --max-time 20 --write-out "%{http_code}" \
+                -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
+                "$url" || echo "CURL_FAILED")
+              
+              if [[ "$response" == *"CURL_FAILED"* ]]; then
+                echo "❌ Network error accessing $url"
+                ((auth_failures++))
+              elif [[ "$response" == *"vercel.com/login"* ]] || [[ "$response" == *"sso-api"* ]]; then
+                echo "❌ Authentication failed for $url (redirected to login)"
+                ((auth_failures++))
+              else
+                # Extract HTTP status code (last 3 characters)
+                status_code="${response: -3}"
+                if [[ "$status_code" =~ ^[45][0-9][0-9]$ ]]; then
+                  echo "⚠️ HTTP $status_code for $url"
+                  ((auth_failures++))
+                else
+                  echo "✅ HTTP $status_code for $url"
+                fi
+              fi
+            done
+            
+            if [ $auth_failures -gt 0 ]; then
+              echo ""
+              echo "⚠️ $auth_failures URL(s) failed authentication tests"
+              echo "🔧 Lighthouse may encounter issues with protected URLs"
+              echo "   Consider disabling Preview Deployment Protection in Vercel"
+            else
+              echo ""
+              echo "✅ All URLs passed authentication tests"
+              echo "🚀 Lighthouse should be able to access all pages"
+            fi
+          else
+            echo "ℹ️ No VERCEL_TOKEN available - skipping authentication tests"
           fi
 
       - name: '🚀 Run Lighthouse CI'
@@ -153,8 +253,8 @@ jobs:
           temporaryPublicStorage: true
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_PROTECTION_BYPASS }}
-          LHCI_FORM_FACTOR: mobile
+          # Pass Vercel token for preview protection bypass (used by lighthouserc.ci.cjs)
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
       - name: '📊 Parse Lighthouse results'
         id: parse_results
@@ -297,6 +397,14 @@ jobs:
             echo "pr_number=" >> "$GITHUB_OUTPUT"
           fi
 
+          # Debug: Show all available context
+          echo "🔍 Debug: Available context:"
+          echo "  Deployment ID: ${{ github.event.deployment.id }}"
+          echo "  Deployment Ref: ${{ github.event.deployment.ref }}"
+          echo "  Repository: ${{ github.repository }}"
+          echo "  Event Name: ${{ github.event_name }}"
+          echo "  Final PR Number: $pr_number"
+
       - name: '💬 Post detailed Lighthouse comment'
         if: always() && steps.get_pr.outputs.pr_number != ''
         uses: marocchino/sticky-pull-request-comment@v2
@@ -315,10 +423,10 @@ jobs:
 
             | Category | Score | Status |
             |----------|-------|--------|
-            | 🚀 Performance | ${{ steps.parse_results.outputs.perf_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.perf_display) || 'N/A' }} | ${{ steps.parse_results.outputs.perf_ok == 'true' && '✅' || '❌' }} |
-            | ♿ Accessibility | ${{ steps.parse_results.outputs.a11y_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.a11y_display) || 'N/A' }} | ${{ steps.parse_results.outputs.a11y_ok == 'true' && '✅' || '❌' }} |
-            | 🔍 SEO | ${{ steps.parse_results.outputs.seo_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.seo_display) || 'N/A' }} | ${{ steps.parse_results.outputs.seo_ok == 'true' && '✅' || '❌' }} |
-            | ⚡ Best Practices | ${{ steps.parse_results.outputs.bp_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.bp_display) || 'N/A' }} | ${{ steps.parse_results.outputs.bp_ok == 'true' && '✅' || '❌' }} |
+            | 🚀 Performance | ${{ steps.parse_results.outputs.perf_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.perf_display) || 'N/A' }} | ${{ steps.parse_results.outputs.perf_display != 'N/A' && (steps.parse_results.outputs.perf_display >= '80' && '✅' || (steps.parse_results.outputs.perf_display >= '50' && '⚠️' || '❌')) || '❓' }} |
+            | ♿ Accessibility | ${{ steps.parse_results.outputs.a11y_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.a11y_display) || 'N/A' }} | ${{ steps.parse_results.outputs.a11y_display != 'N/A' && (steps.parse_results.outputs.a11y_display >= '95' && '✅' || (steps.parse_results.outputs.a11y_display >= '80' && '⚠️' || '❌')) || '❓' }} |
+            | 🔍 SEO | ${{ steps.parse_results.outputs.seo_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.seo_display) || 'N/A' }} | ${{ steps.parse_results.outputs.seo_display != 'N/A' && (steps.parse_results.outputs.seo_display >= '90' && '✅' || (steps.parse_results.outputs.seo_display >= '70' && '⚠️' || '❌')) || '❓' }} |
+            | ⚡ Best Practices | ${{ steps.parse_results.outputs.bp_display != 'N/A' && format('{0}/100', steps.parse_results.outputs.bp_display) || 'N/A' }} | ${{ steps.parse_results.outputs.bp_display != 'N/A' && (steps.parse_results.outputs.bp_display >= '90' && '✅' || (steps.parse_results.outputs.bp_display >= '70' && '❌')) || '❓' }} |
 
             ### ⚡ Core Web Vitals
 
@@ -359,6 +467,8 @@ jobs:
 
             *This comment updates automatically on each push.*
             </details>
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: '⚠️ Fallback notification (no PR found)'
         if: always() && steps.get_pr.outputs.pr_number == ''

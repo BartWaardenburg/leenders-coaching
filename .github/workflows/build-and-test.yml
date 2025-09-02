@@ -90,10 +90,6 @@ jobs:
           fail_ci_if_error: false
           verbose: true
           flags: frontend
-          exclude: |
-            packages/leenders-coaching-nl/lighthouserc.js
-            packages/leenders-coaching-nl/*.config.*
-            packages/leenders-coaching-nl/next-env.d.ts
 
       - name: '📤 Upload test results'
         uses: actions/upload-artifact@v4
