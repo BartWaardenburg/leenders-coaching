@@ -8,10 +8,6 @@ on:
   schedule:
     - cron: '0 5 * * *'
 
-concurrency:
-  group: lhci-main
-  cancel-in-progress: false
-
 permissions:
   contents: read
   issues: write
