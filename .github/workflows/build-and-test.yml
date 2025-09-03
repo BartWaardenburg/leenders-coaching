@@ -49,6 +49,8 @@ jobs:
           security-command: ci:security
           coverage-upload: true
           working-directory: ''
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}
+          github-sha: ${{ github.sha }}
 
   production-build:
     name: 'Production Build'
@@ -88,6 +90,7 @@ jobs:
           package-command: 'package:build'
           cache-nextjs: ${{ matrix.package.name == 'frontend' }}
           working-directory: ''
+          github-sha: ${{ github.sha }}
 
   content-validation:
     name: 'Content & Schema Validation'

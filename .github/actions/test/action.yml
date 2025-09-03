@@ -29,6 +29,14 @@ inputs:
     description: 'pnpm version to use'
     required: false
     default: '10.15.1'
+  codecov-token:
+    description: 'Codecov token for coverage uploads'
+    required: false
+    default: ''
+  github-sha:
+    description: 'GitHub SHA for artifact naming'
+    required: false
+    default: ''
 runs:
   using: 'composite'
   steps:
@@ -60,10 +68,10 @@ runs:
       run: pnpm run ${{ inputs.test-command }}
 
     - name: Upload coverage to Codecov
-      if: ${{ inputs.coverage-upload == 'true' }}
+      if: ${{ inputs.coverage-upload == 'true' && inputs.codecov-token != '' }}
       uses: codecov/codecov-action@v5
       with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+        token: ${{ inputs.codecov-token }}
         directory: ./packages/leenders-coaching-nl/coverage
         fail_ci_if_error: false
         verbose: true
@@ -73,7 +81,7 @@ runs:
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: test-results-${{ github.sha }}
+        name: test-results-${{ inputs.github-sha || 'latest' }}
         path: |
           packages/leenders-coaching-nl/coverage/
           packages/leenders-coaching-nl/test-results/

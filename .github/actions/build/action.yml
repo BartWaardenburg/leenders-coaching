@@ -54,6 +54,10 @@ inputs:
     description: 'pnpm version to use'
     required: false
     default: '10.15.1'
+  github-sha:
+    description: 'GitHub SHA for artifact naming'
+    required: false
+    default: ''
 runs:
   using: 'composite'
   steps:
@@ -105,7 +109,7 @@ runs:
       if: ${{ inputs.package-build == 'true' }}
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ inputs.package-name }}-build-${{ github.sha }}
+        name: ${{ inputs.package-name }}-build-${{ inputs.github-sha }}
         path: ${{ inputs.package-name }}-build.tar.gz
         retention-days: 7
         compression-level: 6

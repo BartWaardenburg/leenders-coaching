@@ -30,6 +30,8 @@ jobs:
           security-command: ''
           coverage-upload: false
           working-directory: ''
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}
+          github-sha: ${{ github.sha }}
 
   frontend-tests:
     name: 'Frontend Tests'
@@ -46,6 +48,8 @@ jobs:
           security-command: ''
           coverage-upload: true
           working-directory: ''
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}
+          github-sha: ${{ github.sha }}
 
   studio-validation:
     name: 'Studio Validation'
@@ -65,6 +69,7 @@ jobs:
           analyze-bundle: false
           package-build: false
           working-directory: ''
+          github-sha: ${{ github.sha }}
 
   build-verification:
     name: 'Build Verification'
@@ -85,6 +90,7 @@ jobs:
           analyze-bundle: false
           package-build: false
           working-directory: ''
+          github-sha: ${{ github.sha }}
 
   pr-comment:
     name: 'PR Comment (CI Summary)'
