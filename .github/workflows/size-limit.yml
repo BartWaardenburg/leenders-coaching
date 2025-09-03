@@ -113,7 +113,11 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
         run: |
           OUT="$GITHUB_WORKSPACE/packages/leenders-coaching-nl/.bundle-analysis/size-results-main.json"
-          pnpm exec size-limit --json > "$OUT"
+          # Don't fail if baseline exceeds limits - we just want the measurements
+          set +e
+          pnpm exec size-limit --json > "$OUT" 2>/dev/null
+          # Always exit successfully - we're just collecting baseline data
+          exit 0
 
       - name: '🔍 Generate Detailed Bundle Analysis (from JSON)'
         working-directory: packages/leenders-coaching-nl
