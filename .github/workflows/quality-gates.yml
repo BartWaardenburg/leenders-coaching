@@ -213,26 +213,87 @@ jobs:
           {
             echo "## 📜 License Compliance"
             echo
+            
+            # Get total package count
+            TOTAL_PACKAGES=$(jq 'length' license.json)
+            echo "**Total packages scanned:** $TOTAL_PACKAGES"
+            echo
+            
+            # Show license summary
+            echo "### 📊 License Summary"
+            echo "| License Type | Count | Status |"
+            echo "|---|---|---|"
+            
+            # Count licenses by type and show summary
+            jq -r '
+              to_entries
+              | map(.value.licenses // "UNKNOWN")
+              | group_by(.)
+              | map({license: .[0], count: length})
+              | sort_by(.count)
+              | reverse
+              | .[]
+              | "| `\(.license)` | \(.count) | \(
+                if .license|test("(MIT|Apache|ISC|BSD|CC0|WTFPL|Unlicense|0BSD)"; "i") then "🟢 Safe"
+                elif .license|test("(GPL|AGPL|LGPL)"; "i") then "🔴 High Risk"
+                elif .license|test("(SSPL|BUSL|Commons Clause)"; "i") then "🟡 Medium Risk"
+                elif .license=="UNKNOWN" then "🟠 Unknown"
+                elif .license|test("Proprietary"; "i") then "🟡 Medium Risk"
+                else "🟡 Review Required"
+                end
+              ) |"
+            ' license.json
+            
+            echo
+            
             # Flag problematic licenses
             echo "### ⚠️ Flagged Licenses"
-            PROBLEMATIC=$(jq -r '
+            
+            # Use a simpler approach to detect problematic licenses
+            PROBLEMATIC_COUNT=$(jq -r '
               to_entries
-              | map({pkg: .key, lic: (.value.licenses // "UNKNOWN")})
-              | map(select(.lic|test("(GPL|AGPL|LGPL|SSPL|BUSL|Commons Clause)"; "i") or .lic=="UNKNOWN" or .lic|test("Proprietary"; "i")))
+              | map(.value.licenses // "UNKNOWN")
+              | map(select(test("(GPL|AGPL|LGPL|SSPL|BUSL|Commons Clause)"; "i") or .=="UNKNOWN" or test("Proprietary"; "i")))
+              | length
             ' license.json)
             
-            if [ "$(echo "$PROBLEMATIC" | jq 'length')" -gt 0 ]; then
+            if [ "$PROBLEMATIC_COUNT" -gt 0 ]; then
               echo "| Package | License | Risk Level |"
               echo "|---|---|---|"
-              echo "$PROBLEMATIC" | jq -r '.[] | 
-                if .lic|test("(GPL|AGPL|LGPL)"; "i") then "| `\(.pkg)` | `\(.lic)` | 🔴 High |"
-                elif .lic|test("(SSPL|BUSL|Commons Clause)"; "i") then "| `\(.pkg)` | `\(.lic)` | 🟡 Medium |"
-                elif .lic=="UNKNOWN" then "| `\(.pkg)` | `\(.lic)` | 🟠 Unknown |"
-                else "| `\(.pkg)` | `\(.lic)` | 🟡 Medium |"
-                end
-              '
+              
+              # Get packages with problematic licenses
+              jq -r '
+                to_entries
+                | map(select((.value.licenses // "UNKNOWN") | test("(GPL|AGPL|LGPL|SSPL|BUSL|Commons Clause)"; "i") or .=="UNKNOWN" or test("Proprietary"; "i")))
+                | .[]
+                | "| `" + .key + "` | `" + (.value.licenses // "UNKNOWN") + "` | " + (
+                  if (.value.licenses // "UNKNOWN") | test("(GPL|AGPL|LGPL)"; "i") then "🔴 High"
+                  elif (.value.licenses // "UNKNOWN") | test("(SSPL|BUSL|Commons Clause)"; "i") then "🟡 Medium"
+                  elif (.value.licenses // "UNKNOWN") == "UNKNOWN" then "🟠 Unknown"
+                  else "🟡 Medium"
+                  end
+                ) + " |"
+              ' license.json
             else
               echo "✅ No GPL/AGPL/LGPL/SSPL/BUSL/Commons-Clause/Proprietary/UNKNOWN licenses found."
+            fi
+            
+            echo
+            echo "### 📋 All Licenses (Top 20 by Count)"
+            echo "| Package | License |"
+            echo "|---|---|"
+            jq -r '
+              to_entries
+              | map({pkg: .key, lic: (.value.licenses // "UNKNOWN")})
+              | sort_by(.pkg)
+              | .[0:20]
+              | .[]
+              | "| `\(.pkg)` | `\(.lic)` |"
+            ' license.json
+            
+            if [ "$TOTAL_PACKAGES" -gt 20 ]; then
+              echo
+              echo "_... and $((TOTAL_PACKAGES - 20)) more packages_"
             fi
           } > license-report.md
 
@@ -384,22 +445,37 @@ jobs:
           sed -n '/^\[/,$p' eslint-raw.txt > eslint.json || echo "[]" > eslint.json
           pnpm --parallel run type-check 2>&1 | tee ts.txt || true
 
-          # Create a simple complexity analysis using file sizes and line counts
+          # Create a better complexity analysis excluding test files
           echo "[]" > complexity.json
           if command -v find >/dev/null 2>&1 && command -v wc >/dev/null 2>&1; then
             # Create a temporary file for building the JSON
             echo "[" > temp_complexity.json
             first=true
-            find packages/*/src -name "*.ts" -o -name "*.tsx" | head -20 | while IFS= read -r file; do
+            # Find source files, excluding test files and test directories
+            find packages/*/src -name "*.ts" -o -name "*.tsx" | grep -v -E "(\.test\.|\.spec\.|__tests__|test/)" | head -30 | while IFS= read -r file; do
               if [ -f "$file" ]; then
                 lines=$(wc -l < "$file" | tr -d ' ')
                 size=$(wc -c < "$file" | tr -d ' ')
+                
+                # Calculate better metrics
+                maintainability=$((100 - lines/15))  # Adjusted formula
+                complexity=$((lines/25))             # Adjusted complexity calculation
+                
+                # Ensure maintainability is within reasonable bounds
+                if [ "$maintainability" -lt 0 ]; then
+                  maintainability=0
+                elif [ "$maintainability" -gt 100 ]; then
+                  maintainability=100
+                fi
+                
                 if [ "$first" = true ]; then
                   first=false
                 else
                   echo "," >> temp_complexity.json
                 fi
-                echo "{\"file\":\"$file\",\"lines\":$lines,\"size\":$size,\"maintainability\":$((100 - lines/10)),\"complexity\":$((lines/20))}" >> temp_complexity.json
+                
+                # Create JSON with meaningful metrics
+                echo "{\"file\":\"$file\",\"lines\":$lines,\"size\":$size,\"maintainability\":$maintainability,\"complexity\":$complexity,\"loc\":$lines}" >> temp_complexity.json
               fi
             done
             echo "]" >> temp_complexity.json
@@ -439,36 +515,46 @@ jobs:
             
             # Handle complexity report
             if [ "$COMPLEXITY_COUNT" -gt 0 ]; then
-              echo "**Complexity Analysis:** $COMPLEXITY_COUNT files analyzed"
+              echo "**Complexity Analysis:** $COMPLEXITY_COUNT source files analyzed (excluding tests)"
               echo
               echo "### 🔍 Maintainability Scores"
-              echo "| File | Maintainability | Complexity | Halstead | LOC |"
+              echo "| File | Maintainability | Complexity | LOC | Size (KB) |"
               echo "|---|---|---|---|---|"
               jq -r '
-                [.[] | {file: (.file | split("/") | last), maintainability, cyclomatic, halstead, loc}]
+                [.[] | {file: (.file | split("/") | last), maintainability, complexity, loc, size}]
                 | sort_by(.maintainability)
-                | .[0:10]
+                | .[0:15]
                 | .[]
-                | "| `\(.file)` | \(.maintainability // "N/A") | \(.cyclomatic // "N/A") | \(.halstead // "N/A") | \(.loc // "N/A") |"
+                | "| `\(.file)` | \(.maintainability) | \(.complexity) | \(.loc) | \((.size/1024 | floor))KB |"
               ' complexity.json
               
               # Show high complexity files
               HIGH_COMPLEXITY=$(jq -r '
-                [.[] | select(.cyclomatic > 10)]
-                | sort_by(.cyclomatic)
+                [.[] | select(.complexity > 5)]
+                | sort_by(.complexity)
                 | reverse
-                | .[0:5]
+                | .[0:8]
                 | .[]
-                | "\(.file | split("/") | last): \(.cyclomatic) complexity"
+                | "\(.file | split("/") | last): \(.complexity) complexity (\(.loc) LOC)"
               ' complexity.json)
               
               if [ -n "$HIGH_COMPLEXITY" ]; then
                 echo
-                echo "### ⚠️ High Complexity Files (>10)"
+                echo "### ⚠️ High Complexity Files (>5 complexity)"
                 echo '```text'
                 echo "$HIGH_COMPLEXITY"
                 echo '```'
               fi
+              
+              # Show file size distribution
+              echo
+              echo "### 📊 File Size Distribution"
+              SMALL=$(jq -r '[.[] | select(.loc <= 50)] | length' complexity.json)
+              MEDIUM=$(jq -r '[.[] | select(.loc > 50 and .loc <= 200)] | length' complexity.json)
+              LARGE=$(jq -r '[.[] | select(.loc > 200)] | length' complexity.json)
+              echo "- **Small files (≤50 LOC):** $SMALL"
+              echo "- **Medium files (51-200 LOC):** $MEDIUM"
+              echo "- **Large files (>200 LOC):** $LARGE"
             else
               echo "**Complexity Analysis:** No complexity data available"
             fi
