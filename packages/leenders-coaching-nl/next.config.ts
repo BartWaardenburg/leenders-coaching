@@ -3,6 +3,8 @@ import withBundleAnalyzer from '@next/bundle-analyzer';
 
 const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
+  analyzerMode: 'static', // write HTML files
+  openAnalyzer: false, // don't try to open a browser in CI
 });
 
 const nextConfig: NextConfig = {
