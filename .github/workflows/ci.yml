@@ -20,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - name: 'Checkout code'
+        uses: actions/checkout@v4
       - name: '⚙️ Run Quality Checks'
         uses: ./.github/actions/test
         with:
@@ -34,6 +36,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
+      - name: 'Checkout code'
+        uses: actions/checkout@v4
       - name: '🧪 Run Frontend Tests'
         uses: ./.github/actions/test
         with:
@@ -48,6 +52,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
+      - name: 'Checkout code'
+        uses: actions/checkout@v4
       - name: '🏗️ Build Studio'
         uses: ./.github/actions/build
         with:
@@ -66,6 +72,8 @@ jobs:
     needs: [frontend-tests, studio-validation]
     timeout-minutes: 15
     steps:
+      - name: 'Checkout code'
+        uses: actions/checkout@v4
       - name: '🏗️ Build All Packages'
         uses: ./.github/actions/build
         with:
