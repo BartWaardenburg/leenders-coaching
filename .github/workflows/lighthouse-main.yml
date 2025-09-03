@@ -54,20 +54,14 @@ jobs:
                  "https://leenders-coaching.vercel.app/contact" )
 
           echo "🔍 Testing production URL accessibility for all pages:"
-
           for production_url in "${urls[@]}"; do
             echo "  Testing: $production_url"
-            
-            # Test production URL accessibility (should not need authentication)
             response=$(curl -sL --max-time 30 --max-redirs 5 "$production_url" || echo "CURL_FAILED")
-            final_url=$(curl -sLI --max-time 30 --max-redirs 5 "$production_url" 2>/dev/null | grep -i "^location:" | tail -1 | cut -d' ' -f2- | tr -d '\r\n' || echo "NO_REDIRECT")
-
             if [[ "$response" == "CURL_FAILED" ]]; then
               echo "❌ Production URL is not accessible (network error)"
               echo "   URL: $production_url"
               exit 1
             else
-              # Check HTTP status code
               code=$(curl -s -o /dev/null -w "%{http_code}" "$production_url")
               if [[ "$code" -ge 200 ]] && [[ "$code" -lt 400 ]]; then
                 echo "✅ HTTP $code - accessible"
@@ -78,7 +72,6 @@ jobs:
               fi
             fi
           done
-
           echo "🎯 All production pages are accessible and ready for Lighthouse testing"
 
       - name: '🚀 Run Lighthouse CI (Production)'
@@ -101,6 +94,7 @@ jobs:
           LHCI_FORM_FACTOR: ${{ matrix.formFactor }}
 
       - name: '📊 Parse & summarize Lighthouse results'
+        id: parse
         if: always()
         shell: bash
         run: |
@@ -112,123 +106,176 @@ jobs:
           shopt -s nullglob
           lhrs=("$results_dir"/lhr-*.json)
 
-          if [[ ${#lhrs[@]} -eq 0 ]]; then
-            {
-              echo "## 🚀 Production Lighthouse – ${{ matrix.formFactor }}";
-              echo "";
-              echo "_No Lighthouse result files were found (lhr-*.json)._";
-            } >> $GITHUB_STEP_SUMMARY
-            exit 0
+          # ----- Extract environment metadata from first LHR -----
+          if [[ ${#lhrs[@]} -gt 0 ]]; then
+            env_md=$(jq -r '
+              {
+                lighthouseVersion: .lighthouseVersion,
+                userAgent: .userAgent,
+                emulatedFormFactor: .configSettings.emulatedFormFactor,
+                throttling: .configSettings.throttling
+              } as $e
+              | "**Lighthouse**: \($e.lighthouseVersion // "n/a")\n"
+                + "**User-Agent**: \($e.userAgent // "n/a")\n"
+                + "**Emulated form factor**: \($e.emulatedFormFactor // "n/a")\n"
+                + "**Throttling**: RTT=\($e.throttling.rttMs // "n/a")ms, "
+                + "Throughput=\($e.throttling.throughputKbps // "n/a")kbps, "
+                + "CPU×\($e.throttling.cpuSlowdownMultiplier // "n/a")"
+            ' "${lhrs[0]}")
+          else
+            env_md="_No Lighthouse result files were found (lhr-*.json)._"
           fi
 
-          # --- Averages across all runs for this form factor ---
-          readarray -t agg < <(jq -s '
-            def avg: (length as $n | if $n==0 then null else (add / $n) end);
-            {
-              perf: (map(try .categories.performance.score catch null) | map(select(.!=null)) | avg),
-              a11y: (map(try .categories.accessibility.score catch null) | map(select(.!=null)) | avg),
-              seo:  (map(try .categories.seo.score catch null) | map(select(.!=null)) | avg),
-              bp:   (map(try .categories["best-practices"].score catch null) | map(select(.!=null)) | avg)
-            } | [.perf,.a11y,.seo,.bp] | map(if .==null then "N/A" else . end) | .[]
-          ' "${lhrs[@]}")
-
-          fmt() { if [[ "$1" == "N/A" ]]; then echo "N/A"; else awk -v v="$1" 'BEGIN{printf "%.0f/100", v*100}'; fi; }
-          avg_perf="$(fmt "${agg[0]}")"
-          avg_a11y="$(fmt "${agg[1]}")"
-          avg_seo="$(fmt "${agg[2]}")"
-          avg_bp="$(fmt "${agg[3]}")"
-
-          # --- Per-page rows from LHRs (dedup by final URL, average per page) ---
-          # We average multiple runs of the same URL so each page shows one row.
-          rows_md=$(
-            jq -s -r '
-              # strip ?query and #hash, then trailing slash
-              def norm(u):
-                if u==null then null else (u | sub("[?#].*$"; "") | sub("/$"; "")) end;
-              # prefer finalDisplayedUrl, fall back if needed
-              def key(x): norm(x.finalDisplayedUrl // x.finalUrl // x.requestedUrl);
+          # ----- Averages across all runs -----
+          if [[ ${#lhrs[@]} -gt 0 ]]; then
+            readarray -t agg < <(jq -s '
               def avg: (length as $n | if $n==0 then null else (add / $n) end);
-              # group all runs by final URL with query/hash/trailing-slash normalization
-              group_by(key(.)) |
-              map(. as $g |
-                {
-                  url: ($g | first | key(.)),
-                  p: ([ $g[] | try .categories.performance.score catch empty ] | map(select(.!=null)) | avg),
-                  a: ([ $g[] | try .categories.accessibility.score catch empty ] | map(select(.!=null)) | avg),
-                  s: ([ $g[] | try .categories.seo.score catch empty ] | map(select(.!=null)) | avg),
-                  b: ([ $g[] | try .categories["best-practices"].score catch empty ] | map(select(.!=null)) | avg)
-                }
-              )
-              | sort_by(.url)
-              | map("| \(.url) | " +
-                    (if .p then ((.p*100)|tostring) else "N/A" end) + " | " +
-                    (if .a then ((.a*100)|tostring) else "N/A" end) + " | " +
-                    (if .s then ((.s*100)|tostring) else "N/A" end) + " | " +
-                    (if .b then ((.b*100)|tostring) else "N/A" end) + " |")[]
-            ' "${lhrs[@]}"
+              {
+                perf: (map(try .categories.performance.score catch null) | map(select(.!=null)) | avg),
+                a11y: (map(try .categories.accessibility.score catch null) | map(select(.!=null)) | avg),
+                seo:  (map(try .categories.seo.score catch null) | map(select(.!=null)) | avg),
+                bp:   (map(try .categories["best-practices"].score catch null) | map(select(.!=null)) | avg)
+              } | [.perf,.a11y,.seo,.bp] | map(if .==null then "N/A" else . end) | .[]
+            ' "${lhrs[@]}")
+          fi
+
+          fmt100() { if [[ "$1" == "N/A" ]]; then echo "N/A"; else awk -v v="$1" 'BEGIN{printf "%.0f/100", v*100}'; fi; }
+          avg_perf="$(fmt100 "${agg[0]:-N/A}")"
+          avg_a11y="$(fmt100 "${agg[1]:-N/A}")"
+          avg_seo="$(fmt100 "${agg[2]:-N/A}")"
+          avg_bp="$(fmt100 "${agg[3]:-N/A}")"
+
+          # ----- Per-page category rows (averaged by final URL) -----
+          rows_md=$(
+            if [[ ${#lhrs[@]} -gt 0 ]]; then
+              jq -s -r '
+                def norm(u): if u==null then null else (u | sub("[?#].*$"; "") | sub("/$"; "")) end;
+                def key(x): norm(x.finalDisplayedUrl // x.finalUrl // x.requestedUrl);
+                def avg: (length as $n | if $n==0 then null else (add / $n) end);
+                group_by(key(.)) |
+                map(. as $g |
+                  {
+                    url: ($g | first | key(.)),
+                    p: ([ $g[] | try .categories.performance.score catch empty ] | map(select(.!=null)) | avg),
+                    a: ([ $g[] | try .categories.accessibility.score catch empty ] | map(select(.!=null)) | avg),
+                    s: ([ $g[] | try .categories.seo.score catch empty ] | map(select(.!=null)) | avg),
+                    b: ([ $g[] | try .categories["best-practices"].score catch empty ] | map(select(.!=null)) | avg)
+                  }
+                )
+                | sort_by(.url)
+                | map("| \(.url) | " +
+                      (if .p then ((.p*100)|tostring) else "N/A" end) + " | " +
+                      (if .a then ((.a*100)|tostring) else "N/A" end) + " | " +
+                      (if .s then ((.s*100)|tostring) else "N/A" end) + " | " +
+                      (if .b then ((.b*100)|tostring) else "N/A" end) + " |")[]
+              ' "${lhrs[@]}"
+            fi
           )
 
-          # Debug: show what URLs we got from the LHRs
-          echo "🔍 URLs processed from LHRs:"
-          echo "$rows_md" | grep -o '^| [^|]* |' | sed 's/^| \([^|]*\) |/\1/' | sort
-          echo "🔍 Ordered URLs to match:"
-          printf '%s\n' "${urls[@]}"
-          echo "---"
-
-          # --- Robust link extraction (object / array / newline list) ---
+          # ----- Robust link extraction -----
           links_raw='${{ steps.lhci.outputs.links }}'
           declare -A url2link=()
           declare -a link_list=()
           if [[ -n "$links_raw" && "$links_raw" != "null" ]]; then
             if echo "$links_raw" | grep -q '^{'; then
-              # JSON object: { "url": "reportUrl", ... }
               while IFS=$'\t' read -r k v; do
-                # normalize: drop ?…/#… and then trailing slash
-                k="${k%%[\?#]*}"
-                k="${k%/}"
+                k="${k%%[\?#]*}"; k="${k%/}"
                 url2link["$k"]="$v"
               done < <(printf '%s' "$links_raw" | jq -r 'to_entries[] | [.key,.value] | @tsv')
             elif echo "$links_raw" | grep -q '^\s*\['; then
-              # JSON array
               mapfile -t link_list < <(printf '%s' "$links_raw" | jq -r '.[]')
             else
-              # newline-separated strings
               mapfile -t link_list < <(printf '%s\n' "$links_raw")
             fi
           fi
 
-          # Attach one link per row by index (same run order). If fewer links than rows, fill with "-".
+          # ----- Attach report links to categories table -----
           i=0
           table="| Page | Perf | A11y | SEO | BP | Report |"$'\n'"|---|---:|---:|---:|---:|---|"$'\n'
           while IFS= read -r row; do
-            # Extract URL from the row to try URL-based mapping first
+            [[ -z "$row" ]] && continue
             row_url=$(echo "$row" | sed 's/^| \([^|]*\) |.*/\1/')
-            # Try both with and without trailing slash for URL matching
             key="${row_url%/}"
-            altkey="${row_url%/}/"
             if [[ "$row_url" == */ ]]; then altkey="${row_url%/}"; else altkey="$row_url/"; fi
-            
             link="${url2link[$key]-}"
             [[ -z "$link" ]] && link="${url2link[$altkey]-}"
-            if [[ -z "$link" && ${#link_list[@]} -gt 0 ]]; then 
-              link="${link_list[$i]-}"
-            fi
+            if [[ -z "$link" && ${#link_list[@]} -gt 0 ]]; then link="${link_list[$i]-}"; fi
             link="${link%%[[:space:]]*}"
-            report_cell="-"
-            [[ -n "$link" ]] && report_cell="[Report](${link})"
+            [[ -n "$link" ]] && report_cell="[Report](${link})" || report_cell="-"
             table+="${row} ${report_cell} |"$'\n'
             i=$((i+1))
           done <<< "$rows_md"
 
-          # First report link for quick access
+          # ----- Vitals per page (averaged) -----
+          vitals_table="| Page | LCP (ms) | CLS | TBT (ms) | FCP (ms) | SI (ms) | TTI (ms) | Req | Bytes (KB) |"$'\n'"|---|---:|---:|---:|---:|---:|---:|---:|---:|"$'\n'
+          if [[ ${#lhrs[@]} -gt 0 ]]; then
+            vitals_rows=$(jq -s -r '
+              def norm(u): if u==null then null else (u | sub("[?#].*$"; "") | sub("/$"; "")) end;
+              def key(x): norm(x.finalDisplayedUrl // x.finalUrl // x.requestedUrl);
+              def avg: (length as $n | if $n==0 then null else (add / $n) end);
+              group_by(key(.)) |
+              map(. as $g |
+                {
+                  url: ($g | first | key(.)),
+                  lcp: ([ $g[] | try .audits["largest-contentful-paint"].numericValue catch empty ] | map(select(.!=null)) | avg),
+                  cls: ([ $g[] | try .audits["cumulative-layout-shift"].numericValue catch empty ] | map(select(.!=null)) | avg),
+                  tbt: ([ $g[] | try .audits["total-blocking-time"].numericValue catch empty ] | map(select(.!=null)) | avg),
+                  fcp: ([ $g[] | try .audits["first-contentful-paint"].numericValue catch empty ] | map(select(.!=null)) | avg),
+                  si:  ([ $g[] | try .audits["speed-index"].numericValue catch empty ] | map(select(.!=null)) | avg),
+                  tti: ([ $g[] | try .audits["interactive"].numericValue catch empty ] | map(select(.!=null)) | avg),
+                  bytes: ([ $g[] | try .audits["total-byte-weight"].numericValue catch empty ] | map(select(.!=null)) | avg),
+                  reqs: ([ $g[] | try (.audits["network-requests"].details.items | length) catch empty ] | map(select(.!=null)) | avg)
+                }
+              )
+              | sort_by(.url)
+              | map("| \(.url) | " +
+                    (if .lcp then (.lcp|tostring) else "N/A" end) + " | " +
+                    (if .cls then (.cls|tostring) else "N/A" end) + " | " +
+                    (if .tbt then (.tbt|tostring) else "N/A" end) + " | " +
+                    (if .fcp then (.fcp|tostring) else "N/A" end) + " | " +
+                    (if .si  then (.si|tostring)  else "N/A" end) + " | " +
+                    (if .tti then (.tti|tostring) else "N/A" end) + " | " +
+                    (if .reqs then (.reqs|tostring) else "N/A" end) + " | " +
+                    (if .bytes then (.bytes/1024|floor|tostring) else "N/A" end) + " |")[]
+            ' "${lhrs[@]}")
+            vitals_table+="$vitals_rows"$'\n'
+          fi
+
+          # ----- First report link (quick access) -----
           first_link=""
           if [[ ${#link_list[@]} -gt 0 ]]; then
             first_link="${link_list[0]-}"
           elif [[ ${#url2link[@]} -gt 0 ]]; then
-            # Get first value from associative array
             first_link=$(printf '%s\n' "${url2link[@]}" | head -n1)
           fi
 
+          # ----- Assertions (if available) -----
+          assertion_file="$results_dir/assertion-results.json"
+          if [[ -f "$assertion_file" ]]; then
+            rows=$(jq -r '
+              [ .[] | select(.level!="pass")
+                | { level, id: (.id // .auditId // "—"),
+                    url: (.url // "—"),
+                    op: (.result.operator // "—"),
+                    exp: (.result.expected // "—"),
+                    act: (.result.actual // "—") } ]
+              | .[:30]
+              | map("| \(.level) | \(.id) | \(.exp) | \(.act) | \(.op) | \(.url) |")
+              | .[]
+            ' "$assertion_file")
+            assert_md="| Level | Check | Expected | Actual | Operator | URL |\n|---|---|---|---|---|---|\n"
+            if [[ -n "$rows" ]]; then
+              printf '%s\n' "$rows" >> temp_assertions.md
+              assert_md+=$(cat temp_assertions.md)
+              rm -f temp_assertions.md
+            else
+              assert_md+="| - | - | - | - | - | - |\n"
+            fi
+          else
+            assert_md="_No assertions file found._"
+          fi
+
+          # ----- Write Job Summary -----
           {
             echo "## 🚀 Production Lighthouse – ${{ matrix.formFactor }}";
             echo "";
@@ -241,24 +288,102 @@ jobs:
             echo "| SEO | ${avg_seo} |";
             echo "| Best Practices | ${avg_bp} |";
             echo "";
+            echo "### Category Scores";
             echo "${table}";
             if [[ -n "$first_link" ]]; then
               echo "";
               echo "- Temporary public report (first page): ${first_link}";
             fi
+            echo "";
+            echo "### Core Metrics";
+            echo "${vitals_table}";
+            echo "";
+            echo "### Assertion details";
+            echo "";
+            echo "<br/>";
+            echo "";
+            echo "${assert_md}";
           } >> $GITHUB_STEP_SUMMARY
+
+          # ----- Add attribution to job summary -----
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "*Generated by GitHub Actions Lighthouse (Production)*" >> $GITHUB_STEP_SUMMARY
+
+          # ----- Expose outputs for issue body -----
+          {
+            echo "averages_md<<'EOF'"
+            echo "| Category | Score |"
+            echo "|---|---|"
+            echo "| Performance | ${avg_perf} |"
+            echo "| Accessibility | ${avg_a11y} |"
+            echo "| SEO | ${avg_seo} |"
+            echo "| Best Practices | ${avg_bp} |"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo "categories_table_md<<'EOF'"
+            echo "${table}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo "vitals_table_md<<'EOF'"
+            echo "${vitals_table}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo "assertions_md<<'EOF'"
+            echo "${assert_md}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo "env_md<<'EOF'"
+            echo "${env_md}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          echo "first_report_link=${first_link}" >> "$GITHUB_OUTPUT"
 
       - name: '🚨 Open regression issue when failed'
         if: failure() && github.event_name != 'schedule'
         uses: actions/github-script@v7
+        env:
+          FIRST_REPORT: ${{ steps.parse.outputs.first_report_link }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const title = `Lighthouse regression on main – ${{ matrix.formFactor }} (${new Date().toISOString().slice(0,10)})`;
-            const body = `The production Lighthouse check failed for **${{ matrix.formFactor }}**.
+            const firstReport = (process.env.FIRST_REPORT || '').trim();
+            const title = 'Lighthouse regression on main – ${{ matrix.formFactor }} (' + new Date().toISOString().slice(0,10) + ')';
+            const body = '**Form factor:** `${{ matrix.formFactor }}`\n\n' +
+              '**Commit:** `${{ github.sha }}`\n' +
+              '**Run:** https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n' +
+              (firstReport ? '**First report:** ' + firstReport + '\n' : '') +
+              '\n---\n\n' +
+              '### Averages (all pages/runs)\n' +
+              '${{ steps.parse.outputs.averages_md }}\n\n' +
+              '---\n\n' +
+              '### Category Scores\n' +
+              '${{ steps.parse.outputs.categories_table_md }}\n\n' +
+              '---\n\n' +
+              '### Core Metrics\n' +
+              '${{ steps.parse.outputs.vitals_table_md }}\n\n' +
+              '---\n\n' +
+              '### Assertion details\n' +
+              '\n<br/>\n\n' +
+              '${{ steps.parse.outputs.assertions_md }}\n\n' +
+              '---\n\n' +
+              '### Environment\n' +
+              '${{ steps.parse.outputs.env_md }}\n\n' +
+              '---\n\n' +
+              '*Generated by GitHub Actions Lighthouse (Production)*';
 
-            Commit: \`${{ github.sha }}\`
-            Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
-            Please review the artifacts and the temporary report link in the job summary.`;
-            await github.rest.issues.create({ owner: context.repo.owner, repo: context.repo.repo, title, body, labels: ['performance','lighthouse'] });
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body,
+              labels: ['performance','lighthouse','regression']
+            });
