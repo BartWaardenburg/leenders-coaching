@@ -84,8 +84,9 @@ jobs:
         id: audit
         run: |
           command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq >/dev/null 2>&1; }
-          SEVERITY="${{ github.event.inputs.severity || 'moderate' }}"
-          if pnpm audit --audit-level "$SEVERITY" --json > audit-results.json 2>/dev/null; then
+          SEVERITY="${{ github.event.inputs.severity }}"
+          : "${SEVERITY:=moderate}"   # default to moderate if not provided
+          if pnpm audit --recursive --audit-level "$SEVERITY" --json > audit-results.json 2>/dev/null; then
             echo "vulnerabilities=false" >> $GITHUB_OUTPUT
             echo "info=0" >> $GITHUB_OUTPUT
             echo "low=0" >> $GITHUB_OUTPUT
@@ -94,22 +95,17 @@ jobs:
             echo "critical=0" >> $GITHUB_OUTPUT
           else
             echo "vulnerabilities=true" >> $GITHUB_OUTPUT
-            
             if [ -f audit-results.json ]; then
-              # Extract vulnerability counts
-              INFO=$(cat audit-results.json | jq -r '.metadata.vulnerabilities.info // 0')
-              LOW=$(cat audit-results.json | jq -r '.metadata.vulnerabilities.low // 0')
-              MODERATE=$(cat audit-results.json | jq -r '.metadata.vulnerabilities.moderate // 0')
-              HIGH=$(cat audit-results.json | jq -r '.metadata.vulnerabilities.high // 0')
-              CRITICAL=$(cat audit-results.json | jq -r '.metadata.vulnerabilities.critical // 0')
-              
+              INFO=$(jq -r '.metadata.vulnerabilities.info // 0' < audit-results.json)
+              LOW=$(jq -r '.metadata.vulnerabilities.low // 0' < audit-results.json)
+              MODERATE=$(jq -r '.metadata.vulnerabilities.moderate // 0' < audit-results.json)
+              HIGH=$(jq -r '.metadata.vulnerabilities.high // 0' < audit-results.json)
+              CRITICAL=$(jq -r '.metadata.vulnerabilities.critical // 0' < audit-results.json)
               echo "info=$INFO" >> $GITHUB_OUTPUT
               echo "low=$LOW" >> $GITHUB_OUTPUT
               echo "moderate=$MODERATE" >> $GITHUB_OUTPUT
               echo "high=$HIGH" >> $GITHUB_OUTPUT
               echo "critical=$CRITICAL" >> $GITHUB_OUTPUT
-              
-              cat audit-results.json | jq -r '.metadata.vulnerabilities // empty'
             fi
           fi
         continue-on-error: true
@@ -124,48 +120,102 @@ jobs:
 
       - name: '📊 Generate security report'
         if: steps.audit.outputs.vulnerabilities == 'true' && github.event_name == 'pull_request'
+        id: build_audit_md
         run: |
           command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq >/dev/null 2>&1; }
-          if [ -f audit-results.json ]; then
-            VULN_SUMMARY=$(cat audit-results.json | jq -r '.metadata.vulnerabilities | "**Vulnerabilities Found:**\n- Info: \(.info)\n- Low: \(.low)\n- Moderate: \(.moderate)\n- High: \(.high)\n- Critical: \(.critical)"')
-            
-            VULN_DETAILS=$(cat audit-results.json | jq -r '
-              .advisories | to_entries[] | 
-              "### \(.value.title)\n" +
-              "- **Severity:** \(.value.severity)\n" +
-              "- **CVE:** \(.value.cves | join(", "))\n" +
-              "- **Module:** \(.value.module_name)\n" +
-              "- **Vulnerable Versions:** \(.value.vulnerable_versions)\n" +
-              "- **Patched Versions:** \(.value.patched_versions)\n" +
-              "- **Recommendation:** \(.value.recommendation)\n" +
-              "- **Overview:** \(.value.overview | split("\n") | .[0:3] | join("\n"))\n" +
-              "- **References:** \(.value.url)\n"
-            ')
-            
-            echo "## 🔒 Security Audit Report" > security-report.md
-            echo "" >> security-report.md
-            echo "⚠️ **Security vulnerabilities detected in dependencies**" >> security-report.md
-            echo "" >> security-report.md
-            echo "$VULN_SUMMARY" >> security-report.md
-            echo "" >> security-report.md
-            echo "### 📋 Detailed Findings" >> security-report.md
-            echo "" >> security-report.md
-            echo "$VULN_DETAILS" >> security-report.md
-            echo "" >> security-report.md
-            echo "### 🔧 Next Steps" >> security-report.md
-            echo "" >> security-report.md
-            echo "1. **Review the vulnerabilities** above and assess their impact on your application" >> security-report.md
-            echo "2. **Update affected dependencies** to their patched versions where possible" >> security-report.md
-            echo "3. **Consider using dependency updates** tools like Renovate or Dependabot" >> security-report.md
-            echo "4. **Monitor for new patches** and update accordingly" >> security-report.md
-            echo "" >> security-report.md
-            echo "### 📊 Full Report" >> security-report.md
-            echo "" >> security-report.md
-            echo "For complete audit details, check the workflow artifacts or run \`pnpm audit\` locally." >> security-report.md
-            echo "" >> security-report.md
-            echo "---" >> security-report.md
-            echo "*Generated by GitHub Actions Security Audit*" >> security-report.md
+          [ -f audit-results.json ] || { echo "No audit-results.json found"; exit 0; }
+
+          # Summary counts (fallback to 0 if missing)
+          VULN_SUMMARY="$(jq -r '
+            .metadata.vulnerabilities as $m
+            | "**Vulnerabilities Found:**\n- Info: \($m.info // 0)\n- Low: \($m.low // 0)\n- Moderate: \($m.moderate // 0)\n- High: \($m.high // 0)\n- Critical: \($m.critical // 0)"
+          ' audit-results.json)"
+
+          # Prefer .advisories (npm v6 / pnpm style). Fallback to .vulnerabilities (npm v7+ style).
+          if jq -e '.advisories and (.advisories|length>0)' audit-results.json >/dev/null; then
+            jq -r '
+              .advisories
+              | to_entries
+              | sort_by([
+                (if .value.severity == "critical" then 0 elif .value.severity == "high" then 1 elif .value.severity == "moderate" then 2 elif .value.severity == "low" then 3 else 4 end),
+                .value.module_name
+              ])
+              | map(
+                  "<details><summary><b>\(.value.title)</b> — \(.value.severity) — <code>\(.value.module_name)</code></summary>\n\n" +
+                  "- **CVE:** \((.value.cves // []) | join(", ") | if . == "" then "—" else . end)\n" +
+                  "- **Vulnerable Versions:** \(.value.vulnerable_versions)\n" +
+                  "- **Patched Versions:** \(.value.patched_versions)\n" +
+                  "- **Recommendation:** \(.value.recommendation)\n" +
+                  "- **Overview:** \((.value.overview // "" | split("\n") | .[0:3] | join("\n")))\n" +
+                  "- **References:** \(.value.url)\n" +
+                  "- **Affected Paths (first 10):**\n" +
+                  ( .value.findings | map(.paths) | add | unique | .[0:10] | map("  - " + .) | join("\n") ) + "\n" +
+                  "</details>\n"
+                )
+              | .[]
+            ' audit-results.json > VULN_DETAILS.md
+          elif jq -e '.vulnerabilities and (.vulnerabilities|length>0)' audit-results.json >/dev/null; then
+            jq -r '
+              .vulnerabilities
+              | to_entries
+              | sort_by([
+                (if .value.severity == "critical" then 0 elif .value.severity == "high" then 1 elif .value.severity == "moderate" then 2 elif .value.severity == "low" then 3 else 4 end),
+                .key
+              ])
+              | map(
+                  "<details><summary><b>\(.key)</b> — \(.value.severity) — range: <code>\(.value.range // "n/a")</code></summary>\n\n" +
+                  "- **Via:** " +
+                  ( .value.via
+                    | map( if type=="string" then . else ( (.name // "") + (if .url then " ("+.url+")" else "" end) ) end )
+                    | unique | join(", ")
+                  ) + "\n" +
+                  "- **Fix Available:** \(.value.fixAvailable // false)\n" +
+                  "- **Paths (first 10):**\n" +
+                  ( .value.nodes // [] | .[0:10] | map("  - " + .) | join("\n") ) + "\n" +
+                  "</details>\n"
+                )
+              | .[]
+            ' audit-results.json > VULN_DETAILS.md
+          else
+            echo "_No detailed advisories in audit output._" > VULN_DETAILS.md
           fi
+
+          {
+            echo "## 🔒 Security Audit Report"
+            echo
+            echo "⚠️ **Security vulnerabilities detected in dependencies**"
+            echo
+            echo "$VULN_SUMMARY"
+            echo
+            echo "### 📋 Detailed Findings"
+            echo
+            cat VULN_DETAILS.md
+            echo
+            echo "### 🔧 Next Steps"
+            echo
+            echo "1. **Review** the vulnerabilities and assess impact"
+            echo "2. **Update** to patched versions where possible"
+            echo "3. Consider enabling **Renovate/Dependabot**"
+            echo "4. **Re-run** the audit after updates"
+            echo
+            echo "---"
+            echo "*Generated by GitHub Actions Security Audit*"
+          } > security-report.md
+
+          # Safety: trim if close to GitHub's ~65k comment limit
+          BYTES=$(wc -c < security-report.md | tr -d " ")
+          if [ "$BYTES" -gt 60000 ]; then
+            echo -e "\n> ⚠️ Report truncated due to GitHub comment size limits. See the full JSON in the workflow artifact." >> security-report.md
+            head -c 60000 security-report.md > security-report.md.trim && mv security-report.md.trim security-report.md
+          fi
+
+      - name: '📤 Upload security report (non-PR)'
+        if: steps.audit.outputs.vulnerabilities == 'true' && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-report-${{ github.sha }}
+          path: security-report.md
+          retention-days: 30
 
       - name: '💬 Sticky PR comment – Security Audit'
         if: steps.audit.outputs.vulnerabilities == 'true' && github.event_name == 'pull_request'
@@ -173,25 +223,7 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: security-audit
-          number: ${{ github.event.pull_request.number }}
-          message: |
-            ## 🔒 Security Audit Report
-
-            ⚠️ **Security vulnerabilities detected in dependencies**
-
-            **Vulnerabilities Found:**
-            - Info: ${{ steps.audit.outputs.info || 0 }}
-            - Low: ${{ steps.audit.outputs.low || 0 }}
-            - Moderate: ${{ steps.audit.outputs.moderate || 0 }}
-            - High: ${{ steps.audit.outputs.high || 0 }}
-            - Critical: ${{ steps.audit.outputs.critical || 0 }}
-
-            ### 📋 Detailed Findings
-
-            For complete audit details, check the workflow artifacts or run `pnpm audit` locally.
-
-            ---
-            *Generated by GitHub Actions Security Audit*
+          path: security-report.md
 
   license-compliance:
     name: 'License Compliance'
