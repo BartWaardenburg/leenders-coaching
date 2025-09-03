@@ -454,10 +454,10 @@ jobs:
           echo "{\"frontend_build_time\": $frontend_duration, \"studio_build_time\": $studio_duration}" > build-metrics.json
 
       - name: '📊 Bundle size analysis'
-        run: pnpm run analyze:bundle
+        run: pnpm --filter ./packages/leenders-coaching-nl run analyze:bundle
 
-      - name: '🔍 Performance audit'
-        run: pnpm run perf:audit
+      - name: '🔍 Performance audit (non-Lighthouse)'
+        run: pnpm --filter ./packages/leenders-coaching-nl run verify:performance
 
       - name: '📋 Capture bundle size summary'
         run: |

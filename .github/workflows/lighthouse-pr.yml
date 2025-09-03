@@ -22,6 +22,7 @@ jobs:
     timeout-minutes: 25
     if: |
       github.event.deployment_status.state == 'success' &&
+      contains(github.event.deployment.environment, 'Preview') &&
       contains(github.event.deployment.environment, 'leenders-coaching') &&
       !contains(github.event.deployment.environment, 'studio')
 
@@ -90,7 +91,7 @@ jobs:
           echo "warnc=0"  >> $GITHUB_OUTPUT
           echo "passc=0"  >> $GITHUB_OUTPUT
 
-          # assertions counts (if file exists)
+          # assertions counts (if file exists) + details table
           if [[ -f "$assertion_file" ]]; then
             errc=$(jq '[.[] | select(.level=="error")] | length' "$assertion_file")
             warnc=$(jq '[.[] | select(.level=="warn")]  | length' "$assertion_file")
@@ -98,6 +99,32 @@ jobs:
             echo "errc=$errc"  >> $GITHUB_OUTPUT
             echo "warnc=$warnc" >> $GITHUB_OUTPUT
             echo "passc=$passc" >> $GITHUB_OUTPUT
+
+            rows=$(jq -r '
+              [ .[] | select(.level!="pass")
+                | { level, id: (.id // .auditId // "—"),
+                    url: (.url // "—"),
+                    op: (.result.operator // "—"),
+                    exp: (.result.expected // "—"),
+                    act: (.result.actual // "—") } ] 
+              | .[:25]
+              | map("| \(.level) | \(.id) | \(.exp) | \(.act) | \(.op) | \(.url) |")
+              | .[]
+            ' "$assertion_file")
+
+            {
+              echo "assert_md<<'EOF'"
+              echo "| Level | Check | Expected | Actual | Operator | URL |"
+              echo "|---|---|---|---|---|---|"
+              if [[ -n "$rows" ]]; then echo "$rows"; else echo "| - | - | - | - | - | - |"; fi
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          else
+            {
+              echo "assert_md<<'EOF'"
+              echo "_No assertions file found._"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
           fi
 
           # derive category scores from raw LHRs (robust)
@@ -128,7 +155,6 @@ jobs:
             [[ "$seo"  != "N/A" ]] && echo "seo=$(to_pct "$seo")"   >> $GITHUB_OUTPUT || echo "seo=N/A"  >> $GITHUB_OUTPUT
             [[ "$bp"   != "N/A" ]] && echo "bp=$(to_pct "$bp")"     >> $GITHUB_OUTPUT || echo "bp=N/A"   >> $GITHUB_OUTPUT
 
-            # overall from assertions if present; else pass
             if [[ -f "$assertion_file" ]] && [[ "${errc:-0}" -gt 0 ]]; then
               echo "overall=❌ FAILED" >> $GITHUB_OUTPUT
             else
@@ -136,19 +162,9 @@ jobs:
             fi
           fi
 
-          # robust link extraction
-          links='${{ steps.lhci.outputs.links }}'
-          report=""
-          if [[ -n "$links" && "$links" != "null" ]]; then
-            if echo "$links" | grep -q '^\s*\['; then
-              report="$(echo "$links" | jq -r 'first // empty' 2>/dev/null || true)"
-            else
-              report="$(echo "$links" | head -n1 | tr -d '[:space:]')"
-            fi
-          fi
-          echo "report=$report" >> $GITHUB_OUTPUT
+          # Note: Links are processed in the table step for per-page report links
 
-      - name: '🧾 Build per-page table'
+      - name: '🧾 Build per-page tables (categories + vitals)'
         id: table
         if: always()
         shell: bash
@@ -158,15 +174,12 @@ jobs:
 
           results_dir="${{ steps.lhci.outputs.resultsPath }}"
           base="${{ steps.url.outputs.preview_url }}"
-          # keep your order
           ordered_urls=("$base" "$base/over-mij" "$base/aanpak" "$base/coaching" "$base/contact")
 
-          # Build URL -> {p,a,s,b} with query/hash/trailing-slash normalization
+          # --- CATEGORY SCORES MAP: url -> {p,a,s,b} ---
           scores_json="$(jq -sr '
-            # strip ?query and #hash, then trailing slash
             def norm(u):
               if u==null then null else (u | sub("[?#].*$"; "") | sub("/$"; "")) end;
-            # prefer finalDisplayedUrl, fall back if needed
             def key(x): norm(x.finalDisplayedUrl // x.finalUrl // x.requestedUrl);
             def avg: (length as $n | if $n==0 then null else (add / $n) end);
             sort_by(key(.))
@@ -184,16 +197,14 @@ jobs:
 
           fpct() { v="$1"; if [[ "$v" == "null" || -z "$v" ]]; then echo "N/A"; else awk -v n="$v" 'BEGIN{printf "%.0f", n*100}'; fi; }
 
-          # Parse links (object / array / newline list) and normalize root key
+          # --- LINKS (report urls) ---
           raw_links='${{ steps.lhci.outputs.links }}'
           declare -A url2link=()
           declare -a link_list=()
           if [[ -n "$raw_links" && "$raw_links" != "null" ]]; then
             if echo "$raw_links" | grep -q '^{'; then
               while IFS=$'\t' read -r k v; do
-                # normalize: drop ?…/#… and then trailing slash
-                k="${k%%[\?#]*}"
-                k="${k%/}"
+                k="${k%%[\?#]*}"; k="${k%/}"
                 url2link["$k"]="$v"
               done < <(printf '%s' "$raw_links" | jq -r 'to_entries[] | [.key,.value] | @tsv')
             elif echo "$raw_links" | grep -q '^\s*\['; then
@@ -203,11 +214,10 @@ jobs:
             fi
           fi
 
-          # Build the markdown table (real newlines)
+          # --- Build categories table ---
           table="| Page | Perf | A11y | SEO | BP | Report |"$'\n'"|---|---:|---:|---:|---:|---|"$'\n'
           idx=0
           for u in "${ordered_urls[@]}"; do
-            # alt key with/without trailing slash
             if [[ "$u" == */ ]]; then alt="${u%/}"; else alt="$u/"; fi
             key="${u%/}" ; altkey="${alt%/}"
 
@@ -227,10 +237,58 @@ jobs:
             idx=$((idx+1))
           done
 
-          # Write as a multiline output (no escaping needed)
           {
             echo "md<<EOF"
             echo "$table"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          # --- VITALS MAP: url -> {lcp,cls,tbt,fcp,si,tti,bytes,reqs} ---
+          metrics_json="$(jq -sr '
+            def norm(u): if u==null then null else (u | sub("[?#].*$"; "") | sub("/$"; "")) end;
+            def key(x): norm(x.finalDisplayedUrl // x.finalUrl // x.requestedUrl);
+            def avg: (length as $n | if $n==0 then null else (add / $n) end);
+            sort_by(key(.))
+            | group_by(key(.))
+            | map(. as $g | {
+                url: ($g | first | key(.)),
+                lcp: ([ $g[] | try .audits["largest-contentful-paint"].numericValue catch empty ] | map(select(.!=null)) | avg),
+                cls: ([ $g[] | try .audits["cumulative-layout-shift"].numericValue catch empty ] | map(select(.!=null)) | avg),
+                tbt: ([ $g[] | try .audits["total-blocking-time"].numericValue catch empty ] | map(select(.!=null)) | avg),
+                fcp: ([ $g[] | try .audits["first-contentful-paint"].numericValue catch empty ] | map(select(.!=null)) | avg),
+                si:  ([ $g[] | try .audits["speed-index"].numericValue catch empty ] | map(select(.!=null)) | avg),
+                tti: ([ $g[] | try .audits["interactive"].numericValue catch empty ] | map(select(.!=null)) | avg),
+                bytes: ([ $g[] | try .audits["total-byte-weight"].numericValue catch empty ] | map(select(.!=null)) | avg),
+                reqs: ([ $g[] | try (.audits["network-requests"].details.items | length) catch empty ] | map(select(.!=null)) | avg)
+              })
+            | map({ (.url): {lcp:.lcp,cls:.cls,tbt:.tbt,fcp:.fcp,si:.si,tti:.tti,bytes:.bytes,reqs:.reqs} })
+            | add // {}
+          ' "$results_dir"/lhr-*.json)"
+
+          ms() { v="$1"; if [[ "$v" == "null" || -z "$v" ]]; then echo "N/A"; else awk -v n="$v" 'BEGIN{printf "%.0f", n}'; fi; }
+          kb() { v="$1"; if [[ "$v" == "null" || -z "$v" ]]; then echo "N/A"; else awk -v n="$v" 'BEGIN{printf "%.0f", n/1024}'; fi; }
+          num() { v="$1"; if [[ "$v" == "null" || -z "$v" ]]; then echo "N/A"; else awk -v n="$v" 'BEGIN{printf "%.0f", n}'; fi; }
+
+          vt="| Page | LCP (ms) | CLS | TBT (ms) | FCP (ms) | SI (ms) | TTI (ms) | Req | Bytes (KB) |"$'\n'"|---|---:|---:|---:|---:|---:|---:|---:|---:|"$'\n'
+          for u in "${ordered_urls[@]}"; do
+            if [[ "$u" == */ ]]; then alt="${u%/}"; else alt="$u/"; fi
+            key="${u%/}" ; altkey="${alt%/}"
+
+            lcp=$(jq -r --arg k "$key" --arg a "$altkey" -n --argjson m "$metrics_json" '($m[$k].lcp // $m[$a].lcp // "null")')
+            cls=$(jq -r --arg k "$key" --arg a "$altkey" -n --argjson m "$metrics_json" '($m[$k].cls // $m[$a].cls // "null")')
+            tbt=$(jq -r --arg k "$key" --arg a "$altkey" -n --argjson m "$metrics_json" '($m[$k].tbt // $m[$a].tbt // "null")')
+            fcp=$(jq -r --arg k "$key" --arg a "$altkey" -n --argjson m "$metrics_json" '($m[$k].fcp // $m[$a].fcp // "null")')
+            si=$(jq -r  --arg k "$key" --arg a "$altkey" -n --argjson m "$metrics_json" '($m[$k].si  // $m[$a].si  // "null")')
+            tti=$(jq -r --arg k "$key" --arg a "$altkey" -n --argjson m "$metrics_json" '($m[$k].tti // $m[$a].tti // "null")')
+            bytes=$(jq -r --arg k "$key" --arg a "$altkey" -n --argjson m "$metrics_json" '($m[$k].bytes // $m[$a].bytes // "null")')
+            reqs=$(jq -r  --arg k "$key" --arg a "$altkey" -n --argjson m "$metrics_json" '($m[$k].reqs // $m[$a].reqs // "null")')
+
+            vt+="| $u | $(ms "$lcp") | $(printf '%.3f' "${cls:-0}" 2>/dev/null || echo 'N/A') | $(ms "$tbt") | $(ms "$fcp") | $(ms "$si") | $(ms "$tti") | $(num "$reqs") | $(kb "$bytes") |"$'\n'
+          done
+
+          {
+            echo "vitals_md<<EOF"
+            echo "$vt"
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
@@ -263,9 +321,19 @@ jobs:
             **Preview URL:** ${{ steps.url.outputs.preview_url }}
             **Status:** ${{ steps.parse.outputs.overall }}
 
+            ### Category Scores
             ${{ steps.table.outputs.md }}
 
+            ### Core Metrics
+            ${{ steps.table.outputs.vitals_md }}
+
             **Assertions:** ✅ ${{ steps.parse.outputs.passc }} · ⚠️ ${{ steps.parse.outputs.warnc }} · ❌ ${{ steps.parse.outputs.errc }}
+
+            <details><summary>Assertion details</summary>
+
+            ${{ steps.parse.outputs.assert_md }}
+
+            </details>
 
       - name: '📋 Job summary'
         if: always()
@@ -276,7 +344,17 @@ jobs:
             echo "- URL: ${{ steps.url.outputs.preview_url }}";
             echo "- Status: ${{ steps.parse.outputs.overall }}";
             echo "";
+            echo "### Category Scores";
             echo "${{ steps.table.outputs.md }}";
             echo "";
+            echo "### Core Metrics";
+            echo "${{ steps.table.outputs.vitals_md }}";
+            echo "";
             echo "**Assertions:** ✅ ${{ steps.parse.outputs.passc }} · ⚠️ ${{ steps.parse.outputs.warnc }} · ❌ ${{ steps.parse.outputs.errc }}";
+            echo "";
+            echo "<details><summary>Assertion details</summary>";
+            echo "";
+            echo "${{ steps.parse.outputs.assert_md }}";
+            echo "";
+            echo "</details>";
           } >> $GITHUB_STEP_SUMMARY

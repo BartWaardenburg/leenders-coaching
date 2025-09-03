@@ -29,7 +29,7 @@
     "ci:install-playwright": "pnpm dlx playwright install --with-deps chromium",
     "ci:test-a11y": "pnpm dlx start-server-and-test 'pnpm dlx http-server storybook-static -p 6006' http://localhost:6006 'pnpm dlx @storybook/test-runner --url http://localhost:6006'",
     "validate:tailwind": "postcss src/app/globals.css -o /tmp/test.css --config postcss.config.mjs && echo '✅ Tailwind CSS configuration is valid' && rm -f /tmp/test.css",
-    "perf:lighthouse": "lhci autorun",
+    "perf:lighthouse": "lhci autorun --config=lighthouserc.ci.cjs",
     "perf:audit": "pnpm run perf:lighthouse",
     "perf:local": "lhci autorun --config=lighthouserc.js",
     "perf:ci": "lhci autorun --config=lighthouserc.ci.cjs",
