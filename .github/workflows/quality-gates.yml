@@ -10,9 +10,7 @@ on:
       - 'pnpm-lock.yaml'
   pull_request:
     branches: ['main']
-    paths:
-      - '**/package.json'
-      - 'pnpm-lock.yaml'
+    types: [opened, synchronize, reopened, ready_for_review] # run on ALL PRs
   workflow_dispatch:
     inputs:
       severity:
@@ -20,12 +18,7 @@ on:
         required: false
         default: 'moderate'
         type: choice
-        options:
-          - 'info'
-          - 'low'
-          - 'moderate'
-          - 'high'
-          - 'critical'
+        options: ['info', 'low', 'moderate', 'high', 'critical']
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -90,9 +83,8 @@ jobs:
         run: |
           command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq >/dev/null 2>&1; }
           SEVERITY="${{ github.event.inputs.severity }}"
-          : "${SEVERITY:=moderate}"   # default to moderate if not provided
+          : "${SEVERITY:=moderate}"
 
-          # Run pnpm audit (without --recursive as it's not needed for pnpm workspaces)
           if pnpm audit --audit-level "$SEVERITY" --json > audit-results.json 2>&1; then
             echo "vulnerabilities=false" >> $GITHUB_OUTPUT
             echo "info=0" >> $GITHUB_OUTPUT
@@ -102,15 +94,12 @@ jobs:
             echo "critical=0" >> $GITHUB_OUTPUT
           else
             echo "vulnerabilities=true" >> $GITHUB_OUTPUT
-            
             if [ -f audit-results.json ] && jq -e . audit-results.json >/dev/null 2>&1; then
-              # Extract vulnerability counts from metadata.vulnerabilities
               INFO=$(jq -r '.metadata.vulnerabilities.info // 0' audit-results.json)
               LOW=$(jq -r '.metadata.vulnerabilities.low // 0' audit-results.json)
               MODERATE=$(jq -r '.metadata.vulnerabilities.moderate // 0' audit-results.json)
               HIGH=$(jq -r '.metadata.vulnerabilities.high // 0' audit-results.json)
               CRITICAL=$(jq -r '.metadata.vulnerabilities.critical // 0' audit-results.json)
-              
               echo "info=$INFO" >> $GITHUB_OUTPUT
               echo "low=$LOW" >> $GITHUB_OUTPUT
               echo "moderate=$MODERATE" >> $GITHUB_OUTPUT
@@ -134,127 +123,65 @@ jobs:
           path: audit-results.json
           retention-days: 30
 
-      - name: '📊 Generate security report'
-        if: steps.audit.outputs.vulnerabilities == 'true' && github.event_name == 'pull_request'
-        id: build_audit_md
+      # Always build a report for PRs (clean or with vulns)
+      - name: '📊 Build security report (PRs)'
+        if: github.event_name == 'pull_request'
         run: |
           command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq >/dev/null 2>&1; }
-          [ -f audit-results.json ] || { echo "No audit-results.json found"; exit 0; }
-
-          # Summary counts from the audit step outputs
-          VULN_SUMMARY="**Vulnerabilities Found:**
-          - Info: ${{ steps.audit.outputs.info }}
-          - Low: ${{ steps.audit.outputs.low }}
-          - Moderate: ${{ steps.audit.outputs.moderate }}
-          - High: ${{ steps.audit.outputs.high }}
-          - Critical: ${{ steps.audit.outputs.critical }}"
-
-          # Process the advisories object (this is the format pnpm uses)
-          if jq -e '.advisories and (.advisories | length > 0)' audit-results.json >/dev/null 2>&1; then
-            jq -r '
-              .advisories
-              | to_entries
-              | sort_by([
-                (if .value.severity == "critical" then 0 
-                 elif .value.severity == "high" then 1 
-                 elif .value.severity == "moderate" then 2 
-                 elif .value.severity == "low" then 3 
-                 else 4 end),
-                .value.module_name
-              ])
-              | map(
-                  "<details><summary>🔸 <b>" + .value.module_name + "</b> — " + 
-                  (if .value.severity == "critical" then "🔴 CRITICAL"
-                   elif .value.severity == "high" then "🟠 HIGH"
-                   elif .value.severity == "moderate" then "🟡 MODERATE"
-                   elif .value.severity == "low" then "🟢 LOW"
-                   else .value.severity end) + 
-                  " severity</summary>\n\n" +
-                  "### " + (.value.title // "Vulnerability") + "\n\n" +
-                  "**📋 Details:**\n" +
-                  "- **CVE:** " + (if (.value.cves | length) > 0 then (.value.cves | join(", ")) else "Not assigned" end) + "\n" +
-                  "- **Module:** `" + .value.module_name + "`\n" +
-                  "- **Current Version:** " + (.value.findings[0].version // "Unknown") + "\n" +
-                  "- **Vulnerable Versions:** `" + .value.vulnerable_versions + "`\n" +
-                  "- **Patched Versions:** `" + .value.patched_versions + "`\n" +
-                  "- **CVSS Score:** " + (if .value.cvss.score > 0 then (.value.cvss.score | tostring) else "Not available" end) + "\n\n" +
-                  "**📝 Overview:**\n" +
-                  ((.value.overview // "No description available") | split("\n") | .[0:5] | join("\n")) + "\n\n" +
-                  "**🔧 Recommendation:**\n" +
-                  "> " + .value.recommendation + "\n\n" +
-                  "**🔗 References:**\n" +
-                  "- [GitHub Advisory](" + .value.url + ")\n" +
-                  (if .value.references then (.value.references | split("\n") | map(select(. != "") | "- " + .) | join("\n")) else "" end) + "\n\n" +
-                  "**📦 Affected Dependency Paths:**\n```\n" +
-                  (.value.findings | map(.paths[]) | unique | .[0:5] | join("\n")) + 
-                  (if (.value.findings | map(.paths[]) | unique | length) > 5 then "\n... and " + (((.value.findings | map(.paths[]) | unique | length) - 5) | tostring) + " more" else "" end) +
-                  "\n```\n" +
-                  "</details>"
-                )
-              | join("\n\n")
-            ' audit-results.json > VULN_DETAILS.md 2>/dev/null || {
-              echo "_Error processing vulnerability details. Check the audit-results.json artifact._" > VULN_DETAILS.md
-            }
-          else
-            echo "_No detailed advisories found in audit output._" > VULN_DETAILS.md
-            echo "" >> VULN_DETAILS.md
-            echo "This might happen if:" >> VULN_DETAILS.md
-            echo "- All vulnerabilities are below the specified severity level" >> VULN_DETAILS.md
-            echo "- The audit output format is unexpected" >> VULN_DETAILS.md
-            echo "" >> VULN_DETAILS.md
-            echo "Check the uploaded audit-results.json artifact for raw data." >> VULN_DETAILS.md
-          fi
-
-          # Build the final report
+          [ -f audit-results.json ] || echo '{}' > audit-results.json
           {
             echo "## 🔒 Security Audit Report"
-            echo
-            echo "⚠️ **Security vulnerabilities detected in dependencies**"
-            echo
-            echo "$VULN_SUMMARY"
-            echo
-            if [ -s VULN_DETAILS.md ]; then
-              echo "### 📋 Detailed Findings"
+            if [ "${{ steps.audit.outputs.vulnerabilities }}" = "true" ]; then
               echo
-              cat VULN_DETAILS.md
+              echo "⚠️ **Security vulnerabilities detected** (threshold: \`${{ github.event.inputs.severity || 'moderate' }}\`)"
+              echo
+              echo "**Counts:**"
+              echo "- Info: ${{ steps.audit.outputs.info }}"
+              echo "- Low: ${{ steps.audit.outputs.low }}"
+              echo "- Moderate: ${{ steps.audit.outputs.moderate }}"
+              echo "- High: ${{ steps.audit.outputs.high }}"
+              echo "- Critical: ${{ steps.audit.outputs.critical }}"
+              echo
+              if jq -e '.advisories and (.advisories | length > 0)' audit-results.json >/dev/null 2>&1; then
+                jq -r '
+                  .advisories
+                  | to_entries
+                  | sort_by([
+                    (if .value.severity == "critical" then 0
+                     elif .value.severity == "high" then 1
+                     elif .value.severity == "moderate" then 2
+                     elif .value.severity == "low" then 3 else 4 end),
+                    .value.module_name
+                  ])
+                  | map(
+                    "<details><summary>🔸 <b>" + .value.module_name + "</b> — " + (.value.severity|ascii_upcase) + "</summary>\n\n" +
+                    "• **Title**: " + (.value.title // "N/A") + "\n" +
+                    "• **Version**: " + (.value.findings[0].version // "Unknown") + "\n" +
+                    "• **Patched**: `" + (.value.patched_versions // "N/A") + "`\n" +
+                    "• **Vulnerable**: `" + (.value.vulnerable_versions // "N/A") + "`\n" +
+                    "• **Ref**: " + (.value.url // "N/A") + "\n\n" +
+                    "</details>"
+                  )
+                  | join("\n\n")
+                ' audit-results.json
+              else
+                echo "_No advisory details available in audit output._"
+              fi
+            else
+              echo
+              echo "✅ **No vulnerabilities** at or above threshold \`${{ github.event.inputs.severity || 'moderate' }}\`."
             fi
             echo
-            echo "---"
-            echo
-            echo "📊 **Dependency Statistics:**"
-            TOTAL_DEPS=$(jq -r '.metadata.totalDependencies // 0' audit-results.json)
-            echo "- Total dependencies scanned: $TOTAL_DEPS"
-            echo
-            echo "*Generated by GitHub Actions Security Audit on $(date -u '+%Y-%m-%d %H:%M:%S UTC')*"
+            echo "*Generated: $(date -u '+%Y-%m-%d %H:%M:%S UTC')*"
           } > security-report.md
 
-          # Safety: trim if close to GitHub's ~65k comment limit
-          BYTES=$(wc -c < security-report.md | tr -d " ")
-          if [ "$BYTES" -gt 60000 ]; then
-            {
-              head -c 59000 security-report.md
-              echo
-              echo "---"
-              echo "> ⚠️ **Report truncated** due to GitHub comment size limits."
-              echo "> Download the full audit-results.json artifact for complete details."
-            } > security-report.md.trim
-            mv security-report.md.trim security-report.md
-          fi
-
-      - name: '📤 Upload security report (non-PR)'
-        if: steps.audit.outputs.vulnerabilities == 'true' && github.event_name != 'pull_request'
-        uses: actions/upload-artifact@v4
-        with:
-          name: security-report-${{ github.sha }}
-          path: security-report.md
-          retention-days: 30
-
       - name: '💬 Sticky PR comment – Security Audit'
-        if: steps.audit.outputs.vulnerabilities == 'true' && github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: security-audit
+          number: ${{ github.event.pull_request.number }}
           path: security-report.md
 
   license-compliance:
@@ -291,13 +218,24 @@ jobs:
       - name: '📥 Install dependencies'
         run: pnpm run ci:install:frozen
 
-      - name: '📜 Generate license report'
+      - name: '📜 Generate license report file'
         run: |
-          npx license-checker --summary > license-summary.txt || echo "License checker not available, skipping..."
+          npx license-checker --summary > license-summary.txt || echo "license-checker not available" > license-summary.txt
 
-          if [ -f license-summary.txt ]; then
-            cat license-summary.txt
-          fi
+      - name: '💬 Sticky PR comment – Licenses'
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: license-compliance
+          number: ${{ github.event.pull_request.number }}
+          message: |
+            ## 📜 License Compliance
+            Below is the current license summary:
+            ```text
+            ${{ steps.generate_summary.outputs.noop }}
+            ```
+          path: license-summary.txt
 
       - name: '📤 Upload license report'
         uses: actions/upload-artifact@v4
@@ -345,28 +283,60 @@ jobs:
         run: |
           sudo apt-get update -y >/dev/null 2>&1 || true
           sudo apt-get install -y jq >/dev/null 2>&1 || true
-          echo "📦 Dependency Analysis Report"
-          echo "=========================="
 
-          pnpm run outdated || echo "✅ All packages are up to date"
+          pnpm run outdated | tee outdated.txt || echo "✅ All packages are up to date" | tee outdated.txt
 
-          echo ""
-          echo "📈 Package count by workspace:"
-          echo "Root: $(cat package.json | jq '.devDependencies | length')"
-          echo "Frontend: $(cat packages/leenders-coaching-nl/package.json | jq '.dependencies | length')"
-          echo "Studio: $(cat packages/studio-leenders-coaching-nl/package.json | jq '.dependencies | length')"
+          echo "" >> outdated.txt
+          echo "📈 Package count by workspace:" >> outdated.txt
+          echo "Root devDependencies: $(cat package.json | jq '.devDependencies | length')" >> outdated.txt
+          echo "Frontend deps: $(cat packages/leenders-coaching-nl/package.json | jq '.dependencies | length')" >> outdated.txt
+          echo "Studio deps: $(cat packages/studio-leenders-coaching-nl/package.json | jq '.dependencies | length')" >> outdated.txt
 
       - name: '🔍 Check for duplicate dependencies'
-        run: pnpm run dedupe:check || echo "ℹ️ Some dependencies could be deduplicated"
+        run: pnpm run dedupe:check | tee dedupe.txt || echo "ℹ️ Some dependencies could be deduplicated" | tee -a dedupe.txt
 
       - name: '📊 Generate dependency tree'
-        run: pnpm list --depth=2 > dependency-tree.txt || echo "Dependency tree generated with warnings"
+        run: pnpm list --depth=2 > dependency-tree.txt || echo "Dependency tree generated with warnings" >> dependency-tree.txt
+
+      - name: '🧾 Build dependency report (PRs)'
+        if: github.event_name == 'pull_request'
+        run: |
+          {
+            echo "## 📦 Dependency Analysis"
+            echo
+            echo "### Outdated"
+            echo '```text'
+            head -n 200 outdated.txt
+            echo '```'
+            echo
+            echo "### Dedupe Check"
+            echo '```text'
+            head -n 120 dedupe.txt
+            echo '```'
+            echo
+            echo "### Dependency Tree (depth=2, first 200 lines)"
+            echo '```text'
+            head -n 200 dependency-tree.txt
+            echo '```'
+          } > dependency-report.md
+
+      - name: '💬 Sticky PR comment – Dependencies'
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: dependency-analysis
+          number: ${{ github.event.pull_request.number }}
+          path: dependency-report.md
 
       - name: '📤 Upload dependency analysis'
         uses: actions/upload-artifact@v4
         with:
           name: dependency-analysis-${{ github.sha }}
-          path: dependency-tree.txt
+          path: |
+            outdated.txt
+            dedupe.txt
+            dependency-tree.txt
           retention-days: 30
 
   code-quality:
@@ -417,36 +387,54 @@ jobs:
           sudo apt-get update -y >/dev/null 2>&1 || true
           sudo apt-get install -y jq >/dev/null 2>&1 || true
           if pnpm --filter leenders-coaching-nl run lint:format > eslint-raw-output.txt 2>&1; then
-            ESLINT_STATUS="success"
+            true
           else
-            ESLINT_STATUS="issues"
+            true
           fi
-
-          if [ -f eslint-raw-output.txt ]; then
-            sed -n '/^\[/,$p' eslint-raw-output.txt > eslint-results.json
-            
-            if jq empty eslint-results.json 2>/dev/null; then
-              TOTAL_FILES=$(cat eslint-results.json | jq 'length')
-              ERROR_COUNT=$(cat eslint-results.json | jq 'map(.errorCount) | add // 0')
-              WARNING_COUNT=$(cat eslint-results.json | jq 'map(.warningCount) | add // 0')
-              
-              echo "Files analyzed: $TOTAL_FILES"
-              echo "Total errors: $ERROR_COUNT"
-              echo "Total warnings: $WARNING_COUNT"
-              
-              if [ "$ERROR_COUNT" -gt 0 ] || [ "$WARNING_COUNT" -gt 0 ]; then
-                echo ""
-                echo "Files with issues:"
-                cat eslint-results.json | jq -r '.[] | select(.errorCount > 0 or .warningCount > 0) | "  - \(.filePath | split("/") | last): \(.errorCount) errors, \(.warningCount) warnings"'
-              fi
-            fi
-          fi
+          sed -n '/^\[/,$p' eslint-raw-output.txt > eslint-results.json || echo "[]" > eslint-results.json
 
       - name: '📊 TypeScript strict check'
-        run: pnpm --parallel run type-check 2>&1 | tee typescript-results.txt || echo "TypeScript issues found"
+        run: pnpm --parallel run type-check 2>&1 | tee typescript-results.txt || echo "TypeScript issues found" | tee -a typescript-results.txt
 
       - name: '📈 Code complexity analysis'
-        run: pnpm dlx complexity-report --output json --format json packages/*/src | sort -nr -k2 > complexity-analysis.txt
+        run: pnpm dlx complexity-report --output json --format json packages/*/src > complexity-analysis.json || echo "[]" > complexity-analysis.json
+
+      - name: '🧾 Build code-quality report (PRs)'
+        if: github.event_name == 'pull_request'
+        run: |
+          command -v jq >/dev/null 2>&1 || sudo apt-get install -y jq >/dev/null 2>&1
+          TOTAL_FILES=$(jq 'length' eslint-results.json)
+          ERRORS=$(jq 'map(.errorCount) | add // 0' eslint-results.json)
+          WARNINGS=$(jq 'map(.warningCount) | add // 0' eslint-results.json)
+          {
+            echo "## 🧹 Code Quality"
+            echo
+            echo "**ESLint** — files: ${TOTAL_FILES}, errors: ${ERRORS}, warnings: ${WARNINGS}"
+            echo
+            echo "Top files with issues:"
+            echo '```text'
+            jq -r '.[] | select(.errorCount>0 or .warningCount>0) | "\(.filePath | split("/") | last): \(.errorCount) errors, \(.warningCount) warnings"' eslint-results.json | head -n 20
+            echo '```'
+            echo
+            echo "**TypeScript (strict)** — last 60 lines"
+            echo '```text'
+            tail -n 60 typescript-results.txt
+            echo '```'
+            echo
+            echo "**Complexity (summary)**"
+            echo '```json'
+            jq '[.[] | {file: .file, maintainability: .maintainability}] | sort_by(.maintainability) | .[0:10]' complexity-analysis.json
+            echo '```'
+          } > code-quality-report.md
+
+      - name: '💬 Sticky PR comment – Code Quality'
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: code-quality
+          number: ${{ github.event.pull_request.number }}
+          path: code-quality-report.md
 
       - name: '📤 Upload quality metrics'
         uses: actions/upload-artifact@v4
@@ -456,13 +444,12 @@ jobs:
           path: |
             eslint-results.json
             typescript-results.txt
-            complexity-analysis.txt
+            complexity-analysis.json
           retention-days: 30
 
   performance-benchmarks:
     name: 'Performance Benchmarks'
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule' || github.ref == 'refs/heads/main'
     timeout-minutes: 20
 
     env:
@@ -503,18 +490,8 @@ jobs:
 
       - name: '⏱️ Build time benchmark'
         run: |
-          start_time=$(date +%s)
-          pnpm run build:frontend
-          end_time=$(date +%s)
-          frontend_duration=$((end_time - start_time))
-          echo "Frontend build: ${frontend_duration}s"
-
-          start_time=$(date +%s)
-          pnpm run build:studio
-          end_time=$(date +%s)
-          studio_duration=$((end_time - start_time))
-          echo "Studio build: ${studio_duration}s"
-
+          start_time=$(date +%s); pnpm run build:frontend; end_time=$(date +%s); frontend_duration=$((end_time - start_time))
+          start_time=$(date +%s); pnpm run build:studio;   end_time=$(date +%s); studio_duration=$((end_time - start_time))
           echo "{\"frontend_build_time\": $frontend_duration, \"studio_build_time\": $studio_duration}" > build-metrics.json
 
       - name: '📊 Bundle size analysis'
@@ -525,28 +502,35 @@ jobs:
 
       - name: '📋 Capture bundle size summary'
         run: |
-          if [ -d "packages/leenders-coaching-nl/.next" ]; then
-            if [ -d "packages/leenders-coaching-nl/.next/static/chunks" ]; then
-              echo "📊 Chunk Statistics:"
-              echo "Total JS chunks: $(find packages/leenders-coaching-nl/.next/static/chunks -name "*.js" | wc -l)"
-              echo "Total CSS files: $(find packages/leenders-coaching-nl/.next/static/css -name "*.css" | wc -l)"
-              
-              JS_SIZE=$(find packages/leenders-coaching-nl/.next/static/chunks -name "*.js" -exec du -ch {} + | tail -1 | cut -f1)
-              CSS_SIZE=$(find packages/leenders-coaching-nl/.next/static/css -name "*.css" -exec du -ch {} + | tail -1 | cut -f1)
-              
-              echo "Total JS size: $JS_SIZE"
-              echo "Total CSS size: $CSS_SIZE"
-            fi
-            
-            echo "📏 Bundle size limits are enforced by the Size Limit GitHub Action on PRs"
-            
-            if [ -d "packages/leenders-coaching-nl/.next/analyze" ]; then
-              echo "📁 Bundle analysis files available in packages/leenders-coaching-nl/.next/analyze/"
-              ls -la packages/leenders-coaching-nl/.next/analyze/ || echo "No analysis files found"
-            fi
-          else
-            exit 1
+          if [ -d "packages/leenders-coaching-nl/.next/static" ]; then
+            JS_SIZE=$(find packages/leenders-coaching-nl/.next/static/chunks -name "*.js" -exec du -ch {} + 2>/dev/null | tail -1 | cut -f1)
+            CSS_SIZE=$(find packages/leenders-coaching-nl/.next/static/css -name "*.css" -exec du -ch {} + 2>/dev/null | tail -1 | cut -f1)
+            echo "js=$JS_SIZE" >> $GITHUB_OUTPUT
+            echo "css=$CSS_SIZE" >> $GITHUB_OUTPUT
           fi
+
+      - name: '🧾 Build performance report (PRs)'
+        if: github.event_name == 'pull_request'
+        run: |
+          {
+            echo "## 🚀 Performance Benchmarks"
+            echo
+            echo "- Frontend build time: $(jq -r '.frontend_build_time' build-metrics.json)s"
+            echo "- Studio build time: $(jq -r '.studio_build_time' build-metrics.json)s"
+            echo
+            echo "### Bundle size snapshot"
+            echo "- Total JS size (chunks): ${{ steps.capture_bundle_size_summary.outputs.js || 'n/a' }}"
+            echo "- Total CSS size: ${{ steps.capture_bundle_size_summary.outputs.css || 'n/a' }}"
+          } > performance-report.md
+
+      - name: '💬 Sticky PR comment – Performance'
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: performance-benchmarks
+          number: ${{ github.event.pull_request.number }}
+          path: performance-report.md
 
       - name: '📤 Upload performance metrics'
         uses: actions/upload-artifact@v4
@@ -561,7 +545,13 @@ jobs:
     name: 'Quality Summary'
     runs-on: ubuntu-latest
     needs:
-      [security-audit, license-compliance, dependency-analysis, code-quality]
+      [
+        security-audit,
+        license-compliance,
+        dependency-analysis,
+        code-quality,
+        performance-benchmarks,
+      ]
     if: always()
     timeout-minutes: 5
 
@@ -570,17 +560,15 @@ jobs:
         run: |
           echo "## 🎯 Quality Gates Report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-
           if [ "${{ needs.security-audit.outputs.vulnerabilities-found }}" = "true" ]; then
             echo "- ⚠️ **Security**: Vulnerabilities detected" >> $GITHUB_STEP_SUMMARY
           else
             echo "- ✅ **Security**: No vulnerabilities found" >> $GITHUB_STEP_SUMMARY
           fi
-
           echo "- ${{ needs.license-compliance.result == 'success' && '✅' || '❌' }} **License Compliance**: ${{ needs.license-compliance.result }}" >> $GITHUB_STEP_SUMMARY
           echo "- ${{ needs.dependency-analysis.result == 'success' && '✅' || '❌' }} **Dependency Analysis**: ${{ needs.dependency-analysis.result }}" >> $GITHUB_STEP_SUMMARY
           echo "- ${{ needs.code-quality.result == 'success' && '✅' || '❌' }} **Code Quality**: ${{ needs.code-quality.result }}" >> $GITHUB_STEP_SUMMARY
-
+          echo "- ${{ needs.performance-benchmarks.result == 'success' && '✅' || '❌' }} **Performance Benchmarks**: ${{ needs.performance-benchmarks.result }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Generated**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
 
@@ -597,6 +585,7 @@ jobs:
             - **License Compliance:** ${{ needs.license-compliance.result == 'success' && '✅' || '❌' }}
             - **Dependency Analysis:** ${{ needs.dependency-analysis.result == 'success' && '✅' || '❌' }}
             - **Code Quality:** ${{ needs.code-quality.result == 'success' && '✅' || '❌' }}
+            - **Performance:** ${{ needs.performance-benchmarks.result == 'success' && '✅' || '❌' }}
 
             *Generated by GitHub Actions Quality Gates*
 
