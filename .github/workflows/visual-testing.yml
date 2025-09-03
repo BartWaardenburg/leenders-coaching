@@ -2,7 +2,7 @@ name: 'Visual Testing & Design System'
 
 on:
   push:
-    branches: ['main', 'develop']
+    branches: ['main']
     paths:
       - 'packages/leenders-coaching-nl/src/components/**/*.stories.*'
       - 'packages/leenders-coaching-nl/src/components/**/*.tsx'
@@ -11,7 +11,7 @@ on:
       - 'packages/leenders-coaching-nl/tailwind.config.*'
       - 'packages/leenders-coaching-nl/src/config/**'
   pull_request:
-    branches: ['main', 'develop']
+    branches: ['main']
     paths:
       - 'packages/leenders-coaching-nl/src/components/**/*.stories.*'
       - 'packages/leenders-coaching-nl/src/components/**/*.tsx'
@@ -117,7 +117,7 @@ jobs:
           exitZeroOnChanges: true
           exitOnceUploaded: true
           ignoreLastBuildOnBranch: ${{ github.event_name == 'pull_request' }}
-          skip: ${{ github.event_name == 'push' && github.ref != 'refs/heads/main' && github.ref != 'refs/heads/develop' }}
+          skip: ${{ github.event_name == 'push' && github.ref != 'refs/heads/main' }}
 
       - name: '💬 Sticky PR comment – Visual/Chromatic'
         if: github.event_name == 'pull_request'

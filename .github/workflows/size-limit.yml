@@ -2,7 +2,7 @@ name: 'Bundle Size Analysis & Limits'
 
 on:
   pull_request:
-    branches: ['main', 'develop']
+    branches: ['main']
     paths:
       - 'packages/leenders-coaching-nl/src/**'
       - 'packages/leenders-coaching-nl/package.json'

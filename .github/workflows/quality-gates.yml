@@ -9,7 +9,7 @@ on:
       - '**/package.json'
       - 'pnpm-lock.yaml'
   pull_request:
-    branches: ['main', 'develop']
+    branches: ['main']
     paths:
       - '**/package.json'
       - 'pnpm-lock.yaml'
@@ -50,6 +50,11 @@ jobs:
 
     outputs:
       vulnerabilities-found: ${{ steps.audit.outputs.vulnerabilities }}
+      info-count: ${{ steps.audit.outputs.info }}
+      low-count: ${{ steps.audit.outputs.low }}
+      moderate-count: ${{ steps.audit.outputs.moderate }}
+      high-count: ${{ steps.audit.outputs.high }}
+      critical-count: ${{ steps.audit.outputs.critical }}
 
     steps:
       - name: '🔄 Checkout repository'
@@ -86,7 +91,9 @@ jobs:
           command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq >/dev/null 2>&1; }
           SEVERITY="${{ github.event.inputs.severity }}"
           : "${SEVERITY:=moderate}"   # default to moderate if not provided
-          if pnpm audit --recursive --audit-level "$SEVERITY" --json > audit-results.json 2>/dev/null; then
+
+          # Run pnpm audit (without --recursive as it's not needed for pnpm workspaces)
+          if pnpm audit --audit-level "$SEVERITY" --json > audit-results.json 2>&1; then
             echo "vulnerabilities=false" >> $GITHUB_OUTPUT
             echo "info=0" >> $GITHUB_OUTPUT
             echo "low=0" >> $GITHUB_OUTPUT
@@ -95,17 +102,26 @@ jobs:
             echo "critical=0" >> $GITHUB_OUTPUT
           else
             echo "vulnerabilities=true" >> $GITHUB_OUTPUT
-            if [ -f audit-results.json ]; then
-              INFO=$(jq -r '.metadata.vulnerabilities.info // 0' < audit-results.json)
-              LOW=$(jq -r '.metadata.vulnerabilities.low // 0' < audit-results.json)
-              MODERATE=$(jq -r '.metadata.vulnerabilities.moderate // 0' < audit-results.json)
-              HIGH=$(jq -r '.metadata.vulnerabilities.high // 0' < audit-results.json)
-              CRITICAL=$(jq -r '.metadata.vulnerabilities.critical // 0' < audit-results.json)
+            
+            if [ -f audit-results.json ] && jq -e . audit-results.json >/dev/null 2>&1; then
+              # Extract vulnerability counts from metadata.vulnerabilities
+              INFO=$(jq -r '.metadata.vulnerabilities.info // 0' audit-results.json)
+              LOW=$(jq -r '.metadata.vulnerabilities.low // 0' audit-results.json)
+              MODERATE=$(jq -r '.metadata.vulnerabilities.moderate // 0' audit-results.json)
+              HIGH=$(jq -r '.metadata.vulnerabilities.high // 0' audit-results.json)
+              CRITICAL=$(jq -r '.metadata.vulnerabilities.critical // 0' audit-results.json)
+              
               echo "info=$INFO" >> $GITHUB_OUTPUT
               echo "low=$LOW" >> $GITHUB_OUTPUT
               echo "moderate=$MODERATE" >> $GITHUB_OUTPUT
               echo "high=$HIGH" >> $GITHUB_OUTPUT
               echo "critical=$CRITICAL" >> $GITHUB_OUTPUT
+            else
+              echo "info=0" >> $GITHUB_OUTPUT
+              echo "low=0" >> $GITHUB_OUTPUT
+              echo "moderate=0" >> $GITHUB_OUTPUT
+              echo "high=0" >> $GITHUB_OUTPUT
+              echo "critical=0" >> $GITHUB_OUTPUT
             fi
           fi
         continue-on-error: true
@@ -125,61 +141,71 @@ jobs:
           command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq >/dev/null 2>&1; }
           [ -f audit-results.json ] || { echo "No audit-results.json found"; exit 0; }
 
-          # Summary counts (fallback to 0 if missing)
-          VULN_SUMMARY="$(jq -r '
-            .metadata.vulnerabilities as $m
-            | "**Vulnerabilities Found:**\n- Info: \($m.info // 0)\n- Low: \($m.low // 0)\n- Moderate: \($m.moderate // 0)\n- High: \($m.high // 0)\n- Critical: \($m.critical // 0)"
-          ' audit-results.json)"
+          # Summary counts from the audit step outputs
+          VULN_SUMMARY="**Vulnerabilities Found:**
+          - Info: ${{ steps.audit.outputs.info }}
+          - Low: ${{ steps.audit.outputs.low }}
+          - Moderate: ${{ steps.audit.outputs.moderate }}
+          - High: ${{ steps.audit.outputs.high }}
+          - Critical: ${{ steps.audit.outputs.critical }}"
 
-          # Prefer .advisories (npm v6 / pnpm style). Fallback to .vulnerabilities (npm v7+ style).
-          if jq -e '.advisories and (.advisories|length>0)' audit-results.json >/dev/null; then
+          # Process the advisories object (this is the format pnpm uses)
+          if jq -e '.advisories and (.advisories | length > 0)' audit-results.json >/dev/null 2>&1; then
             jq -r '
               .advisories
               | to_entries
               | sort_by([
-                (if .value.severity == "critical" then 0 elif .value.severity == "high" then 1 elif .value.severity == "moderate" then 2 elif .value.severity == "low" then 3 else 4 end),
+                (if .value.severity == "critical" then 0 
+                 elif .value.severity == "high" then 1 
+                 elif .value.severity == "moderate" then 2 
+                 elif .value.severity == "low" then 3 
+                 else 4 end),
                 .value.module_name
               ])
               | map(
-                  "<details><summary><b>\(.value.title)</b> — \(.value.severity) — <code>\(.value.module_name)</code></summary>\n\n" +
-                  "- **CVE:** \((.value.cves // []) | join(", ") | if . == "" then "—" else . end)\n" +
-                  "- **Vulnerable Versions:** \(.value.vulnerable_versions)\n" +
-                  "- **Patched Versions:** \(.value.patched_versions)\n" +
-                  "- **Recommendation:** \(.value.recommendation)\n" +
-                  "- **Overview:** \((.value.overview // "" | split("\n") | .[0:3] | join("\n")))\n" +
-                  "- **References:** \(.value.url)\n" +
-                  "- **Affected Paths (first 10):**\n" +
-                  ( .value.findings | map(.paths) | add | unique | .[0:10] | map("  - " + .) | join("\n") ) + "\n" +
-                  "</details>\n"
+                  "<details><summary>🔸 <b>" + .value.module_name + "</b> — " + 
+                  (if .value.severity == "critical" then "🔴 CRITICAL"
+                   elif .value.severity == "high" then "🟠 HIGH"
+                   elif .value.severity == "moderate" then "🟡 MODERATE"
+                   elif .value.severity == "low" then "🟢 LOW"
+                   else .value.severity end) + 
+                  " severity</summary>\n\n" +
+                  "### " + (.value.title // "Vulnerability") + "\n\n" +
+                  "**📋 Details:**\n" +
+                  "- **CVE:** " + (if (.value.cves | length) > 0 then (.value.cves | join(", ")) else "Not assigned" end) + "\n" +
+                  "- **Module:** `" + .value.module_name + "`\n" +
+                  "- **Current Version:** " + (.value.findings[0].version // "Unknown") + "\n" +
+                  "- **Vulnerable Versions:** `" + .value.vulnerable_versions + "`\n" +
+                  "- **Patched Versions:** `" + .value.patched_versions + "`\n" +
+                  "- **CVSS Score:** " + (if .value.cvss.score > 0 then (.value.cvss.score | tostring) else "Not available" end) + "\n\n" +
+                  "**📝 Overview:**\n" +
+                  ((.value.overview // "No description available") | split("\n") | .[0:5] | join("\n")) + "\n\n" +
+                  "**🔧 Recommendation:**\n" +
+                  "> " + .value.recommendation + "\n\n" +
+                  "**🔗 References:**\n" +
+                  "- [GitHub Advisory](" + .value.url + ")\n" +
+                  (if .value.references then (.value.references | split("\n") | map(select(. != "") | "- " + .) | join("\n")) else "" end) + "\n\n" +
+                  "**📦 Affected Dependency Paths:**\n```\n" +
+                  (.value.findings | map(.paths[]) | unique | .[0:5] | join("\n")) + 
+                  (if (.value.findings | map(.paths[]) | unique | length) > 5 then "\n... and " + (((.value.findings | map(.paths[]) | unique | length) - 5) | tostring) + " more" else "" end) +
+                  "\n```\n" +
+                  "</details>"
                 )
-              | .[]
-            ' audit-results.json > VULN_DETAILS.md
-          elif jq -e '.vulnerabilities and (.vulnerabilities|length>0)' audit-results.json >/dev/null; then
-            jq -r '
-              .vulnerabilities
-              | to_entries
-              | sort_by([
-                (if .value.severity == "critical" then 0 elif .value.severity == "high" then 1 elif .value.severity == "moderate" then 2 elif .value.severity == "low" then 3 else 4 end),
-                .key
-              ])
-              | map(
-                  "<details><summary><b>\(.key)</b> — \(.value.severity) — range: <code>\(.value.range // "n/a")</code></summary>\n\n" +
-                  "- **Via:** " +
-                  ( .value.via
-                    | map( if type=="string" then . else ( (.name // "") + (if .url then " ("+.url+")" else "" end) ) end )
-                    | unique | join(", ")
-                  ) + "\n" +
-                  "- **Fix Available:** \(.value.fixAvailable // false)\n" +
-                  "- **Paths (first 10):**\n" +
-                  ( .value.nodes // [] | .[0:10] | map("  - " + .) | join("\n") ) + "\n" +
-                  "</details>\n"
-                )
-              | .[]
-            ' audit-results.json > VULN_DETAILS.md
+              | join("\n\n")
+            ' audit-results.json > VULN_DETAILS.md 2>/dev/null || {
+              echo "_Error processing vulnerability details. Check the audit-results.json artifact._" > VULN_DETAILS.md
+            }
           else
-            echo "_No detailed advisories in audit output._" > VULN_DETAILS.md
+            echo "_No detailed advisories found in audit output._" > VULN_DETAILS.md
+            echo "" >> VULN_DETAILS.md
+            echo "This might happen if:" >> VULN_DETAILS.md
+            echo "- All vulnerabilities are below the specified severity level" >> VULN_DETAILS.md
+            echo "- The audit output format is unexpected" >> VULN_DETAILS.md
+            echo "" >> VULN_DETAILS.md
+            echo "Check the uploaded audit-results.json artifact for raw data." >> VULN_DETAILS.md
           fi
 
+          # Build the final report
           {
             echo "## 🔒 Security Audit Report"
             echo
@@ -187,19 +213,32 @@ jobs:
             echo
             echo "$VULN_SUMMARY"
             echo
-            echo "### 📋 Detailed Findings"
-            echo
-            cat VULN_DETAILS.md
+            if [ -s VULN_DETAILS.md ]; then
+              echo "### 📋 Detailed Findings"
+              echo
+              cat VULN_DETAILS.md
+            fi
             echo
             echo "---"
-            echo "*Generated by GitHub Actions Security Audit*"
+            echo
+            echo "📊 **Dependency Statistics:**"
+            TOTAL_DEPS=$(jq -r '.metadata.totalDependencies // 0' audit-results.json)
+            echo "- Total dependencies scanned: $TOTAL_DEPS"
+            echo
+            echo "*Generated by GitHub Actions Security Audit on $(date -u '+%Y-%m-%d %H:%M:%S UTC')*"
           } > security-report.md
 
           # Safety: trim if close to GitHub's ~65k comment limit
           BYTES=$(wc -c < security-report.md | tr -d " ")
           if [ "$BYTES" -gt 60000 ]; then
-            echo -e "\n> ⚠️ Report truncated due to GitHub comment size limits. See the full JSON in the workflow artifact." >> security-report.md
-            head -c 60000 security-report.md > security-report.md.trim && mv security-report.md.trim security-report.md
+            {
+              head -c 59000 security-report.md
+              echo
+              echo "---"
+              echo "> ⚠️ **Report truncated** due to GitHub comment size limits."
+              echo "> Download the full audit-results.json artifact for complete details."
+            } > security-report.md.trim
+            mv security-report.md.trim security-report.md
           fi
 
       - name: '📤 Upload security report (non-PR)'
