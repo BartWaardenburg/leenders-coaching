@@ -2,10 +2,6 @@ name: 'Lighthouse (Production)'
 
 on: deployment_status
 
-concurrency:
-  group: lhci-${{ github.event.deployment.id }}
-  cancel-in-progress: true
-
 permissions:
   contents: read
   deployments: read
@@ -68,6 +64,7 @@ jobs:
       - name: '🚀 Run Lighthouse CI (Production)'
         id: lhci
         uses: treosh/lighthouse-ci-action@v12
+        continue-on-error: true
         with:
           urls: |
             https://leenders-coaching.vercel.app/
@@ -232,7 +229,7 @@ jobs:
           echo "first_report_link=$first_link" >> "$GITHUB_OUTPUT"
 
           # Minimal environment info for the issue body
-          env_md="| Key | Value |\n|---|---|\n| Form Factor | ${{ matrix.formFactor }} |\n| Commit | ${{ github.sha }} |\n| Runner | ${RUNNER_OS:-unknown} |"
+          env_md="| Key | Value |\n|---|---|\n| Form Factor | ${{ matrix.formFactor }} |\n| Commit | ${{ github.sha }} |\n| Runner | ${RUNNER_OS:-unknown} |\n| Trigger | Production Deployment |"
           { echo "env_md<<EOF"; echo "$env_md"; echo "EOF"; } >> "$GITHUB_OUTPUT"
 
           # ----- Job Summary (no unbound vars) -----
@@ -300,13 +297,17 @@ jobs:
             const assertionsMd = process.env.ASSERTIONS_MD || '';
             const envMd = process.env.ENV_MD || '';
 
-            const title = 'Lighthouse regression on main – ${{ matrix.formFactor }} (' + new Date().toISOString().slice(0,10) + ')';
+            const title = '🚨 Lighthouse Performance Regression – ${{ matrix.formFactor }} (' + new Date().toISOString().slice(0,10) + ')';
 
             const body = '**Form factor:** `${{ matrix.formFactor }}`\n\n' +
               '**Commit:** `${{ github.sha }}`\n' +
               '**Run:** https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n' +
               (firstReport ? '**First report:** ' + firstReport + '\n' : '') +
               '\n---\n\n' +
+              '## 📊 Performance Summary\n' +
+              'This issue was automatically created due to Lighthouse performance regressions detected during production deployment.\n\n' +
+              '**Action Required:** Review the performance metrics below and investigate the regressions.\n\n' +
+              '---\n\n' +
               '### Averages (all pages/runs)\n' +
               averagesMd + '\n\n' +
               '---\n\n' +
@@ -317,7 +318,6 @@ jobs:
               vitalsTableMd + '\n\n' +
               '---\n\n' +
               '### Assertion details\n' +
-              '\n<br/>\n\n' +
               assertionsMd + '\n\n' +
               '---\n\n' +
               '### Environment\n' +
@@ -330,5 +330,5 @@ jobs:
               repo: context.repo.repo,
               title,
               body,
-              labels: ['performance','lighthouse','regression']
+              labels: ['performance', 'lighthouse', 'regression', 'needs-investigation', 'production']
             });

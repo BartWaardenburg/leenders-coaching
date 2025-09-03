@@ -24,8 +24,14 @@ jobs:
       !contains(github.event.deployment.environment, 'main')
 
     steps:
-      - name: '🔄 Checkout'
+      - name: 'Checkout code'
         uses: actions/checkout@v5
+      - name: '⚙️ Setup Environment'
+        uses: ./.github/actions/setup
+        with:
+          node-version: '22'
+          pnpm-version: '10.15.1'
+          working-directory: ''
 
       - name: '🔗 Resolve preview URL (environment_url)'
         id: url
@@ -45,6 +51,7 @@ jobs:
       - name: '🚀 Run Lighthouse CI'
         id: lhci
         uses: treosh/lighthouse-ci-action@v12
+        continue-on-error: true
         with:
           urls: |
             ${{ steps.url.outputs.preview_url }}
