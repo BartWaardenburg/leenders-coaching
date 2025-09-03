@@ -12,13 +12,17 @@ permissions:
   pull-requests: write
   issues: write
 
-env:
-  NODE_VERSION: '22'
-
 jobs:
+  # Setup environment
+  setup:
+    uses: ./.github/workflows/setup.yml
+    with:
+      pnpm-version: '10.15.1'
+
   lighthouse:
     name: 'Lighthouse CI (Preview)'
     runs-on: ubuntu-latest
+    needs: setup
     timeout-minutes: 25
     if: |
       github.event.deployment_status.state == 'success' &&
@@ -29,17 +33,6 @@ jobs:
     steps:
       - name: '🔄 Checkout'
         uses: actions/checkout@v5
-
-      - name: '🔧 Setup Node.js'
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: '📦 Setup pnpm'
-        uses: pnpm/action-setup@v4
-        with:
-          version: '10.15.1'
-          run_install: false
 
       - name: '🔗 Resolve preview URL (environment_url)'
         id: url

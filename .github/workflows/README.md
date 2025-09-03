@@ -1,209 +1,150 @@
-# 🚀 GitHub Actions Workflows
+# Reusable GitHub Actions Workflows
 
-This repository uses a comprehensive CI/CD pipeline designed with enterprise-grade best practices. The workflow architecture ensures code quality, security, and reliable deployments across our monorepo structure.
+This directory contains reusable workflows that help reduce duplication across GitHub Actions workflows.
 
-## 📋 Workflow Overview
+## Available Reusable Workflows
 
-| Workflow                                          | Trigger             | Purpose                                      | Duration |
-| ------------------------------------------------- | ------------------- | -------------------------------------------- | -------- |
-| [Continuous Integration](#continuous-integration) | Pull Requests       | Fast feedback loop                           | ~10 min  |
-| [Build & Test Pipeline](#build--test-pipeline)    | Main/Develop pushes | Comprehensive testing                        | ~20 min  |
-| [Visual Testing](#visual-testing--design-system)  | Component changes   | Visual regression & design system validation | ~15 min  |
-| [Quality Gates](#quality-gates--security)         | Daily/On-demand     | Security audits & dependency analysis        | ~15 min  |
+### 1. Setup Workflow (`.github/workflows/setup.yml`)
 
-## 🔄 Continuous Integration
+Handles common setup tasks:
 
-**File:** `ci.yml`  
-**Triggers:** Pull requests to `main` or `develop`
+- Node.js setup
+- pnpm setup and caching
+- Dependency installation
+- Cache key generation
 
-Fast, parallel quality checks that provide immediate feedback:
+**Usage:**
 
-- **Quality Gate**: Linting and type checking across all packages
-- **Frontend Tests**: Unit tests with coverage reporting
-- **Studio Validation**: Sanity schema validation and build verification
-- **Build Verification**: Ensures all packages build successfully
+```yaml
+jobs:
+  setup:
+    uses: ./.github/workflows/setup.yml
+    with:
+      node-version: '22' # Optional, defaults to '22'
+      pnpm-version: '10.15.1' # Optional, defaults to '10.15.1'
+      install-command: 'ci:install:frozen' # Optional, defaults to 'ci:install:frozen'
+      cache-key: '' # Optional, custom cache key
+      working-directory: '' # Optional, working directory for install
+```
 
-### Features:
+**Outputs:**
 
-- ⚡ **Intelligent caching** with pnpm store optimization
-- 🔀 **Parallel execution** for maximum speed
-- 📊 **Coverage reporting** to Codecov
-- ✅ **Build artifact verification**
+- `cache-key`: Generated cache key for pnpm store
+- `pnpm-store-path`: Path to pnpm store
 
-## 🏗️ Build & Test Pipeline
+### 2. Build Workflow (`.github/workflows/build.yml`)
 
-**File:** `build-and-test.yml`  
-**Triggers:** Pushes to `main` or `develop` branches
+Handles building packages:
 
-Comprehensive testing and production-ready build validation:
-
-- **Test & Coverage Analysis**: Full test suite with security audits
-- **Production Build**: Matrix builds for both frontend and studio
-- **Content Validation**: Sanity schema extraction and type generation
-- **Security Analysis**: Dependency auditing and vulnerability scanning
-- **Deployment Readiness**: Final validation for production deployment
-
-### Features:
-
-- 🎯 **Matrix strategy** for parallel package builds
-- 📦 **Build artifact management** with compression
-- 🔒 **Security scanning** with configurable severity levels
-- 📈 **Bundle analysis** for performance monitoring
-- 🚀 **Deployment readiness** validation
-
-## 🎨 Visual Testing & Design System
-
-**File:** `visual-testing.yml`  
-**Triggers:** Changes to components, stories, or Storybook configuration
-
-Ensures visual consistency and design system integrity:
-
-- **Visual Regression Testing**: Chromatic integration with smart change detection
-- **Accessibility Testing**: Automated a11y validation for components
-- **Performance Testing**: Component bundle analysis and optimization
-- **Design System Validation**: Tailwind CSS configuration and token validation
-
-### Features:
-
-- 🎯 **Smart change detection** - only runs on relevant file changes
-- ♿ **Accessibility compliance** with automated testing
-- 📊 **Performance metrics** for component library
-- 🎨 **Design token validation** and consistency checks
-
-## 🛡️ Quality Gates & Security
-
-**File:** `quality-gates.yml`  
-**Triggers:** Daily schedule, dependency changes, manual dispatch
-
-Maintains code quality and security standards:
-
-- **Security Audit**: Dependency vulnerability scanning
-- **License Compliance**: License validation and reporting
-- **Dependency Analysis**: Outdated package detection and deduplication
-- **Code Quality Metrics**: ESLint analysis and complexity measurement
-- **Performance Benchmarks**: Build time and bundle size tracking
-
-### Features:
-
-- 🔒 **Configurable security levels** (info → critical)
-- 📜 **License compliance** monitoring
-- 📊 **Quality metrics** tracking over time
-- ⚡ **Performance benchmarking** with trend analysis
-- 🤖 **Automated PR comments** for security issues
-
-## 🏗️ Architecture Principles
-
-### 🎯 **Fail Fast Strategy**
-
-Workflows are designed to fail quickly on fundamental issues, providing rapid feedback to developers.
-
-### ⚡ **Intelligent Caching**
-
-Multi-layered caching strategy:
-
-- pnpm store caching across workflows
-- Next.js build cache optimization
-- Storybook build caching for visual tests
-
-### 🔄 **Parallel Execution**
-
-Jobs run in parallel where possible to minimize total pipeline time while maintaining dependencies.
-
-### 🔒 **Security First**
-
-All workflows include security considerations:
-
-- Dependency scanning
-- Secret management
-- Minimal permission scopes
-
-### 📊 **Observability**
-
-Comprehensive reporting and artifact collection:
-
-- Coverage reports to Codecov
-- Build artifacts for debugging
-- Performance metrics tracking
-- Quality trend analysis
-
-## 🛠️ Package Integration
-
-### Frontend (`leenders-coaching-nl`)
-
-- Next.js application with React 19
-- Storybook component library
-- Vitest testing framework
-- TypeScript strict mode
-- Tailwind CSS design system
-
-### Studio (`studio-leenders-coaching-nl`)
-
-- Sanity CMS configuration
-- Schema validation and type generation
-- Content seeding scripts
+- Package building with customizable commands
+- Bundle analysis (optional)
 - Build verification
+- Artifact packaging and upload (optional)
 
-## 📈 Performance Metrics
+**Usage:**
 
-| Metric         | Target          | Monitoring   |
-| -------------- | --------------- | ------------ |
-| CI Pipeline    | < 10 minutes    | ✅ Automated |
-| Build Pipeline | < 20 minutes    | ✅ Automated |
-| Test Coverage  | > 80%           | ✅ Codecov   |
-| Security Audit | 0 high/critical | ✅ Daily     |
-| Bundle Size    | Trend tracking  | ✅ Weekly    |
+```yaml
+jobs:
+  build-frontend:
+    uses: ./.github/workflows/build.yml
+    with:
+      package-name: 'frontend' # Required
+      package-filter: 'leenders-coaching-nl' # Required
+      build-command: 'build' # Optional, defaults to 'build'
+      verify-command: 'verify:build' # Optional, defaults to 'verify:build'
+      analyze-bundle: true # Optional, defaults to false
+      analyze-command: 'analyze:bundle' # Optional, defaults to 'analyze:bundle'
+      package-build: true # Optional, defaults to false
+      package-command: 'package:build' # Optional, defaults to 'package:build'
+      working-directory: '' # Optional
+    secrets:
+      NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+      NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
+      NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
+      SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+```
 
-## 🚀 Deployment Strategy
+### 3. Test Workflow (`.github/workflows/test.yml`)
 
-### Development Flow
+Handles testing and quality checks:
 
-1. **PR Created** → CI pipeline validates changes
-2. **PR Merged** → Full build and test pipeline
-3. **Visual Changes** → Chromatic visual testing
-4. **Dependencies** → Security and quality gates
+- Security audits
+- Quality checks
+- Test execution
+- Coverage upload
+- Test result artifacts
 
-### Production Readiness
+**Usage:**
 
-The `deployment-readiness` job in the build pipeline validates:
+```yaml
+jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+    with:
+      test-command: 'ci:test' # Optional, defaults to 'ci:test'
+      quality-command: 'ci:quality' # Optional, defaults to 'ci:quality'
+      security-command: 'ci:security' # Optional, defaults to 'ci:security'
+      coverage-upload: true # Optional, defaults to true
+      working-directory: '' # Optional
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+      NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
+      NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
+      SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+```
 
-- ✅ All tests passing
-- ✅ Builds successful for all packages
-- ✅ Security audit clean
-- ✅ Content validation complete
+## Benefits
 
-## 📋 Maintenance
+1. **Reduced Duplication**: Common setup, build, and test steps are centralized
+2. **Consistency**: All workflows use the same versions and commands
+3. **Maintainability**: Updates to common steps only need to be made in one place
+4. **Flexibility**: Customizable inputs allow workflows to adapt to different needs
+5. **Caching**: Optimized pnpm caching across all workflows
 
-### Daily Tasks (Automated)
+## Migration Guide
 
-- Security audit scanning
-- Dependency update checks
-- Performance benchmarking
+To migrate existing workflows to use these reusable workflows:
 
-### Weekly Tasks
+1. **Replace setup steps** with calls to `setup.yml`
+2. **Replace build steps** with calls to `build.yml`
+3. **Replace test steps** with calls to `test.yml`
+4. **Update job dependencies** to reference the new job names
+5. **Pass required secrets** to the reusable workflows
 
-- Review quality metrics trends
-- Analyze bundle size changes
-- Update security policies if needed
+## Example Migration
 
-### Monthly Tasks
+**Before:**
 
-- Review and update workflow configurations
-- Analyze performance trends
-- Update documentation
+```yaml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.15.1'
+      - run: pnpm install
+      - run: pnpm run build
+```
 
-## 🔧 Configuration
+**After:**
 
-### Environment Variables
+```yaml
+jobs:
+  setup:
+    uses: ./.github/workflows/setup.yml
 
-- `NEXT_PUBLIC_SANITY_*`: Sanity CMS configuration
-- `RESEND_API_KEY`: Email service integration
-- `CODECOV_TOKEN`: Coverage reporting
-- `CHROMATIC_PROJECT_TOKEN`: Visual testing
-
-### Secrets Management
-
-All sensitive data is stored in GitHub Secrets with minimal access scopes.
-
----
-
-**Designed for excellence** • **Built for scale** • **Optimized for developer experience**
+  build:
+    uses: ./.github/workflows/build.yml
+    needs: setup
+    with:
+      package-name: 'my-package'
+      package-filter: 'my-package'
+```

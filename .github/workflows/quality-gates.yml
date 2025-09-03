@@ -30,14 +30,15 @@ permissions:
   pull-requests: write
   actions: read
 
-env:
-  NODE_VERSION: '22'
-  PNPM_VERSION: '10.15.1'
-
 jobs:
+  # Setup environment
+  setup:
+    uses: ./.github/workflows/setup.yml
+
   security-audit:
     name: 'Security Audit'
     runs-on: ubuntu-latest
+    needs: setup
     timeout-minutes: 10
     outputs:
       vulnerabilities-found: ${{ steps.audit.outputs.vulnerabilities }}
@@ -45,28 +46,6 @@ jobs:
     steps:
       - name: '🔄 Checkout repository'
         uses: actions/checkout@v5
-
-      - name: '🔧 Setup Node.js'
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: '📦 Setup pnpm'
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
-      - name: 'Get pnpm store path'
-        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
-
-      - name: '💾 Cache pnpm store'
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PNPM_STORE_PATH }}
-          key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            pnpm-store-${{ runner.os }}-
 
       - name: '📥 Install dependencies'
         run: pnpm run ci:install:frozen
@@ -163,17 +142,10 @@ jobs:
   license-compliance:
     name: 'License Compliance'
     runs-on: ubuntu-latest
+    needs: setup
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
       - name: '📜 Scan licenses (JSON)'
         run: |
           npx license-checker --json --production --relativeLicensePath > license.json || echo "{}" > license.json
@@ -217,17 +189,10 @@ jobs:
   dependency-analysis:
     name: 'Dependency Analysis'
     runs-on: ubuntu-latest
+    needs: setup
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
       - name: '📥 Install deps'
         run: pnpm run ci:install:frozen
 
@@ -287,19 +252,12 @@ jobs:
   code-quality:
     name: 'Code Quality'
     runs-on: ubuntu-latest
+    needs: setup
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
       - name: '📥 Install deps'
         run: pnpm run ci:install:frozen
 
@@ -366,6 +324,7 @@ jobs:
   performance-benchmarks:
     name: 'Performance Benchmarks'
     runs-on: ubuntu-latest
+    needs: setup
     timeout-minutes: 20
     env:
       NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
@@ -375,14 +334,6 @@ jobs:
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
       - name: '📥 Install deps'
         run: pnpm run ci:install:frozen
 

@@ -14,205 +14,78 @@ permissions:
   pull-requests: write
   issues: write
 
-env:
-  NODE_VERSION: '22'
-  PNPM_VERSION: '10.15.1'
-  PNPM_HOME: /home/runner/.local/share/pnpm
-
 jobs:
   quality-gate:
     name: 'Quality Gate'
+    uses: ./.github/workflows/setup.yml
+    with:
+      install-command: ci:install
+
+  quality-checks:
+    name: 'Quality Checks'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    outputs:
-      cache-key: ${{ steps.cache-key.outputs.key }}
-
+    needs: quality-gate
+    timeout-minutes: 10
     steps:
       - name: '🔄 Checkout repository'
         uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
-      - name: '🔧 Setup Node.js'
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: '📦 Setup pnpm'
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
-      - name: '🎯 Generate cache key'
-        id: cache-key
-        run: |
-          echo "key=pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}" >> $GITHUB_OUTPUT
-
-      - name: 'Get pnpm store path'
-        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
-
-      - name: '💾 Cache pnpm store'
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PNPM_STORE_PATH }}
-          key: ${{ steps.cache-key.outputs.key }}
-          restore-keys: |
-            pnpm-${{ runner.os }}-
 
       - name: '📥 Install dependencies'
-        run: pnpm run ci:install
+        run: pnpm run ci:install:frozen
 
       - name: '🔍 Quality checks'
         run: pnpm run ci:quality
 
   frontend-tests:
     name: 'Frontend Tests'
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/test.yml
     needs: quality-gate
-    timeout-minutes: 10
-
-    env:
+    with:
+      test-command: ci:test
+      quality-command: ''
+      security-command: ''
+      coverage-upload: true
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
       NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
       NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
       SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-
-    steps:
-      - name: '🔄 Checkout repository'
-        uses: actions/checkout@v5
-
-      - name: '🔧 Setup Node.js'
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: '📦 Setup pnpm'
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
-      - name: 'Get pnpm store path'
-        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
-
-      - name: '💾 Restore pnpm cache'
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PNPM_STORE_PATH }}
-          key: ${{ needs.quality-gate.outputs.cache-key }}
-          restore-keys: |
-            pnpm-${{ runner.os }}-
-
-      - name: '📥 Install dependencies'
-        run: pnpm run ci:install:frozen
-
-      - name: '🧪 Run comprehensive tests'
-        run: pnpm run ci:test
-
-      - name: '📤 Upload coverage reports'
-        uses: codecov/codecov-action@v5
-        if: always()
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./packages/leenders-coaching-nl/coverage
-          fail_ci_if_error: false
-          verbose: true
-          flags: frontend
 
   studio-validation:
     name: 'Studio Validation'
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/build.yml
     needs: quality-gate
-    timeout-minutes: 8
-
-    env:
+    with:
+      package-name: 'studio'
+      package-filter: 'studio-leenders-coaching-nl'
+      build-command: 'build:studio'
+      verify-command: 'validate:schema'
+      analyze-bundle: false
+      package-build: false
+      working-directory: ''
+    secrets:
       SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
-
-    steps:
-      - name: '🔄 Checkout repository'
-        uses: actions/checkout@v5
-
-      - name: '🔧 Setup Node.js'
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: '📦 Setup pnpm'
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
-      - name: 'Get pnpm store path'
-        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
-
-      - name: '💾 Restore pnpm cache'
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PNPM_STORE_PATH }}
-          key: ${{ needs.quality-gate.outputs.cache-key }}
-          restore-keys: |
-            pnpm-${{ runner.os }}-
-
-      - name: '📥 Install dependencies'
-        run: pnpm run ci:install:frozen
-
-      - name: '🏗️ Build Sanity studio'
-        run: pnpm run build:studio
-
-      - name: '🔍 Validate schema'
-        run: pnpm --filter studio-leenders-coaching-nl run validate:schema
 
   build-verification:
     name: 'Build Verification'
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/build.yml
     needs: [quality-gate, frontend-tests, studio-validation]
-    timeout-minutes: 12
-
-    env:
+    with:
+      package-name: 'all-packages'
+      package-filter: 'leenders-coaching-nl'
+      build-command: 'ci:build'
+      verify-command: 'ci:verify'
+      analyze-bundle: false
+      package-build: false
+      working-directory: ''
+    secrets:
       NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
       NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
       NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
       SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-
-    steps:
-      - name: '🔄 Checkout repository'
-        uses: actions/checkout@v5
-
-      - name: '🔧 Setup Node.js'
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: '📦 Setup pnpm'
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
-      - name: 'Get pnpm store path'
-        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
-
-      - name: '💾 Restore pnpm cache'
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PNPM_STORE_PATH }}
-          key: ${{ needs.quality-gate.outputs.cache-key }}
-          restore-keys: |
-            pnpm-${{ runner.os }}-
-
-      - name: '📥 Install dependencies'
-        run: pnpm run ci:install:frozen
-
-      - name: '🏗️ Build all packages'
-        run: pnpm run ci:build
-
-      - name: '✅ Verify build artifacts'
-        run: pnpm run ci:verify
 
   pr-comment:
     name: 'PR Comment (CI Summary)'
