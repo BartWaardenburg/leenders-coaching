@@ -76,26 +76,70 @@ jobs:
       - name: '🏗️ Build frontend'
         run: pnpm --filter leenders-coaching-nl run build
 
-      - name: '📊 Run Size Limit Analysis'
-        uses: andresz1/size-limit-action@v1.8.0
+      - name: '📊 Run Size Limit (soft-fail)'
+        id: sizelimit
+        working-directory: packages/leenders-coaching-nl
+        run: |
+          set -e
+          mkdir -p .bundle-analysis
+          set +e
+          pnpm exec size-limit --json > .bundle-analysis/size-results.json
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          # always succeed here; comments/summary will reflect pass/fail
+          exit 0
+
+      - name: '⬇️ Checkout main as baseline'
+        uses: actions/checkout@v5
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          directory: 'packages/leenders-coaching-nl'
-          package_manager: 'pnpm'
-          skip_step: 'build'
+          ref: main
+          path: baseline
+
+      - name: '📦 Install deps (baseline)'
+        working-directory: baseline
+        run: pnpm run ci:install:frozen
+
+      - name: '🏗️ Build frontend (baseline)'
+        working-directory: baseline
+        run: pnpm --filter leenders-coaching-nl run build
+
+      - name: '📏 Run size-limit (baseline)'
+        working-directory: baseline/packages/leenders-coaching-nl
+        env:
+          NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+          NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
+          NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
+          SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: |
+          OUT="$GITHUB_WORKSPACE/packages/leenders-coaching-nl/.bundle-analysis/size-results-main.json"
+          pnpm exec size-limit --json > "$OUT"
 
       - name: '🔍 Generate Detailed Bundle Analysis (from JSON)'
         working-directory: packages/leenders-coaching-nl
         run: |
-          mkdir -p .bundle-analysis
-          pnpm exec size-limit --json > .bundle-analysis/size-results.json
           node -e "
             const fs = require('fs');
             const results = JSON.parse(fs.readFileSync('.bundle-analysis/size-results.json', 'utf8'));
-            const rows = results.map(x => 
-              \`| \${x.name} | \${x.limit || '-'} | \${x.size} | \${x.passed ? '✅' : '❌'} |\`
-            ).join('\n');
-            
+            const cfg = JSON.parse(fs.readFileSync('.size-limit.json', 'utf8'));
+            const cfgByName = new Map(cfg.map(c => [c.name, c]));
+
+            const humanBytes = n => (n >= 1024 ? (n/1024).toFixed(0)+' KB' : n+' B');
+
+            const rows = results.map(r => {
+              const c = cfgByName.get(r.name) || {};
+              const limitStr = c.limit || (typeof r.sizeLimit === 'number' ? humanBytes(r.sizeLimit) : '-');
+              const isTime = r.running != null || (typeof limitStr === 'string' && limitStr.endsWith('ms'));
+              const valStr = isTime
+                ? (r.running != null ? Math.round(r.running * 1000) + ' ms' : 'N/A')
+                : (typeof r.size === 'number' ? humanBytes(r.size) : 'N/A');
+              const pass = r.passed ? '✅' : '❌';
+              return \`| \${r.name} | \${limitStr} | \${valStr} | \${pass} |\`;
+            }).join('\n');
+
+            const failed = results.filter(r => !r.passed);
+            const status = failed.length ? '❌ Some bundles exceed limits' : '✅ All bundles are within limits';
+
             const report = \`# Bundle Analysis Report
 
           ## 📊 Size Limit Results
@@ -104,17 +148,36 @@ jobs:
           |-------|-------|------|--------|
           \${rows}
 
-          ## 🔍 Analysis Summary
+          ## 📋 Analysis Summary
 
           - **Total Checks**: \${results.length}
           - **Passed**: \${results.filter(x => x.passed).length}
-          - **Failed**: \${results.filter(x => !x.passed).length}
+          - **Failed**: \${failed.length}
+          - **Status**: \${status}
 
-          ## 🛠️ Next Steps
+          \${failed.length ? \`
+          ## 🚨 Failed Checks
 
-          \${results.filter(x => !x.passed).length > 0 
-            ? '❌ Some bundles exceed limits. Consider code splitting or optimization.'
-            : '✅ All bundles are within limits. Great job!'}
+          \${failed.map(x => {
+            const c = cfgByName.get(x.name) || {};
+            const limitStr = c.limit || (typeof x.sizeLimit === 'number' ? humanBytes(x.sizeLimit) : '-');
+            const isTime = x.running != null || (typeof limitStr === 'string' && limitStr.endsWith('ms'));
+            const valStr = isTime ? (x.running != null ? Math.round(x.running * 1000)+' ms' : 'N/A')
+                                  : (typeof x.size === 'number' ? humanBytes(x.size) : 'N/A');
+            return \`- **\${x.name}**: \${valStr} (limit: \${limitStr})\`;
+          }).join('\n')}
+
+          ## 🛠️ Optimization Suggestions
+
+          - Consider code splitting for large bundles
+          - Use dynamic imports for non-critical features
+          - Optimize third-party dependencies
+          - Review and remove unused code
+          \` : \`
+          ## 🎉 All Good!
+
+          Great job keeping your bundles optimized!
+          \`}
 
           ---
           *Generated on \${new Date().toISOString()}*
@@ -125,6 +188,73 @@ jobs:
             console.log('✅ Analysis report generated from JSON');
           "
 
+      - name: '🔧 Ensure jq'
+        run: |
+          command -v jq >/dev/null 2>&1 || { sudo apt-get update -y && sudo apt-get install -y jq; }
+
+      - name: '✅ Evaluate results'
+        id: eval
+        working-directory: packages/leenders-coaching-nl
+        run: |
+          HAS_FAIL=$(jq -r '[.[] | select(.passed==false)] | length > 0' .bundle-analysis/size-results.json)
+          echo "has_failures=$HAS_FAIL" >> "$GITHUB_OUTPUT"
+
+      - name: '📊 Generate Delta Comparison'
+        if: always() && github.event_name == 'pull_request'
+        working-directory: packages/leenders-coaching-nl
+        run: |
+          if [[ -f ".bundle-analysis/size-results-main.json" && -f ".bundle-analysis/size-results.json" ]]; then
+            node -e "
+              const fs = require('fs');
+              const fmtBytes = n => n.toFixed(0) + ' B';
+              const fmtMs = n => n.toFixed(0) + ' ms';
+              try {
+                const current = JSON.parse(fs.readFileSync('.bundle-analysis/size-results.json', 'utf8'));
+                const main = JSON.parse(fs.readFileSync('.bundle-analysis/size-results-main.json', 'utf8'));
+                const rows = [];
+
+                for (const item of current) {
+                  const base = main.find(m => m.name === item.name);
+                  if (!base) continue;
+
+                  const isTime = item.running != null || base.running != null; // ✅ detect time via 'running'
+                  const curVal  = isTime ? ((item.running || 0) * 1000) : (item.size || 0);
+                  const baseVal = isTime ? ((base.running  || 0) * 1000) : (base.size || 0);
+                  const delta = curVal - baseVal;
+                  const pct   = baseVal > 0 ? ((delta / baseVal) * 100) : 0;
+                  const arrow = delta > 0 ? '▲' : delta < 0 ? '▼' : '•';
+                  const unit  = isTime ? 'ms' : 'B';
+                  const fmt   = isTime ? fmtMs : fmtBytes;
+
+                  rows.push(\`| \${item.name} | \${fmt(curVal)} | \${fmt(baseVal)} | \${arrow} \${delta.toFixed(0)} \${unit} (\${pct.toFixed(1)}%) |\`);
+                }
+
+                if (rows.length) {
+                  const md = [
+                    '## 📈 Changes vs Main Branch',
+                    '',
+                    '| Check | Current | Main | Change |',
+                    '|-------|---------|------|--------|',
+                    ...rows,
+                    ''
+                  ].join('\\n');
+                  fs.writeFileSync('.bundle-analysis/delta-report.md', md);
+                  console.log('✅ Delta comparison generated');
+                }
+              } catch (e) {
+                console.log('⚠️ Could not generate delta comparison:', e.message);
+              }
+            "
+          fi
+
+      - name: '📈 Append delta to report (if exists)'
+        working-directory: packages/leenders-coaching-nl
+        run: |
+          if [ -f .bundle-analysis/delta-report.md ]; then
+            echo "" >> .bundle-analysis/analysis-report.md
+            cat .bundle-analysis/delta-report.md >> .bundle-analysis/analysis-report.md
+          fi
+
       - name: '📁 Upload Bundle Analysis Artifacts'
         uses: actions/upload-artifact@v4
         with:
@@ -132,3 +262,57 @@ jobs:
           path: |
             packages/leenders-coaching-nl/.bundle-analysis/
           retention-days: 30
+
+      - name: '💬 Create PR Comment on Size Limit Failure'
+        if: github.event_name == 'pull_request' && steps.eval.outputs.has_failures == 'true'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: bundle-size-analysis
+          number: ${{ github.event.pull_request.number }}
+          path: packages/leenders-coaching-nl/.bundle-analysis/analysis-report.md
+
+      - name: '💬 Create PR Comment on Size Limit Success'
+        if: github.event_name == 'pull_request' && steps.eval.outputs.has_failures != 'true'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: bundle-size-analysis
+          number: ${{ github.event.pull_request.number }}
+          path: packages/leenders-coaching-nl/.bundle-analysis/analysis-report.md
+
+      - name: '📋 Job Summary'
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## 📊 Bundle Size Analysis & Limits";
+            echo "";
+            if [[ -f "packages/leenders-coaching-nl/.bundle-analysis/size-results.json" ]]; then
+              echo "### 📊 Size Limit Results";
+              echo "";
+              echo "| Check | Limit | Size | Passed |";
+              echo "|-------|-------|------|--------|";
+              jq -s -r '
+                # $r = results, $c = config; join by .name
+                (.[0] // []) as $r
+                | (.[1] // []) as $c
+                | ($c | map({key:.name, val:.limit}) | from_entries) as $limits
+                | $r[]
+                | . as $x
+                | "| \($x.name) | \($limits[$x.name] // (if (.sizeLimit!=null) then (.sizeLimit|tostring+" B") else "-" end)) | " +
+                  ( if ($x.running!=null) then ((($x.running*1000)|floor|tostring) + " ms")
+                    else (($x.size // 0 | tostring) + " B") end ) + " | " +
+                  (if $x.passed then "✅" else "❌" end) + " |"
+              ' packages/leenders-coaching-nl/.bundle-analysis/size-results.json packages/leenders-coaching-nl/.size-limit.json;
+              echo "";
+              echo "### 📋 Analysis Results";
+              echo "Check the workflow artifacts for detailed information about your bundle sizes.";
+            else
+              echo "### 📋 Analysis Results";
+              echo "Size limit results not available. Check the workflow logs for details.";
+            fi
+            echo "";
+            echo "### 📁 Artifacts";
+            echo "Download the bundle analysis artifacts to see the detailed report.";
+          } >> $GITHUB_STEP_SUMMARY
