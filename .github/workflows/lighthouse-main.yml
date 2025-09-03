@@ -264,7 +264,13 @@ jobs:
               | .[]
             ' "$assertion_file")
             assert_md="| Level | Check | Expected | Actual | Operator | URL |\n|---|---|---|---|---|---|\n"
-            if [[ -n "$rows" ]]; then assert_md+="$rows"$'\n'; else assert_md+="| - | - | - | - | - | - |\n"; fi
+            if [[ -n "$rows" ]]; then
+              printf '%s\n' "$rows" >> temp_assertions.md
+              assert_md+=$(cat temp_assertions.md)
+              rm -f temp_assertions.md
+            else
+              assert_md+="| - | - | - | - | - | - |\n"
+            fi
           else
             assert_md="_No assertions file found._"
           fi
@@ -293,6 +299,9 @@ jobs:
             echo "${vitals_table}";
             echo "";
             echo "### Assertion details";
+            echo "";
+            echo "<br/>";
+            echo "";
             echo "${assert_md}";
           } >> $GITHUB_STEP_SUMMARY
 
@@ -359,6 +368,7 @@ jobs:
               '${{ steps.parse.outputs.vitals_table_md }}\n\n' +
               '---\n\n' +
               '### Assertion details\n' +
+              '\n<br/>\n\n' +
               '${{ steps.parse.outputs.assertions_md }}\n\n' +
               '---\n\n' +
               '### Environment\n' +

@@ -116,7 +116,11 @@ jobs:
               echo "assert_md<<'EOF'"
               echo "| Level | Check | Expected | Actual | Operator | URL |"
               echo "|---|---|---|---|---|---|"
-              if [[ -n "$rows" ]]; then echo "$rows"; else echo "| - | - | - | - | - | - |"; fi
+              if [[ -n "$rows" ]]; then
+              printf '%s\n' "$rows"
+            else
+              echo "| - | - | - | - | - | - |"
+            fi
               echo "EOF"
             } >> "$GITHUB_OUTPUT"
           else
@@ -331,6 +335,8 @@ jobs:
 
             <details><summary>Assertion details</summary>
 
+            <br/>
+
             ${{ steps.parse.outputs.assert_md }}
 
             </details>
@@ -353,6 +359,8 @@ jobs:
             echo "**Assertions:** ✅ ${{ steps.parse.outputs.passc }} · ⚠️ ${{ steps.parse.outputs.warnc }} · ❌ ${{ steps.parse.outputs.errc }}";
             echo "";
             echo "<details><summary>Assertion details</summary>";
+            echo "";
+            echo "<br/>";
             echo "";
             echo "${{ steps.parse.outputs.assert_md }}";
             echo "";
