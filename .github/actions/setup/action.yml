@@ -1,0 +1,73 @@
+name: 'Setup Environment (Node + pnpm + Cache + Install)'
+description: 'Sets up Node.js, pnpm, restores cache, and installs dependencies'
+inputs:
+  node-version:
+    description: 'Node.js version to use'
+    required: false
+    default: '22'
+  pnpm-version:
+    description: 'pnpm version to use'
+    required: false
+    default: '10.15.1'
+  install-command:
+    description: 'Install command to run'
+    required: false
+    default: 'ci:install:frozen'
+  cache-key:
+    description: 'Custom cache key for pnpm store'
+    required: false
+    default: ''
+  working-directory:
+    description: 'Working directory for the job'
+    required: false
+    default: ''
+outputs:
+  cache-key:
+    description: 'Generated cache key for pnpm store'
+    value: ${{ steps.cache-key.outputs.key }}
+  pnpm-store-path:
+    description: 'Path to pnpm store'
+    value: ${{ steps.pnpm-store-path.outputs.path }}
+runs:
+  using: 'composite'
+  steps:
+    # Checkout should be done explicitly in the workflow before calling this action
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: ${{ inputs.pnpm-version }}
+        run_install: false
+
+    - name: Generate cache key
+      id: cache-key
+      shell: bash
+      run: |
+        if [[ -n "${{ inputs.cache-key }}" ]]; then
+          echo "key=${{ inputs.cache-key }}" >> $GITHUB_OUTPUT
+        else
+          echo "key=pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Get pnpm store path
+      id: pnpm-store-path
+      shell: bash
+      run: echo "path=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+    - name: Cache pnpm store
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.pnpm-store-path.outputs.path }}
+        key: ${{ steps.cache-key.outputs.key }}
+        restore-keys: |
+          pnpm-${{ runner.os }}-
+
+    - name: Install dependencies
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: pnpm run ${{ inputs.install-command }}

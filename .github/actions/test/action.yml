@@ -1,0 +1,80 @@
+name: 'Run Tests & Quality Checks'
+description: 'Runs tests, quality checks, security audits, and optionally uploads coverage'
+inputs:
+  test-command:
+    description: 'Test command to run'
+    required: false
+    default: 'ci:test'
+  quality-command:
+    description: 'Quality check command to run'
+    required: false
+    default: 'ci:quality'
+  security-command:
+    description: 'Security check command to run'
+    required: false
+    default: 'ci:security'
+  coverage-upload:
+    description: 'Whether to upload coverage reports'
+    required: false
+    default: 'true'
+  working-directory:
+    description: 'Working directory for the job'
+    required: false
+    default: ''
+  node-version:
+    description: 'Node.js version to use'
+    required: false
+    default: '22'
+  pnpm-version:
+    description: 'pnpm version to use'
+    required: false
+    default: '10.15.1'
+runs:
+  using: 'composite'
+  steps:
+    # Checkout should be done explicitly in the workflow before calling this action
+
+    - name: Setup environment
+      uses: ./.github/actions/setup
+      with:
+        node-version: ${{ inputs.node-version }}
+        pnpm-version: ${{ inputs.pnpm-version }}
+        working-directory: ${{ inputs.working-directory }}
+
+    - name: Run security audit
+      if: ${{ inputs.security-command != '' }}
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: pnpm run ${{ inputs.security-command }}
+      continue-on-error: true
+
+    - name: Quality checks
+      if: ${{ inputs.quality-command != '' }}
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: pnpm run ${{ inputs.quality-command }}
+
+    - name: Run comprehensive tests
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: pnpm run ${{ inputs.test-command }}
+
+    - name: Upload coverage to Codecov
+      if: ${{ inputs.coverage-upload == 'true' }}
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        directory: ./packages/leenders-coaching-nl/coverage
+        fail_ci_if_error: false
+        verbose: true
+        flags: frontend
+
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-${{ github.sha }}
+        path: |
+          packages/leenders-coaching-nl/coverage/
+          packages/leenders-coaching-nl/test-results/
+        retention-days: 30

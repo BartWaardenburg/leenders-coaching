@@ -19,9 +19,14 @@ permissions:
 jobs:
   # Setup environment
   setup:
-    uses: ./.github/workflows/setup.yml
-    with:
-      pnpm-version: '10.15.1'
+    runs-on: ubuntu-latest
+    steps:
+      - name: '⚙️ Setup Environment'
+        uses: ./.github/actions/setup
+        with:
+          node-version: '22'
+          pnpm-version: '10.15.1'
+          working-directory: ''
 
   lighthouse:
     name: 'Lighthouse CI (Production) – ${{ matrix.formFactor }}'

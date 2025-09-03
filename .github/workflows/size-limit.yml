@@ -22,7 +22,15 @@ concurrency:
 jobs:
   # Setup environment
   setup:
-    uses: ./.github/workflows/setup.yml
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: '⚙️ Setup Environment'
+        uses: ./.github/actions/setup
+        with:
+          node-version: '22'
+          pnpm-version: '10.15.1'
+          working-directory: ''
 
   bundle-analysis:
     name: '📊 Bundle Size Analysis & Limits'
@@ -43,8 +51,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: '📥 Install dependencies'
-        run: pnpm run ci:install:frozen
+      - name: '⚙️ Setup Environment'
+        uses: ./.github/actions/setup
+        with:
+          node-version: '22'
+          pnpm-version: '10.15.1'
+          working-directory: ''
 
       - name: '🏗️ Build frontend'
         run: pnpm --filter leenders-coaching-nl run build
@@ -68,9 +80,12 @@ jobs:
           ref: main
           path: baseline
 
-      - name: '📦 Install deps (baseline)'
-        working-directory: baseline
-        run: pnpm run ci:install:frozen
+      - name: '⚙️ Setup Environment (baseline)'
+        uses: ./.github/actions/setup
+        with:
+          node-version: '22'
+          pnpm-version: '10.15.1'
+          working-directory: baseline
 
       - name: '🏗️ Build frontend (baseline)'
         working-directory: baseline

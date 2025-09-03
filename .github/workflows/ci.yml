@@ -15,83 +15,75 @@ permissions:
   issues: write
 
 jobs:
-  quality-gate:
-    name: 'Quality Gate'
-    uses: ./.github/workflows/setup.yml
-    with:
-      install-command: ci:install
-
   quality-checks:
     name: 'Quality Checks'
     runs-on: ubuntu-latest
-    needs: quality-gate
     timeout-minutes: 10
     steps:
-      - name: '🔄 Checkout repository'
-        uses: actions/checkout@v5
-
-      - name: '📥 Install dependencies'
-        run: pnpm run ci:install:frozen
-
-      - name: '🔍 Quality checks'
-        run: pnpm run ci:quality
+      - name: '⚙️ Run Quality Checks'
+        uses: ./.github/actions/test
+        with:
+          test-command: ''
+          quality-command: ci:quality
+          security-command: ''
+          coverage-upload: false
+          working-directory: ''
 
   frontend-tests:
     name: 'Frontend Tests'
-    uses: ./.github/workflows/test.yml
-    needs: quality-gate
-    with:
-      test-command: ci:test
-      quality-command: ''
-      security-command: ''
-      coverage-upload: true
-    secrets:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
-      NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
-      NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
-      SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
-      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: '🧪 Run Frontend Tests'
+        uses: ./.github/actions/test
+        with:
+          test-command: ci:test
+          quality-command: ''
+          security-command: ''
+          coverage-upload: true
+          working-directory: ''
 
   studio-validation:
     name: 'Studio Validation'
-    uses: ./.github/workflows/build.yml
-    needs: quality-gate
-    with:
-      package-name: 'studio'
-      package-filter: 'studio-leenders-coaching-nl'
-      build-command: 'build:studio'
-      verify-command: 'validate:schema'
-      analyze-bundle: false
-      package-build: false
-      working-directory: ''
-    secrets:
-      SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: '🏗️ Build Studio'
+        uses: ./.github/actions/build
+        with:
+          package-name: 'studio'
+          package-filter: 'studio-leenders-coaching-nl'
+          package-path: 'packages/studio-leenders-coaching-nl'
+          build-command: 'build:studio'
+          verify-command: 'validate:schema'
+          analyze-bundle: false
+          package-build: false
+          working-directory: ''
 
   build-verification:
     name: 'Build Verification'
-    uses: ./.github/workflows/build.yml
-    needs: [quality-gate, frontend-tests, studio-validation]
-    with:
-      package-name: 'all-packages'
-      package-filter: 'leenders-coaching-nl'
-      build-command: 'ci:build'
-      verify-command: 'ci:verify'
-      analyze-bundle: false
-      package-build: false
-      working-directory: ''
-    secrets:
-      NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
-      NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
-      NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
-      SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
-      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+    runs-on: ubuntu-latest
+    needs: [frontend-tests, studio-validation]
+    timeout-minutes: 15
+    steps:
+      - name: '🏗️ Build All Packages'
+        uses: ./.github/actions/build
+        with:
+          package-name: 'all-packages'
+          package-filter: 'leenders-coaching-nl'
+          package-path: 'packages/leenders-coaching-nl'
+          build-command: 'ci:build'
+          verify-command: 'ci:verify'
+          analyze-bundle: false
+          package-build: false
+          working-directory: ''
 
   pr-comment:
     name: 'PR Comment (CI Summary)'
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
-    needs: [quality-gate, frontend-tests, studio-validation, build-verification]
+    needs:
+      [quality-checks, frontend-tests, studio-validation, build-verification]
     permissions:
       pull-requests: write
       issues: write
@@ -104,7 +96,7 @@ jobs:
           number: ${{ github.event.pull_request.number }}
           message: |
             ## ✅ CI Summary
-            - **Quality Gate:** ${{ needs.quality-gate.result == 'success' && '✅' || '❌' }}
+            - **Quality Checks:** ${{ needs.quality-checks.result == 'success' && '✅' || '❌' }}
             - **Frontend Tests:** ${{ needs.frontend-tests.result == 'success' && '✅' || '❌' }}
             - **Studio Validation:** ${{ needs.studio-validation.result == 'success' && '✅' || '❌' }}
             - **Build Verification:** ${{ needs.build-verification.result == 'success' && '✅' || '❌' }}
