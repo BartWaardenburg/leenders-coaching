@@ -13,24 +13,9 @@ permissions:
   issues: write
 
 jobs:
-  # Setup environment
-  setup:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: 'Checkout code'
-        uses: actions/checkout@v5
-      - name: '⚙️ Setup Environment'
-        uses: ./.github/actions/setup
-        with:
-          node-version: '22'
-          pnpm-version: '10.15.1'
-          working-directory: ''
-
   lighthouse:
     name: 'Lighthouse CI (Preview)'
     runs-on: ubuntu-latest
-    needs: setup
     timeout-minutes: 25
     if: |
       github.event.deployment_status.state == 'success' &&

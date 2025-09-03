@@ -31,24 +31,9 @@ permissions:
   actions: read
 
 jobs:
-  # Setup environment
-  setup:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: 'Checkout code'
-        uses: actions/checkout@v5
-      - name: '⚙️ Setup Environment'
-        uses: ./.github/actions/setup
-        with:
-          node-version: '22'
-          pnpm-version: '10.15.1'
-          working-directory: ''
-
   security-audit:
     name: 'Security Audit'
     runs-on: ubuntu-latest
-    needs: setup
     timeout-minutes: 10
     outputs:
       vulnerabilities-found: ${{ steps.audit.outputs.vulnerabilities }}
@@ -156,7 +141,6 @@ jobs:
   license-compliance:
     name: 'License Compliance'
     runs-on: ubuntu-latest
-    needs: setup
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v5
@@ -211,7 +195,6 @@ jobs:
   dependency-analysis:
     name: 'Dependency Analysis'
     runs-on: ubuntu-latest
-    needs: setup
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v5
@@ -279,7 +262,6 @@ jobs:
   code-quality:
     name: 'Code Quality'
     runs-on: ubuntu-latest
-    needs: setup
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
@@ -356,7 +338,6 @@ jobs:
   performance-benchmarks:
     name: 'Performance Benchmarks'
     runs-on: ubuntu-latest
-    needs: setup
     timeout-minutes: 20
     env:
       NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
