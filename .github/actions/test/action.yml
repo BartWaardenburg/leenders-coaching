@@ -37,6 +37,10 @@ inputs:
     description: 'GitHub SHA for artifact naming'
     required: false
     default: ''
+  env:
+    description: 'Environment variables to set (JSON string)'
+    required: false
+    default: '{}'
 runs:
   using: 'composite'
   steps:
@@ -48,6 +52,23 @@ runs:
         node-version: ${{ inputs.node-version }}
         pnpm-version: ${{ inputs.pnpm-version }}
         working-directory: ${{ inputs.working-directory }}
+
+    - name: Set environment variables
+      shell: bash
+      env:
+        INPUT_ENV: ${{ inputs.env }}
+      run: |
+        if [[ "${INPUT_ENV}" != "{}" ]]; then
+          # Robustly handle any characters/newlines
+          node -e '
+            const env = JSON.parse(process.env.INPUT_ENV || "{}");
+            const fs = require("fs");
+            const out = Object.entries(env)
+              .map(([k,v]) => `${k}<<__EOF__\n${v}\n__EOF__`)
+              .join("\n") + "\n";
+            fs.appendFileSync(process.env.GITHUB_ENV, out);
+          '
+        fi
 
     - name: Run security audit
       if: ${{ inputs.security-command != '' }}
