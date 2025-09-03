@@ -1,19 +1,16 @@
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
-import typescriptPlugin from "@typescript-eslint/eslint-plugin";
 import typescriptParser from "@typescript-eslint/parser";
+import typescriptPlugin from "@typescript-eslint/eslint-plugin";
 import importPlugin from "eslint-plugin-import";
-import nextPlugin from "@next/eslint-plugin-next";
 import storybookPlugin from "eslint-plugin-storybook";
+import nextPlugin from "@next/eslint-plugin-next";
+import reactPlugin from "eslint-plugin-react";
+import reactHooksPlugin from "eslint-plugin-react-hooks";
+import jsxA11yPlugin from "eslint-plugin-jsx-a11y";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: true
-});
 
 const eslintConfig = [
   // Base config for all files
@@ -25,41 +22,72 @@ const eslintConfig = [
       "**/generated/**",
       "**/lib/gql/generated/**",
       "**/next-env.d.ts",
-      "**/coverage/**"
+      "**/coverage/**",
+      "**/storybook-static/**",
+      "**/build/**",
+      "**/.storybook-static/**",
+      "**/*.bundle.js",
+      "**/*.min.js"
     ]
   },
-  // Extend recommended configs
-  ...compat.extends(
-    "next/core-web-vitals",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:import/recommended",
-    "plugin:import/typescript",
-    "plugin:@next/next/recommended",
-    "plugin:storybook/recommended"
-  ),
-  // TypeScript specific config
+
+  // Global plugins and settings
   {
-    files: ["**/*.{ts,tsx}"],
     plugins: {
       "@typescript-eslint": typescriptPlugin,
       "@next/next": nextPlugin,
       storybook: storybookPlugin,
-      import: importPlugin
+      import: importPlugin,
+      react: reactPlugin,
+      "react-hooks": reactHooksPlugin,
+      "jsx-a11y": jsxA11yPlugin
     },
     languageOptions: {
-      parser: typescriptParser,
-      parserOptions: {
-        project: ["./tsconfig.json", "./.storybook/tsconfig.json"],
-        tsconfigRootDir: __dirname
-      }
+      ecmaVersion: 2022,
+      sourceType: "module"
     },
     settings: {
+      react: {
+        version: "detect"
+      },
       "import/resolver": {
         typescript: true,
         node: true
       }
+    }
+  },
+
+  // TypeScript files only
+  {
+    files: ["**/*.{ts,tsx}"],
+    languageOptions: {
+      parser: typescriptParser,
+      parserOptions: {
+        project: ["./tsconfig.json", "./.storybook/tsconfig.json"],
+        tsconfigRootDir: __dirname,
+        ecmaVersion: 2022,
+        sourceType: "module"
+      }
     },
     rules: {
+      // TypeScript rules
+      "@typescript-eslint/no-floating-promises": "off",
+      "@typescript-eslint/no-misused-promises": ["error", {
+        "checksVoidReturn": false
+      }],
+      "@typescript-eslint/no-unused-vars": ["warn", {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }],
+      "@typescript-eslint/no-explicit-any": "error",
+
+      // React rules
+      "react/react-in-jsx-scope": "off",
+      "react/prop-types": "off",
+      "react/jsx-uses-react": "off",
+      "react/jsx-uses-vars": "error",
+
+      // Import rules
       // "import/order": ["error", {
       //   "newlines-between": "always",
       //   "alphabetize": {
@@ -68,22 +96,35 @@ const eslintConfig = [
       //   }
       // }],
 
-      "@typescript-eslint/no-floating-promises": "off", // Next.js async components don't need explicit promise handling
-      "@typescript-eslint/no-misused-promises": ["error", {
-        "checksVoidReturn": false
-      }],
-      "@typescript-eslint/no-unused-vars": ["warn", {
-        "argsIgnorePattern": "^_",
-        "varsIgnorePattern": "^_"
-      }]
+      // Next.js rules
+      "@next/next/no-html-link-for-pages": "error",
+      "@next/next/no-img-element": "warn",
+      "@next/next/no-sync-scripts": "error",
+      "@next/next/no-title-in-document-head": "error",
+
+      // General rules
+      "no-console": "warn",
+      "prefer-const": "error",
+      "no-var": "error"
     }
   },
+
+  // Storybook files
   {
     files: [".storybook/**/*"],
     rules: {
       "@typescript-eslint/no-var-requires": "off",
     },
   },
+
+  // Test files
+  {
+    files: ["**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "no-console": "off"
+    }
+  }
 ];
 
 export default eslintConfig;
