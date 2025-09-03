@@ -55,10 +55,39 @@ jobs:
           command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq >/dev/null 2>&1; }
           SEVERITY="${{ github.event.inputs.severity }}"
           : "${SEVERITY:=moderate}"
-          if pnpm audit --audit-level "$SEVERITY" --json > audit-results.json 2>&1; then
-            echo "vulnerabilities=false" >> $GITHUB_OUTPUT
+
+          # Run audit and capture results
+          pnpm audit --audit-level "$SEVERITY" --json > audit-results.json 2>&1
+          AUDIT_EXIT_CODE=$?
+
+          # Check if there are actual vulnerabilities at/above threshold
+          if [ -f audit-results.json ]; then
+            # Use jq to check if there are vulnerabilities at or above the threshold
+            case "$SEVERITY" in
+              "critical")
+                VULN_COUNT=$(jq -r '.metadata.vulnerabilities.critical // 0' audit-results.json)
+                ;;
+              "high")
+                VULN_COUNT=$(jq -r '(.metadata.vulnerabilities.critical // 0) + (.metadata.vulnerabilities.high // 0)' audit-results.json)
+                ;;
+              "moderate")
+                VULN_COUNT=$(jq -r '(.metadata.vulnerabilities.critical // 0) + (.metadata.vulnerabilities.high // 0) + (.metadata.vulnerabilities.moderate // 0)' audit-results.json)
+                ;;
+              "low")
+                VULN_COUNT=$(jq -r '(.metadata.vulnerabilities.critical // 0) + (.metadata.vulnerabilities.high // 0) + (.metadata.vulnerabilities.moderate // 0) + (.metadata.vulnerabilities.low // 0)' audit-results.json)
+                ;;
+              *)
+                VULN_COUNT=0
+                ;;
+            esac
+            
+            if [ "$VULN_COUNT" -gt 0 ]; then
+              echo "vulnerabilities=true" >> $GITHUB_OUTPUT
+            else
+              echo "vulnerabilities=false" >> $GITHUB_OUTPUT
+            fi
           else
-            echo "vulnerabilities=true" >> $GITHUB_OUTPUT
+            echo "vulnerabilities=false" >> $GITHUB_OUTPUT
           fi
         continue-on-error: true
 
