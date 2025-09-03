@@ -35,8 +35,8 @@ jobs:
     if: |
       github.event.deployment_status.state == 'success' &&
       contains(github.event.deployment.environment, 'Preview') &&
-      contains(github.event.deployment.environment, 'leenders-coaching') &&
-      !contains(github.event.deployment.environment, 'studio')
+      !contains(github.event.deployment.environment, 'Production') &&
+      !contains(github.event.deployment.environment, 'main')
 
     steps:
       - name: '🔄 Checkout'
