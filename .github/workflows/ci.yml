@@ -108,7 +108,7 @@ jobs:
           package-name: 'studio'
           package-filter: 'studio-leenders-coaching-nl'
           package-path: 'packages/studio-leenders-coaching-nl'
-          build-command: 'build:studio'
+          build-command: 'build'
           verify-command: 'validate:schema'
           analyze-bundle: false
           package-build: false

@@ -87,7 +87,7 @@ jobs:
           package-name: ${{ matrix.package.name }}
           package-filter: ${{ matrix.package.filter }}
           package-path: ${{ matrix.package.path }}
-          build-command: 'build:${{ matrix.package.name }}'
+          build-command: 'build'
           verify-command: 'verify:build'
           analyze-bundle: ${{ matrix.package.name == 'frontend' }}
           analyze-command: 'analyze:bundle'

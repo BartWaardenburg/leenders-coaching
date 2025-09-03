@@ -311,7 +311,7 @@ jobs:
 
           # ----- Expose outputs for issue body -----
           {
-            echo "averages_md<<'EOF'"
+            echo "averages_md<<EOF"
             echo "| Category | Score |"
             echo "|---|---|"
             echo "| Performance | ${avg_perf} |"
@@ -322,25 +322,25 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
           {
-            echo "categories_table_md<<'EOF'"
+            echo "categories_table_md<<EOF"
             echo "${table}"
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
           {
-            echo "vitals_table_md<<'EOF'"
+            echo "vitals_table_md<<EOF"
             echo "${vitals_table}"
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
           {
-            echo "assertions_md<<'EOF'"
+            echo "assertions_md<<EOF"
             echo "${assert_md}"
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
           {
-            echo "env_md<<'EOF'"
+            echo "env_md<<EOF"
             echo "${env_md}"
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
