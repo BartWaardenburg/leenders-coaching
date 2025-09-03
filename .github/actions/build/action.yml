@@ -1,0 +1,136 @@
+name: 'Build Package'
+description: 'Builds packages with verification, bundle analysis, and optional artifact packaging'
+inputs:
+  package-name:
+    description: 'Name of the package to build'
+    required: true
+  package-filter:
+    description: 'pnpm filter for the package'
+    required: true
+  package-path:
+    description: 'Relative path to package directory (e.g. packages/leenders-coaching-nl)'
+    required: true
+  build-type:
+    description: 'Type of build to perform'
+    required: false
+    default: 'standard'
+  build-command:
+    description: 'Build command to run'
+    required: false
+    default: 'build'
+  verify-command:
+    description: 'Verification command to run after build'
+    required: false
+    default: 'verify:build'
+  analyze-bundle:
+    description: 'Whether to analyze bundle after build'
+    required: false
+    default: 'false'
+  analyze-command:
+    description: 'Bundle analysis command'
+    required: false
+    default: 'analyze:bundle'
+  package-build:
+    description: 'Whether to package build artifacts'
+    required: false
+    default: 'false'
+  package-command:
+    description: 'Package command to run'
+    required: false
+    default: 'package:build'
+  cache-nextjs:
+    description: 'Whether to cache Next.js build'
+    required: false
+    default: 'false'
+  working-directory:
+    description: 'Working directory for the job'
+    required: false
+    default: ''
+  node-version:
+    description: 'Node.js version to use'
+    required: false
+    default: '22'
+  pnpm-version:
+    description: 'pnpm version to use'
+    required: false
+    default: '10.15.1'
+  github-sha:
+    description: 'GitHub SHA for artifact naming'
+    required: false
+    default: ''
+  env:
+    description: 'Environment variables to set (JSON string)'
+    required: false
+    default: '{}'
+runs:
+  using: 'composite'
+  steps:
+    # Checkout should be done explicitly in the workflow before calling this action
+
+    - name: Setup environment
+      uses: ./.github/actions/setup
+      with:
+        node-version: ${{ inputs.node-version }}
+        pnpm-version: ${{ inputs.pnpm-version }}
+        working-directory: ${{ inputs.working-directory }}
+
+    - name: Set environment variables
+      shell: bash
+      env:
+        INPUT_ENV: ${{ inputs.env }}
+      run: |
+        if [[ "${INPUT_ENV}" != "{}" ]]; then
+          # Robustly handle any characters/newlines
+          node -e '
+            const env = JSON.parse(process.env.INPUT_ENV || "{}");
+            const fs = require("fs");
+            const out = Object.entries(env)
+              .map(([k,v]) => `${k}<<__EOF__\n${v}\n__EOF__`)
+              .join("\n") + "\n";
+            fs.appendFileSync(process.env.GITHUB_ENV, out);
+          '
+        fi
+
+    - name: Cache Next.js build
+      if: ${{ inputs.cache-nextjs == 'true' }}
+      uses: actions/cache@v4
+      with:
+        path: ${{ inputs.package-path }}/.next/cache
+        key: nextjs-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles(format('{0}/**/*.js', inputs.package-path), format('{0}/**/*.jsx', inputs.package-path), format('{0}/**/*.ts', inputs.package-path), format('{0}/**/*.tsx', inputs.package-path)) }}
+        restore-keys: |
+          nextjs-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
+          nextjs-${{ runner.os }}-
+
+    - name: Build package
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: pnpm --filter ${{ inputs.package-filter }} run ${{ inputs.build-command }}
+
+    - name: Analyze bundle size
+      if: ${{ inputs.analyze-bundle == 'true' }}
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: pnpm --filter ${{ inputs.package-filter }} run ${{ inputs.analyze-command }} || echo "Bundle analysis completed"
+
+    - name: Verify build output
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: pnpm --filter ${{ inputs.package-filter }} run ${{ inputs.verify-command }}
+
+    - name: Package build artifacts
+      if: ${{ inputs.package-build == 'true' }}
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        cd ${{ inputs.package-path }}
+        pnpm run ${{ inputs.package-command }}
+        mv ${{ inputs.package-name }}-build.tar.gz ../../${{ inputs.package-name }}-build.tar.gz 2>/dev/null || echo "No artifacts to move"
+
+    - name: Upload build artifacts
+      if: ${{ inputs.package-build == 'true' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.package-name }}-build-${{ inputs.github-sha }}
+        path: ${{ inputs.package-name }}-build.tar.gz
+        retention-days: 7
+        compression-level: 6

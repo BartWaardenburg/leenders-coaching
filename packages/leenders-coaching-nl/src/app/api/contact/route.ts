@@ -33,7 +33,7 @@ export async function POST(request: Request) {
       });
       return NextResponse.json(
         { error: 'Missing required fields' },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -49,11 +49,11 @@ export async function POST(request: Request) {
     if (notificationResult.error) {
       console.error(
         'Failed to send notification email:',
-        notificationResult.error,
+        notificationResult.error
       );
       return NextResponse.json(
         { error: 'Failed to send notification email' },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
     if (confirmationResult.error) {
       console.error(
         'Failed to send confirmation email:',
-        confirmationResult.error,
+        confirmationResult.error
       );
       // We still return success since the primary notification was sent
     }
@@ -83,7 +83,7 @@ export async function POST(request: Request) {
     console.error('Contact form error:', error);
     return NextResponse.json(
       { error: 'Failed to send message' },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

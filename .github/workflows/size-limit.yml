@@ -2,7 +2,7 @@ name: 'Bundle Size Analysis & Limits'
 
 on:
   pull_request:
-    branches: ['main', 'develop']
+    branches: ['main']
     paths:
       - 'packages/leenders-coaching-nl/src/**'
       - 'packages/leenders-coaching-nl/package.json'
@@ -19,15 +19,25 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  NODE_VERSION: '22'
-  PNPM_VERSION: '10.15.1'
-  PNPM_HOME: /home/runner/.local/share/pnpm
-
 jobs:
+  # Setup environment
+  setup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: 'Checkout code'
+        uses: actions/checkout@v5
+      - name: '⚙️ Setup Environment'
+        uses: ./.github/actions/setup
+        with:
+          node-version: '22'
+          pnpm-version: '10.15.1'
+          working-directory: ''
+
   bundle-analysis:
     name: '📊 Bundle Size Analysis & Limits'
     runs-on: ubuntu-latest
+    needs: setup
     timeout-minutes: 20
 
     env:
@@ -43,35 +53,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: '🔧 Setup Node.js'
-        uses: actions/setup-node@v4
+      - name: '⚙️ Setup Environment'
+        uses: ./.github/actions/setup
         with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: '📦 Setup pnpm'
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
-      - name: '🎯 Generate cache key'
-        id: cache-key
-        run: |
-          echo "key=pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}" >> $GITHUB_OUTPUT
-
-      - name: 'Get pnpm store path'
-        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
-
-      - name: '💾 Cache pnpm store'
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PNPM_STORE_PATH }}
-          key: ${{ steps.cache-key.outputs.key }}
-          restore-keys: |
-            pnpm-${{ runner.os }}-
-
-      - name: '📥 Install dependencies'
-        run: pnpm run ci:install:frozen
+          node-version: '22'
+          pnpm-version: '10.15.1'
+          working-directory: ''
 
       - name: '🏗️ Build frontend'
         run: pnpm --filter leenders-coaching-nl run build
@@ -95,9 +82,12 @@ jobs:
           ref: main
           path: baseline
 
-      - name: '📦 Install deps (baseline)'
-        working-directory: baseline
-        run: pnpm run ci:install:frozen
+      - name: '⚙️ Setup Environment (baseline)'
+        uses: ./.github/actions/setup
+        with:
+          node-version: '22'
+          pnpm-version: '10.15.1'
+          working-directory: baseline
 
       - name: '🏗️ Build frontend (baseline)'
         working-directory: baseline

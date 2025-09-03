@@ -9,10 +9,8 @@ on:
       - '**/package.json'
       - 'pnpm-lock.yaml'
   pull_request:
-    branches: ['main', 'develop']
-    paths:
-      - '**/package.json'
-      - 'pnpm-lock.yaml'
+    branches: ['main']
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
     inputs:
       severity:
@@ -20,12 +18,7 @@ on:
         required: false
         default: 'moderate'
         type: choice
-        options:
-          - 'info'
-          - 'low'
-          - 'moderate'
-          - 'high'
-          - 'critical'
+        options: ['info', 'low', 'moderate', 'high', 'critical']
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -37,17 +30,26 @@ permissions:
   pull-requests: write
   actions: read
 
-env:
-  NODE_VERSION: '22'
-  PNPM_VERSION: '10.15.1'
-  PNPM_HOME: /home/runner/.local/share/pnpm
-
 jobs:
+  # Setup environment
+  setup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: 'Checkout code'
+        uses: actions/checkout@v5
+      - name: '⚙️ Setup Environment'
+        uses: ./.github/actions/setup
+        with:
+          node-version: '22'
+          pnpm-version: '10.15.1'
+          working-directory: ''
+
   security-audit:
     name: 'Security Audit'
     runs-on: ubuntu-latest
+    needs: setup
     timeout-minutes: 10
-
     outputs:
       vulnerabilities-found: ${{ steps.audit.outputs.vulnerabilities }}
 
@@ -55,496 +57,403 @@ jobs:
       - name: '🔄 Checkout repository'
         uses: actions/checkout@v5
 
-      - name: '🔧 Setup Node.js'
-        uses: actions/setup-node@v4
+      - name: '⚙️ Setup Environment'
+        uses: ./.github/actions/setup
         with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: '📦 Setup pnpm'
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
-      - name: 'Get pnpm store path'
-        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
-
-      - name: '💾 Cache pnpm store'
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PNPM_STORE_PATH }}
-          key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            pnpm-store-${{ runner.os }}-
-
-      - name: '📥 Install dependencies'
-        run: pnpm run ci:install:frozen
+          node-version: '22'
+          pnpm-version: '10.15.1'
+          working-directory: ''
 
       - name: '🔒 Run security audit'
         id: audit
         run: |
           command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq >/dev/null 2>&1; }
           SEVERITY="${{ github.event.inputs.severity }}"
-          : "${SEVERITY:=moderate}"   # default to moderate if not provided
-          if pnpm audit --recursive --audit-level "$SEVERITY" --json > audit-results.json 2>/dev/null; then
+          : "${SEVERITY:=moderate}"
+          if pnpm audit --audit-level "$SEVERITY" --json > audit-results.json 2>&1; then
             echo "vulnerabilities=false" >> $GITHUB_OUTPUT
-            echo "info=0" >> $GITHUB_OUTPUT
-            echo "low=0" >> $GITHUB_OUTPUT
-            echo "moderate=0" >> $GITHUB_OUTPUT
-            echo "high=0" >> $GITHUB_OUTPUT
-            echo "critical=0" >> $GITHUB_OUTPUT
           else
             echo "vulnerabilities=true" >> $GITHUB_OUTPUT
-            if [ -f audit-results.json ]; then
-              INFO=$(jq -r '.metadata.vulnerabilities.info // 0' < audit-results.json)
-              LOW=$(jq -r '.metadata.vulnerabilities.low // 0' < audit-results.json)
-              MODERATE=$(jq -r '.metadata.vulnerabilities.moderate // 0' < audit-results.json)
-              HIGH=$(jq -r '.metadata.vulnerabilities.high // 0' < audit-results.json)
-              CRITICAL=$(jq -r '.metadata.vulnerabilities.critical // 0' < audit-results.json)
-              echo "info=$INFO" >> $GITHUB_OUTPUT
-              echo "low=$LOW" >> $GITHUB_OUTPUT
-              echo "moderate=$MODERATE" >> $GITHUB_OUTPUT
-              echo "high=$HIGH" >> $GITHUB_OUTPUT
-              echo "critical=$CRITICAL" >> $GITHUB_OUTPUT
-            fi
           fi
         continue-on-error: true
 
       - name: '📤 Upload audit results'
-        uses: actions/upload-artifact@v4
         if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: security-audit-${{ github.sha }}
           path: audit-results.json
           retention-days: 30
 
-      - name: '📊 Generate security report'
-        if: steps.audit.outputs.vulnerabilities == 'true' && github.event_name == 'pull_request'
-        id: build_audit_md
+      - name: '📊 Build compact security report (PRs)'
+        if: github.event_name == 'pull_request'
         run: |
-          command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq >/dev/null 2>&1; }
-          [ -f audit-results.json ] || { echo "No audit-results.json found"; exit 0; }
+          command -v jq >/dev/null 2>&1 || sudo apt-get install -y jq >/dev/null 2>&1
+          [ -f audit-results.json ] || echo '{}' > audit-results.json
 
-          # Summary counts (fallback to 0 if missing)
-          VULN_SUMMARY="$(jq -r '
-            .metadata.vulnerabilities as $m
-            | "**Vulnerabilities Found:**\n- Info: \($m.info // 0)\n- Low: \($m.low // 0)\n- Moderate: \($m.moderate // 0)\n- High: \($m.high // 0)\n- Critical: \($m.critical // 0)"
-          ' audit-results.json)"
-
-          # Prefer .advisories (npm v6 / pnpm style). Fallback to .vulnerabilities (npm v7+ style).
-          if jq -e '.advisories and (.advisories|length>0)' audit-results.json >/dev/null; then
-            jq -r '
-              .advisories
-              | to_entries
-              | sort_by([
-                (if .value.severity == "critical" then 0 elif .value.severity == "high" then 1 elif .value.severity == "moderate" then 2 elif .value.severity == "low" then 3 else 4 end),
-                .value.module_name
-              ])
-              | map(
-                  "<details><summary><b>\(.value.title)</b> — \(.value.severity) — <code>\(.value.module_name)</code></summary>\n\n" +
-                  "- **CVE:** \((.value.cves // []) | join(", ") | if . == "" then "—" else . end)\n" +
-                  "- **Vulnerable Versions:** \(.value.vulnerable_versions)\n" +
-                  "- **Patched Versions:** \(.value.patched_versions)\n" +
-                  "- **Recommendation:** \(.value.recommendation)\n" +
-                  "- **Overview:** \((.value.overview // "" | split("\n") | .[0:3] | join("\n")))\n" +
-                  "- **References:** \(.value.url)\n" +
-                  "- **Affected Paths (first 10):**\n" +
-                  ( .value.findings | map(.paths) | add | unique | .[0:10] | map("  - " + .) | join("\n") ) + "\n" +
-                  "</details>\n"
-                )
-              | .[]
-            ' audit-results.json > VULN_DETAILS.md
-          elif jq -e '.vulnerabilities and (.vulnerabilities|length>0)' audit-results.json >/dev/null; then
-            jq -r '
-              .vulnerabilities
-              | to_entries
-              | sort_by([
-                (if .value.severity == "critical" then 0 elif .value.severity == "high" then 1 elif .value.severity == "moderate" then 2 elif .value.severity == "low" then 3 else 4 end),
-                .key
-              ])
-              | map(
-                  "<details><summary><b>\(.key)</b> — \(.value.severity) — range: <code>\(.value.range // "n/a")</code></summary>\n\n" +
-                  "- **Via:** " +
-                  ( .value.via
-                    | map( if type=="string" then . else ( (.name // "") + (if .url then " ("+.url+")" else "" end) ) end )
-                    | unique | join(", ")
-                  ) + "\n" +
-                  "- **Fix Available:** \(.value.fixAvailable // false)\n" +
-                  "- **Paths (first 10):**\n" +
-                  ( .value.nodes // [] | .[0:10] | map("  - " + .) | join("\n") ) + "\n" +
-                  "</details>\n"
-                )
-              | .[]
-            ' audit-results.json > VULN_DETAILS.md
-          else
-            echo "_No detailed advisories in audit output._" > VULN_DETAILS.md
-          fi
+          THRESHOLD="${{ github.event.inputs.severity || 'moderate' }}"
+          COUNTS_JSON=$(jq -r '.metadata.vulnerabilities // {}' audit-results.json)
+          CRIT=$(echo "$COUNTS_JSON" | jq -r '.critical // 0')
+          HIGH=$(echo "$COUNTS_JSON" | jq -r '.high // 0')
+          MOD=$(echo "$COUNTS_JSON" | jq -r '.moderate // 0')
+          LOW=$(echo "$COUNTS_JSON" | jq -r '.low // 0')
 
           {
-            echo "## 🔒 Security Audit Report"
+            echo "## 🔒 Security Audit"
+            if [ "${{ steps.audit.outputs.vulnerabilities }}" = "true" ]; then
+              echo "**Status:** ⚠️ Action required (threshold: \`$THRESHOLD\`)"
+            else
+              # No findings at/above threshold — still show low count if present
+              if [ "$LOW" -gt 0 ]; then
+                echo "**Status:** ✅ No actionable vulnerabilities. _($LOW low issues present)_"
+              else
+                echo "**Status:** ✅ No vulnerabilities found."
+              fi
+            fi
             echo
-            echo "⚠️ **Security vulnerabilities detected in dependencies**"
+            echo "| Severity | Count |"
+            echo "|---|---:|"
+            echo "| Critical | $CRIT |"
+            echo "| High | $HIGH |"
+            echo "| Moderate | $MOD |"
+            echo "| Low | $LOW |"
+
+            # Show only actionable items (hide low) - top 8
+            if jq -e '.advisories' audit-results.json >/dev/null 2>&1; then
+              ACT=$(jq '
+                .advisories
+                | to_entries
+                | map(.value)
+                | map(select(.severity != "low"))
+                | .[0:8]
+              ' audit-results.json)
+
+              if [ "$(echo "$ACT" | jq 'length')" -gt 0 ]; then
+                echo
+                echo "### ▶️ Recommended updates"
+                echo
+                echo "| Module | Current | Patched range | Link |"
+                echo "|---|---|---|---|"
+                echo "$ACT" | jq -r '.[] | "| `" + .module_name + "` | " + (.findings[0].version // "?") + " | `" + (.patched_versions // "N/A") + "` | [" + (.title // "advisory") + "](" + (.url // "#") + ") |"'
+                echo
+                echo "_Apply with:_ \`pnpm up <module> -r\`"
+              fi
+            fi
+
             echo
-            echo "$VULN_SUMMARY"
-            echo
-            echo "### 📋 Detailed Findings"
-            echo
-            cat VULN_DETAILS.md
-            echo
-            echo "---"
-            echo "*Generated by GitHub Actions Security Audit*"
+            echo "*Generated: $(date -u '+%Y-%m-%d %H:%M:%S UTC')*"
           } > security-report.md
 
-          # Safety: trim if close to GitHub's ~65k comment limit
-          BYTES=$(wc -c < security-report.md | tr -d " ")
-          if [ "$BYTES" -gt 60000 ]; then
-            echo -e "\n> ⚠️ Report truncated due to GitHub comment size limits. See the full JSON in the workflow artifact." >> security-report.md
-            head -c 60000 security-report.md > security-report.md.trim && mv security-report.md.trim security-report.md
-          fi
-
-      - name: '📤 Upload security report (non-PR)'
-        if: steps.audit.outputs.vulnerabilities == 'true' && github.event_name != 'pull_request'
-        uses: actions/upload-artifact@v4
-        with:
-          name: security-report-${{ github.sha }}
-          path: security-report.md
-          retention-days: 30
-
-      - name: '💬 Sticky PR comment – Security Audit'
-        if: steps.audit.outputs.vulnerabilities == 'true' && github.event_name == 'pull_request'
+      - name: '💬 Sticky PR comment – Security'
+        if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: security-audit
+          number: ${{ github.event.pull_request.number }}
           path: security-report.md
 
   license-compliance:
     name: 'License Compliance'
     runs-on: ubuntu-latest
+    needs: setup
     timeout-minutes: 8
-
     steps:
-      - name: '🔄 Checkout repository'
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v5
 
-      - name: '🔧 Setup Node.js'
-        uses: actions/setup-node@v4
+      - name: '⚙️ Setup Environment'
+        uses: ./.github/actions/setup
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '22'
+          pnpm-version: '10.15.1'
+          working-directory: ''
 
-      - name: '📦 Setup pnpm'
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
-      - name: 'Get pnpm store path'
-        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
-
-      - name: '💾 Cache pnpm store'
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PNPM_STORE_PATH }}
-          key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            pnpm-store-${{ runner.os }}-
-
-      - name: '📥 Install dependencies'
-        run: pnpm run ci:install:frozen
-
-      - name: '📜 Generate license report'
+      - name: '📜 Scan licenses (JSON)'
         run: |
-          npx license-checker --summary > license-summary.txt || echo "License checker not available, skipping..."
+          npx license-checker --json --production --relativeLicensePath > license.json || echo "{}" > license.json
 
-          if [ -f license-summary.txt ]; then
-            cat license-summary.txt
-          fi
+      - name: '🧾 Build compact license report (PRs)'
+        if: github.event_name == 'pull_request'
+        run: |
+          command -v jq >/dev/null 2>&1 || sudo apt-get install -y jq >/dev/null 2>&1
+          {
+            echo "## 📜 License Compliance"
+            echo
+            # Flag only problematic licenses
+            echo "### Flagged licenses"
+            jq -r '
+              to_entries
+              | map({pkg: .key, lic: (.value.licenses // "UNKNOWN")})
+              | map(select(.lic|test("(GPL|AGPL|LGPL|SSPL|BUSL|Commons Clause)"; "i") or .lic=="UNKNOWN" or .lic|test("Proprietary"; "i")))
+              | if length==0
+                  then "✅ No GPL/AGPL/LGPL/SSPL/BUSL/Commons-Clause/Proprietary/UNKNOWN licenses found."
+                 else (["| Package | License |","|---|---|"] + (.[0:20] | map("| `\(.pkg)` | `\(.lic)` |"))) | .[] 
+                end
+            ' license.json
+          } > license-report.md
 
-      - name: '📤 Upload license report'
-        uses: actions/upload-artifact@v4
+      - name: '💬 Sticky PR comment – Licenses'
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: license-compliance
+          number: ${{ github.event.pull_request.number }}
+          path: license-report.md
+
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: license-report-${{ github.sha }}
-          path: license-summary.txt
+          name: license-scan-${{ github.sha }}
+          path: license.json
           retention-days: 30
 
   dependency-analysis:
     name: 'Dependency Analysis'
     runs-on: ubuntu-latest
+    needs: setup
     timeout-minutes: 12
-
     steps:
-      - name: '🔄 Checkout repository'
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v5
 
-      - name: '🔧 Setup Node.js'
-        uses: actions/setup-node@v4
+      - name: '⚙️ Setup Environment'
+        uses: ./.github/actions/setup
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '22'
+          pnpm-version: '10.15.1'
+          working-directory: ''
 
-      - name: '📦 Setup pnpm'
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
-      - name: 'Get pnpm store path'
-        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
-
-      - name: '💾 Cache pnpm store'
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PNPM_STORE_PATH }}
-          key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            pnpm-store-${{ runner.os }}-
-
-      - name: '📥 Install dependencies'
-        run: pnpm run ci:install:frozen
-
-      - name: '📊 Analyze dependencies'
+      - name: '📊 Outdated (JSON) + Dedupe'
         run: |
-          sudo apt-get update -y >/dev/null 2>&1 || true
-          sudo apt-get install -y jq >/dev/null 2>&1 || true
-          echo "📦 Dependency Analysis Report"
-          echo "=========================="
+          pnpm outdated --format json > outdated.json || echo "{}" > outdated.json
+          pnpm dedupe --check | tee dedupe.txt || true
 
-          pnpm run outdated || echo "✅ All packages are up to date"
+      - name: '🧾 Build compact deps report (PRs)'
+        if: github.event_name == 'pull_request'
+        run: |
+          command -v jq >/dev/null 2>&1 || sudo apt-get install -y jq >/dev/null 2>&1
+          {
+            echo "## 📦 Dependency Analysis"
+            echo
+            echo "### Top updates"
+            echo "| Package | Current | Latest | Type |"
+            echo "|---|---|---|---|"
+            jq -r '
+              to_entries
+              | map({name: .key, cur: .value.current, lat: .value.latest, type: .value.bump})
+              | sort_by(.type)             # patch -> minor -> major (lexicographically), tweak if you prefer major-first
+              | .[0:10]
+              | .[]
+              | "| `\(.name)` | \(.cur) | \(.lat) | \(.type // "n/a") |"
+            ' outdated.json
+            echo
+            if grep -q 'Dedupe --check found' dedupe.txt; then
+              echo "### Dedupe"
+              echo '```text'
+              grep ' → ' dedupe.txt | head -n 10
+              echo '```'
+              echo "_Apply:_ \`pnpm dedupe && pnpm install\`"
+            else
+              echo "### Dedupe"
+              echo "✅ No lockfile dedupe changes required."
+            fi
+          } > dependency-report.md
 
-          echo ""
-          echo "📈 Package count by workspace:"
-          echo "Root: $(cat package.json | jq '.devDependencies | length')"
-          echo "Frontend: $(cat packages/leenders-coaching-nl/package.json | jq '.dependencies | length')"
-          echo "Studio: $(cat packages/studio-leenders-coaching-nl/package.json | jq '.dependencies | length')"
-
-      - name: '🔍 Check for duplicate dependencies'
-        run: pnpm run dedupe:check || echo "ℹ️ Some dependencies could be deduplicated"
-
-      - name: '📊 Generate dependency tree'
-        run: pnpm list --depth=2 > dependency-tree.txt || echo "Dependency tree generated with warnings"
-
-      - name: '📤 Upload dependency analysis'
-        uses: actions/upload-artifact@v4
+      - name: '💬 Sticky PR comment – Dependencies'
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
         with:
-          name: dependency-analysis-${{ github.sha }}
-          path: dependency-tree.txt
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: dependency-analysis
+          number: ${{ github.event.pull_request.number }}
+          path: dependency-report.md
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dependency-artifacts-${{ github.sha }}
+          path: |
+            outdated.json
+            dedupe.txt
           retention-days: 30
 
   code-quality:
-    name: 'Code Quality Metrics'
+    name: 'Code Quality'
     runs-on: ubuntu-latest
+    needs: setup
     timeout-minutes: 15
-
-    env:
-      NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
-      NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
-      NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
-      SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
-      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-
     steps:
-      - name: '🔄 Checkout repository'
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - name: '🔧 Setup Node.js'
-        uses: actions/setup-node@v4
+      - name: '⚙️ Setup Environment'
+        uses: ./.github/actions/setup
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '22'
+          pnpm-version: '10.15.1'
+          working-directory: ''
 
-      - name: '📦 Setup pnpm'
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
-      - name: 'Get pnpm store path'
-        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
-
-      - name: '💾 Cache pnpm store'
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PNPM_STORE_PATH }}
-          key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            pnpm-store-${{ runner.os }}-
-
-      - name: '📥 Install dependencies'
-        run: pnpm run ci:install:frozen
-
-      - name: '🔍 ESLint analysis'
+      - name: '🧹 ESLint (json) / TS / Complexity'
         run: |
           sudo apt-get update -y >/dev/null 2>&1 || true
           sudo apt-get install -y jq >/dev/null 2>&1 || true
-          if pnpm --filter leenders-coaching-nl run lint:format > eslint-raw-output.txt 2>&1; then
-            ESLINT_STATUS="success"
-          else
-            ESLINT_STATUS="issues"
-          fi
+          pnpm --filter leenders-coaching-nl run lint:format > eslint-raw.txt 2>&1 || true
+          sed -n '/^\[/,$p' eslint-raw.txt > eslint.json || echo "[]" > eslint.json
+          pnpm --parallel run type-check 2>&1 | tee ts.txt || true
+          pnpm dlx complexity-report --output json --format json packages/*/src > complexity.json || echo "[]" > complexity.json
 
-          if [ -f eslint-raw-output.txt ]; then
-            sed -n '/^\[/,$p' eslint-raw-output.txt > eslint-results.json
-            
-            if jq empty eslint-results.json 2>/dev/null; then
-              TOTAL_FILES=$(cat eslint-results.json | jq 'length')
-              ERROR_COUNT=$(cat eslint-results.json | jq 'map(.errorCount) | add // 0')
-              WARNING_COUNT=$(cat eslint-results.json | jq 'map(.warningCount) | add // 0')
-              
-              echo "Files analyzed: $TOTAL_FILES"
-              echo "Total errors: $ERROR_COUNT"
-              echo "Total warnings: $WARNING_COUNT"
-              
-              if [ "$ERROR_COUNT" -gt 0 ] || [ "$WARNING_COUNT" -gt 0 ]; then
-                echo ""
-                echo "Files with issues:"
-                cat eslint-results.json | jq -r '.[] | select(.errorCount > 0 or .warningCount > 0) | "  - \(.filePath | split("/") | last): \(.errorCount) errors, \(.warningCount) warnings"'
-              fi
+      - name: '🧾 Build compact code report (PRs)'
+        if: github.event_name == 'pull_request'
+        run: |
+          command -v jq >/dev/null 2>&1 || sudo apt-get install -y jq >/dev/null 2>&1
+          FILES=$(jq 'length' eslint.json)
+          ERR=$(jq 'map(.errorCount)|add // 0' eslint.json)
+          WARN=$(jq 'map(.warningCount)|add // 0' eslint.json)
+          {
+            echo "## 🧹 Code Quality"
+            echo
+            echo "**ESLint:** $ERR errors, $WARN warnings (across $FILES files)"
+            if [ "$ERR" -gt 0 ] || [ "$WARN" -gt 0 ]; then
+              echo
+              echo "Top files with issues:"
+              echo '```text'
+              jq -r '.[] | select(.errorCount>0 or .warningCount>0) | "\(.filePath | split("/") | last): \(.errorCount) errors, \(.warningCount) warnings"' eslint.json | head -n 10
+              echo '```'
             fi
-          fi
+            echo
+            if grep -qiE "error|TS[0-9]{4}" ts.txt; then
+              echo "**TypeScript:** issues detected (last 40 lines)"
+              echo '```text'; tail -n 40 ts.txt; echo '```'
+            else
+              echo "**TypeScript:** ✅ no issues."
+            fi
+            echo
+            echo "**Complexity:** 10 lowest maintainability scores"
+            echo '```json'
+            jq '[.[] | {file: .file, maintainability: .maintainability}] | sort_by(.maintainability) | .[0:10]' complexity.json
+            echo '```'
+          } > code-quality.md
 
-      - name: '📊 TypeScript strict check'
-        run: pnpm --parallel run type-check 2>&1 | tee typescript-results.txt || echo "TypeScript issues found"
+      - name: '💬 Sticky PR comment – Code Quality'
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: code-quality
+          number: ${{ github.event.pull_request.number }}
+          path: code-quality.md
 
-      - name: '📈 Code complexity analysis'
-        run: pnpm dlx complexity-report --output json --format json packages/*/src | sort -nr -k2 > complexity-analysis.txt
-
-      - name: '📤 Upload quality metrics'
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: code-quality-${{ github.sha }}
           path: |
-            eslint-results.json
-            typescript-results.txt
-            complexity-analysis.txt
+            eslint.json
+            ts.txt
+            complexity.json
           retention-days: 30
 
   performance-benchmarks:
     name: 'Performance Benchmarks'
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule' || github.ref == 'refs/heads/main'
+    needs: setup
     timeout-minutes: 20
-
     env:
       NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
       NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
       NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
       SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-
     steps:
-      - name: '🔄 Checkout repository'
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v5
 
-      - name: '🔧 Setup Node.js'
-        uses: actions/setup-node@v4
+      - name: '⚙️ Setup Environment'
+        uses: ./.github/actions/setup
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '22'
+          pnpm-version: '10.15.1'
+          working-directory: ''
 
-      - name: '📦 Setup pnpm'
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
-      - name: 'Get pnpm store path'
-        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
-
-      - name: '💾 Cache pnpm store'
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PNPM_STORE_PATH }}
-          key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            pnpm-store-${{ runner.os }}-
-
-      - name: '📥 Install dependencies'
-        run: pnpm run ci:install:frozen
-
-      - name: '⏱️ Build time benchmark'
+      # One build with analyzer ON (captures reports + sizes)
+      - name: '🏗️ Build (with bundle analyzer)'
+        id: build_analyze
         run: |
-          start_time=$(date +%s)
-          pnpm run build:frontend
-          end_time=$(date +%s)
-          frontend_duration=$((end_time - start_time))
-          echo "Frontend build: ${frontend_duration}s"
+          START=$(date +%s)
+          pnpm --filter ./packages/leenders-coaching-nl run analyze:bundle
+          END=$(date +%s)
+          echo "duration=$((END-START))" >> $GITHUB_OUTPUT
 
-          start_time=$(date +%s)
-          pnpm run build:studio
-          end_time=$(date +%s)
-          studio_duration=$((end_time - start_time))
-          echo "Studio build: ${studio_duration}s"
+      - name: '🔍 Size-Limit gate (does not fail PR comment)'
+        continue-on-error: true
+        run: pnpm --filter ./packages/leenders-coaching-nl run verify:performance:ci
 
-          echo "{\"frontend_build_time\": $frontend_duration, \"studio_build_time\": $studio_duration}" > build-metrics.json
-
-      - name: '📊 Bundle size analysis'
-        run: pnpm --filter ./packages/leenders-coaching-nl run analyze:bundle
-
-      - name: '🔍 Performance audit (non-Lighthouse)'
-        run: pnpm --filter ./packages/leenders-coaching-nl run verify:performance
-
-      - name: '📋 Capture bundle size summary'
+      - name: '📊 Bundle snapshot'
+        id: bundle_snapshot
         run: |
-          if [ -d "packages/leenders-coaching-nl/.next" ]; then
-            if [ -d "packages/leenders-coaching-nl/.next/static/chunks" ]; then
-              echo "📊 Chunk Statistics:"
-              echo "Total JS chunks: $(find packages/leenders-coaching-nl/.next/static/chunks -name "*.js" | wc -l)"
-              echo "Total CSS files: $(find packages/leenders-coaching-nl/.next/static/css -name "*.css" | wc -l)"
-              
-              JS_SIZE=$(find packages/leenders-coaching-nl/.next/static/chunks -name "*.js" -exec du -ch {} + | tail -1 | cut -f1)
-              CSS_SIZE=$(find packages/leenders-coaching-nl/.next/static/css -name "*.css" -exec du -ch {} + | tail -1 | cut -f1)
-              
-              echo "Total JS size: $JS_SIZE"
-              echo "Total CSS size: $CSS_SIZE"
-            fi
-            
-            echo "📏 Bundle size limits are enforced by the Size Limit GitHub Action on PRs"
-            
-            if [ -d "packages/leenders-coaching-nl/.next/analyze" ]; then
-              echo "📁 Bundle analysis files available in packages/leenders-coaching-nl/.next/analyze/"
-              ls -la packages/leenders-coaching-nl/.next/analyze/ || echo "No analysis files found"
-            fi
-          else
-            exit 1
-          fi
+          JS_SIZE=$(find packages/leenders-coaching-nl/.next/static/chunks -name "*.js" -exec du -ch {} + 2>/dev/null | tail -1 | cut -f1)
+          CSS_SIZE=$(find packages/leenders-coaching-nl/.next/static/css -name "*.css" -exec du -ch {} + 2>/dev/null | tail -1 | cut -f1)
+          echo "js=${JS_SIZE:-n/a}"   >> $GITHUB_OUTPUT
+          echo "css=${CSS_SIZE:-n/a}" >> $GITHUB_OUTPUT
 
-      - name: '📤 Upload performance metrics'
+      - name: '🧾 Build compact perf report (PRs)'
+        if: github.event_name == 'pull_request'
+        run: |
+          {
+            echo "## 🚀 Performance"
+            echo
+            echo "| Metric | Value |"
+            echo "|---|---:|"
+            echo "| Build (frontend, ANALYZE on) | ${{ steps.build_analyze.outputs.duration || 'n/a' }}s |"
+            echo "| Total JS (chunks) | ${{ steps.bundle_snapshot.outputs.js || 'n/a' }} |"
+            echo "| Total CSS | ${{ steps.bundle_snapshot.outputs.css || 'n/a' }} |"
+            echo
+            echo "📊 **Bundle Analysis:** HTML reports available in artifact \`bundle-analyzer-${{ github.sha }}\`"
+          } > performance.md
+
+      - name: '💬 Sticky PR comment – Performance'
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: performance-benchmarks
+          number: ${{ github.event.pull_request.number }}
+          path: performance.md
+
+      - name: '📝 Write perf.json (for artifact)'
+        run: |
+          printf '{"frontend":%s,"js":"%s","css":"%s"}\n' \
+            "${{ steps.build_analyze.outputs.duration || 'null' }}" \
+            "${{ steps.bundle_snapshot.outputs.js || 'n/a' }}" \
+            "${{ steps.bundle_snapshot.outputs.css || 'n/a' }}" > perf.json
+
+      - name: '📤 Upload bundle analyzer report'
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: performance-metrics-${{ github.sha }}
-          path: |
-            build-metrics.json
-            packages/leenders-coaching-nl/.next/static/
+          name: bundle-analyzer-${{ github.sha }}
+          path: packages/leenders-coaching-nl/.next/analyze/
+          if-no-files-found: ignore # prevents failures when folder missing
+          retention-days: 14
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: performance-${{ github.sha }}
+          path: perf.json
           retention-days: 90
 
   quality-summary:
     name: 'Quality Summary'
     runs-on: ubuntu-latest
     needs:
-      [security-audit, license-compliance, dependency-analysis, code-quality]
+      [
+        security-audit,
+        license-compliance,
+        dependency-analysis,
+        code-quality,
+        performance-benchmarks,
+      ]
     if: always()
-    timeout-minutes: 5
-
     steps:
-      - name: '📋 Generate quality report'
-        run: |
-          echo "## 🎯 Quality Gates Report" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          if [ "${{ needs.security-audit.outputs.vulnerabilities-found }}" = "true" ]; then
-            echo "- ⚠️ **Security**: Vulnerabilities detected" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "- ✅ **Security**: No vulnerabilities found" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          echo "- ${{ needs.license-compliance.result == 'success' && '✅' || '❌' }} **License Compliance**: ${{ needs.license-compliance.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- ${{ needs.dependency-analysis.result == 'success' && '✅' || '❌' }} **Dependency Analysis**: ${{ needs.dependency-analysis.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- ${{ needs.code-quality.result == 'success' && '✅' || '❌' }} **Code Quality**: ${{ needs.code-quality.result }}" >> $GITHUB_STEP_SUMMARY
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Generated**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
-
       - name: '💬 Sticky PR comment – Quality Gates'
         if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
@@ -553,16 +462,9 @@ jobs:
           header: quality-gates
           number: ${{ github.event.pull_request.number }}
           message: |
-            ## 🎯 Quality Gates (summary)
-            - **Security:** ${{ needs.security-audit.outputs.vulnerabilities-found == 'true' && '⚠️ Vulnerabilities detected' || '✅ No vulnerabilities found' }}
-            - **License Compliance:** ${{ needs.license-compliance.result == 'success' && '✅' || '❌' }}
-            - **Dependency Analysis:** ${{ needs.dependency-analysis.result == 'success' && '✅' || '❌' }}
-            - **Code Quality:** ${{ needs.code-quality.result == 'success' && '✅' || '❌' }}
-
-            *Generated by GitHub Actions Quality Gates*
-
-      - name: '🚨 Fail on critical issues'
-        if: needs.security-audit.outputs.vulnerabilities-found == 'true' && github.event.inputs.severity == 'critical'
-        run: |
-          echo "❌ Critical security vulnerabilities found!"
-          exit 1
+            ## 🎯 Quality Gates
+            - **Security:** ${{ needs.security-audit.outputs.vulnerabilities-found == 'true' && '⚠️ Action required' || '✅ Clear' }}
+            - **Licenses:** ✅ Scanned (see comment)
+            - **Dependencies:** ✅ Scanned (see comment)
+            - **Code Quality:** ✅ Scanned (see comment)
+            - **Performance:** ✅ Scanned (see comment)

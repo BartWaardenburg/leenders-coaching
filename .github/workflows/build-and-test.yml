@@ -2,23 +2,22 @@ name: 'Build & Test Pipeline'
 
 on:
   push:
-    branches: ['main', 'develop']
+    branches: ['main']
     paths-ignore: ['**.md', 'docs/**']
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
-env:
-  NODE_VERSION: '22'
-  PNPM_VERSION: '10.15.1'
-  PNPM_HOME: /home/runner/.local/share/pnpm
-
 jobs:
   test-and-coverage:
     name: 'Test & Coverage Analysis'
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
 
     env:
       NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
@@ -27,42 +26,9 @@ jobs:
       SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
-    outputs:
-      cache-key: ${{ steps.cache-key.outputs.key }}
-
     steps:
-      - name: '🔄 Checkout repository'
+      - name: 'Checkout code'
         uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
-      - name: '🔧 Setup Node.js'
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: '📦 Setup pnpm'
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
-      - name: '🎯 Generate cache key'
-        id: cache-key
-        run: |
-          echo "key=pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}" >> $GITHUB_OUTPUT
-
-      - name: 'Get pnpm store path'
-        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
-
-      - name: '💾 Cache pnpm store'
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PNPM_STORE_PATH }}
-          key: ${{ steps.cache-key.outputs.key }}
-          restore-keys: |
-            pnpm-${{ runner.os }}-
-
       - name: '🗂️ Cache Next.js build'
         uses: actions/cache@v4
         with:
@@ -72,51 +38,27 @@ jobs:
             nextjs-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
             nextjs-${{ runner.os }}-
 
-      - name: '📥 Install dependencies'
-        run: pnpm run ci:install:frozen
-
-      - name: '🔒 Audit dependencies'
-        run: pnpm run ci:security
-        continue-on-error: true
-
-      - name: '🔍 Quality checks'
-        run: pnpm run ci:quality
-
-      - name: '🧪 Run comprehensive tests'
-        run: pnpm run ci:test
-
-      - name: '📊 Upload coverage to Codecov'
-        uses: codecov/codecov-action@v5
+      - name: '🧪 Run Tests & Coverage'
+        uses: ./.github/actions/test
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./packages/leenders-coaching-nl/coverage
-          fail_ci_if_error: false
-          verbose: true
-          flags: frontend
-
-      - name: '📤 Upload test results'
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-results-${{ github.sha }}
-          path: |
-            packages/leenders-coaching-nl/coverage/
-            packages/leenders-coaching-nl/test-results/
-          retention-days: 30
+          test-command: ci:test
+          quality-command: ci:quality
+          security-command: ci:security
+          coverage-upload: true
+          working-directory: ''
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}
+          github-sha: ${{ github.sha }}
+          env: |
+            {
+              "NEXT_PUBLIC_SANITY_PROJECT_ID": "${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}",
+              "NEXT_PUBLIC_SANITY_DATASET": "${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}",
+              "NEXT_PUBLIC_SANITY_API_VERSION": "${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}",
+              "SANITY_API_TOKEN": "${{ secrets.SANITY_API_TOKEN }}",
+              "RESEND_API_KEY": "${{ secrets.RESEND_API_KEY }}"
+            }
 
   production-build:
     name: 'Production Build'
-    runs-on: ubuntu-latest
-    needs: test-and-coverage
-    timeout-minutes: 15
-
-    env:
-      NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
-      NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
-      NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
-      SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
-      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-
     strategy:
       matrix:
         package:
@@ -133,106 +75,53 @@ jobs:
             },
           ]
 
+    runs-on: ubuntu-latest
+    needs: [test-and-coverage]
+    timeout-minutes: 15
     steps:
-      - name: '🔄 Checkout repository'
+      - name: 'Checkout code'
         uses: actions/checkout@v5
-
-      - name: '🔧 Setup Node.js'
-        uses: actions/setup-node@v4
+      - name: '🏗️ Build Package'
+        uses: ./.github/actions/build
         with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: '📦 Setup pnpm'
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
-      - name: 'Get pnpm store path'
-        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
-
-      - name: '💾 Restore pnpm cache'
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PNPM_STORE_PATH }}
-          key: ${{ needs.test-and-coverage.outputs.cache-key }}
-          restore-keys: |
-            pnpm-${{ runner.os }}-
-
-      - name: '🗂️ Cache Next.js build'
-        if: matrix.package.name == 'frontend'
-        uses: actions/cache@v4
-        with:
-          path: packages/leenders-coaching-nl/.next/cache
-          key: nextjs-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('packages/leenders-coaching-nl/**/*.{js,jsx,ts,tsx}') }}
-          restore-keys: |
-            nextjs-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
-            nextjs-${{ runner.os }}-
-
-      - name: '📥 Install dependencies'
-        run: pnpm run ci:install:frozen
-
-      - name: '🏗️ Build ${{ matrix.package.name }}'
-        run: pnpm run build:${{ matrix.package.name }}
-
-      - name: '📈 Analyze bundle size'
-        if: matrix.package.name == 'frontend'
-        run: pnpm --filter ${{ matrix.package.filter }} run analyze:bundle || echo "Bundle analysis completed"
-
-      - name: '✅ Verify build output'
-        run: pnpm --filter ${{ matrix.package.filter }} run verify:build
-
-      - name: '📦 Package build artifacts'
-        run: |
-          cd packages/${{ matrix.package.filter }}
-          pnpm run package:build
-          mv ${{ matrix.package.name }}-build.tar.gz ../../${{ matrix.package.name }}-build.tar.gz 2>/dev/null || echo "No artifacts to move"
-
-      - name: '📤 Upload build artifacts'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.package.name }}-build-${{ github.sha }}
-          path: ${{ matrix.package.name }}-build.tar.gz
-          retention-days: 7
-          compression-level: 6
+          package-name: ${{ matrix.package.name }}
+          package-filter: ${{ matrix.package.filter }}
+          package-path: ${{ matrix.package.path }}
+          build-command: 'build:${{ matrix.package.name }}'
+          verify-command: 'verify:build'
+          analyze-bundle: ${{ matrix.package.name == 'frontend' }}
+          analyze-command: 'analyze:bundle'
+          package-build: ${{ matrix.package.name == 'frontend' }}
+          package-command: 'package:build'
+          cache-nextjs: ${{ matrix.package.name == 'frontend' }}
+          working-directory: ''
+          github-sha: ${{ github.sha }}
+          env: |
+            {
+              "NEXT_PUBLIC_SANITY_PROJECT_ID": "${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}",
+              "NEXT_PUBLIC_SANITY_DATASET": "${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}",
+              "NEXT_PUBLIC_SANITY_API_VERSION": "${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}",
+              "SANITY_API_TOKEN": "${{ secrets.SANITY_API_TOKEN }}",
+              "RESEND_API_KEY": "${{ secrets.RESEND_API_KEY }}"
+            }
 
   content-validation:
     name: 'Content & Schema Validation'
     runs-on: ubuntu-latest
-    needs: test-and-coverage
     timeout-minutes: 10
 
     env:
       SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
 
     steps:
-      - name: '🔄 Checkout repository'
+      - name: 'Checkout code'
         uses: actions/checkout@v5
-
-      - name: '🔧 Setup Node.js'
-        uses: actions/setup-node@v4
+      - name: '⚙️ Setup Environment'
+        uses: ./.github/actions/setup
         with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: '📦 Setup pnpm'
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
-      - name: 'Get pnpm store path'
-        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
-
-      - name: '💾 Restore pnpm cache'
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PNPM_STORE_PATH }}
-          key: ${{ needs.test-and-coverage.outputs.cache-key }}
-          restore-keys: |
-            pnpm-${{ runner.os }}-
-
-      - name: '📥 Install dependencies'
-        run: pnpm run ci:install:frozen
+          node-version: '22'
+          pnpm-version: '10.15.1'
+          working-directory: ''
 
       - name: '🔍 Extract and validate schema'
         run: pnpm --filter studio-leenders-coaching-nl run validate:schema
@@ -255,37 +144,18 @@ jobs:
   security-analysis:
     name: 'Security Analysis'
     runs-on: ubuntu-latest
-    needs: test-and-coverage
     timeout-minutes: 8
 
     steps:
       - name: '🔄 Checkout repository'
         uses: actions/checkout@v5
 
-      - name: '🔧 Setup Node.js'
-        uses: actions/setup-node@v4
+      - name: '⚙️ Setup Environment'
+        uses: ./.github/actions/setup
         with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: '📦 Setup pnpm'
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
-      - name: 'Get pnpm store path'
-        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
-
-      - name: '💾 Restore pnpm cache'
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PNPM_STORE_PATH }}
-          key: ${{ needs.test-and-coverage.outputs.cache-key }}
-          restore-keys: |
-            pnpm-${{ runner.os }}-
-
-      - name: '📥 Install dependencies'
-        run: pnpm run ci:install:frozen
+          node-version: '22'
+          pnpm-version: '10.15.1'
+          working-directory: ''
 
       - name: '🔒 Run security audit'
         run: pnpm run audit
