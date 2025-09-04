@@ -242,7 +242,7 @@ jobs:
             echo "<summary>📊 License Summary</summary>"
             echo
             echo "| License Type | Package Count | Compliance Status | Action Required |"
-            echo "|---|---|---|"
+            echo "|---|---|---|---|"
             echo "| MIT | 150+ | 🟢 Safe | None required |"
             echo "| Apache-2.0 | 20+ | 🟢 Safe | None required |"
             echo "| ISC | 15+ | 🟢 Safe | None required |"
@@ -359,8 +359,18 @@ jobs:
               echo "|---|---|---|---|"
               
               # Extract package information from dedupe output with better parsing
-              # Look for patterns that indicate deduplication opportunities
-              if grep -q "duplicate" dedupe.txt; then
+              # Look for patterns like "package@version → package@version" or similar
+              # First try to find actual package names that can be deduplicated
+              if grep -q "→" dedupe.txt; then
+                # Extract packages that have version changes (most common case)
+                grep -E "→" dedupe.txt | sed 's/.*→ //' | grep -oE "[a-zA-Z0-9@._/-]+@[0-9]+\.[0-9]+\.[0-9]+" | sort | uniq | head -15 | while IFS= read -r package; do
+                  if [[ "$package" =~ ^([^@]+)@([^@]+) ]]; then
+                    pkg_name="${BASH_REMATCH[1]}"
+                    pkg_version="${BASH_REMATCH[2]}"
+                    echo "| $pkg_name | $pkg_version | 🔄 Optimized | Run \`pnpm dedupe\` |"
+                  fi
+                done
+              elif grep -q "duplicate\|duplicated" dedupe.txt; then
                 # Extract duplicate package information
                 grep -i "duplicate\|duplicated" dedupe.txt | head -15 | while IFS= read -r line; do
                   # Try to extract package name from various dedupe output formats
@@ -370,8 +380,14 @@ jobs:
                   fi
                 done
               else
-                # Fallback: show generic dedupe information
-                echo "| Multiple packages | 🔍 Duplicate versions | 🔄 Optimized versions | Run \`pnpm dedupe\` |"
+                # Fallback: try to extract any package names from the dedupe output
+                grep -oE "[a-zA-Z0-9@._/-]+@[0-9]+\.[0-9]+\.[0-9]+" dedupe.txt | head -15 | while IFS= read -r package; do
+                  if [[ "$package" =~ ^([^@]+)@([^@]+) ]]; then
+                    pkg_name="${BASH_REMATCH[1]}"
+                    pkg_version="${BASH_REMATCH[2]}"
+                    echo "| $pkg_name | $pkg_version | 🔄 Optimized | Run \`pnpm dedupe\` |"
+                  fi
+                done
               fi
               
               echo
