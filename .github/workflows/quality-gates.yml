@@ -289,19 +289,18 @@ jobs:
             echo "{}" > outdated.json
           fi
 
-          # Run dedupe check and capture output
-          if command -v pnpm >/dev/null 2>&1; then
-            pnpm dedupe --check 2>&1 | tee dedupe.txt || echo "No dedupe changes needed" > dedupe.txt
-          else
-            echo "pnpm not available" > dedupe.txt
-          fi
+                       # Dedupe check already done in previous step
 
-          # Check for deprecated packages
-          if command -v pnpm >/dev/null 2>&1; then
-            pnpm list --depth=0 2>&1 | grep -i "deprecated" > deprecated.txt || echo "No deprecated packages found" > deprecated.txt
-          else
-            echo "pnpm not available" > deprecated.txt
-          fi
+                       # Check for deprecated packages - they appear in dedupe output
+             if command -v pnpm >/dev/null 2>&1; then
+               # Run dedupe check first to capture deprecated packages
+               pnpm dedupe --check 2>&1 | tee dedupe.txt || echo "No dedupe changes needed" > dedupe.txt
+               # Extract deprecated packages from dedupe output
+               grep -i "deprecated" dedupe.txt > deprecated.txt || echo "No deprecated packages found" > deprecated.txt
+             else
+               echo "pnpm not available" > deprecated.txt
+               echo "No dedupe changes needed" > dedupe.txt
+             fi
 
       - name: '🧾 Build compact deps report (PRs)'
         if: github.event_name == 'pull_request'
@@ -363,7 +362,7 @@ jobs:
               echo "| Package | Current Version | Status |"
               echo "|---|---|---|"
               
-              # Extract specific deprecated package information
+              # Extract specific deprecated package information from dedupe output
               grep -i "deprecated" deprecated.txt | sed 's/.*found: //' | tr ',' '\n' | sed 's/^[[:space:]]*//' | grep -v "^$" | head -15 | while IFS= read -r package; do
                 if [[ "$package" =~ ^([^@]+)@([^@]+) ]]; then
                   pkg_name="${BASH_REMATCH[1]}"
