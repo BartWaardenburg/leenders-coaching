@@ -40,14 +40,46 @@ jobs:
         run: |
           set -euo pipefail
           url="${{ github.event.deployment_status.environment_url || '' }}"
+
+          echo "🔍 Raw environment_url: $url"
+
+          # Handle Vercel SSO redirects
           if [[ "$url" == *"vercel.com/login"* || "$url" == *"sso-api"* ]]; then
             if [[ "$url" =~ url=([^&]+) ]]; then
               enc="${BASH_REMATCH[1]}"
               url="$(python3 -c "import sys,urllib.parse;print(urllib.parse.unquote(sys.argv[1]))" "$enc")"
+              echo "🔍 Decoded SSO URL: $url"
             fi
           fi
-          [[ "$url" =~ ^https?:// ]] || { echo "No valid environment_url"; exit 1; }
+
+          # Validate it's a valid URL
+          [[ "$url" =~ ^https?:// ]] || { echo "❌ No valid environment_url found"; exit 1; }
+
+          # Check if this is the studio URL (we don't want to test the CMS)
+          if [[ "$url" == *"studio-leenders-coaching"* ]]; then
+            echo "⚠️ Warning: This appears to be a studio deployment URL"
+            echo "   Studio URL: $url"
+            echo "   This workflow should test the main app, not the CMS"
+            echo "   Consider checking your Vercel project configuration"
+            
+            # Try to construct the main app preview URL
+            if [[ "$url" =~ ^https://studio-leenders-coaching-([^.]+)\.vercel\.app ]]; then
+              branch_suffix="${BASH_REMATCH[1]}"
+              main_app_url="https://leenders-coaching-${branch_suffix}.vercel.app"
+              echo "🔄 Attempting to use main app URL: $main_app_url"
+              url="$main_app_url"
+            fi
+          fi
+
+          echo "✅ Preview URL resolved: $url"
           echo "preview_url=$url" >> "$GITHUB_OUTPUT"
+
+          # Debug deployment context
+          echo "🔍 Deployment context:"
+          echo "   Environment: ${{ github.event.deployment.environment }}"
+          echo "   Project: ${{ github.event.deployment.environment_url }}"
+          echo "   Commit SHA: ${{ github.event.deployment.sha }}"
+          echo "   Ref: ${{ github.event.deployment.ref }}"
 
       - name: '🔍 Debug Environment Variables'
         run: |
