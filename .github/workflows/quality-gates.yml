@@ -475,7 +475,7 @@ jobs:
               echo "### 📋 Top files with issues:"
               echo "| File | Errors | Warnings | Total Issues |"
               echo "|---|---|---|---|"
-              jq -r '.[] | select(.errorCount>0 or .warningCount>0) | "| [\(.filePath | split("/") | last)](packages/leenders-coaching-nl/\(.filePath)) | \(.errorCount) | \(.warningCount) | \(.errorCount + .warningCount) |"' eslint.json | head -n 10
+              jq -r '.[] | select(.errorCount>0 or .warningCount>0) | "| [\(.filePath | split("/") | last)](https://github.com/${{ github.repository }}/blob/${{ github.head_ref || github.ref_name }}/packages/leenders-coaching-nl/\(.filePath)) | \(.errorCount) | \(.warningCount) | \(.errorCount + .warningCount) |"' eslint.json | head -n 10
             fi
             echo
             if grep -qiE "error|TS[0-9]{4}" ts.txt; then
@@ -498,7 +498,7 @@ jobs:
                 | sort_by(.maintainability)
                 | .[0:15]
                 | .[]
-                | "| [`\(.file | split("/") | last)`](packages/leenders-coaching-nl/\(.file)) | \(if .maintainability >= 80 then "🟢 " elif .maintainability >= 60 then "🟡 " else "🔴 " end)\(.maintainability) | \(.complexity) | \(.loc) | \((.size/1024 | floor))KB |"
+                | "| [`\(.file | split("/") | last)`](https://github.com/${{ github.repository }}/blob/${{ github.head_ref || github.ref_name }}/packages/leenders-coaching-nl/\(.file)) | \(if .maintainability >= 80 then "🟢 " elif .maintainability >= 60 then "🟡 " else "🔴 " end)\(.maintainability) | \(.complexity) | \(.loc) | \((.size/1024 | floor))KB |"
               ' complexity.json
               
 
