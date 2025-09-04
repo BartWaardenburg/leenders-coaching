@@ -22,6 +22,31 @@ console.log('📊 Generating Performance Report...');
 // Parse the build output from webpack bundle analyzer
 console.log('📦 Parsing bundle analysis output...');
 
+// Try to read the actual webpack build output from .next directory
+let routeData = [];
+let chunkData = [];
+
+try {
+  // Look for build output files
+  const buildOutputPath = join('.next', 'analyze');
+  if (existsSync(buildOutputPath)) {
+    console.log('✅ Found webpack bundle analyzer output');
+    
+    // TODO: In a real implementation, we would parse the actual webpack build output
+    // This would require capturing the build console output or parsing the generated HTML files
+    // For now, this is a placeholder showing the structure
+    
+    console.log('📊 Note: This script needs to be integrated with the build process to capture real data');
+    console.log('📊 The actual webpack output should be parsed from the build step');
+    
+  } else {
+    console.log('⚠️ No webpack bundle analyzer output found');
+    console.log('📊 Run "pnpm run analyze:bundle" first to generate the data');
+  }
+} catch (error) {
+  console.log('⚠️ Could not read webpack output:', error.message);
+}
+
 // Generate the performance report
 let report = `## 🚀 Performance Overview
 
@@ -30,20 +55,13 @@ let report = `## 🚀 Performance Overview
 <details>
 <summary>📈 Build & Bundle Metrics</summary>
 
-| Metric | Value | Status | Performance |
-|--------|-------|---------|-------------|`;
+| Metric | Value | Status |
+|--------|-------|---------|`;
 
 // Add build duration if available
 if (process.env.BUILD_DURATION) {
-  report += `\n| ⏱️ Build Duration | ${process.env.BUILD_DURATION}s | ✅ | 🟢 Good |`;
+  report += `\n| ⏱️ Build Duration | ${process.env.BUILD_DURATION}s | ✅ |`;
 }
-
-// Add webpack bundle analyzer metrics
-report += `
-| 📦 Total JS (chunks) | 1.3M | ✅ Optimized | 🟢 Excellent |
-| 🎨 Total CSS | 64K | ✅ Optimized | 🟢 Outstanding |
-| 🔗 Bundle Efficiency | 93% shared | ✅ Excellent | 🟢 Best Practice |
-| ✂️ Code Splitting | Route-based | ✅ Optimal | 🟢 Perfect |`;
 
 report += `
 
@@ -55,74 +73,80 @@ report += `
 <summary>🔍 Detailed Bundle Composition</summary>
 
 #### 🛣️ Route Analysis
-| Route | Type | Size | First Load JS | Status | Performance |
-|-------|------|------|----------------|---------|-------------|
-| 🏠 / (Home) | ⚡ Static | 243 B | 221 kB | ✅ Optimized | 🟢 Fast |
-| 🎯 /aanpak | ⚡ Static | 243 B | 221 kB | ✅ Optimized | 🟢 Fast |
-| 📝 /blog | ⚡ Static | 234 B | 221 kB | ✅ Optimized | 🟢 Fast |
-| 🧠 /coaching | ⚡ Static | 243 B | 221 kB | ✅ Optimized | 🟢 Fast |
-| 📞 /contact | ⚡ Static | 243 B | 221 kB | ✅ Optimized | 🟢 Fast |
-| 👤 /over-mij | ⚡ Static | 243 B | 221 kB | ✅ Optimized | 🟢 Fast |
-| 📄 /blog/[slug] | 🔄 Dynamic | 160 B | 108 kB | ✅ Efficient | 🟡 Good |
-| 📡 /api/contact | 🔄 Dynamic | 126 B | 102 kB | ✅ Efficient | 🟡 Good |
-| 🖼️ /api/og | 🔄 Dynamic | 126 B | 102 kB | ✅ Efficient | 🟡 Good |
+| Route | Type | Size | First Load JS | Status |
+|-------|------|------|----------------|---------|`;
+
+// Add routes dynamically from the parsed data
+if (routeData.length > 0) {
+  const routeEmojis = {
+    '/': '🏠',
+    '/aanpak': '🎯',
+    '/blog': '📝',
+    '/coaching': '🧠',
+    '/contact': '📞',
+    '/over-mij': '👤',
+    '/blog/[slug]': '📄',
+    '/api/contact': '📡',
+    '/api/og': '🖼️'
+  };
+  
+  const typeEmojis = {
+    'Static': '⚡',
+    'Dynamic': '🔄'
+  };
+  
+  for (const route of routeData) {
+    const emoji = routeEmojis[route.route] || '📄';
+    const typeEmoji = typeEmojis[route.type] || '📄';
+    const status = route.firstLoadJS <= '150 kB' ? '✅ Optimized' : '✅ Efficient';
+    
+    report += `\n| ${emoji} ${route.route} | ${typeEmoji} ${route.type} | ${route.size} | ${route.firstLoadJS} | ${status} |`;
+  }
+} else {
+  report += `\n| 📄 No route data available | - | - | - | - |`;
+  report += `\n| 📝 Note: Run "pnpm run analyze:bundle" to generate data | - | - | - | - |`;
+}
+
+report += `
 
 #### 🧩 Shared Chunks Analysis
-| Chunk | Size | Purpose | Status | Impact |
-|-------|------|---------|---------|---------|
-| 🧠 **Core Application** | 46.1 kB | Main app logic | ✅ Optimized | 🟢 Low |
-| 🎨 **UI Components** | 54.2 kB | Component library | ✅ Reasonable | 🟡 Medium |
-| 🔧 **Shared Dependencies** | 1.94 kB | Common utilities | ✅ Minimal | 🟢 Very Low |
-| 🔗 **Total Shared JS** | 102 kB | Cross-route code | ✅ Efficient | 🟢 Optimal |
+| Chunk | Size | Purpose | Status |
+|-------|------|---------|---------|`;
 
-</details>
+// Add chunks dynamically from the parsed data
+if (chunkData.length > 0) {
+  const chunkEmojis = {
+    'Core Application': '🧠',
+    'UI Components': '🎨',
+    'Shared Dependencies': '🔧'
+  };
+  
+  for (const chunk of chunkData) {
+    const emoji = chunkEmojis[chunk.name] || '📦';
+    const status = chunk.size.includes('kB') && parseInt(chunk.size) < 100 ? '✅ Optimized' : '✅ Reasonable';
+    
+    report += `\n| ${emoji} **${chunk.name}** | ${chunk.size} | ${chunk.purpose} | ${status} |`;
+  }
+  
+  // Calculate total shared JS
+  const totalSharedJS = chunkData.reduce((total, chunk) => {
+    const size = chunk.size.replace(' kB', '');
+    return total + parseFloat(size);
+  }, 0);
+  
+  report += `\n| 🔗 **Total Shared JS** | ${totalSharedJS.toFixed(1)} kB | Cross-route code | ✅ Efficient |`;
+} else {
+  report += `\n| 📦 No chunk data available | - | - | - |`;
+  report += `\n| 📝 Note: Run "pnpm run analyze:bundle" to generate data | - | - | - | - |`;
+}
 
-### 🎯 Bundle Optimization Status
-
-<details>
-<summary>📊 Optimization Analysis</summary>
-
-| Metric | Status | Performance | Notes |
-|--------|---------|-------------|-------|
-| 📊 **Bundle Efficiency** | ✅ Excellent | 🟢 93% shared | Best practice achieved |
-| 🎯 **Optimization Status** | ✅ Optimal | 🟢 All within limits | No immediate action needed |
-| 🚀 **Code Splitting** | ✅ Perfect | 🟢 Route-based | Excellent implementation |
-| 📦 **Chunk Strategy** | ✅ Optimal | 🟢 Shared distribution | Efficient resource usage |
-| 🔗 **Bundle Size** | ✅ Good | 🟢 1.3M total | Well optimized |
-| 🎨 **CSS Optimization** | ✅ Outstanding | 🟢 64K total | Excellent compression |
+report += `
 
 </details>
 
 ### 📊 Bundle Analysis Reports
 
-HTML reports available in artifact \`bundle-analyzer-${process.env.GITHUB_SHA || 'local'}\`
-
-### 🎉 Performance Summary
-
-<details>
-<summary>🚀 Quick Overview & Recommendations</summary>
-
-#### 🏆 **Overall Performance Score: 9.2/10**
-
-| Category | Score | Status | Action |
-|----------|-------|---------|---------|
-| 📦 **Bundle Size** | 9.5/10 | 🟢 Excellent | ✅ No action needed |
-| ⚡ **Loading Speed** | 9.0/10 | 🟢 Fast | ✅ Optimized |
-| 🔗 **Code Splitting** | 10/10 | 🟢 Perfect | ✅ Best practice |
-| 🎨 **CSS Efficiency** | 9.8/10 | 🟢 Outstanding | ✅ No action needed |
-
-#### 🎯 **Key Strengths**
-- ✅ **Excellent bundle efficiency** (93% shared code)
-- ✅ **Perfect code splitting** implementation
-- ✅ **Outstanding CSS optimization**
-- ✅ **Optimal chunk distribution**
-
-#### 📋 **Recommendations**
-- 🟡 **Monitor bundle growth** - Currently at 93% of optimal size
-- 🟡 **Consider lazy loading** for non-critical components
-- 🟡 **Regular performance audits** - Current setup is excellent
-
-</details>`;
+HTML reports available in artifact \`bundle-analyzer-${process.env.GITHUB_SHA || 'local'}\``;
 
 // Write the report
 const reportPath = join(BUNDLE_ANALYSIS_DIR, 'performance-report.md');

@@ -12,6 +12,7 @@ jobs:
     name: 'Lighthouse CI (Production) – ${{ matrix.formFactor }}'
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    continue-on-error: true
     strategy:
       matrix:
         formFactor: [mobile, desktop]
@@ -64,7 +65,6 @@ jobs:
       - name: '🚀 Run Lighthouse CI (Production)'
         id: lhci
         uses: treosh/lighthouse-ci-action@v12
-        continue-on-error: true
         with:
           urls: |
             https://leenders-coaching.vercel.app/

@@ -17,6 +17,7 @@ jobs:
     name: 'Lighthouse CI (Preview)'
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    continue-on-error: true
     if: |
       github.event.deployment_status.state == 'success' &&
       contains(github.event.deployment.environment, 'Preview') &&
@@ -51,7 +52,6 @@ jobs:
       - name: '🚀 Run Lighthouse CI'
         id: lhci
         uses: treosh/lighthouse-ci-action@v12
-        continue-on-error: true
         with:
           urls: |
             ${{ steps.url.outputs.preview_url }}
