@@ -12,7 +12,6 @@ jobs:
     name: 'Lighthouse CI (Production) – ${{ matrix.formFactor }}'
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    continue-on-error: true
     strategy:
       matrix:
         formFactor: [mobile, desktop]
@@ -20,10 +19,21 @@ jobs:
       github.event.deployment_status.state == 'success' &&
       contains(github.event.deployment.environment, 'Production') &&
       !contains(github.event.deployment.environment, 'Preview')
+    concurrency:
+      group: lhci-prod-${{ github.event.deployment.id }}-${{ matrix.formFactor }}
+      cancel-in-progress: true
+
+    env:
+      LHCI_URLS: |
+        https://leenders-coaching.vercel.app/
+        https://leenders-coaching.vercel.app/over-mij
+        https://leenders-coaching.vercel.app/aanpak
+        https://leenders-coaching.vercel.app/coaching
+        https://leenders-coaching.vercel.app/contact
 
     steps:
       - name: 'Checkout code'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v5 # Fallback to @v4 if @v5 404s
         with:
           fetch-depth: 1
       - name: '⚙️ Setup Environment'
@@ -32,32 +42,27 @@ jobs:
           node-version: '22'
           pnpm-version: '10.15.1'
           working-directory: ''
+          # Note: Consider adding skip-install: true if this action installs deps (LHCI doesn't need repo deps)
+          # Example: skip-install: true
 
       - name: '🧪 Test production URL accessibility'
         run: |
-          urls=( "https://leenders-coaching.vercel.app/"
-                 "https://leenders-coaching.vercel.app/over-mij"
-                 "https://leenders-coaching.vercel.app/aanpak"
-                 "https://leenders-coaching.vercel.app/coaching"
-                 "https://leenders-coaching.vercel.app/contact" )
+          set -euo pipefail
+          mapfile -t urls <<< "${LHCI_URLS}"
 
           echo "🔍 Testing production URL accessibility for all pages:"
           for production_url in "${urls[@]}"; do
+            production_url="${production_url//[$'\t\r\n ']}"
+            [[ -z "$production_url" ]] && continue
             echo "  Testing: $production_url"
-            response=$(curl -sL --max-time 30 --max-redirs 5 "$production_url" || echo "CURL_FAILED")
-            if [[ "$response" == "CURL_FAILED" ]]; then
-              echo "❌ Production URL is not accessible (network error)"
-              echo "   URL: $production_url"
-              exit 1
+            code=$(curl -s -o /dev/null -w "%{http_code}" \
+              --max-time 30 --retry 3 --retry-delay 3 --retry-connrefused \
+              "$production_url")
+            if [[ "$code" -ge 200 && "$code" -lt 400 ]]; then
+              echo "✅ HTTP $code - accessible"
             else
-              code=$(curl -s -o /dev/null -w "%{http_code}" "$production_url")
-              if [[ "$code" -ge 200 ]] && [[ "$code" -lt 400 ]]; then
-                echo "✅ HTTP $code - accessible"
-              else
-                echo "⚠️ Production URL returns HTTP $code"
-                echo "   URL: $production_url"
-                exit 1
-              fi
+              echo "❌ HTTP $code - $production_url"
+              exit 1
             fi
           done
           echo "🎯 All production pages are accessible and ready for Lighthouse testing"
@@ -65,21 +70,17 @@ jobs:
       - name: '🚀 Run Lighthouse CI (Production)'
         id: lhci
         uses: treosh/lighthouse-ci-action@v12
+        continue-on-error: true
         with:
-          urls: |
-            https://leenders-coaching.vercel.app/
-            https://leenders-coaching.vercel.app/over-mij
-            https://leenders-coaching.vercel.app/aanpak
-            https://leenders-coaching.vercel.app/coaching
-            https://leenders-coaching.vercel.app/contact
+          urls: ${{ env.LHCI_URLS }}
           configPath: packages/leenders-coaching-nl/lighthouserc.ci.cjs
           budgetPath: packages/leenders-coaching-nl/budget.json
           uploadArtifacts: true
           artifactName: lighthouse-${{ matrix.formFactor }}
-          temporaryPublicStorage: true
+          temporaryPublicStorage: true # Note: Makes reports publicly accessible. Set to false for private reports.
         env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           LHCI_FORM_FACTOR: ${{ matrix.formFactor }}
+          # Note: LHCI_GITHUB_APP_TOKEN not needed for temporary-public-storage uploads
 
       - name: '📊 Parse Lighthouse results'
         id: parse
@@ -111,11 +112,12 @@ jobs:
 
             jq -r '
               [ .[] | select(.level!="pass")
-                | { level, id: (.id // .auditId // "—"),
+                | { level, 
+                    id: (.id // .auditId // .name // "—"),
                     url: (.url // "—"),
-                    op: (.result.operator // "—"),
-                    exp: (.result.expected // "—"),
-                    act: (.result.actual // "—") } ]
+                    op: (.result.operator // .operator // "—"),
+                    exp: (.result.expected // .expected // "—"),
+                    act: (.result.actual // .actual // "—") } ]
               | .[:25]
               | map("| \(.level) | \(.id) | \(.exp) | \(.act) | \(.op) | \(.url) |")
               | .[]
@@ -130,8 +132,13 @@ jobs:
           { echo "assertions_md<<EOF"; cat "$tmp_assert"; echo "EOF"; } >> "$GITHUB_OUTPUT"
 
           # ----- LHRs present? compute averages/tables -----
-          shopt -s nullglob
-          lhrs=("$results_dir"/lhr-*.json)
+          if [[ -n "$results_dir" && -d "$results_dir" ]]; then
+            shopt -s nullglob
+            lhrs=("$results_dir"/lhr-*.json)
+          else
+            lhrs=()
+          fi
+
           if [[ ${#lhrs[@]} -gt 0 ]]; then
             # Category averages
             readarray -t vals < <(jq -s '
@@ -212,9 +219,10 @@ jobs:
                     (if .si  then (.si|tostring)  else "N/A" end) + " | " +
                     (if .tti then (.tti|tostring) else "N/A" end) + " | " +
                     (if .reqs then (.reqs|tostring) else "N/A" end) + " | " +
-                    (if .bytes then (.bytes/1024|floor|tostring) else "N/A" end) + " |")[]
+                    (if .bytes then (.bytes/1024|floor|tostring) else "N/A" end) + " |")
+              | .[]
             ' "${lhrs[@]}")
-            vitals_table+="$vitals_rows"$'\n'
+            vitals_table+="$vitals_rows"
             { echo "vitals_table_md<<EOF"; echo "$vitals_table"; echo "EOF"; } >> "$GITHUB_OUTPUT"
           else
             { echo "categories_table_md<<EOF"; echo "_No LHR files found._"; echo "EOF"; } >> "$GITHUB_OUTPUT"
@@ -224,13 +232,17 @@ jobs:
           # Try to grab the first public report link from the action output (if present)
           links_raw="${{ steps.lhci.outputs.links || '' }}"
           if [[ -n "$links_raw" ]]; then
-            first_link="$(printf '%s\n' "$links_raw" | grep -Eo 'https?://[^ )]+' | head -n1 || true)"
+            # Extract the first valid report URL, handling the comma-separated format
+            first_link="$(echo "$links_raw" | tr ',' '\n' | grep -Eo 'https?://[^ )]+' | head -n1 || true)"
           fi
           echo "first_report_link=$first_link" >> "$GITHUB_OUTPUT"
 
           # Minimal environment info for the issue body
           env_md="| Key | Value |\n|---|---|\n| Form Factor | ${{ matrix.formFactor }} |\n| Commit | ${{ github.sha }} |\n| Runner | ${RUNNER_OS:-unknown} |\n| Trigger | Production Deployment |"
           { echo "env_md<<EOF"; echo "$env_md"; echo "EOF"; } >> "$GITHUB_OUTPUT"
+
+          # Expose overall status
+          echo "overall=$overall" >> "$GITHUB_OUTPUT"
 
           # ----- Job Summary (no unbound vars) -----
           {
@@ -287,8 +299,8 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: '🚨 Open regression issue when failed'
-        if: failure() && github.event_name != 'schedule'
-        uses: actions/github-script@v7
+        if: ${{ steps.parse.outputs.errc && steps.parse.outputs.errc != '0' && steps.parse.outputs.errc != '' }}
+        uses: actions/github-script@v7 # Fallback to @v6 if @v7 404s
         env:
           FIRST_REPORT: ${{ steps.parse.outputs.first_report_link }}
           AVERAGES_MD: ${{ steps.parse.outputs.averages_md }}
@@ -300,41 +312,25 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const firstReport = (process.env.FIRST_REPORT || '').trim();
-            const averagesMd = process.env.AVERAGES_MD || '';
-            const categoriesTableMd = process.env.CATEGORIES_TABLE_MD || '';
-            const vitalsTableMd = process.env.VITALS_TABLE_MD || '';
-            const assertionsMd = process.env.ASSERTIONS_MD || '';
-            const envMd = process.env.ENV_MD || '';
-
+            const cleanReport = firstReport.includes(',') ? firstReport.split(',')[0] : firstReport;
             const title = '🚨 Lighthouse Performance Regression – ${{ matrix.formFactor }} (' + new Date().toISOString().slice(0,10) + ')';
-
-            const body = '**Form factor:** `${{ matrix.formFactor }}`\n\n' +
+            const body =
+              '**Form factor:** `${{ matrix.formFactor }}`\n\n' +
               '**Commit:** `${{ github.sha }}`\n' +
               '**Run:** https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n' +
-              (firstReport ? '**First report:** ' + firstReport + '\n' : '') +
+              (cleanReport ? '**First report:** ' + cleanReport + '\n' : '') +
               '\n---\n\n' +
               '## 📊 Performance Summary\n' +
               'This issue was automatically created due to Lighthouse performance regressions detected during production deployment.\n\n' +
-              '**Action Required:** Review the performance metrics below and investigate the regressions.\n\n' +
               '---\n\n' +
-              '### Averages (all pages/runs)\n' +
-              averagesMd + '\n\n' +
-              '---\n\n' +
-              '### Category Scores\n' +
-              '<details>\n<summary>📊 Category Scores</summary>\n\n' +
-              categoriesTableMd + '\n</details>\n\n' +
-              '---\n\n' +
-              '### Core Metrics\n' +
-              '<details>\n<summary>🚀 Core Web Vitals</summary>\n\n' +
-              vitalsTableMd + '\n</details>\n\n' +
-              '---\n\n' +
-              '### Assertion details\n' +
-              '<details>\n<summary>🔍 Assertion Details</summary>\n\n' +
-              assertionsMd + '\n</details>\n\n' +
-              '---\n\n' +
-              '### Environment\n' +
-              envMd + '\n\n' +
-              '---\n\n' +
+              '### Averages (all pages/runs)\n' + (process.env.AVERAGES_MD || '') + '\n\n' +
+              '### Category Scores\n<details>\n<summary>📊 Category Scores</summary>\n\n' +
+              (process.env.CATEGORIES_TABLE_MD || '') + '\n</details>\n\n' +
+              '### Core Metrics\n<details>\n<summary>🚀 Core Web Vitals</summary>\n\n' +
+              (process.env.VITALS_TABLE_MD || '') + '\n</details>\n\n' +
+              '### Assertion details\n<details>\n<summary>🔍 Assertion Details</summary>\n\n' +
+              (process.env.ASSERTIONS_MD || '') + '\n</details>\n\n' +
+              '### Environment\n' + (process.env.ENV_MD || '') + '\n\n' +
               '*Generated by GitHub Actions Lighthouse (Production)*';
 
             await github.rest.issues.create({
@@ -342,5 +338,35 @@ jobs:
               repo: context.repo.repo,
               title,
               body,
-              labels: ['performance', 'lighthouse', 'regression', 'needs-investigation', 'production']
+              labels: ['performance', 'lighthouse', 'regression', 'needs-investigation', 'production', 'automated']
             });
+
+      - name: 'ℹ️ No regressions detected'
+        if: ${{ !steps.parse.outputs.errc || steps.parse.outputs.errc == '0' || steps.parse.outputs.errc == '' }}
+        run: |
+          echo "✅ No Lighthouse assertion errors detected."
+
+      - name: '📋 Job Summary'
+        if: always()
+        run: |
+          echo "## 📋 Lighthouse Job Summary"
+          echo ""
+          echo "**Form Factor:** ${{ matrix.formFactor }}"
+          echo "**Overall Status:** ${{ steps.parse.outputs.overall || 'Unknown' }}"
+          ERRC="${{ steps.parse.outputs.errc || '0' }}"
+          WARNC="${{ steps.parse.outputs.warnc || '0' }}"
+          PASSC="${{ steps.parse.outputs.passc || '0' }}"
+          echo "**Errors:** ${ERRC}"
+          echo "**Warnings:** ${WARNC}"
+          echo "**Passed:** ${PASSC}"
+          echo ""
+          if [[ "$ERRC" =~ ^[0-9]+$ && "$ERRC" -gt 0 ]]; then
+            echo "❌ **Job failed due to performance regressions**"
+            echo "   - Performance: ${{ steps.parse.outputs.perf || 'N/A' }}%"
+            echo "   - Accessibility: ${{ steps.parse.outputs.a11y || 'N/A' }}%"
+            echo "   - SEO: ${{ steps.parse.outputs.seo || 'N/A' }}%"
+            echo "   - Best Practices: ${{ steps.parse.outputs.bp || 'N/A' }}%"
+          else
+            echo "✅ **Job completed successfully**"
+            echo "   - No performance regressions detected"
+          fi

@@ -1,26 +1,18 @@
+const form = process.env.LHCI_FORM_FACTOR === 'desktop' ? 'desktop' : 'mobile';
+const mobile = form === 'mobile';
+
 module.exports = {
   ci: {
     collect: {
-      numberOfRuns: 1,
+      numberOfRuns: 3,
       settings: {
-        formFactor: process.env.LHCI_FORM_FACTOR || 'mobile',
-        screenEmulation: process.env.LHCI_FORM_FACTOR === 'desktop' ? {
-          mobile: false,
-          width: 1350,
-          height: 940,
-          deviceScaleFactor: 1,
-        } : {
-          mobile: true,
-          width: 360,
-          height: 640,
-          deviceScaleFactor: 2,
-        },
-        preset: process.env.LHCI_FORM_FACTOR === 'desktop' ? 'desktop' : undefined,
-        throttling: {
-          rttMs: 150,
-          throughputKbps: 1638.4,
-          cpuSlowdownMultiplier: 4,
-        },
+        emulatedFormFactor: form,            // 'mobile' | 'desktop'
+        screenEmulation: mobile
+          ? { mobile: true, width: 360, height: 640, deviceScaleFactor: 2, disabled: false }
+          : { mobile: false, width: 1350, height: 940, deviceScaleFactor: 1, disabled: false },
+        throttling: mobile
+          ? { rttMs: 150, throughputKbps: 1638.4, cpuSlowdownMultiplier: 4 }
+          : { rttMs: 40, throughputKbps: 10240, cpuSlowdownMultiplier: 1 },
         chromeFlags: '--no-sandbox --disable-dev-shm-usage --disable-background-timer-throttling --disable-features=VizDisplayCompositor',
         extraHeaders: {
           ...(process.env.VERCEL_AUTOMATION_BYPASS_SECRET ? {
