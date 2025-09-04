@@ -680,9 +680,28 @@ jobs:
           echo "BUILD_DURATION=$((END-START))s" >> $GITHUB_ENV
 
       - name: '🧾 Create comment markdown'
+        id: create-comment
         run: |
           cd "$PROJECT_DIR"
           node scripts/collect-bundle-metrics.cjs
+
+          # Verify the file was created
+          if [ ! -f ".bundle-analysis/comment.md" ]; then
+            echo "❌ Bundle analysis comment file was not created"
+            exit 1
+          fi
+
+          echo "✅ Bundle analysis comment file created successfully"
+          ls -la .bundle-analysis/
+
+          # Verify the file exists and has content
+          if [ -s ".bundle-analysis/comment.md" ]; then
+            echo "✅ Comment file exists and has content"
+            echo "📁 File size: $(wc -c < .bundle-analysis/comment.md) bytes"
+          else
+            echo "❌ Comment file is missing or empty"
+            exit 1
+          fi
 
       - name: '💬 Sticky PR comment – Bundle Analysis'
         uses: marocchino/sticky-pull-request-comment@v2
