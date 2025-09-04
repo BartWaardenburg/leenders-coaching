@@ -175,16 +175,25 @@ function routeTableFromManifest() {
       }
     } else if (label === 'app' && m) {
       // App Router: has route -> file mapping
+      console.log(`\n=== Processing App Router routes ===`);
       for (const [route, filePath] of Object.entries(m)) {
+        console.log(`Processing route: "${route}" (type: ${typeof route}, length: ${route ? route.length : 'null'})`);
 
+        // Skip empty or whitespace-only routes
+        if (!route || route.trim() === '') {
+          console.log(`Skipping empty route: "${route}"`);
+          continue;
+        }
         
         // Skip special routes but include API routes for edge runtime detection
         if (route.includes('/favicon.ico') || route.includes('/_not-found')) {
+          console.log(`Skipping special route: "${route}"`);
           continue;
         }
         
         // Extract the actual route path (remove /page suffix)
         const cleanRoute = route.replace('/page', '');
+        console.log(`Clean route: "${cleanRoute}"`);
         
         // For App Router, we need to estimate size based on the route
         // This is a simplified approach - in practice you might want to analyze the actual JS files
@@ -223,16 +232,22 @@ function routeTableFromManifest() {
         
 
         
-        rows.push({ 
-          route: cleanRoute, 
-          kind: label, 
-          files: count, 
-          raw, 
-          gz, 
-          br, 
-          status,
-          isEdge: isEdge ? '⚡' : ''
-        });
+        // Only add routes that have a valid, non-empty path
+        if (cleanRoute && cleanRoute.trim() !== '') {
+          rows.push({ 
+            route: cleanRoute, 
+            kind: label, 
+            files: count, 
+            raw, 
+            gz, 
+            br, 
+            status,
+            isEdge: isEdge ? '⚡' : ''
+          });
+          console.log(`Added route: "${cleanRoute}"`);
+        } else {
+          console.log(`Skipping invalid route: "${cleanRoute}"`);
+        }
       }
     }
   };
@@ -240,9 +255,16 @@ function routeTableFromManifest() {
   if (manifest) addFrom(manifest, 'pages');
   if (appManifest) addFrom(appManifest, 'app');
 
+  // Final filter to remove any empty routes that might have slipped through
+  const filteredRows = rows.filter(row => row.route && row.route.trim() !== '');
+  
+  console.log(`\n=== Final route count ===`);
+  console.log(`Total routes processed: ${rows.length}`);
+  console.log(`Valid routes after filtering: ${filteredRows.length}`);
+  
   // stable sort by brotli desc
-  rows.sort((a, b) => b.br - a.br);
-  return rows;
+  filteredRows.sort((a, b) => b.br - a.br);
+  return filteredRows;
 }
 
 function topAssets(limit = 15) {
