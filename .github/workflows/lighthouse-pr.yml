@@ -49,6 +49,13 @@ jobs:
           [[ "$url" =~ ^https?:// ]] || { echo "No valid environment_url"; exit 1; }
           echo "preview_url=$url" >> "$GITHUB_OUTPUT"
 
+      - name: '🔍 Debug Environment Variables'
+        run: |
+          echo "🔍 Debugging environment variables:"
+          echo "LHCI_FORM_FACTOR: mobile"
+          echo "VERCEL_AUTOMATION_BYPASS_SECRET: ${VERCEL_AUTOMATION_BYPASS_SECRET:0:8}..." # Show first 8 chars
+          echo "Has bypass secret: ${{ env.VERCEL_AUTOMATION_BYPASS_SECRET != '' }}"
+
       - name: '🚀 Run Lighthouse CI'
         id: lhci
         uses: treosh/lighthouse-ci-action@v12

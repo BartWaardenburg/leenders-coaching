@@ -67,6 +67,13 @@ jobs:
           done
           echo "🎯 All production pages are accessible and ready for Lighthouse testing"
 
+      - name: '🔍 Debug Environment Variables'
+        run: |
+          echo "🔍 Debugging environment variables:"
+          echo "LHCI_FORM_FACTOR: ${{ matrix.formFactor }}"
+          echo "VERCEL_AUTOMATION_BYPASS_SECRET: ${VERCEL_AUTOMATION_BYPASS_SECRET:0:8}..." # Show first 8 chars
+          echo "Has bypass secret: ${{ env.VERCEL_AUTOMATION_BYPASS_SECRET != '' }}"
+
       - name: '🚀 Run Lighthouse CI (Production)'
         id: lhci
         uses: treosh/lighthouse-ci-action@v12
@@ -80,6 +87,7 @@ jobs:
           temporaryPublicStorage: true # Note: Makes reports publicly accessible. Set to false for private reports.
         env:
           LHCI_FORM_FACTOR: ${{ matrix.formFactor }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
           # Note: LHCI_GITHUB_APP_TOKEN not needed for temporary-public-storage uploads
 
       - name: '📊 Parse Lighthouse results'
