@@ -22,7 +22,7 @@
   {
     "name": "Main script exec time",
     "path": ".next/static/chunks/main-*.js",
-    "limit": "500 ms",
+    "limit": "500ms",
     "webpack": false,
     "message": "Main script execution time. Keep under 500ms for optimal user experience. Current target allows for CI environment variations."
   }

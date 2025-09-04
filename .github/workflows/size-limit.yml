@@ -48,6 +48,8 @@ jobs:
       - name: '🏗️ Build frontend'
         run: pnpm --filter leenders-coaching-nl run build
 
+      # Note: This step runs size-limit and captures results for analysis
+      # The workflow now correctly uses the actual pass/fail status from size-limit results
       - name: '📊 Run Size Limit (soft-fail)'
         id: sizelimit
         working-directory: packages/leenders-coaching-nl
@@ -117,26 +119,21 @@ jobs:
                             r.name.toLowerCase().includes('time') ||
                             r.name.toLowerCase().includes('exec');
               
-              let valStr, pass;
+              let valStr;
               if (isTime) {
                 // Handle time-based metrics
                 const currentTime = r.running != null ? Math.round(r.running * 1000) : 0; // Convert to ms
-                const limitTime = typeof limitStr === 'string' ? 
-                  (limitStr.endsWith('ms') ? parseInt(limitStr) : 
-                   limitStr.endsWith('s') ? parseInt(limitStr) * 1000 : 0) : 0;
-                
                 valStr = currentTime > 0 ? currentTime + ' ms' : 'N/A';
-                pass = limitTime > 0 && currentTime <= limitTime ? '✅' : '❌';
               } else {
                 // Handle size-based metrics
                 const currentSize = r.size || 0;
-                const limitSize = typeof limitStr === 'string' ? 
-                  (limitStr.endsWith('KB') ? parseInt(limitStr) * 1024 : 
-                   limitStr.endsWith('B') ? parseInt(limitStr) : 0) : 0;
-                
                 valStr = currentSize > 0 ? humanBytes(currentSize) : 'N/A';
-                pass = limitSize > 0 && currentSize <= limitSize ? '✅' : '❌';
               }
+              
+                          // Use the actual pass/fail status from size-limit results
+            // This fixes the issue where custom logic was incorrectly determining pass/fail
+            // Previously, the workflow was recalculating pass/fail instead of using size-limit's results
+            const pass = r.passed ? '✅' : '❌';
               
               return \`| \${r.name} | \${limitStr} | \${valStr} | \${pass} |\`;
             }).join('\n');
@@ -198,7 +195,7 @@ jobs:
               valStr = currentSize > 0 ? humanBytes(currentSize) : 'N/A';
             }
             
-            return \`| \${x.name} | \${valStr} | \${limitStr} | ❌ Exceeds Limit |\`;
+            return \`| \${x.name} | \${valStr} | \${limitStr} | ❌ Failed |\`;
           }).join('\n')}
 
           </details>
