@@ -424,8 +424,8 @@ jobs:
             # Create a temporary file for building the JSON
             echo "[" > temp_complexity.json
             first=true
-            # Find source files, excluding test files and test directories
-            find packages/*/src -name "*.ts" -o -name "*.tsx" | grep -v -E "(\.test\.|\.spec\.|__tests__|test/)" | head -30 | while IFS= read -r file; do
+            # Find source files, excluding test files, test directories, story files, and types folder
+            find packages/*/src -name "*.ts" -o -name "*.tsx" | grep -v -E "(\.test\.|\.spec\.|\.stories\.|__tests__|test/)" | grep -v "/types/" | head -30 | while IFS= read -r file; do
               if [ -f "$file" ]; then
                 lines=$(wc -l < "$file" | tr -d ' ')
                 size=$(wc -c < "$file" | tr -d ' ')
@@ -473,9 +473,9 @@ jobs:
             if [ "$ERR" -gt 0 ] || [ "$WARN" -gt 0 ]; then
               echo
               echo "### 📋 Top files with issues:"
-              echo '```text'
-              jq -r '.[] | select(.errorCount>0 or .warningCount>0) | "\(.filePath | split("/") | last): \(.errorCount) errors, \(.warningCount) warnings"' eslint.json | head -n 10
-              echo '```'
+              echo "| File | Errors | Warnings | Total Issues |"
+              echo "|---|---|---|---|"
+              jq -r '.[] | select(.errorCount>0 or .warningCount>0) | "| \(.filePath | split("/") | last) | \(.errorCount) | \(.warningCount) | \(.errorCount + .warningCount) |"' eslint.json | head -n 10
             fi
             echo
             if grep -qiE "error|TS[0-9]{4}" ts.txt; then
@@ -494,11 +494,11 @@ jobs:
               echo "| File | Maintainability | Complexity | LOC | Size (KB) |"
               echo "|---|---|---|---|---|"
               jq -r '
-                [.[] | {file: (.file | split("/") | last), maintainability, complexity, loc, size}]
+                [.[] | {file, maintainability, complexity, loc, size}]
                 | sort_by(.maintainability)
                 | .[0:15]
                 | .[]
-                | "| `\(.file)` | \(.maintainability) | \(.complexity) | \(.loc) | \((.size/1024 | floor))KB |"
+                | "| `\(.file)` | \(if .maintainability >= 80 then "🟢 " elif .maintainability >= 60 then "🟡 " else "🔴 " end)\(.maintainability) | \(.complexity) | \(.loc) | \((.size/1024 | floor))KB |"
               ' complexity.json
               
               # Show high complexity files
@@ -525,9 +525,11 @@ jobs:
               SMALL=$(jq -r '[.[] | select(.loc <= 50)] | length' complexity.json)
               MEDIUM=$(jq -r '[.[] | select(.loc > 50 and .loc <= 200)] | length' complexity.json)
               LARGE=$(jq -r '[.[] | select(.loc > 200)] | length' complexity.json)
-              echo "- **Small files (≤50 LOC):** $SMALL"
-              echo "- **Medium files (51-200 LOC):** $MEDIUM"
-              echo "- **Large files (>200 LOC):** $LARGE"
+              echo "| Category | LOC Range | Count |"
+              echo "|---|---|---|"
+              echo "| Small files | ≤50 LOC | $SMALL |"
+              echo "| Medium files | 51-200 LOC | $MEDIUM |"
+              echo "| Large files | >200 LOC | $LARGE |"
             else
               echo "**Complexity Analysis:** No complexity data available"
             fi
