@@ -125,12 +125,16 @@ jobs:
               fi
             fi
             echo
+            echo "<details>"
+            echo "<summary>📊 Vulnerability Count Summary</summary>"
+            echo
             echo "| Severity | Count |"
             echo "|---|---:|"
             echo "| Critical | $CRIT |"
             echo "| High | $HIGH |"
             echo "| Moderate | $MOD |"
             echo "| Low | $LOW |"
+            echo "</details>"
 
             # Show actionable items (at/above threshold) - top 10
             if jq -e '.advisories' audit-results.json >/dev/null 2>&1; then
