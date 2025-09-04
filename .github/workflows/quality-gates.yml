@@ -158,7 +158,7 @@ jobs:
                 echo "<details>"
                 echo "<summary>⚠️ Vulnerabilities requiring attention</summary>"
                 echo
-                echo "| Module | Current | Patched | Severity | Description |"
+                echo "| Package Name | Current Version | Patched Version | Severity | Description |"
                 echo "|---|---|---|---|---|"
                 echo "$ACT" | jq -r '.[] | "| `" + .module_name + "` | " + (.findings[0].version // "?") + " | `" + (.patched_versions // "N/A") + "` | " + .severity + " | " + (.title // "advisory" | gsub("[\\n\\r\\t]"; " ")) + " |"'
                 echo
@@ -175,7 +175,7 @@ jobs:
                   echo "_Note: Multiple findings may represent the same vulnerability affecting different package versions or paths_"
                   echo
                 fi
-                echo "| Module | Current | Patched | Description |"
+                echo "| Package Name | Current Version | Patched Version | Description |"
                 echo "|---|---|---|---|"
                 # Show all findings for each advisory to account for multiple vulnerable packages
                 jq -r '.advisories | to_entries | map(.value) | map(select(.severity == "low")) | .[0:5] | .[] | .findings[] as $finding | "| `" + .module_name + "` | " + ($finding.version // "?") + " | `" + (.patched_versions // "N/A") + "` | " + (.title // "advisory") + " |"' audit-results.json
@@ -241,13 +241,13 @@ jobs:
             echo "<details>"
             echo "<summary>📊 License Summary</summary>"
             echo
-            echo "| License Type | Count | Status |"
+            echo "| License Type | Package Count | Compliance Status | Action Required |"
             echo "|---|---|---|"
-            echo "| MIT | 150+ | 🟢 Safe |"
-            echo "| Apache-2.0 | 20+ | 🟢 Safe |"
-            echo "| ISC | 15+ | 🟢 Safe |"
-            echo "| BSD-3-Clause | 10+ | 🟢 Safe |"
-            echo "| UNKNOWN | 5+ | 🟠 Unknown |"
+            echo "| MIT | 150+ | 🟢 Safe | None required |"
+            echo "| Apache-2.0 | 20+ | 🟢 Safe | None required |"
+            echo "| ISC | 15+ | 🟢 Safe | None required |"
+            echo "| BSD-3-Clause | 10+ | 🟢 Safe | None required |"
+            echo "| UNKNOWN | 5+ | 🟠 Unknown | Review needed |"
             echo
             echo "</details>"
             echo
@@ -328,7 +328,7 @@ jobs:
               echo "<details>"
               echo "<summary>🔄 Available Updates ($OUTDATED_COUNT packages)</summary>"
               echo
-              echo "| Package | Current | Latest | Type | Priority |"
+              echo "| Package Name | Current Version | Latest Version | Update Type | Priority |"
               echo "|---|---|---|---|---|"
               jq -r '
                 to_entries
@@ -355,13 +355,24 @@ jobs:
               echo
               echo "⚠️ **Changes detected:** The lockfile can be optimized by deduplicating packages."
               echo
-              echo "| Package | Current Version | New Version |"
-              echo "|---|---|---|"
+              echo "| Package Name | Current Version | Optimized Version | Action |"
+              echo "|---|---|---|---|"
               
-              # Extract package names and versions from dedupe output using simpler, more reliable method
-              grep -E "→" dedupe.txt | sed 's/.*→ //' | grep -oE "[a-zA-Z0-9@._/-]+@[0-9]+\.[0-9]+\.[0-9]+" | sort | uniq | head -15 | while IFS= read -r package; do
-                echo "| $package | → | Updated |"
-              done
+              # Extract package information from dedupe output with better parsing
+              # Look for patterns that indicate deduplication opportunities
+              if grep -q "duplicate" dedupe.txt; then
+                # Extract duplicate package information
+                grep -i "duplicate\|duplicated" dedupe.txt | head -15 | while IFS= read -r line; do
+                  # Try to extract package name from various dedupe output formats
+                  if [[ "$line" =~ ([a-zA-Z0-9@._/-]+) ]]; then
+                    pkg_name="${BASH_REMATCH[1]}"
+                    echo "| $pkg_name | 🔍 Multiple versions | 🔄 Single version | Run \`pnpm dedupe\` |"
+                  fi
+                done
+              else
+                # Fallback: show generic dedupe information
+                echo "| Multiple packages | 🔍 Duplicate versions | 🔄 Optimized versions | Run \`pnpm dedupe\` |"
+              fi
               
               echo
               echo "_Apply optimization:_ \`pnpm dedupe && pnpm install\`"
@@ -381,15 +392,15 @@ jobs:
               echo "<details>"
               echo "<summary>⚠️ Deprecated Packages</summary>"
               echo
-              echo "| Package | Current Version | Status |"
-              echo "|---|---|---|"
+              echo "| Package Name | Current Version | Status | Action |"
+              echo "|---|---|---|---|"
               
               # Extract specific deprecated package information from dedupe output
               grep -i "deprecated" deprecated.txt | sed 's/.*found: //' | tr ',' '\n' | sed 's/^[[:space:]]*//' | grep -v "^$" | head -15 | while IFS= read -r package; do
                 if [[ "$package" =~ ^([^@]+)@([^@]+) ]]; then
                   pkg_name="${BASH_REMATCH[1]}"
                   pkg_version="${BASH_REMATCH[2]}"
-                  echo "| $pkg_name | $pkg_version | 🔴 Deprecated |"
+                  echo "| $pkg_name | $pkg_version | 🔴 Deprecated | Update or replace |"
                 fi
               done
               
