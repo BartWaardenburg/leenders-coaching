@@ -21,15 +21,17 @@ jobs:
     if: |
       github.event.deployment_status.state == 'success' &&
       contains(github.event.deployment.environment, 'Preview') &&
-      !contains(github.event.deployment.environment, 'Production') &&
-      !contains(github.event.deployment.environment, 'main')
+      contains(github.event.deployment.environment, 'leenders-coaching') &&
+      !contains(github.event.deployment.environment, 'studio')
 
     env:
       VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+      PREVIEW_URL: ${{ github.event.deployment_status.environment_url }}
 
     steps:
       - name: 'Checkout code'
         uses: actions/checkout@v5
+
       - name: '⚙️ Setup Environment'
         uses: ./.github/actions/setup
         with:
@@ -37,171 +39,16 @@ jobs:
           pnpm-version: '10.15.1'
           working-directory: ''
 
-      - name: '🔗 Resolve preview URL (environment_url)'
-        id: url
-        shell: bash
-        run: |
-          set -euo pipefail
-          url="${{ github.event.deployment_status.environment_url || '' }}"
-
-          echo "🔍 Raw environment_url: $url"
-
-          # Handle Vercel SSO redirects
-          if [[ "$url" == *"vercel.com/login"* || "$url" == *"sso-api"* ]]; then
-            if [[ "$url" =~ url=([^&]+) ]]; then
-              enc="${BASH_REMATCH[1]}"
-              url="$(python3 -c "import sys,urllib.parse;print(urllib.parse.unquote(sys.argv[1]))" "$enc")"
-              echo "🔍 Decoded SSO URL: $url"
-            fi
-          fi
-
-          # Validate it's a valid URL
-          [[ "$url" =~ ^https?:// ]] || { echo "❌ No valid environment_url found"; exit 1; }
-
-          # Check if this is the studio URL (we don't want to test the CMS)
-          if [[ "$url" == *"studio-leenders-coaching"* ]]; then
-            echo "⚠️ Warning: This appears to be a studio deployment URL"
-            echo "   Studio URL: $url"
-            echo "   This workflow should test the main app, not the CMS"
-            echo "   Consider checking your Vercel project configuration"
-            
-            # Try to construct the main app preview URL
-            if [[ "$url" =~ ^https://studio-leenders-coaching-([^.]+)\.vercel\.app ]]; then
-              branch_suffix="${BASH_REMATCH[1]}"
-              main_app_url="https://leenders-coaching-${branch_suffix}.vercel.app"
-              echo "🔄 Attempting to use main app URL: $main_app_url"
-              url="$main_app_url"
-            fi
-          fi
-
-          echo "✅ Preview URL resolved: $url"
-          echo "preview_url=$url" >> "$GITHUB_OUTPUT"
-
-          # Debug deployment context
-          echo "🔍 Deployment context:"
-          echo "   Environment: ${{ github.event.deployment.environment }}"
-          echo "   Project: ${{ github.event.deployment.environment_url }}"
-          echo "   Commit SHA: ${{ github.event.deployment.sha }}"
-          echo "   Ref: ${{ github.event.deployment.ref }}"
-
-      - name: '🧪 Test preview URL accessibility'
-        run: |
-          set -euo pipefail
-          preview_url="${{ steps.url.outputs.preview_url }}"
-
-          echo "🔍 Testing preview URL accessibility:"
-          echo "  Base URL: $preview_url"
-
-                    # Wait for preview deployment to be ready (max 2 minutes)
-          echo "⏳ Waiting for preview deployment to be ready..."
-          max_attempts=12
-          attempt=1
-
-          while [[ $attempt -le $max_attempts ]]; do
-            echo "  Attempt $attempt/$max_attempts..."
-            
-            # Test with bypass headers if available
-            bypass_secret="${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}"
-            if [[ -n "$bypass_secret" ]]; then
-              echo "    Using Vercel automation bypass headers..."
-              code=$(curl -s -o /dev/null -w "%{http_code}" \
-                --max-time 30 --retry 2 --retry-delay 2 \
-                -H "x-vercel-protection-bypass: $bypass_secret" \
-                -H "x-vercel-set-bypass-cookie: true" \
-                "$preview_url")
-            else
-              echo "    No bypass secret available, testing without headers..."
-              code=$(curl -s -o /dev/null -w "%{http_code}" \
-                --max-time 30 --retry 2 --retry-delay 2 \
-                "$preview_url")
-            fi
-            
-            if [[ "$code" -ge 200 && "$code" -lt 400 ]]; then
-              echo "✅ Base URL accessible (HTTP $code)"
-              break
-            else
-              echo "⚠️ Base URL returned HTTP $code (attempt $attempt/$max_attempts)"
-              if [[ $attempt -eq $max_attempts ]]; then
-                echo "❌ Preview deployment not ready after $max_attempts attempts"
-                echo "   This suggests the preview deployment may have failed or is still building"
-                echo "   Or the Vercel automation bypass is not working correctly"
-                exit 1
-              fi
-              echo "   Waiting 10 seconds before retry..."
-              sleep 10
-              attempt=$((attempt + 1))
-            fi
-          done
-
-          # Test a few key pages
-          test_pages=("/over-mij" "/aanpak" "/coaching" "/contact")
-          for page in "${test_pages[@]}"; do
-            echo "  Testing: $page"
-            
-            # Test with bypass headers if available
-            bypass_secret="${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}"
-            if [[ -n "$bypass_secret" ]]; then
-              page_code=$(curl -s -o /dev/null -w "%{http_code}" \
-                --max-time 30 --retry 2 --retry-delay 2 \
-                -H "x-vercel-protection-bypass: $bypass_secret" \
-                -H "x-vercel-set-bypass-cookie: true" \
-                "$preview_url$page")
-            else
-              page_code=$(curl -s -o /dev/null -w "%{http_code}" \
-                --max-time 30 --retry 2 --retry-delay 2 \
-                "$preview_url$page")
-            fi
-            
-            if [[ "$page_code" -ge 200 && "$page_code" -lt 400 ]]; then
-              echo "✅ $page accessible (HTTP $page_code)"
-            else
-              echo "⚠️ $page returned HTTP $page_code (may not exist in preview)"
-            fi
-          done
-
-          echo "🎯 Preview URL accessibility check completed"
-
-      - name: '🔍 Debug Environment Variables'
-        run: |
-          echo "🔍 Debugging environment variables:"
-          echo "LHCI_FORM_FACTOR: mobile"
-          echo "VERCEL_AUTOMATION_BYPASS_SECRET: ${VERCEL_AUTOMATION_BYPASS_SECRET:0:8}..." # Show first 8 chars
-          echo "Has bypass secret: ${{ env.VERCEL_AUTOMATION_BYPASS_SECRET != '' }}"
-          echo "Bypass secret length: ${#VERCEL_AUTOMATION_BYPASS_SECRET}"
-          echo "Bypass secret first 16 chars: ${VERCEL_AUTOMATION_BYPASS_SECRET:0:16}..."
-          echo ""
-          echo "Testing bypass headers manually..."
-
-          # Test the bypass headers manually
-          preview_url="${{ steps.url.outputs.preview_url }}"
-          bypass_secret="${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}"
-          if [[ -n "$bypass_secret" ]]; then
-            echo "Testing with bypass headers:"
-            echo "  URL: $preview_url"
-            echo "  Headers: x-vercel-protection-bypass: ${bypass_secret:0:8}..."
-            
-            # Test with bypass headers
-            response=$(curl -s -o /dev/null -w "%{http_code}" \
-              --max-time 30 \
-              -H "x-vercel-protection-bypass: $bypass_secret" \
-              -H "x-vercel-set-bypass-cookie: true" \
-              "$preview_url")
-            
-            echo "  Response with bypass headers: HTTP $response"
-          else
-            echo "❌ No bypass secret found!"
-          fi
-
       - name: '🚀 Run Lighthouse CI'
         id: lhci
         uses: treosh/lighthouse-ci-action@v12
         with:
           urls: |
-            ${{ steps.url.outputs.preview_url }}
-            ${{ steps.url.outputs.preview_url }}/over-mij
-            ${{ steps.url.outputs.preview_url }}/aanpak
-            ${{ steps.url.outputs.preview_url }}/coaching
-            ${{ steps.url.outputs.preview_url }}/contact
+            ${{ env.PREVIEW_URL }}
+            ${{ env.PREVIEW_URL }}/over-mij
+            ${{ env.PREVIEW_URL }}/aanpak
+            ${{ env.PREVIEW_URL }}/coaching
+            ${{ env.PREVIEW_URL }}/contact
           configPath: packages/leenders-coaching-nl/lighthouserc.ci.cjs
           budgetPath: packages/leenders-coaching-nl/budget.json
           uploadArtifacts: true
@@ -209,6 +56,8 @@ jobs:
         env:
           LHCI_FORM_FACTOR: mobile
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          # If you prefer to inject bypass headers without touching the config, uncomment:
+          # LHCI_COLLECT_SETTINGS__EXTRA_HEADERS: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET && format('{{"x-vercel-protection-bypass":"{0}","x-vercel-set-bypass-cookie":"true"}}', secrets.VERCEL_AUTOMATION_BYPASS_SECRET) || '' }}
 
       - name: '📊 Parse Lighthouse results'
         id: parse
@@ -221,12 +70,10 @@ jobs:
           results_dir="${{ steps.lhci.outputs.resultsPath }}"
           assertion_file="$results_dir/assertion-results.json"
 
-          # defaults
           echo "errc=0"   >> $GITHUB_OUTPUT
           echo "warnc=0"  >> $GITHUB_OUTPUT
           echo "passc=0"  >> $GITHUB_OUTPUT
 
-          # assertions counts (if file exists) + details table
           if [[ -f "$assertion_file" ]]; then
             errc=$(jq '[.[] | select(.level=="error")] | length' "$assertion_file")
             warnc=$(jq '[.[] | select(.level=="warn")]  | length' "$assertion_file")
@@ -266,7 +113,6 @@ jobs:
             } >> "$GITHUB_OUTPUT"
           fi
 
-          # derive category scores from raw LHRs (robust)
           if [[ -n "$results_dir" && -d "$results_dir" ]]; then
             shopt -s nullglob
             lhrs=("$results_dir"/lhr-*.json)
@@ -280,10 +126,6 @@ jobs:
             echo "seo=N/A"  >> $GITHUB_OUTPUT
             echo "bp=N/A"   >> $GITHUB_OUTPUT
             echo "overall=⚠️ NO RESULTS" >> $GITHUB_OUTPUT
-            echo "❌ No Lighthouse results found. This usually means:"
-            echo "   1. Preview deployment failed or is still building"
-            echo "   2. URLs returned 404 errors"
-            echo "   3. Lighthouse CI failed to collect data"
           else
             readarray -t vals < <(jq -s '
               def avg: (length as $n | if $n==0 then null else (add / $n) end);
@@ -310,8 +152,6 @@ jobs:
             fi
           fi
 
-          # Note: Links are processed in the table step for per-page report links
-
       - name: '🧾 Build per-page tables (categories + vitals)'
         id: table
         if: always()
@@ -321,7 +161,7 @@ jobs:
           command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq -y >/dev/null 2>&1; }
 
           results_dir="${{ steps.lhci.outputs.resultsPath }}"
-          base="${{ steps.url.outputs.preview_url }}"
+          base="${{ env.PREVIEW_URL }}"
           ordered_urls=("$base" "$base/over-mij" "$base/aanpak" "$base/coaching" "$base/contact")
 
           # --- CATEGORY SCORES MAP: url -> {p,a,s,b} ---
@@ -466,7 +306,7 @@ jobs:
           number: ${{ steps.pr.outputs.number }}
           message: |
             ## 🚀 Lighthouse Performance Report
-            **Preview URL:** ${{ steps.url.outputs.preview_url }}
+            **Preview URL:** ${{ env.PREVIEW_URL }}
             **Status:** ${{ steps.parse.outputs.overall }}
 
             ### Category Scores
@@ -499,7 +339,7 @@ jobs:
         run: |
           {
             echo "## 🚀 Lighthouse (Preview)";
-            echo "- URL: ${{ steps.url.outputs.preview_url }}";
+            echo "- URL: ${{ env.PREVIEW_URL }}";
             echo "- Status: ${{ steps.parse.outputs.overall }}";
             echo "";
             echo "### Category Scores";
