@@ -425,6 +425,46 @@ jobs:
               echo "</details>"
               echo
             fi
+            
+            # Show file size distribution
+            echo
+            echo "<details>"
+            echo "<summary>📊 File Size Distribution</summary>"
+            echo
+            echo "| Category | LOC Range | Count |"
+            echo "|---|---|---|"
+            
+            # Count files by lines of code
+            if command -v find >/dev/null 2>&1 && command -v wc >/dev/null 2>&1; then
+              # Find source files, excluding test files, test directories, story files, and types folder
+              find packages/*/src -name "*.ts" -o -name "*.tsx" | grep -v -E "(\.test\.|\.spec\.|\.stories\.|__tests__|test/)" | grep -v "/types/" | while IFS= read -r file; do
+                if [ -f "$file" ]; then
+                  lines=$(wc -l < "$file" | tr -d ' ')
+                  echo "$lines"
+                fi
+              done | sort -n > temp_locs.txt
+              
+              # Count files in each category
+              small_count=$(awk '$1 <= 50 {count++} END {print count+0}' temp_locs.txt)
+              medium_count=$(awk '$1 > 50 && $1 <= 200 {count++} END {print count+0}' temp_locs.txt)
+              large_count=$(awk '$1 > 200 {count++} END {print count+0}' temp_locs.txt)
+              
+              echo "| Small files | ≤50 LOC | $small_count |"
+              echo "| Medium files | 51-200 LOC | $medium_count |"
+              echo "| Large files | >200 LOC | $large_count |"
+              
+              # Clean up temp file
+              rm -f temp_locs.txt
+            else
+              echo "| Small files | ≤50 LOC | N/A |"
+              echo "| Medium files | 51-200 LOC | N/A |"
+              echo "| Large files | >200 LOC | N/A |"
+            fi
+            
+            echo
+            echo "_Note: Based on TypeScript/TSX source files, excluding tests and types_"
+            echo "</details>"
+            echo
           } > dependency-report.md
 
       - name: '💬 Sticky PR comment – Dependencies'
