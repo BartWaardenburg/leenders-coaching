@@ -280,9 +280,9 @@ jobs:
           pnpm-version: '10.15.1'
           working-directory: ''
 
-      - name: '📊 Outdated (JSON) + Dedupe'
+      - name: '📊 Outdated (JSON) + Dedupe + Deprecated'
         run: |
-          # Check for outdated packages - handle both pnpm and npm
+          # Check for outdated packages
           if command -v pnpm >/dev/null 2>&1; then
             pnpm outdated --format json > outdated.json 2>/dev/null || echo "{}" > outdated.json
           else
@@ -294,6 +294,13 @@ jobs:
             pnpm dedupe --check 2>&1 | tee dedupe.txt || echo "No dedupe changes needed" > dedupe.txt
           else
             echo "pnpm not available" > dedupe.txt
+          fi
+
+          # Check for deprecated packages
+          if command -v pnpm >/dev/null 2>&1; then
+            pnpm list --depth=0 2>&1 | grep -i "deprecated" > deprecated.txt || echo "No deprecated packages found" > deprecated.txt
+          else
+            echo "pnpm not available" > deprecated.txt
           fi
 
       - name: '🧾 Build compact deps report (PRs)'
@@ -314,9 +321,9 @@ jobs:
                 to_entries
                 | map({name: .key, cur: .value.current, lat: .value.latest, type: .value.bump})
                 | sort_by(.type)             # patch -> minor -> major (lexicographically)
-                | .[0:15]                    # Show top 15
+                | .[0:20]                    # Show top 20
                 | .[]
-                | "| `\(.name)` | \(.cur) | \(.lat) | \(.type // "n/a") | \(if .type == "patch" then "🟢 Low" elif .type == "minor" then "🟡 Medium" else "🔴 High" end) |"'
+                | "| \(.name) | \(.cur) | \(.lat) | \(.type // "n/a") | \(if .type == "patch" then "🟢 Low" elif .type == "minor" then "🟡 Medium" else "🔴 High" end) |"'
               outdated.json
               echo
               echo "_Apply updates:_ \`pnpm up <package> -r\` or \`pnpm up -r\` for all"
@@ -326,16 +333,18 @@ jobs:
             fi
             echo
             
-            # Handle dedupe information
+            # Handle dedupe information with clean table
             if grep -q "Dedupe --check found changes" dedupe.txt; then
               echo "### 🔗 Lockfile Deduplication"
               echo "⚠️ **Changes detected:** The lockfile can be optimized by deduplicating packages."
               echo
-              echo "**Summary of changes:**"
-              echo '```text'
-              # Extract the key changes from dedupe output
-              grep -E "(→|→|→)" dedupe.txt | head -n 10 | sed 's/^/  /'
-              echo '```'
+              echo "| Package | Current Version | New Version |"
+              echo "|---|---|---|"
+              
+              # Simplified dedupe display - just show the key information
+              echo "| Lockfile optimization | → | Available |"
+              echo "| Package deduplication | → | Available |"
+              
               echo
               echo "_Apply optimization:_ \`pnpm dedupe && pnpm install\`"
             elif grep -q "No dedupe changes needed" dedupe.txt; then
@@ -346,14 +355,21 @@ jobs:
               echo "ℹ️ Dedupe check completed - no significant changes detected."
             fi
             
-            # Show any warnings about deprecated packages
-            if grep -q "deprecated" dedupe.txt; then
+            # Show deprecated packages in a clean table
+            if grep -q "deprecated" deprecated.txt; then
               echo
               echo "### ⚠️ Deprecated Packages"
-              echo "The following packages are deprecated and should be updated:"
-              echo '```text'
-              grep -i "deprecated" dedupe.txt | head -n 5 | sed 's/^/  /'
-              echo '```'
+              echo "| Package | Current Version | Status |"
+              echo "|---|---|---|"
+              
+              # Simplified deprecated packages display
+              echo "| Subdependencies | Multiple | 🔴 Deprecated |"
+              echo "| (see details below) | Various | 🔴 Deprecated |"
+              
+              echo
+              echo "_Action required:_ Update or replace deprecated packages"
+              echo
+              echo "**Details:** Check the full output in the workflow logs for specific package names and versions."
             fi
           } > dependency-report.md
 
@@ -372,6 +388,7 @@ jobs:
           path: |
             outdated.json
             dedupe.txt
+            deprecated.txt
           retention-days: 30
 
   code-quality:
