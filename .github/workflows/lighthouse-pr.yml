@@ -21,12 +21,17 @@ jobs:
     if: |
       github.event.deployment_status.state == 'success' &&
       contains(github.event.deployment.environment, 'Preview') &&
-      !contains(github.event.deployment.environment, 'Production') &&
-      !contains(github.event.deployment.environment, 'main')
+      contains(github.event.deployment.environment, 'leenders-coaching') &&
+      !contains(github.event.deployment.environment, 'studio')
+
+    env:
+      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+      PREVIEW_URL: ${{ github.event.deployment_status.environment_url }}
 
     steps:
       - name: 'Checkout code'
         uses: actions/checkout@v5
+
       - name: '⚙️ Setup Environment'
         uses: ./.github/actions/setup
         with:
@@ -34,31 +39,16 @@ jobs:
           pnpm-version: '10.15.1'
           working-directory: ''
 
-      - name: '🔗 Resolve preview URL (environment_url)'
-        id: url
-        shell: bash
-        run: |
-          set -euo pipefail
-          url="${{ github.event.deployment_status.environment_url || '' }}"
-          if [[ "$url" == *"vercel.com/login"* || "$url" == *"sso-api"* ]]; then
-            if [[ "$url" =~ url=([^&]+) ]]; then
-              enc="${BASH_REMATCH[1]}"
-              url="$(python3 -c "import sys,urllib.parse;print(urllib.parse.unquote(sys.argv[1]))" "$enc")"
-            fi
-          fi
-          [[ "$url" =~ ^https?:// ]] || { echo "No valid environment_url"; exit 1; }
-          echo "preview_url=$url" >> "$GITHUB_OUTPUT"
-
       - name: '🚀 Run Lighthouse CI'
         id: lhci
         uses: treosh/lighthouse-ci-action@v12
         with:
           urls: |
-            ${{ steps.url.outputs.preview_url }}
-            ${{ steps.url.outputs.preview_url }}/over-mij
-            ${{ steps.url.outputs.preview_url }}/aanpak
-            ${{ steps.url.outputs.preview_url }}/coaching
-            ${{ steps.url.outputs.preview_url }}/contact
+            ${{ env.PREVIEW_URL }}
+            ${{ env.PREVIEW_URL }}/over-mij
+            ${{ env.PREVIEW_URL }}/aanpak
+            ${{ env.PREVIEW_URL }}/coaching
+            ${{ env.PREVIEW_URL }}/contact
           configPath: packages/leenders-coaching-nl/lighthouserc.ci.cjs
           budgetPath: packages/leenders-coaching-nl/budget.json
           uploadArtifacts: true
@@ -66,7 +56,8 @@ jobs:
         env:
           LHCI_FORM_FACTOR: mobile
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+          # If you prefer to inject bypass headers without touching the config, uncomment:
+          # LHCI_COLLECT_SETTINGS__EXTRA_HEADERS: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET && format('{{"x-vercel-protection-bypass":"{0}","x-vercel-set-bypass-cookie":"true"}}', secrets.VERCEL_AUTOMATION_BYPASS_SECRET) || '' }}
 
       - name: '📊 Parse Lighthouse results'
         id: parse
@@ -79,12 +70,10 @@ jobs:
           results_dir="${{ steps.lhci.outputs.resultsPath }}"
           assertion_file="$results_dir/assertion-results.json"
 
-          # defaults
           echo "errc=0"   >> $GITHUB_OUTPUT
           echo "warnc=0"  >> $GITHUB_OUTPUT
           echo "passc=0"  >> $GITHUB_OUTPUT
 
-          # assertions counts (if file exists) + details table
           if [[ -f "$assertion_file" ]]; then
             errc=$(jq '[.[] | select(.level=="error")] | length' "$assertion_file")
             warnc=$(jq '[.[] | select(.level=="warn")]  | length' "$assertion_file")
@@ -124,9 +113,13 @@ jobs:
             } >> "$GITHUB_OUTPUT"
           fi
 
-          # derive category scores from raw LHRs (robust)
-          shopt -s nullglob
-          lhrs=("$results_dir"/lhr-*.json)
+          if [[ -n "$results_dir" && -d "$results_dir" ]]; then
+            shopt -s nullglob
+            lhrs=("$results_dir"/lhr-*.json)
+          else
+            lhrs=()
+          fi
+
           if [[ ${#lhrs[@]} -eq 0 ]]; then
             echo "perf=N/A" >> $GITHUB_OUTPUT
             echo "a11y=N/A" >> $GITHUB_OUTPUT
@@ -159,8 +152,6 @@ jobs:
             fi
           fi
 
-          # Note: Links are processed in the table step for per-page report links
-
       - name: '🧾 Build per-page tables (categories + vitals)'
         id: table
         if: always()
@@ -170,7 +161,7 @@ jobs:
           command -v jq >/dev/null 2>&1 || { sudo apt-get update -y >/dev/null 2>&1 && sudo apt-get install -y jq -y >/dev/null 2>&1; }
 
           results_dir="${{ steps.lhci.outputs.resultsPath }}"
-          base="${{ steps.url.outputs.preview_url }}"
+          base="${{ env.PREVIEW_URL }}"
           ordered_urls=("$base" "$base/over-mij" "$base/aanpak" "$base/coaching" "$base/contact")
 
           # --- CATEGORY SCORES MAP: url -> {p,a,s,b} ---
@@ -315,7 +306,7 @@ jobs:
           number: ${{ steps.pr.outputs.number }}
           message: |
             ## 🚀 Lighthouse Performance Report
-            **Preview URL:** ${{ steps.url.outputs.preview_url }}
+            **Preview URL:** ${{ env.PREVIEW_URL }}
             **Status:** ${{ steps.parse.outputs.overall }}
 
             ### Category Scores
@@ -348,7 +339,7 @@ jobs:
         run: |
           {
             echo "## 🚀 Lighthouse (Preview)";
-            echo "- URL: ${{ steps.url.outputs.preview_url }}";
+            echo "- URL: ${{ env.PREVIEW_URL }}";
             echo "- Status: ${{ steps.parse.outputs.overall }}";
             echo "";
             echo "### Category Scores";
