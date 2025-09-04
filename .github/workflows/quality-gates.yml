@@ -642,9 +642,13 @@ jobs:
               
               
               
-              # Show file size distribution
+              echo "</details>"
               echo
-              echo "### 📊 File Size Distribution"
+              
+              # Show file size distribution in its own details block
+              echo "<details>"
+              echo "<summary>📊 File Size Distribution</summary>"
+              echo
               SMALL=$(jq -r '[.[] | select(.loc <= 50)] | length' complexity.json)
               MEDIUM=$(jq -r '[.[] | select(.loc > 50 and .loc <= 200)] | length' complexity.json)
               LARGE=$(jq -r '[.[] | select(.loc > 200)] | length' complexity.json)
@@ -653,6 +657,8 @@ jobs:
               echo "| Small files | ≤50 LOC | $SMALL |"
               echo "| Medium files | 51-200 LOC | $MEDIUM |"
               echo "| Large files | >200 LOC | $LARGE |"
+              echo
+              echo "_Note: Based on TypeScript/TSX source files, excluding tests and types_"
               echo "</details>"
               echo
             else
