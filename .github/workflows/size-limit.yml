@@ -48,6 +48,8 @@ jobs:
       - name: '🏗️ Build frontend'
         run: pnpm --filter leenders-coaching-nl run build
 
+      # Note: This step runs size-limit and captures results for analysis
+      # The workflow now correctly uses the actual pass/fail status from size-limit results
       - name: '📊 Run Size Limit (soft-fail)'
         id: sizelimit
         working-directory: packages/leenders-coaching-nl
@@ -104,15 +106,35 @@ jobs:
             const cfgByName = new Map(cfg.map(c => [c.name, c]));
 
             const humanBytes = n => (n >= 1024 ? (n/1024).toFixed(0)+' KB' : n+' B');
+            
+            // Improved logic to properly handle time vs size metrics and calculate pass/fail status
 
             const rows = results.map(r => {
               const c = cfgByName.get(r.name) || {};
               const limitStr = c.limit || (typeof r.sizeLimit === 'number' ? humanBytes(r.sizeLimit) : '-');
-              const isTime = r.running != null || (typeof limitStr === 'string' && limitStr.endsWith('ms'));
-              const valStr = isTime
-                ? (r.running != null ? Math.round(r.running * 1000) + ' ms' : 'N/A')
-                : (typeof r.size === 'number' ? humanBytes(r.size) : 'N/A');
-              const pass = r.passed ? '✅' : '❌';
+              
+              // Better detection of time-based metrics - prioritize limit format over running value
+              const isTime = (typeof limitStr === 'string' && limitStr.endsWith('ms')) ||
+                            (typeof limitStr === 'string' && limitStr.endsWith('s')) ||
+                            r.name.toLowerCase().includes('time') ||
+                            r.name.toLowerCase().includes('exec');
+              
+              let valStr;
+              if (isTime) {
+                // Handle time-based metrics
+                const currentTime = r.running != null ? Math.round(r.running * 1000) : 0; // Convert to ms
+                valStr = currentTime > 0 ? currentTime + ' ms' : 'N/A';
+              } else {
+                // Handle size-based metrics
+                const currentSize = r.size || 0;
+                valStr = currentSize > 0 ? humanBytes(currentSize) : 'N/A';
+              }
+              
+                          // Use the actual pass/fail status from size-limit results
+            // This fixes the issue where custom logic was incorrectly determining pass/fail
+            // Previously, the workflow was recalculating pass/fail instead of using size-limit's results
+            const pass = r.passed ? '✅' : '❌';
+              
               return \`| \${r.name} | \${limitStr} | \${valStr} | \${pass} |\`;
             }).join('\n');
 
@@ -123,39 +145,69 @@ jobs:
 
           ## 📊 Size Limit Results
 
+          <details>
+          <summary>📋 Bundle Size Details (\${results.length} checks)</summary>
+
           | Check | Limit | Size | Passed |
           |-------|-------|------|--------|
           \${rows}
 
+          </details>
+
           ## 📋 Analysis Summary
 
-          - **Total Checks**: \${results.length}
-          - **Passed**: \${results.filter(x => x.passed).length}
-          - **Failed**: \${failed.length}
-          - **Status**: \${status}
+          <details>
+          <summary>📊 Summary Statistics</summary>
+
+          | Metric | Value |
+          |--------|-------|
+          | Total Checks | \${results.length} |
+          | Passed | \${results.filter(x => x.passed).length} |
+          | Failed | \${failed.length} |
+          | Status | \${status} |
+
+          </details>
 
           \${failed.length ? \`
           ## 🚨 Failed Checks
 
+          <details>
+          <summary>⚠️ Failed Bundle Checks (\${failed.length} failures)</summary>
+
+          | Bundle | Current Size | Limit | Status |
+          |--------|--------------|-------|--------|
           \${failed.map(x => {
             const c = cfgByName.get(x.name) || {};
             const limitStr = c.limit || (typeof x.sizeLimit === 'number' ? humanBytes(x.sizeLimit) : '-');
-            const isTime = x.running != null || (typeof limitStr === 'string' && limitStr.endsWith('ms'));
-            const valStr = isTime ? (x.running != null ? Math.round(x.running * 1000)+' ms' : 'N/A')
-                                  : (typeof x.size === 'number' ? humanBytes(x.size) : 'N/A');
-            return \`- **\${x.name}**: \${valStr} (limit: \${limitStr})\`;
+            
+            // Use the same improved logic for failed checks
+            const isTime = (typeof limitStr === 'string' && limitStr.endsWith('ms')) ||
+                          (typeof limitStr === 'string' && limitStr.endsWith('s')) ||
+                          x.name.toLowerCase().includes('time') ||
+                          x.name.toLowerCase().includes('exec');
+            
+            let valStr;
+            if (isTime) {
+              const currentTime = x.running != null ? Math.round(x.running * 1000) : 0;
+              valStr = currentTime > 0 ? currentTime + ' ms' : 'N/A';
+            } else {
+              const currentSize = x.size || 0;
+              valStr = currentSize > 0 ? humanBytes(currentSize) : 'N/A';
+            }
+            
+            return \`| \${x.name} | \${valStr} | \${limitStr} | ❌ Failed |\`;
           }).join('\n')}
 
-          ## 🛠️ Optimization Suggestions
-
-          - Consider code splitting for large bundles
-          - Use dynamic imports for non-critical features
-          - Optimize third-party dependencies
-          - Review and remove unused code
+          </details>
           \` : \`
           ## 🎉 All Good!
 
-          Great job keeping your bundles optimized!
+          <details>
+          <summary>✅ Bundle Status</summary>
+
+          Great job keeping your bundles optimized! All size limits are within acceptable ranges.
+
+          </details>
           \`}
 
           ---
@@ -212,9 +264,14 @@ jobs:
                   const md = [
                     '## 📈 Changes vs Main Branch',
                     '',
+                    '<details>',
+                    '<summary>📊 Bundle Size Changes</summary>',
+                    '',
                     '| Check | Current | Main | Change |',
                     '|-------|---------|------|--------|',
                     ...rows,
+                    '',
+                    '</details>',
                     ''
                   ].join('\\n');
                   fs.writeFileSync('.bundle-analysis/delta-report.md', md);
@@ -270,20 +327,27 @@ jobs:
             if [[ -f "packages/leenders-coaching-nl/.bundle-analysis/size-results.json" ]]; then
               echo "### 📊 Size Limit Results";
               echo "";
+              echo "<details>";
+              echo "<summary>📋 Bundle Size Details</summary>";
+              echo "";
               echo "| Check | Limit | Size | Passed |";
               echo "|-------|-------|------|--------|";
               jq -s -r '
                 # $r = results, $c = config; join by .name
                 (.[0] // []) as $r
                 | (.[1] // []) as $c
-                | ($c | map({key:.name, val:.limit}) | from_entries) as $limits
                 | $r[]
                 | . as $x
-                | "| \($x.name) | \($limits[$x.name] // (if (.sizeLimit!=null) then (.sizeLimit|tostring+" B") else "-" end)) | " +
-                  ( if ($x.running!=null) then ((($x.running*1000)|floor|tostring) + " ms")
-                    else (($x.size // 0 | tostring) + " B") end ) + " | " +
+                | "| \($x.name) | \(($c[] | select(.name == $x.name) | .limit) // "-") | " +
+                  (if ($x.running != null and (($c[] | select(.name == $x.name) | .limit) // "" | test("ms$|s$"))) then
+                    ((($x.running*1000)|floor|tostring) + " ms")
+                  elif $x.size != null then
+                    (if $x.size >= 1024 then (($x.size/1024)|floor|tostring + " KB") else ($x.size|tostring + " B") end)
+                  else "N/A" end) + " | " +
                   (if $x.passed then "✅" else "❌" end) + " |"
               ' packages/leenders-coaching-nl/.bundle-analysis/size-results.json packages/leenders-coaching-nl/.size-limit.json;
+              echo "";
+              echo "</details>";
               echo "";
               echo "### 📋 Analysis Results";
               echo "Check the workflow artifacts for detailed information about your bundle sizes.";

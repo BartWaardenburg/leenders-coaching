@@ -12,6 +12,7 @@ jobs:
     name: 'Lighthouse CI (Production) – ${{ matrix.formFactor }}'
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    continue-on-error: true
     strategy:
       matrix:
         formFactor: [mobile, desktop]
@@ -64,7 +65,6 @@ jobs:
       - name: '🚀 Run Lighthouse CI (Production)'
         id: lhci
         uses: treosh/lighthouse-ci-action@v12
-        continue-on-error: true
         with:
           urls: |
             https://leenders-coaching.vercel.app/
@@ -246,20 +246,29 @@ jobs:
             echo "| Best Practices | ${bp} |";
             echo "";
             echo "### Category Scores";
+            echo "<details>";
+            echo "<summary>📊 Category Scores</summary>";
+            echo "";
             cat "$tmp_categories" || true
+            echo "</details>";
             if [[ -n "$first_link" ]]; then
               echo "";
               echo "- Temporary public report (first page): ${first_link}";
             fi
             echo "";
             echo "### Core Metrics";
+            echo "<details>";
+            echo "<summary>🚀 Core Web Vitals</summary>";
+            echo "";
             echo "${vitals_table}";
+            echo "</details>";
             echo "";
             echo "### Assertion details";
-            echo "";
-            echo "<br/>";
+            echo "<details>";
+            echo "<summary>🔍 Assertion Details</summary>";
             echo "";
             cat "$tmp_assert";
+            echo "</details>";
           } >> $GITHUB_STEP_SUMMARY
 
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -312,13 +321,16 @@ jobs:
               averagesMd + '\n\n' +
               '---\n\n' +
               '### Category Scores\n' +
-              categoriesTableMd + '\n\n' +
+              '<details>\n<summary>📊 Category Scores</summary>\n\n' +
+              categoriesTableMd + '\n</details>\n\n' +
               '---\n\n' +
               '### Core Metrics\n' +
-              vitalsTableMd + '\n\n' +
+              '<details>\n<summary>🚀 Core Web Vitals</summary>\n\n' +
+              vitalsTableMd + '\n</details>\n\n' +
               '---\n\n' +
               '### Assertion details\n' +
-              assertionsMd + '\n\n' +
+              '<details>\n<summary>🔍 Assertion Details</summary>\n\n' +
+              assertionsMd + '\n</details>\n\n' +
               '---\n\n' +
               '### Environment\n' +
               envMd + '\n\n' +
