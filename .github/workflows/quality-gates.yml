@@ -151,19 +151,22 @@ jobs:
 
               if [ "$(echo "$ACT" | jq 'length')" -gt 0 ]; then
                 echo
-                echo "### ⚠️ Vulnerabilities requiring attention"
+                echo "<details>"
+                echo "<summary>⚠️ Vulnerabilities requiring attention</summary>"
                 echo
                 echo "| Module | Current | Patched | Severity | Description |"
                 echo "|---|---|---|---|---|"
                 echo "$ACT" | jq -r '.[] | "| `" + .module_name + "` | " + (.findings[0].version // "?") + " | `" + (.patched_versions // "N/A") + "` | " + .severity + " | " + (.title // "advisory" | gsub("[\\n\\r\\t]"; " ")) + " |"'
                 echo
                 echo "_Apply updates with:_ \`pnpm up <module> -r\`"
+                echo "</details>"
               fi
 
               # Show low severity items separately if they exist
               if [ "$LOW" -gt 0 ]; then
                 echo
-                echo "### ℹ️ Low priority updates (optional)"
+                echo "<details>"
+                echo "<summary>ℹ️ Low priority updates (optional)</summary>"
                 if [ "$LOW" -gt 1 ]; then
                   echo "_Note: Multiple findings may represent the same vulnerability affecting different package versions or paths_"
                   echo
@@ -172,6 +175,7 @@ jobs:
                 echo "|---|---|---|---|"
                 # Show all findings for each advisory to account for multiple vulnerable packages
                 jq -r '.advisories | to_entries | map(.value) | map(select(.severity == "low")) | .[0:5] | .[] | .findings[] as $finding | "| `" + .module_name + "` | " + ($finding.version // "?") + " | `" + (.patched_versions // "N/A") + "` | " + (.title // "advisory") + " |"' audit-results.json
+                echo "</details>"
               fi
             fi
 
