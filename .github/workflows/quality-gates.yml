@@ -230,7 +230,9 @@ jobs:
             echo
             
             # For now, create a simple license summary with common licenses
-            echo "### 📊 License Summary"
+            echo "<details>"
+            echo "<summary>📊 License Summary</summary>"
+            echo
             echo "| License Type | Count | Status |"
             echo "|---|---|---|"
             echo "| MIT | 150+ | 🟢 Safe |"
@@ -239,6 +241,7 @@ jobs:
             echo "| BSD-3-Clause | 10+ | 🟢 Safe |"
             echo "| UNKNOWN | 5+ | 🟠 Unknown |"
             echo
+            echo "</details>"
             
             # Check if we have any problematic licenses (simplified check)
             PROBLEMATIC_COUNT=0
@@ -313,7 +316,9 @@ jobs:
             # Check if we have outdated packages
             OUTDATED_COUNT=$(jq 'length' outdated.json)
             if [ "$OUTDATED_COUNT" -gt 0 ]; then
-              echo "### 🔄 Available Updates"
+              echo "<details>"
+              echo "<summary>🔄 Available Updates ($OUTDATED_COUNT packages)</summary>"
+              echo
               echo "| Package | Current | Latest | Type | Priority |"
               echo "|---|---|---|---|---|"
               jq -r '
@@ -326,6 +331,7 @@ jobs:
               outdated.json
               echo
               echo "_Apply updates:_ \`pnpm up <package> -r\` or \`pnpm up -r\` for all"
+              echo "</details>"
             else
               echo "### 🔄 Available Updates"
               echo "✅ All packages are up to date!"
@@ -334,7 +340,9 @@ jobs:
             
             # Handle dedupe information with clean table
             if grep -q "Dedupe --check found changes" dedupe.txt; then
-              echo "### 🔗 Lockfile Deduplication"
+              echo "<details>"
+              echo "<summary>🔗 Lockfile Deduplication (Changes detected)</summary>"
+              echo
               echo "⚠️ **Changes detected:** The lockfile can be optimized by deduplicating packages."
               echo
               echo "| Package | Current Version | New Version |"
@@ -347,6 +355,7 @@ jobs:
               
               echo
               echo "_Apply optimization:_ \`pnpm dedupe && pnpm install\`"
+              echo "</details>"
             elif grep -q "No dedupe changes needed" dedupe.txt; then
               echo "### 🔗 Lockfile Deduplication"
               echo "✅ Lockfile is already optimized - no deduplication needed."
@@ -358,7 +367,9 @@ jobs:
             # Show deprecated packages in a clean table
             if grep -q "deprecated" deprecated.txt; then
               echo
-              echo "### ⚠️ Deprecated Packages"
+              echo "<details>"
+              echo "<summary>⚠️ Deprecated Packages</summary>"
+              echo
               echo "| Package | Current Version | Status |"
               echo "|---|---|---|"
               
@@ -373,6 +384,7 @@ jobs:
               
               echo
               echo "_Action required:_ Update or replace deprecated packages"
+              echo "</details>"
             fi
           } > dependency-report.md
 
@@ -479,7 +491,9 @@ jobs:
             echo
             
             # Parse TypeScript errors and create a combined issues table
-            echo "### 📋 Code Issues Summary"
+            echo "<details>"
+            echo "<summary>📋 Code Issues Summary ($ERR errors, $WARN warnings, $(grep -c "error\|TS[0-9]{4}" ts.txt 2>/dev/null || echo 0) TypeScript issues)</summary>"
+            echo
             echo "| File | ESLint Errors | ESLint Warnings | TypeScript Issues | Total Issues |"
             echo "|---|---|---|---|---|"
             
@@ -504,14 +518,18 @@ jobs:
               if [ -s eslint-issues.txt ]; then
                 head -n 10 eslint-issues.txt | while IFS='|' read -r filePath esLintErr esLintWarn tsIssues total; do
                   filename=$(echo "$filePath" | sed 's/.*\///')
-                  echo "| [$filename](https://github.com/${{ github.repository }}/blob/${{ github.head_ref || github.ref_name }}/packages/leenders-coaching-nl/$filePath) | $esLintErr | $esLintWarn | $tsIssues | $total |"
+                  # Clean the file path to remove runner paths
+                  cleanPath=$(echo "$filePath" | sed 's|/home/runner/work/leenders-coaching/leenders-coaching/||g')
+                  echo "| [$filename](https://github.com/${{ github.repository }}/blob/${{ github.head_ref || github.ref_name }}/$cleanPath) | $esLintErr | $esLintWarn | $tsIssues | $total |"
                 done
               fi
               
               if [ -s ts-issues.txt ]; then
                 head -n 10 ts-issues.txt | while IFS='|' read -r filePath esLintErr esLintWarn tsIssues total; do
                   filename=$(echo "$filePath" | sed 's/.*\///')
-                  echo "| [$filename](https://github.com/${{ github.repository }}/blob/${{ github.head_ref || github.ref_name }}/packages/leenders-coaching-nl/$filePath) | $esLintErr | $esLintWarn | $tsIssues | $total |"
+                  # Clean the file path to remove runner paths
+                  cleanPath=$(echo "$filePath" | sed 's|/home/runner/work/leenders-coaching/leenders-coaching/||g')
+                  echo "| [$filename](https://github.com/${{ github.repository }}/blob/${{ github.head_ref || github.ref_name }}/$cleanPath) | $esLintErr | $esLintWarn | $tsIssues | $total |"
                 done
               fi
             else
@@ -519,15 +537,14 @@ jobs:
               echo "| No issues found | No issues found | No issues found | No issues found | No issues found |"
             fi
             
-            echo
-            echo "**Summary:** $ERR ESLint errors, $WARN ESLint warnings, $(grep -c "error\|TS[0-9]{4}" ts.txt 2>/dev/null || echo 0) TypeScript issues across $FILES files"
+            echo "</details>"
             echo
             
-            # Handle complexity report
+                        # Handle complexity report
             if [ "$COMPLEXITY_COUNT" -gt 0 ]; then
-              echo "**Complexity Analysis:** $COMPLEXITY_COUNT source files analyzed (excluding tests)"
+              echo "<details>"
+              echo "<summary>🔍 Maintainability Scores ($COMPLEXITY_COUNT files analyzed)</summary>"
               echo
-              echo "### 🔍 Maintainability Scores"
               echo "| File | Maintainability | Complexity | LOC | Size (KB) |"
               echo "|---|---|---|---|---|"
               jq -r '
@@ -538,7 +555,7 @@ jobs:
                 | "| [`\(.file | split("/") | last)`](https://github.com/${{ github.repository }}/blob/${{ github.head_ref || github.ref_name }}/\(.file)) | \(if .maintainability >= 80 then "🟢 " elif .maintainability >= 60 then "🟡 " else "🔴 " end)\(.maintainability) | \(.complexity) | \(.loc) | \((.size/1024 | floor))KB |"
               ' complexity.json
               
-
+              
               
               # Show file size distribution
               echo
@@ -551,6 +568,7 @@ jobs:
               echo "| Small files | ≤50 LOC | $SMALL |"
               echo "| Medium files | 51-200 LOC | $MEDIUM |"
               echo "| Large files | >200 LOC | $LARGE |"
+              echo "</details>"
             else
               echo "**Complexity Analysis:** No complexity data available"
             fi
@@ -622,11 +640,16 @@ jobs:
           {
             echo "## 🚀 Performance"
             echo
+            echo "<details>"
+            echo "<summary>📊 Performance Metrics</summary>"
+            echo
             echo "| Metric | Value |"
             echo "|---|---:|"
             echo "| Build (frontend, ANALYZE on) | ${{ steps.build_analyze.outputs.duration || 'n/a' }}s |"
             echo "| Total JS (chunks) | ${{ steps.bundle_snapshot.outputs.js || 'n/a' }} |"
             echo "| Total CSS | ${{ steps.bundle_snapshot.outputs.css || 'n/a' }} |"
+            echo
+            echo "</details>"
             echo
             echo "📊 **Bundle Analysis:** HTML reports available in artifact \`bundle-analyzer-${{ github.sha }}\`"
           } > performance.md
