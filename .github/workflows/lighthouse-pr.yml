@@ -24,6 +24,9 @@ jobs:
       !contains(github.event.deployment.environment, 'Production') &&
       !contains(github.event.deployment.environment, 'main')
 
+    env:
+      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+
     steps:
       - name: 'Checkout code'
         uses: actions/checkout@v5
@@ -98,11 +101,12 @@ jobs:
             echo "  Attempt $attempt/$max_attempts..."
             
             # Test with bypass headers if available
-            if [[ -n "$VERCEL_AUTOMATION_BYPASS_SECRET" ]]; then
+            bypass_secret="${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}"
+            if [[ -n "$bypass_secret" ]]; then
               echo "    Using Vercel automation bypass headers..."
               code=$(curl -s -o /dev/null -w "%{http_code}" \
                 --max-time 30 --retry 2 --retry-delay 2 \
-                -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" \
+                -H "x-vercel-protection-bypass: $bypass_secret" \
                 -H "x-vercel-set-bypass-cookie: true" \
                 "$preview_url")
             else
@@ -135,10 +139,11 @@ jobs:
             echo "  Testing: $page"
             
             # Test with bypass headers if available
-            if [[ -n "$VERCEL_AUTOMATION_BYPASS_SECRET" ]]; then
+            bypass_secret="${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}"
+            if [[ -n "$bypass_secret" ]]; then
               page_code=$(curl -s -o /dev/null -w "%{http_code}" \
                 --max-time 30 --retry 2 --retry-delay 2 \
-                -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" \
+                -H "x-vercel-protection-bypass: $bypass_secret" \
                 -H "x-vercel-set-bypass-cookie: true" \
                 "$preview_url$page")
             else
@@ -169,15 +174,16 @@ jobs:
 
           # Test the bypass headers manually
           preview_url="${{ steps.url.outputs.preview_url }}"
-          if [[ -n "$VERCEL_AUTOMATION_BYPASS_SECRET" ]]; then
+          bypass_secret="${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}"
+          if [[ -n "$bypass_secret" ]]; then
             echo "Testing with bypass headers:"
             echo "  URL: $preview_url"
-            echo "  Headers: x-vercel-protection-bypass: ${VERCEL_AUTOMATION_BYPASS_SECRET:0:8}..."
+            echo "  Headers: x-vercel-protection-bypass: ${bypass_secret:0:8}..."
             
             # Test with bypass headers
             response=$(curl -s -o /dev/null -w "%{http_code}" \
               --max-time 30 \
-              -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" \
+              -H "x-vercel-protection-bypass: $bypass_secret" \
               -H "x-vercel-set-bypass-cookie: true" \
               "$preview_url")
             
@@ -203,7 +209,6 @@ jobs:
         env:
           LHCI_FORM_FACTOR: mobile
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
 
       - name: '📊 Parse Lighthouse results'
         id: parse
