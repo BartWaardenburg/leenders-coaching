@@ -349,7 +349,33 @@ jobs:
             echo
             
             # Handle dedupe information with clean table
-            if grep -q "Dedupe --check found changes" dedupe.txt; then
+            # First check if there are actual changes that can be displayed
+            DEDUPE_CHANGES=false
+            DEDUPE_PACKAGES=""
+            
+            # Try to extract package information from dedupe output
+            if grep -q "→" dedupe.txt; then
+              # Extract packages that have version changes (most common case)
+              DEDUPE_PACKAGES=$(grep -E "→" dedupe.txt | sed 's/.*→ //' | grep -oE "[a-zA-Z0-9@._/-]+@[0-9]+\.[0-9]+\.[0-9]+" | sort | uniq | head -15)
+              if [ -n "$DEDUPE_PACKAGES" ]; then
+                DEDUPE_CHANGES=true
+              fi
+            elif grep -q "duplicate\|duplicated" dedupe.txt; then
+              # Extract duplicate package information
+              DEDUPE_PACKAGES=$(grep -i "duplicate\|duplicated" dedupe.txt | head -15)
+              if [ -n "$DEDUPE_PACKAGES" ]; then
+                DEDUPE_CHANGES=true
+              fi
+            else
+              # Fallback: try to extract any package names from the dedupe output
+              DEDUPE_PACKAGES=$(grep -oE "[a-zA-Z0-9@._/-]+@[0-9]+\.[0-9]+\.[0-9]+" dedupe.txt | head -15)
+              if [ -n "$DEDUPE_PACKAGES" ]; then
+                DEDUPE_CHANGES=true
+              fi
+            fi
+            
+            # Only show changes section if we actually have packages to display
+            if [ "$DEDUPE_CHANGES" = true ] && ! grep -q "No dedupe changes needed" dedupe.txt; then
               echo "<details>"
               echo "<summary>🔗 Lockfile Deduplication (Changes detected)</summary>"
               echo
@@ -358,12 +384,9 @@ jobs:
               echo "| Package Name | Current Version | Optimized Version | Action |"
               echo "|---|---|---|---|"
               
-              # Extract package information from dedupe output with better parsing
-              # Look for patterns like "package@version → package@version" or similar
-              # First try to find actual package names that can be deduplicated
+              # Display the extracted packages
               if grep -q "→" dedupe.txt; then
-                # Extract packages that have version changes (most common case)
-                grep -E "→" dedupe.txt | sed 's/.*→ //' | grep -oE "[a-zA-Z0-9@._/-]+@[0-9]+\.[0-9]+\.[0-9]+" | sort | uniq | head -15 | while IFS= read -r package; do
+                echo "$DEDUPE_PACKAGES" | while IFS= read -r package; do
                   if [[ "$package" =~ ^([^@]+)@([^@]+) ]]; then
                     pkg_name="${BASH_REMATCH[1]}"
                     pkg_version="${BASH_REMATCH[2]}"
@@ -371,17 +394,14 @@ jobs:
                   fi
                 done
               elif grep -q "duplicate\|duplicated" dedupe.txt; then
-                # Extract duplicate package information
-                grep -i "duplicate\|duplicated" dedupe.txt | head -15 | while IFS= read -r line; do
-                  # Try to extract package name from various dedupe output formats
+                echo "$DEDUPE_PACKAGES" | while IFS= read -r line; do
                   if [[ "$line" =~ ([a-zA-Z0-9@._/-]+) ]]; then
                     pkg_name="${BASH_REMATCH[1]}"
                     echo "| $pkg_name | 🔍 Multiple versions | 🔄 Single version | Run \`pnpm dedupe\` |"
                   fi
                 done
               else
-                # Fallback: try to extract any package names from the dedupe output
-                grep -oE "[a-zA-Z0-9@._/-]+@[0-9]+\.[0-9]+\.[0-9]+" dedupe.txt | head -15 | while IFS= read -r package; do
+                echo "$DEDUPE_PACKAGES" | while IFS= read -r package; do
                   if [[ "$package" =~ ^([^@]+)@([^@]+) ]]; then
                     pkg_name="${BASH_REMATCH[1]}"
                     pkg_version="${BASH_REMATCH[2]}"
@@ -722,31 +742,3 @@ jobs:
             packages/leenders-coaching-nl/.next/static/analyze/*-stats.json
           if-no-files-found: ignore
           retention-days: 14
-
-  quality-summary:
-    name: 'Quality Summary'
-    runs-on: ubuntu-latest
-    needs:
-      [
-        security-audit,
-        license-compliance,
-        dependency-analysis,
-        code-quality,
-        bundle-analysis,
-      ]
-    if: always()
-    steps:
-      - name: '💬 Sticky PR comment – Quality Gates'
-        if: github.event_name == 'pull_request'
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          header: quality-gates
-          number: ${{ github.event.pull_request.number }}
-          message: |
-            ## 🎯 Quality Gates
-            - **Security:** ${{ needs.security-audit.outputs.vulnerabilities-found == 'true' && '⚠️ Action required' || '✅ Clear' }}
-            - **Licenses:** ✅ Scanned (see comment)
-            - **Dependencies:** ✅ Scanned (see comment)
-            - **Code Quality:** ✅ Scanned (see comment)
-            - **Bundle Analysis:** ✅ Scanned (see comment)

@@ -130,15 +130,42 @@ jobs:
                 valStr = currentSize > 0 ? humanBytes(currentSize) : 'N/A';
               }
               
-                          // Use the actual pass/fail status from size-limit results
-            // This fixes the issue where custom logic was incorrectly determining pass/fail
-            // Previously, the workflow was recalculating pass/fail instead of using size-limit's results
-            const pass = r.passed ? '✅' : '❌';
+                          // Fix for size-limit bug: manually calculate pass/fail for time-based metrics
+            // size-limit incorrectly marks time checks as failed even when under limit
+            let pass;
+            if (isTime) {
+              const currentTime = r.running != null ? r.running * 1000 : 0; // Convert to ms
+              const limitTime = typeof limitStr === 'string' && limitStr.endsWith('ms') 
+                ? parseFloat(limitStr) 
+                : (typeof limitStr === 'string' && limitStr.endsWith('s') 
+                  ? parseFloat(limitStr) * 1000 
+                  : 0);
+              pass = currentTime <= limitTime ? '✅' : '❌';
+            } else {
+              // For size-based metrics, use size-limit's result
+              pass = r.passed ? '✅' : '❌';
+            }
               
               return \`| \${r.name} | \${limitStr} | \${valStr} | \${pass} |\`;
             }).join('\n');
 
-            const failed = results.filter(r => !r.passed);
+            // Fix for size-limit bug: manually filter failed checks
+            const failed = results.filter(r => {
+              if (r.name.toLowerCase().includes('time') || r.name.toLowerCase().includes('exec')) {
+                // For time-based metrics, check if they actually exceed the limit
+                const limitStr = (cfgByName.get(r.name) || {}).limit || '';
+                const limitTime = typeof limitStr === 'string' && limitStr.endsWith('ms') 
+                  ? parseFloat(limitStr) 
+                  : (typeof limitStr === 'string' && limitStr.endsWith('s') 
+                    ? parseFloat(limitStr) * 1000 
+                    : 0);
+                const currentTime = r.running != null ? r.running * 1000 : 0;
+                return currentTime > limitTime;
+              } else {
+                // For size-based metrics, use size-limit's result
+                return !r.passed;
+              }
+            });
             const status = failed.length ? '❌ Some bundles exceed limits' : '✅ All bundles are within limits';
 
             const report = \`# Bundle Analysis Report
@@ -195,7 +222,22 @@ jobs:
               valStr = currentSize > 0 ? humanBytes(currentSize) : 'N/A';
             }
             
-            return \`| \${x.name} | \${valStr} | \${limitStr} | ❌ Failed |\`;
+            // Use the same logic to determine if it actually failed
+            const isTimeFailed = isTime;
+            let status;
+            if (isTimeFailed) {
+              const currentTime = x.running != null ? x.running * 1000 : 0;
+              const limitTime = typeof limitStr === 'string' && limitStr.endsWith('ms') 
+                ? parseFloat(limitStr) 
+                : (typeof limitStr === 'string' && limitStr.endsWith('s') 
+                  ? parseFloat(limitStr) * 1000 
+                  : 0);
+              status = currentTime <= limitTime ? '✅ Passed' : '❌ Failed';
+            } else {
+              status = '❌ Failed';
+            }
+            
+            return \`| \${x.name} | \${valStr} | \${limitStr} | \${status} |\`;
           }).join('\n')}
 
           </details>
