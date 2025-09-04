@@ -452,7 +452,15 @@ jobs:
               fi
             done
             echo "]" >> temp_complexity.json
-            mv temp_complexity.json complexity.json
+            
+            # Clean up file paths to remove absolute runner paths
+            if [ -f temp_complexity.json ]; then
+              # Replace absolute paths with relative paths (compatible with both Linux and macOS)
+              sed 's|/home/runner/work/leenders-coaching/leenders-coaching/||g' temp_complexity.json > complexity.json
+              rm temp_complexity.json
+            else
+              echo "[]" > complexity.json
+            fi
           fi
 
       - name: '🧾 Build compact code report (PRs)'
