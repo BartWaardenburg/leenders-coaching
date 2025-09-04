@@ -29,11 +29,6 @@ const nextConfig: NextConfig = {
   },
   webpack: (config, { dev, isServer }) => {
     if (!dev && process.env.ANALYZE_JSON === 'true') {
-      console.log(
-        `Adding StatsWriterPlugin for ${isServer ? 'server' : 'client'} build`
-      );
-      // Server -> .next/analyze/server-stats.json
-      // Client -> .next/static/analyze/client-stats.json
       const filename = isServer
         ? '../analyze/server-stats.json'
         : 'analyze/client-stats.json';

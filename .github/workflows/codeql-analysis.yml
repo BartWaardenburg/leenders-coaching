@@ -50,25 +50,11 @@ jobs:
         with:
           category: '/language:${{matrix.language}}'
 
-  # Setup environment
-  setup:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: 'Checkout code'
-        uses: actions/checkout@v5
-      - name: '⚙️ Setup Environment'
-        uses: ./.github/actions/setup
-        with:
-          node-version: '22'
-          pnpm-version: '10.15.1'
-          working-directory: ''
-
   security-checks:
     name: 'Security & Quality Checks'
     runs-on: ubuntu-latest
     timeout-minutes: 45
-    needs: [codeql-analysis, setup]
+    needs: [codeql-analysis]
 
     steps:
       - name: '🔄 Checkout repository'
