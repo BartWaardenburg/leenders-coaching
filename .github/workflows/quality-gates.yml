@@ -341,8 +341,8 @@ jobs:
               echo "| Package | Current Version | New Version |"
               echo "|---|---|---|"
               
-              # Extract package names and versions from dedupe output using more reliable method
-              grep -E "→" dedupe.txt | grep -oE "[^@]+@[0-9]+\.[0-9]+\.[0-9]+" | sort | uniq | head -15 | while IFS= read -r package; do
+              # Extract package names and versions from dedupe output using simpler, more reliable method
+              grep -E "→" dedupe.txt | sed 's/.*→ //' | grep -oE "[a-zA-Z0-9@._/-]+@[0-9]+\.[0-9]+\.[0-9]+" | sort | uniq | head -15 | while IFS= read -r package; do
                 echo "| $package | → | Updated |"
               done
               
