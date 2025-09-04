@@ -38,10 +38,10 @@
     "sanity"
   ],
   "dependencies": {
-    "@sanity/client": "7.10.0",
-    "@sanity/types": "4.6.0",
-    "@sanity/vision": "4.6.0",
-    "dotenv": "17.2.1",
+    "@sanity/client": "7.11.0",
+    "@sanity/types": "4.6.1",
+    "@sanity/vision": "4.6.1",
+    "dotenv": "17.2.2",
     "lodash.defaults": "4.2.0",
     "lodash.difference": "4.5.0",
     "lodash.flatten": "4.4.0",
@@ -50,7 +50,7 @@
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "react-is": "19.1.1",
-    "sanity": "4.6.0",
+    "sanity": "4.6.1",
     "styled-components": "6.1.19"
   },
   "devDependencies": {
