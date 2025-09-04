@@ -45,7 +45,7 @@ jobs:
       - name: '⚙️ Setup Environment'
         uses: ./.github/actions/setup
         with:
-          node-version: '24'
+          node-version: '22'
           pnpm-version: '10.15.1'
           working-directory: ''
 
@@ -206,7 +206,7 @@ jobs:
       - name: '⚙️ Setup Environment'
         uses: ./.github/actions/setup
         with:
-          node-version: '24'
+          node-version: '22'
           pnpm-version: '10.15.1'
           working-directory: ''
 
@@ -288,7 +288,7 @@ jobs:
       - name: '⚙️ Setup Environment'
         uses: ./.github/actions/setup
         with:
-          node-version: '24'
+          node-version: '22'
           pnpm-version: '10.15.1'
           working-directory: ''
 
@@ -460,7 +460,7 @@ jobs:
       - name: '⚙️ Setup Environment'
         uses: ./.github/actions/setup
         with:
-          node-version: '24'
+          node-version: '22'
           pnpm-version: '10.15.1'
           working-directory: ''
 
@@ -667,7 +667,7 @@ jobs:
       - name: '⚙️ Setup Environment'
         uses: ./.github/actions/setup
         with:
-          node-version: '24'
+          node-version: '22'
           pnpm-version: '10.15.1'
           working-directory: ''
 
