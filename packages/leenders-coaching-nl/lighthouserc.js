@@ -66,4 +66,4 @@ const lighthouseConfig = {
   }
 };
 
-export default lighthouseConfig;
+module.exports = lighthouseConfig;

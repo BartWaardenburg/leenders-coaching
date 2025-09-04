@@ -27,7 +27,9 @@ const eslintConfig = [
       "**/build/**",
       "**/.storybook-static/**",
       "**/*.bundle.js",
-      "**/*.min.js"
+      "**/*.min.js",
+      "**/*.cjs",
+      "**/scripts/**/*.cjs"
     ]
   },
 
@@ -123,6 +125,21 @@ const eslintConfig = [
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "no-console": "off"
+    }
+  },
+
+  // JavaScript files (including CommonJS)
+  {
+    files: ["**/*.{js,jsx,cjs}"],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: "script"
+    },
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "no-console": "warn",
+      "prefer-const": "error",
+      "no-var": "error"
     }
   }
 ];

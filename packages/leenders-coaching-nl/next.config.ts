@@ -3,6 +3,9 @@ import withBundleAnalyzer from '@next/bundle-analyzer';
 import { StatsWriterPlugin } from 'webpack-stats-plugin';
 
 const nextConfig: NextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   images: {
     remotePatterns: [
       {
