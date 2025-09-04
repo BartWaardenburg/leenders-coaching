@@ -328,7 +328,7 @@ let md = `## 📦 Bundle Analysis
 
 *Generated ${now}*
 
-> ⚠️ **Note**: Build completed with ESLint warnings. Some metrics may be incomplete.
+
 
 <details>
 <summary><strong>🛣️ Routes – approx. First Load JS</strong></summary>
