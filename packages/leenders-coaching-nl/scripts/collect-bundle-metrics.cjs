@@ -7,11 +7,11 @@ const { sync: brotliSizeSync } = require('brotli-size');
 const prettyBytes = require('pretty-bytes').default;
 
 const ROOT = process.env.PROJECT_DIR || '.';
-const NEXT_DIR = path.join(ROOT, '.next');
+const NEXT_DIR = '.next'; // Since we're already in the project directory
 const ANALYZE_DIR = path.join(NEXT_DIR, 'analyze');
 const STATIC_ANALYZE_DIR = path.join(NEXT_DIR, 'static', 'analyze');
 const SERVER_ANALYZE_DIR = path.join(NEXT_DIR, 'server', 'analyze');
-const OUT_DIR = path.join(ROOT, '.bundle-analysis');
+const OUT_DIR = '.bundle-analysis'; // Relative to current directory
 
 // Ensure output directory exists
 if (!fs.existsSync(OUT_DIR)) {
@@ -20,11 +20,12 @@ if (!fs.existsSync(OUT_DIR)) {
 
 // Log the paths being used for debugging
 console.log(`ROOT: ${ROOT}`);
-console.log(`NEXT_DIR: ${NEXT_DIR}`);
+console.log(`NEXT_DIR: ${NEXT_DIR} (relative to current directory)`);
 console.log(`ANALYZE_DIR: ${ANALYZE_DIR}`);
 console.log(`STATIC_ANALYZE_DIR: ${STATIC_ANALYZE_DIR}`);
 console.log(`SERVER_ANALYZE_DIR: ${SERVER_ANALYZE_DIR}`);
 console.log(`OUT_DIR: ${OUT_DIR}`);
+console.log(`Current working directory: ${process.cwd()}`);
 
 const readJSON = (p) => (fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, 'utf8')) : null);
 
