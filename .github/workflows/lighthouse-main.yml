@@ -18,7 +18,9 @@ jobs:
     if: |
       github.event.deployment_status.state == 'success' &&
       contains(github.event.deployment.environment, 'Production') &&
-      !contains(github.event.deployment.environment, 'Preview')
+      contains(github.event.deployment.environment, 'leenders-coaching') &&
+      !contains(github.event.deployment.environment, 'Preview') &&
+      !contains(github.event.deployment.environment, 'studio')
     concurrency:
       group: lhci-prod-${{ github.event.deployment.id }}-${{ matrix.formFactor }}
       cancel-in-progress: true
@@ -33,46 +35,16 @@ jobs:
 
     steps:
       - name: 'Checkout code'
-        uses: actions/checkout@v5 # Fallback to @v4 if @v5 404s
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
+
       - name: '⚙️ Setup Environment'
         uses: ./.github/actions/setup
         with:
           node-version: '22'
           pnpm-version: '10.15.1'
           working-directory: ''
-          # Note: Consider adding skip-install: true if this action installs deps (LHCI doesn't need repo deps)
-          # Example: skip-install: true
-
-      - name: '🧪 Test production URL accessibility'
-        run: |
-          set -euo pipefail
-          mapfile -t urls <<< "${LHCI_URLS}"
-
-          echo "🔍 Testing production URL accessibility for all pages:"
-          for production_url in "${urls[@]}"; do
-            production_url="${production_url//[$'\t\r\n ']}"
-            [[ -z "$production_url" ]] && continue
-            echo "  Testing: $production_url"
-            code=$(curl -s -o /dev/null -w "%{http_code}" \
-              --max-time 30 --retry 3 --retry-delay 3 --retry-connrefused \
-              "$production_url")
-            if [[ "$code" -ge 200 && "$code" -lt 400 ]]; then
-              echo "✅ HTTP $code - accessible"
-            else
-              echo "❌ HTTP $code - $production_url"
-              exit 1
-            fi
-          done
-          echo "🎯 All production pages are accessible and ready for Lighthouse testing"
-
-      - name: '🔍 Debug Environment Variables'
-        run: |
-          echo "🔍 Debugging environment variables:"
-          echo "LHCI_FORM_FACTOR: ${{ matrix.formFactor }}"
-          echo "VERCEL_AUTOMATION_BYPASS_SECRET: ${VERCEL_AUTOMATION_BYPASS_SECRET:0:8}..." # Show first 8 chars
-          echo "Has bypass secret: ${{ env.VERCEL_AUTOMATION_BYPASS_SECRET != '' }}"
 
       - name: '🚀 Run Lighthouse CI (Production)'
         id: lhci
@@ -84,11 +56,11 @@ jobs:
           budgetPath: packages/leenders-coaching-nl/budget.json
           uploadArtifacts: true
           artifactName: lighthouse-${{ matrix.formFactor }}
-          temporaryPublicStorage: true # Note: Makes reports publicly accessible. Set to false for private reports.
+          temporaryPublicStorage: true
         env:
           LHCI_FORM_FACTOR: ${{ matrix.formFactor }}
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
-          # Note: LHCI_GITHUB_APP_TOKEN not needed for temporary-public-storage uploads
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
       - name: '📊 Parse Lighthouse results'
         id: parse
@@ -104,6 +76,12 @@ jobs:
           tmp_assert="$(mktemp)"
           tmp_categories="$(mktemp)"
           vitals_table="| Page | LCP (ms) | CLS | TBT (ms) | FCP (ms) | SI (ms) | TTI (ms) | Req | Bytes (KB) |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|\n"
+
+          # Utility functions for formatting
+          fpct() { v="$1"; if [[ "$v" == "null" || -z "$v" ]]; then echo "N/A"; else awk -v n="$v" 'BEGIN{printf "%.0f", n*100}'; fi; }
+          ms() { v="$1"; if [[ "$v" == "null" || -z "$v" ]]; then echo "N/A"; else awk -v n="$v" 'BEGIN{printf "%.0f", n}'; fi; }
+          kb() { v="$1"; if [[ "$v" == "null" || -z "$v" ]]; then echo "N/A"; else awk -v n="$v" 'BEGIN{printf "%.0f", n/1024}'; fi; }
+          num() { v="$1"; if [[ "$v" == "null" || -z "$v" ]]; then echo "N/A"; else awk -v n="$v" 'BEGIN{printf "%.0f", n}'; fi; }
 
           results_dir="${{ steps.lhci.outputs.resultsPath || '' }}"
           assertion_file="$results_dir/assertion-results.json"
@@ -199,7 +177,7 @@ jobs:
             ' "${lhrs[@]}" > "$tmp_categories"
             { echo "categories_table_md<<EOF"; cat "$tmp_categories"; echo "EOF"; } >> "$GITHUB_OUTPUT"
 
-            # Vitals table
+            # Vitals table - using utility functions for better formatting
             vitals_rows=$(jq -s -r '
               def norm(u): if u==null then null else (u | sub("[?#].*$"; "") | sub("/$"; "")) end;
               def key(x): norm(x.finalDisplayedUrl // x.finalUrl // x.requestedUrl);
@@ -239,9 +217,18 @@ jobs:
 
           # Try to grab the first public report link from the action output (if present)
           links_raw="${{ steps.lhci.outputs.links || '' }}"
-          if [[ -n "$links_raw" ]]; then
-            # Extract the first valid report URL, handling the comma-separated format
-            first_link="$(echo "$links_raw" | tr ',' '\n' | grep -Eo 'https?://[^ )]+' | head -n1 || true)"
+          if [[ -n "$links_raw" && "$links_raw" != "null" ]]; then
+            # Extract the first valid report URL, handling various formats
+            if echo "$links_raw" | grep -q '^{'; then
+              # JSON format
+              first_link="$(echo "$links_raw" | jq -r 'to_entries[0].value // empty' 2>/dev/null || true)"
+            elif echo "$links_raw" | grep -q '^\s*\['; then
+              # Array format
+              first_link="$(echo "$links_raw" | jq -r '.[0] // empty' 2>/dev/null || true)"
+            else
+              # Comma-separated or single URL
+              first_link="$(echo "$links_raw" | tr ',' '\n' | grep -Eo 'https?://[^ )]+' | head -n1 || true)"
+            fi
           fi
           echo "first_report_link=$first_link" >> "$GITHUB_OUTPUT"
 
@@ -291,6 +278,9 @@ jobs:
             echo "</details>";
           } >> $GITHUB_STEP_SUMMARY
 
+          # Clean up temporary files
+          rm -f "$tmp_assert" "$tmp_categories" 2>/dev/null || true
+
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "*Generated by GitHub Actions Lighthouse (Production)*" >> $GITHUB_STEP_SUMMARY
 
@@ -308,7 +298,7 @@ jobs:
 
       - name: '🚨 Open regression issue when failed'
         if: ${{ steps.parse.outputs.errc && steps.parse.outputs.errc != '0' && steps.parse.outputs.errc != '' }}
-        uses: actions/github-script@v7 # Fallback to @v6 if @v7 404s
+        uses: actions/github-script@v7
         env:
           FIRST_REPORT: ${{ steps.parse.outputs.first_report_link }}
           AVERAGES_MD: ${{ steps.parse.outputs.averages_md }}

@@ -7,9 +7,6 @@ module.exports = {
       numberOfRuns: 3,
       settings: {
         emulatedFormFactor: form,            // 'mobile' | 'desktop'
-        screenEmulation: mobile
-          ? { mobile: true, width: 360, height: 640, deviceScaleFactor: 2, disabled: false }
-          : { mobile: false, width: 1350, height: 940, deviceScaleFactor: 1, disabled: false },
         throttling: mobile
           ? { rttMs: 150, throughputKbps: 1638.4, cpuSlowdownMultiplier: 4 }
           : { rttMs: 40, throughputKbps: 10240, cpuSlowdownMultiplier: 1 },
