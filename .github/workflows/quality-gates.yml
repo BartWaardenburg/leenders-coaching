@@ -693,23 +693,14 @@ jobs:
       - name: '🧾 Build compact perf report (PRs)'
         if: github.event_name == 'pull_request'
         run: |
-          {
-            echo "## 🚀 Performance"
-            echo
-            echo "<details>"
-            echo "<summary>📊 Performance Metrics</summary>"
-            echo
-            echo "| Metric | Value |"
-            echo "|---|---:|"
-            echo "| Build (frontend, ANALYZE on) | ${{ steps.build_analyze.outputs.duration || 'n/a' }}s |"
-            echo "| Total JS (chunks) | ${{ steps.bundle_snapshot.outputs.js || 'n/a' }} |"
-            echo "| Total CSS | ${{ steps.bundle_snapshot.outputs.css || 'n/a' }} |"
-            echo
-            echo "</details>"
-            echo
-            
-            echo "📊 **Bundle Analysis:** HTML reports available in artifact \`bundle-analyzer-${{ github.sha }}\`"
-          } > performance.md
+          # Set build duration for the report
+          export BUILD_DURATION="${{ steps.build_analyze.outputs.duration || 'n/a' }}"
+
+          # Generate performance report using the script
+          node scripts/generate-performance-report.js
+
+          # Copy the generated report
+          cp .bundle-analysis/performance-report.md performance.md
 
       - name: '💬 Sticky PR comment – Performance'
         if: github.event_name == 'pull_request'
