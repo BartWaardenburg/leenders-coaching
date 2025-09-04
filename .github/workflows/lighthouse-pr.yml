@@ -89,7 +89,7 @@ jobs:
           echo "🔍 Testing preview URL accessibility:"
           echo "  Base URL: $preview_url"
 
-          # Wait for preview deployment to be ready (max 2 minutes)
+                    # Wait for preview deployment to be ready (max 2 minutes)
           echo "⏳ Waiting for preview deployment to be ready..."
           max_attempts=12
           attempt=1
@@ -97,9 +97,20 @@ jobs:
           while [[ $attempt -le $max_attempts ]]; do
             echo "  Attempt $attempt/$max_attempts..."
             
-            code=$(curl -s -o /dev/null -w "%{http_code}" \
-              --max-time 30 --retry 2 --retry-delay 2 \
-              "$preview_url")
+            # Test with bypass headers if available
+            if [[ -n "$VERCEL_AUTOMATION_BYPASS_SECRET" ]]; then
+              echo "    Using Vercel automation bypass headers..."
+              code=$(curl -s -o /dev/null -w "%{http_code}" \
+                --max-time 30 --retry 2 --retry-delay 2 \
+                -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" \
+                -H "x-vercel-set-bypass-cookie: true" \
+                "$preview_url")
+            else
+              echo "    No bypass secret available, testing without headers..."
+              code=$(curl -s -o /dev/null -w "%{http_code}" \
+                --max-time 30 --retry 2 --retry-delay 2 \
+                "$preview_url")
+            fi
             
             if [[ "$code" -ge 200 && "$code" -lt 400 ]]; then
               echo "✅ Base URL accessible (HTTP $code)"
@@ -109,6 +120,7 @@ jobs:
               if [[ $attempt -eq $max_attempts ]]; then
                 echo "❌ Preview deployment not ready after $max_attempts attempts"
                 echo "   This suggests the preview deployment may have failed or is still building"
+                echo "   Or the Vercel automation bypass is not working correctly"
                 exit 1
               fi
               echo "   Waiting 10 seconds before retry..."
@@ -121,9 +133,19 @@ jobs:
           test_pages=("/over-mij" "/aanpak" "/coaching" "/contact")
           for page in "${test_pages[@]}"; do
             echo "  Testing: $page"
-            page_code=$(curl -s -o /dev/null -w "%{http_code}" \
-              --max-time 30 --retry 2 --retry-delay 2 \
-              "$preview_url$page")
+            
+            # Test with bypass headers if available
+            if [[ -n "$VERCEL_AUTOMATION_BYPASS_SECRET" ]]; then
+              page_code=$(curl -s -o /dev/null -w "%{http_code}" \
+                --max-time 30 --retry 2 --retry-delay 2 \
+                -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" \
+                -H "x-vercel-set-bypass-cookie: true" \
+                "$preview_url$page")
+            else
+              page_code=$(curl -s -o /dev/null -w "%{http_code}" \
+                --max-time 30 --retry 2 --retry-delay 2 \
+                "$preview_url$page")
+            fi
             
             if [[ "$page_code" -ge 200 && "$page_code" -lt 400 ]]; then
               echo "✅ $page accessible (HTTP $page_code)"
@@ -140,6 +162,29 @@ jobs:
           echo "LHCI_FORM_FACTOR: mobile"
           echo "VERCEL_AUTOMATION_BYPASS_SECRET: ${VERCEL_AUTOMATION_BYPASS_SECRET:0:8}..." # Show first 8 chars
           echo "Has bypass secret: ${{ env.VERCEL_AUTOMATION_BYPASS_SECRET != '' }}"
+          echo "Bypass secret length: ${#VERCEL_AUTOMATION_BYPASS_SECRET}"
+          echo "Bypass secret first 16 chars: ${VERCEL_AUTOMATION_BYPASS_SECRET:0:16}..."
+          echo ""
+          echo "Testing bypass headers manually..."
+
+          # Test the bypass headers manually
+          preview_url="${{ steps.url.outputs.preview_url }}"
+          if [[ -n "$VERCEL_AUTOMATION_BYPASS_SECRET" ]]; then
+            echo "Testing with bypass headers:"
+            echo "  URL: $preview_url"
+            echo "  Headers: x-vercel-protection-bypass: ${VERCEL_AUTOMATION_BYPASS_SECRET:0:8}..."
+            
+            # Test with bypass headers
+            response=$(curl -s -o /dev/null -w "%{http_code}" \
+              --max-time 30 \
+              -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" \
+              -H "x-vercel-set-bypass-cookie: true" \
+              "$preview_url")
+            
+            echo "  Response with bypass headers: HTTP $response"
+          else
+            echo "❌ No bypass secret found!"
+          fi
 
       - name: '🚀 Run Lighthouse CI'
         id: lhci
