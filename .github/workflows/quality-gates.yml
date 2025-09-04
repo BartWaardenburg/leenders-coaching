@@ -495,8 +495,10 @@ jobs:
             echo
             
             # Parse TypeScript errors and create a combined issues table
+            # Count TypeScript issues first
+            TS_ISSUES=$(grep -c "TS[0-9]{4}\|\.ts.*error\|\.tsx.*error" ts.txt 2>/dev/null || echo 0)
             echo "<details>"
-            echo "<summary>📋 Code Issues Summary ($ERR errors, $WARN warnings, $(grep -c "error\|TS[0-9]{4}" ts.txt 2>/dev/null || echo 0) TypeScript issues)</summary>"
+            echo "<summary>📋 Code Issues Summary ($ERR errors, $WARN warnings, $TS_ISSUES TypeScript issues)</summary>"
             echo
             echo "| File | ESLint Errors | ESLint Warnings | TypeScript Issues | Total Issues |"
             echo "|---|---|---|---|---|"
@@ -505,7 +507,7 @@ jobs:
             if [ "$ERR" -gt 0 ] || [ "$WARN" -gt 0 ]; then
               jq -r '.[] | select(.errorCount>0 or .warningCount>0) | "\(.filePath)|\(.errorCount)|\(.warningCount)|0|\(.errorCount + .warningCount)"' eslint.json > eslint-issues.txt
             else
-              echo "" > eslint-issues.txt
+              rm -f eslint-issues.txt
             fi
             
             # Process TypeScript issues
@@ -513,7 +515,7 @@ jobs:
               # Extract TypeScript errors and count them per file
               grep -E "\.(ts|tsx).*error|TS[0-9]{4}" ts.txt | cut -d: -f1 | sort | uniq -c | awk '{print $2 "|0|0|" $1 "|" $1}' > ts-issues.txt
             else
-              echo "" > ts-issues.txt
+              rm -f ts-issues.txt
             fi
             
             # Combine and display issues
@@ -521,19 +523,23 @@ jobs:
               # Create a combined view (simplified for now - showing top files with most issues)
               if [ -s eslint-issues.txt ]; then
                 head -n 10 eslint-issues.txt | while IFS='|' read -r filePath esLintErr esLintWarn tsIssues total; do
-                  filename=$(echo "$filePath" | sed 's/.*\///')
-                  # Clean the file path to remove runner paths
-                  cleanPath=$(echo "$filePath" | sed 's|/home/runner/work/leenders-coaching/leenders-coaching/||g')
-                  echo "| [$filename](https://github.com/${{ github.repository }}/blob/${{ github.head_ref || github.ref_name }}/$cleanPath) | $esLintErr | $esLintWarn | $tsIssues | $total |"
+                  if [ -n "$filePath" ] && [ "$filePath" != "" ]; then
+                    filename=$(echo "$filePath" | sed 's/.*\///')
+                    # Clean the file path to remove runner paths
+                    cleanPath=$(echo "$filePath" | sed 's|/home/runner/work/leenders-coaching/leenders-coaching/||g')
+                    echo "| [$filename](https://github.com/${{ github.repository }}/blob/${{ github.head_ref || github.ref_name }}/$cleanPath) | $esLintErr | $esLintWarn | $tsIssues | $total |"
+                  fi
                 done
               fi
               
               if [ -s ts-issues.txt ]; then
                 head -n 10 ts-issues.txt | while IFS='|' read -r filePath esLintErr esLintWarn tsIssues total; do
-                  filename=$(echo "$filePath" | sed 's/.*\///')
-                  # Clean the file path to remove runner paths
-                  cleanPath=$(echo "$filePath" | sed 's|/home/runner/work/leenders-coaching/leenders-coaching/||g')
-                  echo "| [$filename](https://github.com/${{ github.repository }}/blob/${{ github.head_ref || github.ref_name }}/$cleanPath) | $esLintErr | $esLintWarn | $tsIssues | $total |"
+                  if [ -n "$filePath" ] && [ "$filePath" != "" ]; then
+                    filename=$(echo "$filePath" | sed 's/.*\///')
+                    # Clean the file path to remove runner paths
+                    cleanPath=$(echo "$filePath" | sed 's|/home/runner/work/leenders-coaching/leenders-coaching/||g')
+                    echo "| [$filename](https://github.com/${{ github.repository }}/blob/${{ github.head_ref || github.ref_name }}/$cleanPath) | $esLintErr | $esLintWarn | $tsIssues | $total |"
+                  fi
                 done
               fi
             else
