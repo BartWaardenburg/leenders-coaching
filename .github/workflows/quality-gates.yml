@@ -242,6 +242,7 @@ jobs:
             echo "| UNKNOWN | 5+ | 🟠 Unknown |"
             echo
             echo "</details>"
+            echo
             
             # Check if we have any problematic licenses (simplified check)
             PROBLEMATIC_COUNT=0
@@ -332,6 +333,7 @@ jobs:
               echo
               echo "_Apply updates:_ \`pnpm up <package> -r\` or \`pnpm up -r\` for all"
               echo "</details>"
+              echo
             else
               echo "### 🔄 Available Updates"
               echo "✅ All packages are up to date!"
@@ -356,6 +358,7 @@ jobs:
               echo
               echo "_Apply optimization:_ \`pnpm dedupe && pnpm install\`"
               echo "</details>"
+              echo
             elif grep -q "No dedupe changes needed" dedupe.txt; then
               echo "### 🔗 Lockfile Deduplication"
               echo "✅ Lockfile is already optimized - no deduplication needed."
@@ -385,6 +388,7 @@ jobs:
               echo
               echo "_Action required:_ Update or replace deprecated packages"
               echo "</details>"
+              echo
             fi
           } > dependency-report.md
 
@@ -540,7 +544,7 @@ jobs:
             echo "</details>"
             echo
             
-                        # Handle complexity report
+            # Handle complexity report
             if [ "$COMPLEXITY_COUNT" -gt 0 ]; then
               echo "<details>"
               echo "<summary>🔍 Maintainability Scores ($COMPLEXITY_COUNT files analyzed)</summary>"
@@ -569,6 +573,7 @@ jobs:
               echo "| Medium files | 51-200 LOC | $MEDIUM |"
               echo "| Large files | >200 LOC | $LARGE |"
               echo "</details>"
+              echo
             else
               echo "**Complexity Analysis:** No complexity data available"
             fi
@@ -651,6 +656,7 @@ jobs:
             echo
             echo "</details>"
             echo
+            
             echo "📊 **Bundle Analysis:** HTML reports available in artifact \`bundle-analyzer-${{ github.sha }}\`"
           } > performance.md
 
