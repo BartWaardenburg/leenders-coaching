@@ -81,6 +81,59 @@ jobs:
           echo "   Commit SHA: ${{ github.event.deployment.sha }}"
           echo "   Ref: ${{ github.event.deployment.ref }}"
 
+      - name: '🧪 Test preview URL accessibility'
+        run: |
+          set -euo pipefail
+          preview_url="${{ steps.url.outputs.preview_url }}"
+
+          echo "🔍 Testing preview URL accessibility:"
+          echo "  Base URL: $preview_url"
+
+          # Wait for preview deployment to be ready (max 2 minutes)
+          echo "⏳ Waiting for preview deployment to be ready..."
+          max_attempts=12
+          attempt=1
+
+          while [[ $attempt -le $max_attempts ]]; do
+            echo "  Attempt $attempt/$max_attempts..."
+            
+            code=$(curl -s -o /dev/null -w "%{http_code}" \
+              --max-time 30 --retry 2 --retry-delay 2 \
+              "$preview_url")
+            
+            if [[ "$code" -ge 200 && "$code" -lt 400 ]]; then
+              echo "✅ Base URL accessible (HTTP $code)"
+              break
+            else
+              echo "⚠️ Base URL returned HTTP $code (attempt $attempt/$max_attempts)"
+              if [[ $attempt -eq $max_attempts ]]; then
+                echo "❌ Preview deployment not ready after $max_attempts attempts"
+                echo "   This suggests the preview deployment may have failed or is still building"
+                exit 1
+              fi
+              echo "   Waiting 10 seconds before retry..."
+              sleep 10
+              attempt=$((attempt + 1))
+            fi
+          done
+
+          # Test a few key pages
+          test_pages=("/over-mij" "/aanpak" "/coaching" "/contact")
+          for page in "${test_pages[@]}"; do
+            echo "  Testing: $page"
+            page_code=$(curl -s -o /dev/null -w "%{http_code}" \
+              --max-time 30 --retry 2 --retry-delay 2 \
+              "$preview_url$page")
+            
+            if [[ "$page_code" -ge 200 && "$page_code" -lt 400 ]]; then
+              echo "✅ $page accessible (HTTP $page_code)"
+            else
+              echo "⚠️ $page returned HTTP $page_code (may not exist in preview)"
+            fi
+          done
+
+          echo "🎯 Preview URL accessibility check completed"
+
       - name: '🔍 Debug Environment Variables'
         run: |
           echo "🔍 Debugging environment variables:"
@@ -164,14 +217,23 @@ jobs:
           fi
 
           # derive category scores from raw LHRs (robust)
-          shopt -s nullglob
-          lhrs=("$results_dir"/lhr-*.json)
+          if [[ -n "$results_dir" && -d "$results_dir" ]]; then
+            shopt -s nullglob
+            lhrs=("$results_dir"/lhr-*.json)
+          else
+            lhrs=()
+          fi
+
           if [[ ${#lhrs[@]} -eq 0 ]]; then
             echo "perf=N/A" >> $GITHUB_OUTPUT
             echo "a11y=N/A" >> $GITHUB_OUTPUT
             echo "seo=N/A"  >> $GITHUB_OUTPUT
             echo "bp=N/A"   >> $GITHUB_OUTPUT
             echo "overall=⚠️ NO RESULTS" >> $GITHUB_OUTPUT
+            echo "❌ No Lighthouse results found. This usually means:"
+            echo "   1. Preview deployment failed or is still building"
+            echo "   2. URLs returned 404 errors"
+            echo "   3. Lighthouse CI failed to collect data"
           else
             readarray -t vals < <(jq -s '
               def avg: (length as $n | if $n==0 then null else (add / $n) end);
