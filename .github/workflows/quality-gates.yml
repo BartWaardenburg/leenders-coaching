@@ -341,9 +341,10 @@ jobs:
               echo "| Package | Current Version | New Version |"
               echo "|---|---|---|"
               
-              # Simplified dedupe display - just show the key information
-              echo "| Lockfile optimization | → | Available |"
-              echo "| Package deduplication | → | Available |"
+              # Extract package names and versions from dedupe output using more reliable method
+              grep -E "→" dedupe.txt | grep -oE "[^@]+@[0-9]+\.[0-9]+\.[0-9]+" | sort | uniq | head -15 | while IFS= read -r package; do
+                echo "| $package | → | Updated |"
+              done
               
               echo
               echo "_Apply optimization:_ \`pnpm dedupe && pnpm install\`"
@@ -362,14 +363,17 @@ jobs:
               echo "| Package | Current Version | Status |"
               echo "|---|---|---|"
               
-              # Simplified deprecated packages display
-              echo "| Subdependencies | Multiple | 🔴 Deprecated |"
-              echo "| (see details below) | Various | 🔴 Deprecated |"
+              # Extract specific deprecated package information
+              grep -i "deprecated" deprecated.txt | sed 's/.*found: //' | tr ',' '\n' | sed 's/^[[:space:]]*//' | grep -v "^$" | head -15 | while IFS= read -r package; do
+                if [[ "$package" =~ ^([^@]+)@([^@]+) ]]; then
+                  pkg_name="${BASH_REMATCH[1]}"
+                  pkg_version="${BASH_REMATCH[2]}"
+                  echo "| $pkg_name | $pkg_version | 🔴 Deprecated |"
+                fi
+              done
               
               echo
               echo "_Action required:_ Update or replace deprecated packages"
-              echo
-              echo "**Details:** Check the full output in the workflow logs for specific package names and versions."
             fi
           } > dependency-report.md
 
