@@ -498,7 +498,7 @@ jobs:
                 | sort_by(.maintainability)
                 | .[0:15]
                 | .[]
-                | "| [`\(.file | split("/") | last)`](https://github.com/${{ github.repository }}/blob/${{ github.head_ref || github.ref_name }}/packages/leenders-coaching-nl/\(.file)) | \(if .maintainability >= 80 then "🟢 " elif .maintainability >= 60 then "🟡 " else "🔴 " end)\(.maintainability) | \(.complexity) | \(.loc) | \((.size/1024 | floor))KB |"
+                | "| [`\(.file | split("/") | last)`](https://github.com/${{ github.repository }}/blob/${{ github.head_ref || github.ref_name }}/\(.file)) | \(if .maintainability >= 80 then "🟢 " elif .maintainability >= 60 then "🟡 " else "🔴 " end)\(.maintainability) | \(.complexity) | \(.loc) | \((.size/1024 | floor))KB |"
               ' complexity.json
               
 
