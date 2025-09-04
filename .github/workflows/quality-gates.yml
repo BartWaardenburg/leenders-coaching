@@ -649,11 +649,13 @@ jobs:
             complexity.json
           retention-days: 30
 
-  performance-benchmarks:
-    name: 'Performance Benchmarks'
+  bundle-analysis:
+    name: 'Bundle Analysis'
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    if: github.event_name == 'pull_request'
     env:
+      PROJECT_DIR: packages/leenders-coaching-nl
       NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
       NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
       NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
@@ -669,69 +671,38 @@ jobs:
           pnpm-version: '10.15.1'
           working-directory: ''
 
-      # One build with analyzer ON (captures reports + sizes)
-      - name: '🏗️ Build (with bundle analyzer)'
-        id: build_analyze
+      - name: '🏗️ Build with analyzer + stats'
         run: |
+          cd "$PROJECT_DIR"
           START=$(date +%s)
-          pnpm --filter ./packages/leenders-coaching-nl run analyze:bundle
+          pnpm run analyze:bundle
           END=$(date +%s)
-          echo "duration=$((END-START))" >> $GITHUB_OUTPUT
+          echo "BUILD_DURATION=$((END-START))s" >> $GITHUB_ENV
 
-      - name: '🔍 Size-Limit gate (does not fail PR comment)'
-        continue-on-error: true
-        run: pnpm --filter ./packages/leenders-coaching-nl run verify:performance:ci
-
-      - name: '📊 Bundle snapshot'
-        id: bundle_snapshot
+      - name: '🧾 Create comment markdown'
         run: |
-          JS_SIZE=$(find packages/leenders-coaching-nl/.next/static/chunks -name "*.js" -exec du -ch {} + 2>/dev/null | tail -1 | cut -f1)
-          CSS_SIZE=$(find packages/leenders-coaching-nl/.next/static/css -name "*.css" -exec du -ch {} + 2>/dev/null | tail -1 | cut -f1)
-          echo "js=${JS_SIZE:-n/a}"   >> $GITHUB_OUTPUT
-          echo "css=${CSS_SIZE:-n/a}" >> $GITHUB_OUTPUT
+          cd "$PROJECT_DIR"
+          node scripts/collect-bundle-metrics.cjs
 
-      - name: '🧾 Build compact perf report (PRs)'
-        if: github.event_name == 'pull_request'
-        run: |
-          # Set build duration for the report
-          export BUILD_DURATION="${{ steps.build_analyze.outputs.duration || 'n/a' }}"
-
-          # Generate performance report using the script
-          node scripts/generate-performance-report.js
-
-          # Copy the generated report
-          cp .bundle-analysis/performance-report.md performance.md
-
-      - name: '💬 Sticky PR comment – Performance'
-        if: github.event_name == 'pull_request'
+      - name: '💬 Sticky PR comment – Bundle Analysis'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          header: performance-benchmarks
+          header: bundle-analysis
           number: ${{ github.event.pull_request.number }}
-          path: performance.md
+          path: packages/leenders-coaching-nl/.bundle-analysis/comment.md
 
-      - name: '📝 Write perf.json (for artifact)'
-        run: |
-          printf '{"frontend":%s,"js":"%s","css":"%s"}\n' \
-            "${{ steps.build_analyze.outputs.duration || 'null' }}" \
-            "${{ steps.bundle_snapshot.outputs.js || 'n/a' }}" \
-            "${{ steps.bundle_snapshot.outputs.css || 'n/a' }}" > perf.json
-
-      - name: '📤 Upload bundle analyzer report'
+      - name: '📤 Upload analyzer artifacts'
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: bundle-analyzer-${{ github.sha }}
-          path: packages/leenders-coaching-nl/.next/analyze/
-          if-no-files-found: ignore # prevents failures when folder missing
+          path: |
+            packages/leenders-coaching-nl/.next/analyze/*.html
+            packages/leenders-coaching-nl/.next/analyze/*-stats.json
+            packages/leenders-coaching-nl/.next/static/analyze/*-stats.json
+          if-no-files-found: ignore
           retention-days: 14
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: performance-${{ github.sha }}
-          path: perf.json
-          retention-days: 90
 
   quality-summary:
     name: 'Quality Summary'
@@ -742,7 +713,7 @@ jobs:
         license-compliance,
         dependency-analysis,
         code-quality,
-        performance-benchmarks,
+        bundle-analysis,
       ]
     if: always()
     steps:
@@ -759,4 +730,4 @@ jobs:
             - **Licenses:** ✅ Scanned (see comment)
             - **Dependencies:** ✅ Scanned (see comment)
             - **Code Quality:** ✅ Scanned (see comment)
-            - **Performance:** ✅ Scanned (see comment)
+            - **Bundle Analysis:** ✅ Scanned (see comment)
