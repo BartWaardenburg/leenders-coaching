@@ -72,16 +72,16 @@ jobs:
 
           # ---- Safe defaults (avoid -u crashes) ----
           perf="N/A"; a11y="N/A"; seo="N/A"; bp="N/A"; overall="⚠️ NO RESULTS"
+          perf_pct="N/A"; a11y_pct="N/A"; seo_pct="N/A"; bp_pct="N/A"
           first_link=""
           tmp_assert="$(mktemp)"
           tmp_categories="$(mktemp)"
-          vitals_table="| Page | LCP (ms) | CLS | TBT (ms) | FCP (ms) | SI (ms) | TTI (ms) | Req | Bytes (KB) |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|\n"
 
-          # Utility functions for formatting
-          fpct() { v="$1"; if [[ "$v" == "null" || -z "$v" ]]; then echo "N/A"; else awk -v n="$v" 'BEGIN{printf "%.0f", n*100}'; fi; }
-          ms() { v="$1"; if [[ "$v" == "null" || -z "$v" ]]; then echo "N/A"; else awk -v n="$v" 'BEGIN{printf "%.0f", n}'; fi; }
-          kb() { v="$1"; if [[ "$v" == "null" || -z "$v" ]]; then echo "N/A"; else awk -v n="$v" 'BEGIN{printf "%.0f", n/1024}'; fi; }
-          num() { v="$1"; if [[ "$v" == "null" || -z "$v" ]]; then echo "N/A"; else awk -v n="$v" 'BEGIN{printf "%.0f", n}'; fi; }
+          # Proper header with real newlines (no literal \n)
+          vitals_header=$'| Page | LCP (ms) | CLS | TBT (ms) | FCP (ms) | SI (ms) | TTI (ms) | Req | Bytes (KB) |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|'
+
+          # Utility: % conversion for category scores
+          to_pct () { awk -v v="$1" 'BEGIN{printf "%.0f", v*100}'; }
 
           results_dir="${{ steps.lhci.outputs.resultsPath || '' }}"
           assertion_file="$results_dir/assertion-results.json"
@@ -103,7 +103,7 @@ jobs:
                     url: (.url // "—"),
                     op: (.result.operator // .operator // "—"),
                     exp: (.result.expected // .expected // "—"),
-                    act: (.result.actual // .actual // "—") } ]
+                    act: (.result.actual    // .actual   // "—") } ]
               | .[:25]
               | map("| \(.level) | \(.id) | \(.exp) | \(.act) | \(.op) | \(.url) |")
               | .[]
@@ -118,7 +118,7 @@ jobs:
           { echo "assertions_md<<EOF"; cat "$tmp_assert"; echo "EOF"; } >> "$GITHUB_OUTPUT"
 
           # ----- LHRs present? compute averages/tables -----
-          if [[ -n "$results_dir" && -d "$results_dir" ]]; then
+          if [[ -n "${results_dir:-}" && -d "$results_dir" ]]; then
             shopt -s nullglob
             lhrs=("$results_dir"/lhr-*.json)
           else
@@ -126,24 +126,29 @@ jobs:
           fi
 
           if [[ ${#lhrs[@]} -gt 0 ]]; then
-            # Category averages
-            readarray -t vals < <(jq -s '
+            # Category averages as floats 0..1 - use array assignment for better compatibility
+            vals=($(jq -s '
               def avg: (length as $n | if $n==0 then null else (add / $n) end);
               {
-                perf: (map(try .categories.performance.score catch null) | map(select(.!=null)) | avg),
-                a11y: (map(try .categories.accessibility.score catch null) | map(select(.!=null)) | avg),
-                seo:  (map(try .categories.seo.score catch null) | map(select(.!=null)) | avg),
-                bp:   (map(try .categories["best-practices"].score catch null) | map(select(.!=null)) | avg)
+                perf: (map(try .categories.performance.score          catch null) | map(select(.!=null)) | avg),
+                a11y: (map(try .categories.accessibility.score        catch null) | map(select(.!=null)) | avg),
+                seo:  (map(try .categories.seo.score                  catch null) | map(select(.!=null)) | avg),
+                bp:   (map(try .categories["best-practices"].score    catch null) | map(select(.!=null)) | avg)
               } | [.perf,.a11y,.seo,.bp] | map(if .==null then "N/A" else . end) | .[]
-            ' "${lhrs[@]}")
+            ' "${lhrs[@]}"))
 
-            to_pct () { awk -v v="$1" 'BEGIN{printf "%.0f", v*100}'; }
             perf="${vals[0]}"; a11y="${vals[1]}"; seo="${vals[2]}"; bp="${vals[3]}"
 
-            [[ "$perf" != "N/A" ]] && echo "perf=$(to_pct "$perf")" >> "$GITHUB_OUTPUT" || echo "perf=N/A" >> "$GITHUB_OUTPUT"
-            [[ "$a11y" != "N/A" ]] && echo "a11y=$(to_pct "$a11y")" >> "$GITHUB_OUTPUT" || echo "a11y=N/A" >> "$GITHUB_OUTPUT"
-            [[ "$seo"  != "N/A" ]] && echo "seo=$(to_pct "$seo")"   >> "$GITHUB_OUTPUT" || echo "seo=N/A"  >> "$GITHUB_OUTPUT"
-            [[ "$bp"   != "N/A" ]] && echo "bp=$(to_pct "$bp")"     >> "$GITHUB_OUTPUT" || echo "bp=N/A"   >> "$GITHUB_OUTPUT"
+            # Convert to integer percentages for display + outputs
+            if [[ "$perf" != "N/A" ]]; then perf_pct=$(to_pct "$perf"); fi
+            if [[ "$a11y" != "N/A" ]]; then a11y_pct=$(to_pct "$a11y"); fi
+            if [[ "$seo"  != "N/A" ]]; then seo_pct=$(to_pct "$seo"); fi
+            if [[ "$bp"   != "N/A" ]]; then bp_pct=$(to_pct "$bp"); fi
+
+            echo "perf=${perf_pct}" >> "$GITHUB_OUTPUT"
+            echo "a11y=${a11y_pct}" >> "$GITHUB_OUTPUT"
+            echo "seo=${seo_pct}"   >> "$GITHUB_OUTPUT"
+            echo "bp=${bp_pct}"     >> "$GITHUB_OUTPUT"
 
             if [[ -f "$assertion_file" ]] && [[ "${errc:-0}" -gt 0 ]]; then
               overall="❌ FAILED"
@@ -151,7 +156,7 @@ jobs:
               overall="✅ PASSED"
             fi
 
-            # Per-page Category Scores table
+            # Per-page Category Scores table (already rounded to integers)
             jq -s -r '
               def norm(u): if u==null then null else (u | sub("[?#].*$"; "") | sub("/$"; "")) end;
               def key(x): norm(x.finalDisplayedUrl // x.finalUrl // x.requestedUrl);
@@ -160,9 +165,9 @@ jobs:
               map(. as $g |
                 {
                   url: ($g | first | key(.)),
-                  perf: ([ $g[] | try .categories.performance.score catch empty ] | map(select(.!=null)) | avg),
-                  a11y: ([ $g[] | try .categories.accessibility.score catch empty ] | map(select(.!=null)) | avg),
-                  seo:  ([ $g[] | try .categories.seo.score catch empty ] | map(select(.!=null)) | avg),
+                  perf: ([ $g[] | try .categories.performance.score catch empty ]       | map(select(.!=null)) | avg),
+                  a11y: ([ $g[] | try .categories.accessibility.score catch empty ]     | map(select(.!=null)) | avg),
+                  seo:  ([ $g[] | try .categories.seo.score catch empty ]               | map(select(.!=null)) | avg),
                   bp:   ([ $g[] | try .categories["best-practices"].score catch empty ] | map(select(.!=null)) | avg)
                 }
               )
@@ -171,13 +176,17 @@ jobs:
                  (map("| \(.url) | " +
                       (if .perf then ((.perf*100)|round|tostring) else "N/A" end) + " | " +
                       (if .a11y then ((.a11y*100)|round|tostring) else "N/A" end) + " | " +
-                      (if .seo then ((.seo*100)|round|tostring) else "N/A" end) + " | " +
-                      (if .bp then ((.bp*100)|round|tostring) else "N/A" end) + " |")))
+                      (if .seo  then ((.seo *100)|round|tostring) else "N/A" end) + " | " +
+                      (if .bp   then ((.bp  *100)|round|tostring) else "N/A" end) + " |")))
               | .[]
             ' "${lhrs[@]}" > "$tmp_categories"
             { echo "categories_table_md<<EOF"; cat "$tmp_categories"; echo "EOF"; } >> "$GITHUB_OUTPUT"
 
-            # Vitals table - using utility functions for better formatting
+            # Core Web Vitals table with rounding:
+            # - ms metrics rounded to integers
+            # - CLS to 3 decimals
+            # - Req rounded to int
+            # - Bytes -> KB rounded to int
             vitals_rows=$(jq -s -r '
               def norm(u): if u==null then null else (u | sub("[?#].*$"; "") | sub("/$"; "")) end;
               def key(x): norm(x.finalDisplayedUrl // x.finalUrl // x.requestedUrl);
@@ -185,48 +194,51 @@ jobs:
               group_by(key(.)) |
               map(. as $g |
                 {
-                  url: ($g | first | key(.)),
-                  lcp: ([ $g[] | try .audits["largest-contentful-paint"].numericValue catch empty ] | map(select(.!=null)) | avg),
-                  cls: ([ $g[] | try .audits["cumulative-layout-shift"].numericValue catch empty ] | map(select(.!=null)) | avg),
-                  tbt: ([ $g[] | try .audits["total-blocking-time"].numericValue catch empty ] | map(select(.!=null)) | avg),
-                  fcp: ([ $g[] | try .audits["first-contentful-paint"].numericValue catch empty ] | map(select(.!=null)) | avg),
-                  si:  ([ $g[] | try .audits["speed-index"].numericValue catch empty ] | map(select(.!=null)) | avg),
-                  tti: ([ $g[] | try .audits["interactive"].numericValue catch empty ] | map(select(.!=null)) | avg),
-                  bytes: ([ $g[] | try .audits["total-byte-weight"].numericValue catch empty ] | map(select(.!=null)) | avg),
-                  reqs: ([ $g[] | try (.audits["network-requests"].details.items | length) catch empty ] | map(select(.!=null)) | avg)
+                  url:   ($g | first | key(.)),
+                  lcp:   ([ $g[] | try .audits["largest-contentful-paint"].numericValue   catch empty ] | map(select(.!=null)) | avg),
+                  cls:   ([ $g[] | try .audits["cumulative-layout-shift"].numericValue    catch empty ] | map(select(.!=null)) | avg),
+                  tbt:   ([ $g[] | try .audits["total-blocking-time"].numericValue        catch empty ] | map(select(.!=null)) | avg),
+                  fcp:   ([ $g[] | try .audits["first-contentful-paint"].numericValue     catch empty ] | map(select(.!=null)) | avg),
+                  si:    ([ $g[] | try .audits["speed-index"].numericValue                catch empty ] | map(select(.!=null)) | avg),
+                  tti:   ([ $g[] | try .audits["interactive"].numericValue                catch empty ] | map(select(.!=null)) | avg),
+                  bytes: ([ $g[] | try .audits["total-byte-weight"].numericValue          catch empty ] | map(select(.!=null)) | avg),
+                  reqs:  ([ $g[] | try (.audits["network-requests"].details.items | length) catch empty ] | map(select(.!=null)) | avg)
                 }
               )
               | sort_by(.url)
               | map("| \(.url) | " +
-                    (if .lcp then (.lcp|tostring) else "N/A" end) + " | " +
-                    (if .cls then (.cls|tostring) else "N/A" end) + " | " +
-                    (if .tbt then (.tbt|tostring) else "N/A" end) + " | " +
-                    (if .fcp then (.fcp|tostring) else "N/A" end) + " | " +
-                    (if .si  then (.si|tostring)  else "N/A" end) + " | " +
-                    (if .tti then (.tti|tostring) else "N/A" end) + " | " +
-                    (if .reqs then (.reqs|tostring) else "N/A" end) + " | " +
-                    (if .bytes then (.bytes/1024|floor|tostring) else "N/A" end) + " |")
+                    (if .lcp   then ((.lcp  | round)        | tostring) else "N/A" end) + " | " +
+                    (if .cls   then (((.cls*1000)|round/1000)| tostring) else "N/A" end) + " | " +
+                    (if .tbt   then ((.tbt  | round)        | tostring) else "N/A" end) + " | " +
+                    (if .fcp   then ((.fcp  | round)        | tostring) else "N/A" end) + " | " +
+                    (if .si    then ((.si   | round)        | tostring) else "N/A" end) + " | " +
+                    (if .tti   then ((.tti  | round)        | tostring) else "N/A" end) + " | " +
+                    (if .reqs  then ((.reqs | round)        | tostring) else "N/A" end) + " | " +
+                    (if .bytes then (((.bytes/1024)|round)  | tostring) else "N/A" end) + " |")
               | .[]
             ' "${lhrs[@]}")
-            vitals_table+="$vitals_rows"
-            { echo "vitals_table_md<<EOF"; echo "$vitals_table"; echo "EOF"; } >> "$GITHUB_OUTPUT"
+
+            # Expose vitals table (multiline) to outputs
+            {
+              echo "vitals_table_md<<'EOF'"
+              printf "%b\n" "$vitals_header"
+              echo "$vitals_rows"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+
           else
             { echo "categories_table_md<<EOF"; echo "_No LHR files found._"; echo "EOF"; } >> "$GITHUB_OUTPUT"
-            { echo "vitals_table_md<<EOF"; echo "$vitals_table"; echo "EOF"; } >> "$GITHUB_OUTPUT"
+            { echo "vitals_table_md<<EOF"; printf "%b\n" "$vitals_header"; echo "EOF"; } >> "$GITHUB_OUTPUT"
           fi
 
           # Try to grab the first public report link from the action output (if present)
           links_raw="${{ steps.lhci.outputs.links || '' }}"
           if [[ -n "$links_raw" && "$links_raw" != "null" ]]; then
-            # Extract the first valid report URL, handling various formats
             if echo "$links_raw" | grep -q '^{'; then
-              # JSON format
               first_link="$(echo "$links_raw" | jq -r 'to_entries[0].value // empty' 2>/dev/null || true)"
             elif echo "$links_raw" | grep -q '^\s*\['; then
-              # Array format
               first_link="$(echo "$links_raw" | jq -r '.[0] // empty' 2>/dev/null || true)"
             else
-              # Comma-separated or single URL
               first_link="$(echo "$links_raw" | tr ',' '\n' | grep -Eo 'https?://[^ )]+' | head -n1 || true)"
             fi
           fi
@@ -234,12 +246,12 @@ jobs:
 
           # Minimal environment info for the issue body
           env_md="| Key | Value |\n|---|---|\n| Form Factor | ${{ matrix.formFactor }} |\n| Commit | ${{ github.sha }} |\n| Runner | ${RUNNER_OS:-unknown} |\n| Trigger | Production Deployment |"
-          { echo "env_md<<EOF"; echo "$env_md"; echo "EOF"; } >> "$GITHUB_OUTPUT"
+          { echo "env_md<<EOF"; echo -e "$env_md"; echo "EOF"; } >> "$GITHUB_OUTPUT"
 
           # Expose overall status
           echo "overall=$overall" >> "$GITHUB_OUTPUT"
 
-          # ----- Job Summary (no unbound vars) -----
+          # ----- Job Summary (now with clean % and a real table) -----
           {
             echo "## 🚀 Production Lighthouse – ${{ matrix.formFactor }}";
             echo "";
@@ -247,10 +259,10 @@ jobs:
             echo "";
             echo "| Category | Score |";
             echo "|---|---|";
-            echo "| Performance | ${perf} |";
-            echo "| Accessibility | ${a11y} |";
-            echo "| SEO | ${seo} |";
-            echo "| Best Practices | ${bp} |";
+            echo "| Performance | ${perf_pct}% |";
+            echo "| Accessibility | ${a11y_pct}% |";
+            echo "| SEO | ${seo_pct}% |";
+            echo "| Best Practices | ${bp_pct}% |";
             echo "";
             echo "### Category Scores";
             echo "<details>";
@@ -267,7 +279,8 @@ jobs:
             echo "<details>";
             echo "<summary>🚀 Core Web Vitals</summary>";
             echo "";
-            echo "${vitals_table}";
+            printf "%b\n" "$vitals_header"
+            echo "$vitals_rows"
             echo "</details>";
             echo "";
             echo "### Assertion details";
@@ -284,15 +297,15 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "*Generated by GitHub Actions Lighthouse (Production)*" >> $GITHUB_STEP_SUMMARY
 
-          # ----- Expose outputs for issue body -----
+          # ----- Expose outputs for issue body / PR comment (use % values) -----
           {
             echo "averages_md<<EOF"
             echo "| Category | Score |"
             echo "|---|---|"
-            echo "| Performance | ${perf} |"
-            echo "| Accessibility | ${a11y} |"
-            echo "| SEO | ${seo} |"
-            echo "| Best Practices | ${bp} |"
+            echo "| Performance | ${perf_pct}% |"
+            echo "| Accessibility | ${a11y_pct}% |"
+            echo "| SEO | ${seo_pct}% |"
+            echo "| Best Practices | ${bp_pct}% |"
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 

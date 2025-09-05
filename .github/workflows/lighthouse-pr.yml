@@ -127,7 +127,8 @@ jobs:
             echo "bp=N/A"   >> $GITHUB_OUTPUT
             echo "overall=⚠️ NO RESULTS" >> $GITHUB_OUTPUT
           else
-            readarray -t vals < <(jq -s '
+            # Use array assignment instead of readarray for better compatibility
+            vals=($(jq -s '
               def avg: (length as $n | if $n==0 then null else (add / $n) end);
               {
                 perf: (map(try .categories.performance.score catch null) | map(select(.!=null)) | avg),
@@ -135,15 +136,21 @@ jobs:
                 seo:  (map(try .categories.seo.score catch null) | map(select(.!=null)) | avg),
                 bp:   (map(try .categories["best-practices"].score catch null) | map(select(.!=null)) | avg)
               } | [.perf,.a11y,.seo,.bp] | map(if .==null then "N/A" else . end) | .[]
-            ' "${lhrs[@]}")
+            ' "${lhrs[@]}"))
 
             to_pct () { awk -v v="$1" 'BEGIN{printf "%.0f", v*100}'; }
             perf="${vals[0]}"; a11y="${vals[1]}"; seo="${vals[2]}"; bp="${vals[3]}"
 
-            [[ "$perf" != "N/A" ]] && echo "perf=$(to_pct "$perf")" >> $GITHUB_OUTPUT || echo "perf=N/A" >> $GITHUB_OUTPUT
-            [[ "$a11y" != "N/A" ]] && echo "a11y=$(to_pct "$a11y")" >> $GITHUB_OUTPUT || echo "a11y=N/A" >> $GITHUB_OUTPUT
-            [[ "$seo"  != "N/A" ]] && echo "seo=$(to_pct "$seo")"   >> $GITHUB_OUTPUT || echo "seo=N/A"  >> $GITHUB_OUTPUT
-            [[ "$bp"   != "N/A" ]] && echo "bp=$(to_pct "$bp")"     >> $GITHUB_OUTPUT || echo "bp=N/A"   >> $GITHUB_OUTPUT
+            # Convert to integer percentages for display + outputs
+            if [[ "$perf" != "N/A" ]]; then perf_pct=$(to_pct "$perf"); else perf_pct="N/A"; fi
+            if [[ "$a11y" != "N/A" ]]; then a11y_pct=$(to_pct "$a11y"); else a11y_pct="N/A"; fi
+            if [[ "$seo"  != "N/A" ]]; then seo_pct=$(to_pct "$seo"); else seo_pct="N/A"; fi
+            if [[ "$bp"   != "N/A" ]]; then bp_pct=$(to_pct "$bp"); else bp_pct="N/A"; fi
+
+            echo "perf=${perf_pct}" >> $GITHUB_OUTPUT
+            echo "a11y=${a11y_pct}" >> $GITHUB_OUTPUT
+            echo "seo=${seo_pct}"   >> $GITHUB_OUTPUT
+            echo "bp=${bp_pct}"     >> $GITHUB_OUTPUT
 
             if [[ -f "$assertion_file" ]] && [[ "${errc:-0}" -gt 0 ]]; then
               echo "overall=❌ FAILED" >> $GITHUB_OUTPUT
@@ -253,11 +260,14 @@ jobs:
             | add // {}
           ' "$results_dir"/lhr-*.json)"
 
+          # Utility functions with consistent rounding
           ms() { v="$1"; if [[ "$v" == "null" || -z "$v" ]]; then echo "N/A"; else awk -v n="$v" 'BEGIN{printf "%.0f", n}'; fi; }
+          cls() { v="$1"; if [[ "$v" == "null" || -z "$v" ]]; then echo "N/A"; else awk -v n="$v" 'BEGIN{printf "%.3f", n}'; fi; }
           kb() { v="$1"; if [[ "$v" == "null" || -z "$v" ]]; then echo "N/A"; else awk -v n="$v" 'BEGIN{printf "%.0f", n/1024}'; fi; }
           num() { v="$1"; if [[ "$v" == "null" || -z "$v" ]]; then echo "N/A"; else awk -v n="$v" 'BEGIN{printf "%.0f", n}'; fi; }
 
-          vt="| Page | LCP (ms) | CLS | TBT (ms) | FCP (ms) | SI (ms) | TTI (ms) | Req | Bytes (KB) |"$'\n'"|---|---:|---:|---:|---:|---:|---:|---:|---:|"$'\n'
+          # Proper header with real newlines (no literal \n)
+          vt=$'| Page | LCP (ms) | CLS | TBT (ms) | FCP (ms) | SI (ms) | TTI (ms) | Req | Bytes (KB) |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|\n'
           for u in "${ordered_urls[@]}"; do
             if [[ "$u" == */ ]]; then alt="${u%/}"; else alt="$u/"; fi
             key="${u%/}" ; altkey="${alt%/}"
@@ -271,9 +281,10 @@ jobs:
             bytes=$(jq -r --arg k "$key" --arg a "$altkey" -n --argjson m "$metrics_json" '($m[$k].bytes // $m[$a].bytes // "null")')
             reqs=$(jq -r  --arg k "$key" --arg a "$altkey" -n --argjson m "$metrics_json" '($m[$k].reqs // $m[$a].reqs // "null")')
 
-            vt+="| $u | $(ms "$lcp") | $(printf '%.3f' "${cls:-0}" 2>/dev/null || echo 'N/A') | $(ms "$tbt") | $(ms "$fcp") | $(ms "$si") | $(ms "$tti") | $(num "$reqs") | $(kb "$bytes") |"$'\n'
+            vt+="| $u | $(ms "$lcp") | $(cls "$cls") | $(ms "$tbt") | $(ms "$fcp") | $(ms "$si") | $(ms "$tti") | $(num "$reqs") | $(kb "$bytes") |"$'\n'
           done
 
+          # Write vitals table to output using a more robust approach
           {
             echo "vitals_md<<EOF"
             echo "$vt"
@@ -309,6 +320,14 @@ jobs:
             **Preview URL:** ${{ env.PREVIEW_URL }}
             **Status:** ${{ steps.parse.outputs.overall }}
 
+            ### Averages (all pages/runs)
+            | Category | Score |
+            |---|---|
+            | Performance | ${{ steps.parse.outputs.perf }}% |
+            | Accessibility | ${{ steps.parse.outputs.a11y }}% |
+            | SEO | ${{ steps.parse.outputs.seo }}% |
+            | Best Practices | ${{ steps.parse.outputs.bp }}% |
+
             ### Category Scores
             <details>
             <summary>📊 Category Scores</summary>
@@ -341,6 +360,14 @@ jobs:
             echo "## 🚀 Lighthouse (Preview)";
             echo "- URL: ${{ env.PREVIEW_URL }}";
             echo "- Status: ${{ steps.parse.outputs.overall }}";
+            echo "";
+            echo "### Averages (all pages/runs)";
+            echo "| Category | Score |";
+            echo "|---|---|";
+            echo "| Performance | ${{ steps.parse.outputs.perf }}% |";
+            echo "| Accessibility | ${{ steps.parse.outputs.a11y }}% |";
+            echo "| SEO | ${{ steps.parse.outputs.seo }}% |";
+            echo "| Best Practices | ${{ steps.parse.outputs.bp }}% |";
             echo "";
             echo "### Category Scores";
             echo "<details>";
