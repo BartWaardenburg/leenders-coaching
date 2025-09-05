@@ -126,8 +126,8 @@ jobs:
           fi
 
           if [[ ${#lhrs[@]} -gt 0 ]]; then
-            # Category averages as floats 0..1
-            readarray -t vals < <(jq -s '
+            # Category averages as floats 0..1 - use array assignment for better compatibility
+            vals=($(jq -s '
               def avg: (length as $n | if $n==0 then null else (add / $n) end);
               {
                 perf: (map(try .categories.performance.score          catch null) | map(select(.!=null)) | avg),
@@ -135,7 +135,7 @@ jobs:
                 seo:  (map(try .categories.seo.score                  catch null) | map(select(.!=null)) | avg),
                 bp:   (map(try .categories["best-practices"].score    catch null) | map(select(.!=null)) | avg)
               } | [.perf,.a11y,.seo,.bp] | map(if .==null then "N/A" else . end) | .[]
-            ' "${lhrs[@]}")
+            ' "${lhrs[@]}"))
 
             perf="${vals[0]}"; a11y="${vals[1]}"; seo="${vals[2]}"; bp="${vals[3]}"
 

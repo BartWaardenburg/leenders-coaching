@@ -127,7 +127,8 @@ jobs:
             echo "bp=N/A"   >> $GITHUB_OUTPUT
             echo "overall=⚠️ NO RESULTS" >> $GITHUB_OUTPUT
           else
-            readarray -t vals < <(jq -s '
+            # Use array assignment instead of readarray for better compatibility
+            vals=($(jq -s '
               def avg: (length as $n | if $n==0 then null else (add / $n) end);
               {
                 perf: (map(try .categories.performance.score catch null) | map(select(.!=null)) | avg),
@@ -135,7 +136,7 @@ jobs:
                 seo:  (map(try .categories.seo.score catch null) | map(select(.!=null)) | avg),
                 bp:   (map(try .categories["best-practices"].score catch null) | map(select(.!=null)) | avg)
               } | [.perf,.a11y,.seo,.bp] | map(if .==null then "N/A" else . end) | .[]
-            ' "${lhrs[@]}")
+            ' "${lhrs[@]}"))
 
             to_pct () { awk -v v="$1" 'BEGIN{printf "%.0f", v*100}'; }
             perf="${vals[0]}"; a11y="${vals[1]}"; seo="${vals[2]}"; bp="${vals[3]}"
@@ -283,9 +284,10 @@ jobs:
             vt+="| $u | $(ms "$lcp") | $(cls "$cls") | $(ms "$tbt") | $(ms "$fcp") | $(ms "$si") | $(ms "$tti") | $(num "$reqs") | $(kb "$bytes") |"$'\n'
           done
 
+          # Write vitals table to output using a more robust approach
           {
-            echo "vitals_md<<'EOF'"
-            printf "%b\n" "$vt"
+            echo "vitals_md<<EOF"
+            echo "$vt"
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
