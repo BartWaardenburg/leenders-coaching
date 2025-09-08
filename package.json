@@ -58,8 +58,8 @@
     "@types/node": "24.3.1",
     "@types/react": "19.1.12",
     "@types/react-dom": "19.1.9",
-    "@typescript-eslint/eslint-plugin": "8.42.0",
-    "@typescript-eslint/parser": "8.42.0",
+    "@typescript-eslint/eslint-plugin": "8.43.0",
+    "@typescript-eslint/parser": "8.43.0",
     "babel-loader": "10.0.0",
     "eslint": "9.35.0",
     "husky": "9.1.7",
@@ -71,5 +71,10 @@
     "node": ">=22.0.0",
     "pnpm": "10.15.1"
   },
-  "packageManager": "pnpm@10.15.1"
+  "packageManager": "pnpm@10.15.1",
+  "pnpm": {
+    "overrides": {
+      "tmp": ">=0.2.4"
+    }
+  }
 }
