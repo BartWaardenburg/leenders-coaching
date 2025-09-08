@@ -220,15 +220,15 @@ jobs:
 
             # Expose vitals table (multiline) to outputs
             {
-              echo "vitals_table_md<<'EOF'"
-              printf "%b\n" "$vitals_header"
+              echo "vitals_table_md<<EOF"
+              echo "$vitals_header"
               echo "$vitals_rows"
               echo "EOF"
             } >> "$GITHUB_OUTPUT"
 
           else
             { echo "categories_table_md<<EOF"; echo "_No LHR files found._"; echo "EOF"; } >> "$GITHUB_OUTPUT"
-            { echo "vitals_table_md<<EOF"; printf "%b\n" "$vitals_header"; echo "EOF"; } >> "$GITHUB_OUTPUT"
+            { echo "vitals_table_md<<EOF"; echo "$vitals_header"; echo "EOF"; } >> "$GITHUB_OUTPUT"
           fi
 
           # Try to grab the first public report link from the action output (if present)
@@ -279,7 +279,7 @@ jobs:
             echo "<details>";
             echo "<summary>🚀 Core Web Vitals</summary>";
             echo "";
-            printf "%b\n" "$vitals_header"
+            echo "$vitals_header"
             echo "$vitals_rows"
             echo "</details>";
             echo "";
@@ -311,7 +311,7 @@ jobs:
 
       - name: '🚨 Open regression issue when failed'
         if: ${{ steps.parse.outputs.errc && steps.parse.outputs.errc != '0' && steps.parse.outputs.errc != '' }}
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         env:
           FIRST_REPORT: ${{ steps.parse.outputs.first_report_link }}
           AVERAGES_MD: ${{ steps.parse.outputs.averages_md }}
