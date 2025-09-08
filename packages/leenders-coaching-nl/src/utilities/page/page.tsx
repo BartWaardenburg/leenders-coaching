@@ -2,10 +2,8 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { SectionRenderer } from '@/components/sections/SectionRenderer';
-import { groq } from '@/utilities/sanity';
-import { PAGE_QUERY } from '@/groq/queries';
+import { getPage } from '@/groq/queries';
 import type { BasePage } from '@/types/Page';
-import type { PAGE_QUERYResult } from '@/types/sanity/groq';
 
 /**
  * Generic function to fetch page data from Sanity using GROQ
@@ -16,7 +14,7 @@ export const getPageData = async <T extends BasePage>(
   pageType: string
 ): Promise<T | null> => {
   try {
-    return await groq<PAGE_QUERYResult<T>>(PAGE_QUERY(pageType));
+    return (await getPage(pageType)) as T | null;
   } catch (error) {
     console.error(`Error fetching ${pageType} data:`, error);
     return null;
@@ -125,7 +123,7 @@ export const createPageComponent = <T extends BasePage>(
 ) => {
   const getPageDataInternal = async (): Promise<T | null> => {
     try {
-      return await groq<PAGE_QUERYResult<T>>(PAGE_QUERY(pageType));
+      return (await getPage(pageType)) as T | null;
     } catch (error) {
       console.error(`Error fetching ${pageType} data:`, error);
       return null;

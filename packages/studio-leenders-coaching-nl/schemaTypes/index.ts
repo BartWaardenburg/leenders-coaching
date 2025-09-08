@@ -7,7 +7,7 @@ import {
   contactPage,
 } from './pages';
 
-import { postType } from './documents';
+import { postType, categoryType } from './documents';
 
 import {
   sectionHeader,
@@ -85,6 +85,7 @@ export const schemaTypes = [
 
   // Documents
   postType,
+  categoryType,
 
   // Sections
   sectionHeader,

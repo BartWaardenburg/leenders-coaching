@@ -1,10 +1,16 @@
 import type { ReactNode } from 'react';
 import { Analytics } from '@vercel/analytics/react';
+import { draftMode } from 'next/headers';
+import { VisualEditing } from 'next-sanity';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { Box } from '@/components/ui/Box/Box';
 import { GlobalDataProvider } from '@/components/providers/GlobalDataProvider';
 import { ToastProvider } from '@/components/providers/ToastProvider';
-import { ConfigProvider, defaultConfig } from '@/components/providers/ConfigProvider';
+import {
+  ConfigProvider,
+  defaultConfig,
+} from '@/components/providers/ConfigProvider';
+import { DisableDraftMode } from '@/components/ui/DisableDraftMode';
 
 import '@/app/globals.css';
 
@@ -17,8 +23,11 @@ type RootLayoutProps = {
 
 /**
  * Root layout component with theme support, navigation, and footer
+ * Includes visual editing overlay when in draft mode
  */
 export const RootLayout = async ({ children, fonts }: RootLayoutProps) => {
+  const { isEnabled } = await draftMode();
+
   return (
     <Box
       as="html"
@@ -33,6 +42,12 @@ export const RootLayout = async ({ children, fonts }: RootLayoutProps) => {
               <ToastProvider>
                 {children}
                 <Analytics />
+                {isEnabled && (
+                  <>
+                    <VisualEditing />
+                    <DisableDraftMode />
+                  </>
+                )}
               </ToastProvider>
             </GlobalDataProvider>
           </ConfigProvider>

@@ -2,12 +2,20 @@ import { describe, it, expect, vi } from 'vitest';
 import { transformBlogSection } from './blog';
 import type { Post } from '@/types/sanity/schema';
 
+// Test-specific type for resolved category (simulating Sanity's reference resolution)
+type ResolvedCategory = {
+  _ref: string;
+  _type: 'reference';
+  _key: string;
+  title: string;
+};
+
 // Test-specific type for blog section with resolved posts
 type TestSectionBlog = {
   _type: 'sectionBlog';
   displayTitle?: string;
   description?: string;
-  posts?: Post[];
+  posts?: (Omit<Post, 'categories'> & { categories?: ResolvedCategory[] })[];
   postsPerPage?: number;
   showFeaturedOnly?: boolean;
   sortOrder?: 'newest' | 'oldest';
@@ -27,7 +35,7 @@ vi.mock('@/utilities/sanity', () => ({
  */
 describe('transformBlogSection', () => {
   it('should transform valid blog section data', () => {
-    const mockPost: Post = {
+    const mockPost: NonNullable<TestSectionBlog['posts']>[0] = {
       _id: 'post-1',
       _type: 'post',
       _createdAt: '2024-01-01T00:00:00Z',
@@ -37,7 +45,14 @@ describe('transformBlogSection', () => {
       description: 'Test description',
       slug: { _type: 'slug', current: 'test-post' },
       publishedAt: '2024-01-01',
-      categories: ['test'],
+      categories: [
+        {
+          _ref: 'cat-1',
+          _type: 'reference',
+          _key: 'cat-1',
+          title: 'test',
+        },
+      ],
       featured: true,
       image: {
         _type: 'image',
@@ -83,7 +98,7 @@ describe('transformBlogSection', () => {
   });
 
   it('should handle missing optional fields', () => {
-    const mockPost: Post = {
+    const mockPost: NonNullable<TestSectionBlog['posts']>[0] = {
       _id: 'post-1',
       _type: 'post',
       _createdAt: '2024-01-01T00:00:00Z',
@@ -124,7 +139,7 @@ describe('transformBlogSection', () => {
   });
 
   it('should filter featured posts when showFeaturedOnly is true', () => {
-    const mockPosts: Post[] = [
+    const mockPosts: NonNullable<TestSectionBlog['posts']> = [
       {
         _id: 'post-1',
         _type: 'post',
@@ -162,7 +177,7 @@ describe('transformBlogSection', () => {
   });
 
   it('should sort posts by newest first', () => {
-    const mockPosts: Post[] = [
+    const mockPosts: NonNullable<TestSectionBlog['posts']> = [
       {
         _id: 'post-1',
         _type: 'post',
@@ -198,7 +213,7 @@ describe('transformBlogSection', () => {
   });
 
   it('should sort posts by oldest first', () => {
-    const mockPosts: Post[] = [
+    const mockPosts: NonNullable<TestSectionBlog['posts']> = [
       {
         _id: 'post-1',
         _type: 'post',

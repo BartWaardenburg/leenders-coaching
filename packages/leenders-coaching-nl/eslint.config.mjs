@@ -105,7 +105,7 @@ const eslintConfig = [
       "@next/next/no-title-in-document-head": "error",
 
       // General rules
-      "no-console": "warn",
+      "no-console": "off",
       "prefer-const": "error",
       "no-var": "error"
     }
@@ -137,7 +137,7 @@ const eslintConfig = [
     },
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
-      "no-console": "warn",
+      "no-console": "off",
       "prefer-const": "error",
       "no-var": "error"
     }

@@ -74,7 +74,7 @@ export const SectionForm = ({
           {
             variant: 'green',
             duration: 5000,
-          },
+          }
         );
       }
     } catch (error) {
@@ -85,7 +85,7 @@ export const SectionForm = ({
           {
             variant: 'pink',
             duration: 5000,
-          },
+          }
         );
       }
     }

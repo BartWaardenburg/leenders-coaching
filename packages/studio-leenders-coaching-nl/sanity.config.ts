@@ -1,8 +1,10 @@
 import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
 import { visionTool } from '@sanity/vision';
+import { presentationTool } from 'sanity/presentation';
 import { schemaTypes } from './schemaTypes';
 import { structure } from './structure';
+import { locations, mainDocuments } from './lib/presentation/resolve';
 
 export default defineConfig({
   name: 'default',
@@ -14,6 +16,26 @@ export default defineConfig({
       structure,
     }),
     visionTool(),
+    presentationTool({
+      name: 'presentation',
+      title: 'Presentation',
+      resolve: { locations, mainDocuments },
+      previewUrl: {
+        initial:
+          process.env.NODE_ENV === 'development'
+            ? 'http://localhost:3000'
+            : process.env.NEXT_PUBLIC_SITE_URL ||
+              'https://leenders-coaching.nl',
+        previewMode: {
+          enable: '/api/draft/enable',
+        },
+      },
+      allowOrigins: [
+        'https://www.leenders-coaching.nl',
+        'https://leenders-coaching.nl',
+        'http://localhost:*',
+      ],
+    }),
   ],
   schema: {
     types: schemaTypes,

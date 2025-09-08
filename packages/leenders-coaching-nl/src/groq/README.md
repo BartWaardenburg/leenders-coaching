@@ -4,15 +4,15 @@ This directory contains all GROQ queries used throughout the application for fet
 
 ## Usage
 
-Import queries from this directory and use them with the `groq` function from `@/utilities/sanity`:
+Import query functions from this directory. These functions include built-in caching and draft mode support:
 
 ```typescript
-import { groq } from "@/utilities/sanity";
-import { HOME_PAGE_QUERY } from "@/groq/queries";
-import type { HOME_PAGE_QUERYResult } from "@/types/sanity/groq";
+import { getHomePage, getBlogPosts, getBlogPostBySlug } from '@/groq/queries';
 
-// Fetch data with type safety
-const homePage = await groq<HOME_PAGE_QUERYResult>(HOME_PAGE_QUERY);
+// Fetch data with automatic caching and draft mode support
+const homePage = await getHomePage();
+const posts = await getBlogPosts();
+const post = await getBlogPostBySlug('my-post-slug');
 ```
 
 ## Type System
@@ -26,13 +26,22 @@ To update the schema types when your Sanity schema changes:
 pnpm run update-types
 ```
 
-## Naming Convention
+## Features
 
-Query constants follow this naming convention:
+- **Automatic Caching**: All queries include ISR cache tags for optimal performance
+- **Draft Mode Support**: Automatically switches between published and draft content
+- **Type Safety**: Full TypeScript support with generated types
+- **Error Handling**: Built-in error handling and fallbacks
 
-- All uppercase with underscores (`HOME_PAGE_QUERY`)
-- Suffix `_QUERY` for all queries
-- Corresponding type ends with `Result` (`HOME_PAGE_QUERYResult`)
+## Available Functions
+
+- `getPage(type)` - Get any page by type (homePage, aboutPage, etc.)
+- `getHomePage()` - Get the home page
+- `getBlogPosts()` - Get all blog posts
+- `getBlogPostBySlug(slug)` - Get a single blog post
+- `getCategories()` - Get all categories
+- `getPostsByCategory(categoryId)` - Get posts by category
+- `getGlobalData()` - Get navigation, footer, and site settings
 
 ## Design Principles
 
@@ -40,3 +49,4 @@ Query constants follow this naming convention:
 2. **Strong Typing**: All queries have corresponding TypeScript types.
 3. **Reusability**: Queries are designed to be reusable across the application.
 4. **Performance**: Use projections and filters to minimize data transfer.
+5. **Caching**: Built-in ISR cache tags for optimal performance.

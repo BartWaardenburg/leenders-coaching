@@ -83,7 +83,7 @@ const EmailFrame = ({ title, description, html }: EmailFrameProps) => {
             body.offsetHeight,
             html.clientHeight,
             html.scrollHeight,
-            html.offsetHeight,
+            html.offsetHeight
           );
           iframe.style.height = `${height}px`;
         };
@@ -125,7 +125,7 @@ export const NotificationEmail: Story = {
       const renderEmail = async () => {
         try {
           const rendered = await render(
-            <ContactNotification {...sampleData} />,
+            <ContactNotification {...sampleData} />
           );
           setHtml(rendered);
         } catch (error) {
@@ -160,7 +160,7 @@ export const ConfirmationEmail: Story = {
             <ContactConfirmation
               name={sampleData.name}
               subject={sampleData.subject}
-            />,
+            />
           );
           setHtml(rendered);
         } catch (error) {

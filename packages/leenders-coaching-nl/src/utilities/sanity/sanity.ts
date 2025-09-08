@@ -1,8 +1,7 @@
-import { createClient } from '@sanity/client';
+import { createClient } from 'next-sanity';
 import type { QueryParams } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
-
 
 /**
  * Returns true if the hostname matches 'chromatic.com' or is a subdomain of 'chromatic.com'.
@@ -11,7 +10,8 @@ function isChromaticHost(hostname: string): boolean {
   if (!hostname) return false;
   return (
     hostname === 'chromatic.com' ||
-    (hostname.endsWith('.chromatic.com') && hostname.length > '.chromatic.com'.length)
+    (hostname.endsWith('.chromatic.com') &&
+      hostname.length > '.chromatic.com'.length)
   );
 }
 
@@ -99,7 +99,16 @@ const createSanityClient = () => {
       dataset: sanityConfig.dataset,
       apiVersion: sanityConfig.apiVersion,
       useCdn: sanityConfig.useCdn,
-      token: isServer ? sanityConfig.apiToken : undefined, // Only include token on server
+      token: isServer
+        ? process.env.SANITY_VIEWER_TOKEN || sanityConfig.apiToken
+        : undefined, // Use viewer token for draft mode
+      stega: {
+        studioUrl:
+          process.env.NEXT_PUBLIC_SANITY_STUDIO_URL ||
+          (process.env.NODE_ENV === 'development'
+            ? 'http://localhost:3333'
+            : 'https://studio.leenders-coaching.nl'),
+      },
     });
   } catch (error) {
     // In non-production environments, create a fallback client if the real one fails
@@ -109,6 +118,9 @@ const createSanityClient = () => {
         dataset: FALLBACK_CONFIG.dataset,
         apiVersion: FALLBACK_CONFIG.apiVersion,
         useCdn: false,
+        stega: {
+          studioUrl: 'http://localhost:3333',
+        },
       });
     }
     throw error;

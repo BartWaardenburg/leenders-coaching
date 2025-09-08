@@ -9,15 +9,15 @@ export const runtime = 'edge';
 const playfairDisplayData = fetch(
   new URL(
     '../../../assets/fonts/PlayfairDisplay-Bold-subset.ttf',
-    import.meta.url,
-  ),
+    import.meta.url
+  )
 ).then((res) => res.arrayBuffer());
 
 const montserratData = fetch(
   new URL(
     '../../../assets/fonts/Montserrat-Regular-subset.ttf',
-    import.meta.url,
-  ),
+    import.meta.url
+  )
 ).then((res) => res.arrayBuffer());
 
 // Default image configuration
@@ -281,7 +281,7 @@ export async function GET(request: Request) {
             weight: 400,
           },
         ],
-      },
+      }
     );
   } catch (e) {
     console.error(e);

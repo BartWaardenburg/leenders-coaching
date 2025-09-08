@@ -1,5 +1,9 @@
 import type { FC } from 'react';
-import { sectionRegistry, isSectionType, sectionTransformers } from '@/utilities/sections/index';
+import {
+  sectionRegistry,
+  isSectionType,
+  sectionTransformers,
+} from '@/utilities/sections/index';
 
 interface SectionRendererProps {
   type: string;
@@ -32,4 +36,4 @@ export const SectionRenderer: FC<SectionRendererProps> = ({ type, data }) => {
     console.error(`Failed to render section ${type}:`, error);
     return null;
   }
-}; 
+};

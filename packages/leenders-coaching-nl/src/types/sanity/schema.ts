@@ -705,6 +705,19 @@ export type CallToAction = {
   isExternal?: boolean;
 };
 
+export type Category = {
+  _id: string;
+  _type: 'category';
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  description?: string;
+  slug?: Slug;
+  color?: ColorVariant;
+  metadata?: Metadata;
+};
+
 export type Post = {
   _id: string;
   _type: 'post';
@@ -715,7 +728,13 @@ export type Post = {
   description?: string;
   slug?: Slug;
   publishedAt?: string;
-  categories?: Array<string>;
+  categories?: Array<{
+    _ref: string;
+    _type: 'reference';
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: 'category';
+  }>;
   image?: {
     asset?: {
       _ref: string;
@@ -2350,6 +2369,7 @@ export type AllSanitySchemaTypes =
   | SectionBlog
   | SectionHeader
   | CallToAction
+  | Category
   | Post
   | ContactPage
   | BlogPage

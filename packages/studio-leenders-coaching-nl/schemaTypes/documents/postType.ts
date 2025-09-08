@@ -50,7 +50,7 @@ export const postType = defineType({
       title: 'Categories',
       type: 'array',
       group: 'content',
-      of: [{ type: 'string' }],
+      of: [{ type: 'reference', to: [{ type: 'category' }] }],
       validation: (rule) => rule.required(),
     }),
     defineField({

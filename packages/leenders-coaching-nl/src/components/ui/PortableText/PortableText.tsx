@@ -43,19 +43,46 @@ type SanityImage = {
 
 const components: PortableTextComponents = {
   block: {
-    h1: ({ children }) => <Heading level="h1" variant="large">{children}</Heading>,
-    h2: ({ children }) => <Heading level="h2" variant="medium">{children}</Heading>,
-    h3: ({ children }) => <Heading level="h3" variant="small">{children}</Heading>,
-    h4: ({ children }) => <Heading level="h4" variant="small">{children}</Heading>,
-    h5: ({ children }) => <Heading level="h5" variant="small">{children}</Heading>,
-    h6: ({ children }) => <Heading level="h6" variant="small">{children}</Heading>,
+    h1: ({ children }) => (
+      <Heading level="h1" variant="large">
+        {children}
+      </Heading>
+    ),
+    h2: ({ children }) => (
+      <Heading level="h2" variant="medium">
+        {children}
+      </Heading>
+    ),
+    h3: ({ children }) => (
+      <Heading level="h3" variant="small">
+        {children}
+      </Heading>
+    ),
+    h4: ({ children }) => (
+      <Heading level="h4" variant="small">
+        {children}
+      </Heading>
+    ),
+    h5: ({ children }) => (
+      <Heading level="h5" variant="small">
+        {children}
+      </Heading>
+    ),
+    h6: ({ children }) => (
+      <Heading level="h6" variant="small">
+        {children}
+      </Heading>
+    ),
     normal: ({ children }) => (
       <Box className="mb-4">
         <Text>{children}</Text>
       </Box>
     ),
     blockquote: ({ children }) => (
-      <Box as="blockquote" className="pl-4 border-l-4 border-gray-300 my-4 italic">
+      <Box
+        as="blockquote"
+        className="pl-4 border-l-4 border-gray-300 my-4 italic"
+      >
         <Text>{children}</Text>
       </Box>
     ),
@@ -75,7 +102,13 @@ const components: PortableTextComponents = {
         {children}
       </span>
     ),
-    link: ({ value, children }: { value?: LinkAnnotation; children: React.ReactNode }) => {
+    link: ({
+      value,
+      children,
+    }: {
+      value?: LinkAnnotation;
+      children: React.ReactNode;
+    }) => {
       const target = value?.blank ? '_blank' : undefined;
       const rel = value?.blank ? 'noopener noreferrer' : undefined;
       return (
@@ -94,7 +127,8 @@ const components: PortableTextComponents = {
     image: ({ value }: { value: SanityImage }) => {
       if (!value?.asset) return null;
 
-      const imageUrl = value.asset.url || urlForImage(value).width(800).height(400).url();
+      const imageUrl =
+        value.asset.url || urlForImage(value).width(800).height(400).url();
 
       return (
         <Box className="my-8">
@@ -107,7 +141,12 @@ const components: PortableTextComponents = {
             />
           </Box>
           {value?.caption && (
-            <Text as="figcaption" variant="muted" textAlign="center" className="mt-2">
+            <Text
+              as="figcaption"
+              variant="muted"
+              textAlign="center"
+              className="mt-2"
+            >
               {value.caption}
             </Text>
           )}
@@ -127,7 +166,10 @@ const components: PortableTextComponents = {
       </Box>
     ),
     code: ({ value }) => (
-      <Box as="pre" className="bg-pastel-blue/20 dark:bg-pastel-blue-dark/20 border border-foreground/80 p-4 my-4 overflow-x-auto">
+      <Box
+        as="pre"
+        className="bg-pastel-blue/20 dark:bg-pastel-blue-dark/20 border border-foreground/80 p-4 my-4 overflow-x-auto"
+      >
         <code className="font-mono text-sm">{value?.code}</code>
       </Box>
     ),
