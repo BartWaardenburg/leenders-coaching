@@ -193,6 +193,9 @@ jobs:
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
     steps:
+      - name: '🔄 Checkout repository'
+        uses: actions/checkout@v5
+
       - name: '⚙️ Setup Environment'
         uses: ./.github/actions/setup
         with:
@@ -216,6 +219,9 @@ jobs:
     timeout-minutes: 8
 
     steps:
+      - name: '🔄 Checkout repository'
+        uses: actions/checkout@v5
+
       - name: '⚙️ Setup Environment'
         uses: ./.github/actions/setup
         with:
