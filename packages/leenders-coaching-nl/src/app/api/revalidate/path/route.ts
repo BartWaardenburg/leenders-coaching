@@ -44,6 +44,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ body, message });
   } catch (err) {
     console.error('❌ Path revalidation error:', err);
-    return new Response((err as Error).message, { status: 500 });
+    return NextResponse.json({ error: (err as Error).message }, { status: 500 });
   }
 }
