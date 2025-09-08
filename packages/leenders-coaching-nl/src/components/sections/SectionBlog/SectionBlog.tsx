@@ -10,13 +10,15 @@ import { Grid } from '@/components/ui/Grid';
 import { Card } from '@/components/ui/Card';
 import { Pagination } from '@/components/ui/Pagination';
 
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+
 export type BlogPost = {
   title: string;
   description: string;
   slug: string;
   date: string;
   categories: string[];
-  image: string;
+  image: string | SanityImageSource | null;
   featured?: boolean;
   variant?: PastelColor;
 };
@@ -140,7 +142,7 @@ export const SectionBlog = ({
                   date={post.date}
                   categories={post.categories}
                   slug={post.slug}
-                  image={post.image}
+                  image={post.image || undefined}
                   variant={post.variant || 'blue'}
                   featured={post.featured}
                   border

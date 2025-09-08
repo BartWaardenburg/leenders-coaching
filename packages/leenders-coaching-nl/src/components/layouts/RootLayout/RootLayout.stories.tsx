@@ -243,7 +243,6 @@ export const AllSections: Story = {
         title="Transform Your Life"
         description="Take the first step towards a better future with professional coaching"
         image="https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&h=800&fit=crop"
-        imageAlt="Professional coaching session in progress"
         cta={{
           href: '/contact',
           label: 'Start Your Journey',

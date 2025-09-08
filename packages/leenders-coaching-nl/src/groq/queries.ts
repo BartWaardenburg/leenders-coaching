@@ -22,7 +22,17 @@ export const getPage = async (type: string) => {
         asset-> {
           ...,
           metadata {
-            lqip
+            lqip,
+            dimensions {
+              width,
+              height,
+              aspectRatio
+            },
+            palette {
+              dominant {
+                background
+              }
+            }
           }
         },
         hotspot,
@@ -90,7 +100,17 @@ export const getHomePage = async () => {
         asset-> {
           ...,
           metadata {
-            lqip
+            lqip,
+            dimensions {
+              width,
+              height,
+              aspectRatio
+            },
+            palette {
+              dominant {
+                background
+              }
+            }
           }
         },
         hotspot,
@@ -263,7 +283,27 @@ export const getBlogPosts = async () => {
 
   const query = `*[_type == "post" && defined(title) && defined(slug)] | order(publishedAt desc) {
     ...,
-    "image": image.asset->url,
+    image {
+      asset-> {
+        ...,
+        metadata {
+          lqip,
+          dimensions {
+            width,
+            height,
+            aspectRatio
+          },
+          palette {
+            dominant {
+              background
+            }
+          }
+        }
+      },
+      hotspot,
+      crop,
+      alt
+    },
     categories[]-> {
       _id,
       title,
@@ -299,7 +339,27 @@ export const getBlogPostBySlug = async (slug: string) => {
 
   const query = `*[_type == "post" && slug.current == "${slug}" && defined(title)][0] {
     ...,
-    "image": image.asset->url,
+    image {
+      asset-> {
+        ...,
+        metadata {
+          lqip,
+          dimensions {
+            width,
+            height,
+            aspectRatio
+          },
+          palette {
+            dominant {
+              background
+            }
+          }
+        }
+      },
+      hotspot,
+      crop,
+      alt
+    },
     categories[]-> {
       _id,
       title,

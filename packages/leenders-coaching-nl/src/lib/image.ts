@@ -1,156 +1,73 @@
-import createImageUrlBuilder from '@sanity/image-url';
-import type { Image } from 'sanity';
+import imageUrlBuilder from '@sanity/image-url';
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 import { client } from '@/lib/api/sanity';
 
 /**
- * Create image URL builder instance
+ * Internal builder that respects crop + hotspot when width/height are set
+ * Let Sanity CDN pick the best format for the browser (WebP/AVIF) and control quality
  */
-const builder = createImageUrlBuilder(client);
+const builder = imageUrlBuilder(client);
+const urlFor = (source: SanityImageSource) => builder.image(source);
 
 /**
- * Generate optimized image URL with hotspot and crop support
+ * Generate a custom loader function for Next.js Image component
+ * This allows Next.js to request different sizes from Sanity's CDN
  * @param source - Sanity image source
- * @returns Image URL builder instance
+ * @param quality - Image quality (1-100)
+ * @returns Loader function for Next.js Image
  */
-export const urlFor = (source: Image) => {
-  return builder.image(source);
-};
-
-/**
- * Generate responsive image URLs for different screen sizes
- * @param source - Sanity image source
- * @param sizes - Array of width sizes
- * @returns Array of image URLs with sizes
- */
-export const generateResponsiveImages = (
-  source: Image,
-  sizes: number[] = [320, 640, 768, 1024, 1280, 1536]
-) => {
-  return sizes.map((width) => ({
-    width,
-    url: urlFor(source)
+export const createSanityLoader = (source: SanityImageSource, quality = 75) => {
+  return ({ width }: { src: string; width: number }) => {
+    return urlFor(source)
       .width(width)
-      .height(Math.round(width * 0.75)) // 4:3 aspect ratio
-      .fit('max')
+      .quality(quality)
       .auto('format')
-      .url(),
-  }));
-};
-
-/**
- * Generate modern image formats (AVIF, WebP) with fallback
- * @param source - Sanity image source
- * @param width - Image width
- * @param height - Image height
- * @returns Object with different format URLs
- */
-export const generateModernFormats = (
-  source: Image,
-  width: number,
-  height: number
-) => {
-  const baseImage = urlFor(source).width(width).height(height).fit('max');
-
-  return {
-    webp: baseImage.format('webp').url(),
-    jpeg: baseImage.format('jpg').url(),
-    fallback: baseImage.url(),
+      .fit('max')
+      .url();
   };
 };
 
 /**
- * Generate blur-up placeholder from LQIP (Low Quality Image Placeholder)
- * @param source - Sanity image source
- * @returns Base64 encoded blur placeholder
+ * Extract LQIP (Low Quality Image Placeholder) from Sanity image metadata
+ * @param source - Sanity image source with metadata
+ * @returns Base64 LQIP string or null
  */
-export const generateBlurPlaceholder = (source: Image): string => {
-  // Use LQIP from asset metadata if available
-  if (source.asset && 'metadata' in source.asset) {
-    const metadata = source.asset.metadata as { lqip?: string };
-    if (metadata?.lqip) {
-      return metadata.lqip;
-    }
+export const getLQIP = (
+  source: SanityImageSource & { asset?: { metadata?: { lqip?: string } } }
+): string | null => {
+  return source?.asset?.metadata?.lqip || null;
+};
+
+/**
+ * Extract image dimensions from Sanity image metadata
+ * @param source - Sanity image source with metadata
+ * @returns Dimensions object or null
+ */
+export const getImageDimensions = (
+  source: SanityImageSource & {
+    asset?: {
+      metadata?: {
+        dimensions?: { width: number; height: number; aspectRatio: number };
+      };
+    };
   }
-
-  // Fallback: generate a simple placeholder
-  return urlFor(source).width(20).height(20).blur(20).format('jpg').url();
+) => {
+  return source?.asset?.metadata?.dimensions || null;
 };
 
 /**
- * Generate optimized image props for Next.js Image component
- * @param source - Sanity image source
- * @param options - Image optimization options
- * @returns Optimized image props
+ * Extract dominant color from Sanity image palette
+ * @param source - Sanity image source with metadata
+ * @returns Dominant color hex string or null
  */
-export const generateImageProps = (
-  source: Image,
-  options: {
-    width?: number;
-    height?: number;
-    alt?: string;
-    priority?: boolean;
-    sizes?: string;
-  } = {}
+export const getDominantColor = (
+  source: SanityImageSource & {
+    asset?: {
+      metadata?: {
+        palette?: { dominant?: { background?: string } };
+      };
+    };
+  }
 ) => {
-  const {
-    width = 800,
-    height = 600,
-    alt = '',
-    priority = false,
-    sizes = '100vw',
-  } = options;
-
-  const formats = generateModernFormats(source, width, height);
-  const blurDataURL = generateBlurPlaceholder(source);
-
-  return {
-    src: formats.webp, // Use WebP as primary format
-    alt,
-    width,
-    height,
-    priority,
-    sizes,
-    placeholder: 'blur' as const,
-    blurDataURL,
-    // Add srcSet for responsive images
-    srcSet: [`${formats.webp} ${width}w`, `${formats.jpeg} ${width}w`].join(
-      ', '
-    ),
-  };
-};
-
-/**
- * Generate picture element with multiple formats
- * @param source - Sanity image source
- * @param options - Image options
- * @returns Picture element props
- */
-export const generatePictureProps = (
-  source: Image,
-  options: {
-    width?: number;
-    height?: number;
-    alt?: string;
-    sizes?: string;
-  } = {}
-) => {
-  const { width = 800, height = 600, alt = '', sizes = '100vw' } = options;
-
-  const formats = generateModernFormats(source, width, height);
-
-  return {
-    sources: [
-      {
-        srcSet: formats.webp,
-        type: 'image/webp',
-        sizes,
-      },
-    ],
-    img: {
-      src: formats.jpeg,
-      alt,
-      width,
-      height,
-    },
-  };
+  return source?.asset?.metadata?.palette?.dominant?.background || null;
 };

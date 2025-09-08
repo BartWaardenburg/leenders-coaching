@@ -3,7 +3,6 @@ import type { ComponentProps } from 'react';
 import type { SectionCards } from '@/components/sections/SectionCards';
 import type { SectionCards as SanitySectionCards } from '@/types/sanity/schema';
 import { Card } from '@/components/ui/Card';
-import { urlForImage } from '@/utilities/sanity';
 
 /* Type guard for cards section */
 const isSanitySectionCards = (
@@ -35,7 +34,7 @@ export const transformCardsSection = (
         date={card.date}
         categories={card.categories}
         slug={card.slug}
-        image={card.image ? urlForImage(card.image).url() : undefined}
+        image={card.image || undefined}
         variant={card.variant}
         border
         reverse={card.reverse}

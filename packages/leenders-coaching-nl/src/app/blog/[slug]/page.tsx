@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getBlogPostBySlug } from '@/groq/queries';
-import { urlForImage } from '@/utilities/sanity';
 import { PortableText } from '@portabletext/react';
 import { format } from 'date-fns';
 import { nl } from 'date-fns/locale';
@@ -10,8 +9,9 @@ import { Box } from '@/components/ui/Box';
 import { Heading } from '@/components/ui/Heading';
 import { Text } from '@/components/ui/Text';
 import { Flex } from '@/components/ui/Flex';
-import Image from 'next/image';
+import { SanityImage } from '@/components/ui/Image';
 import type { Post } from '@/types/sanity/schema';
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
 /* Type for resolved blog post data from GROQ query */
 type _ResolvedBlogPost = Omit<Post, 'categories'> & {
@@ -83,7 +83,7 @@ const BlogPostPage = async ({ params }: BlogPostPageProps) => {
               {post.categories?.filter(Boolean).map((category) => (
                 <Box
                   key={category.title}
-                  className="bg-gray-100 px-3 py-1 rounded-full"
+                  className="bg-muted px-3 py-1 rounded-full"
                 >
                   <Text variant="small">{category.title}</Text>
                 </Box>
@@ -95,12 +95,13 @@ const BlogPostPage = async ({ params }: BlogPostPageProps) => {
         {/* Featured Image */}
         {post.image && (
           <Box className="relative w-full h-[400px] mb-8">
-            <Image
-              src={urlForImage(post.image).url()}
+            <SanityImage
+              image={post.image as SanityImageSource}
               alt={post.title || 'Blog post image'}
               fill
               className="object-cover rounded-lg"
               priority
+              followHotspot={true}
             />
           </Box>
         )}

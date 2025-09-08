@@ -15,12 +15,16 @@ export const sectionFeatured = defineType({
       options: {
         hotspot: true,
       },
-    },
-    {
-      name: 'imageAlt',
-      title: 'Image Alt Text',
-      type: 'string',
-      description: 'Alternative text for accessibility',
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alternative text',
+          description:
+            'Beschrijf de inhoud van de afbeelding (voor toegankelijkheid)',
+          validation: (Rule) => Rule.required().min(3),
+        },
+      ],
     },
     {
       name: 'cta',

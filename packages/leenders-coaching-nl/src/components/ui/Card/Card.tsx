@@ -4,6 +4,8 @@ import { FC, ReactNode } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import type { StaticImageData } from 'next/image';
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import { SanityImage } from '@/components/ui/Image';
 import { Text } from '@/components/ui/Text';
 import { Heading } from '@/components/ui/Heading';
 import { Flex } from '@/components/ui/Flex';
@@ -66,7 +68,7 @@ export type CardProps = {
   categories?: string[];
   children?: ReactNode;
   slug?: string;
-  image?: string | StaticImageData;
+  image?: string | StaticImageData | SanityImageSource;
   variant?: CardVariant;
   border?: boolean;
   reverse?: boolean;
@@ -182,7 +184,23 @@ export const Card: FC<CardProps> = ({
             )}
           >
             <motion.div variants={imageVariants} className="h-full w-full">
-              <Image src={image} alt={title} fill className="object-cover" />
+              {/* Check if image is a Sanity image object or static image/URL */}
+              {typeof image === 'object' && 'asset' in image ? (
+                <SanityImage
+                  image={image as SanityImageSource}
+                  alt={title}
+                  fill
+                  className="object-cover"
+                  followHotspot={true}
+                />
+              ) : (
+                <Image
+                  src={image as string | StaticImageData}
+                  alt={title}
+                  fill
+                  className="object-cover"
+                />
+              )}
             </motion.div>
           </Box>
         )}

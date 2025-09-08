@@ -1,4 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import type { StaticImageData } from 'next/image';
 import Image from 'next/image';
 
 import { Section, type PastelColor } from '@/components/ui/Section';
@@ -8,6 +10,7 @@ import { Text } from '@/components/ui/Text';
 import { Stack } from '@/components/ui/Stack';
 import { Box } from '@/components/ui/Box';
 import { Button } from '@/components/ui/Button';
+import { SanityImage } from '@/components/ui/Image';
 
 type CallToAction = {
   href: string;
@@ -28,10 +31,8 @@ type SectionFeaturedProps = {
   title?: ReactNode;
   /** The description text */
   description?: ReactNode;
-  /** The image source URL */
-  image: string;
-  /** Alt text for the image */
-  imageAlt: string;
+  /** The image - can be a Sanity image object, static image, or string URL */
+  image: SanityImageSource | StaticImageData | string | null;
   /** Optional call-to-action button */
   cta?: CallToAction;
   /** Optional background color */
@@ -50,7 +51,6 @@ export const SectionFeatured = ({
   title,
   description,
   image,
-  imageAlt,
   cta,
   background,
   border = false,
@@ -78,18 +78,32 @@ export const SectionFeatured = ({
 
   const ImageContainer = image ? (
     <Box className="relative aspect-[4/3] sm:aspect-[16/9] w-full h-full">
-      <Image
-        src={image}
-        alt={imageAlt}
-        fill
-        className="object-cover"
-        sizes="(max-width: 640px) 100vw, 50vw"
-        quality={80}
-        priority={true}
-      />
+      {/* Check if image is a Sanity image object (has asset property) */}
+      {typeof image === 'object' && 'asset' in image ? (
+        <SanityImage
+          image={image as SanityImageSource}
+          alt=""
+          fill
+          className="object-cover"
+          sizes="(max-width: 640px) 100vw, 50vw"
+          priority={true}
+          followHotspot={true}
+          qualityHint={80}
+        />
+      ) : (
+        /* For static images or string URLs, use next/image */
+        <Image
+          src={image as string | StaticImageData}
+          alt=""
+          fill
+          className="object-cover"
+          sizes="(max-width: 640px) 100vw, 50vw"
+          priority={true}
+        />
+      )}
     </Box>
   ) : (
-    <Box className="relative aspect-[4/3] sm:aspect-[16/9] w-full h-full bg-gray-100" />
+    <Box className="relative aspect-[4/3] sm:aspect-[16/9] w-full h-full bg-muted" />
   );
 
   return (

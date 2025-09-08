@@ -35,7 +35,7 @@ export const Footer = ({
   ...props
 }: FooterProps) => {
   const instagramLink = socialLinks?.find(
-    (link) => link.platform?.toLowerCase() === 'instagram',
+    (link) => link.platform?.toLowerCase() === 'instagram'
   );
 
   return (
@@ -43,7 +43,7 @@ export const Footer = ({
       as="footer"
       className={twMerge(
         'mt-auto bg-background dark:bg-menu transition-theme',
-        className,
+        className
       )}
       {...props}
     >
@@ -70,14 +70,9 @@ export const Footer = ({
               target="_blank"
               rel="noopener noreferrer"
               variant="subtle"
-              className="hidden md:block md:order-2"
+              className="hidden md:inline-flex md:items-center md:order-2 text-sm text-muted-foreground hover:text-primary transition-theme"
             >
-              <Text
-                variant="muted"
-                className="text-sm hover:text-primary transition-theme"
-              >
-                Instagram
-              </Text>
+              Instagram
             </Link>
           )}
 

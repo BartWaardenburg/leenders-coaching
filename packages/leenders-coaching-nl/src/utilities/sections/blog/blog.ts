@@ -5,7 +5,6 @@ import type {
   Category as SanityCategory,
   Post,
 } from '@/types/sanity/schema';
-import { urlForImage } from '@/utilities/sanity';
 
 /* Type guard for blog section */
 const isSanitySectionBlog = (
@@ -51,7 +50,7 @@ export const transformBlogSection = (
             return category?.title || '';
           }) || [],
         featured: post.featured || false,
-        image: post.image ? urlForImage(post.image).url() : '',
+        image: post.image || null,
         variant: post.variant,
       };
     }) || [];

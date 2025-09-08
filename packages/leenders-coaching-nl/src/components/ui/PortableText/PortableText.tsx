@@ -3,14 +3,13 @@ import type {
   PortableTextComponents,
   PortableTextBlock,
 } from '@portabletext/react';
-import Image from 'next/image';
+import { SanityImage } from '@/components/ui/Image';
 
 import { Heading } from '@/components/ui/Heading';
 import { Link } from '@/components/ui/Link';
 import { Text } from '@/components/ui/Text';
 import { Box } from '@/components/ui/Box';
 import { Button } from '@/components/ui/Button';
-import { urlForImage } from '@/utilities/sanity';
 
 type LinkAnnotation = {
   _type: 'link';
@@ -127,17 +126,16 @@ const components: PortableTextComponents = {
     image: ({ value }: { value: SanityImage }) => {
       if (!value?.asset) return null;
 
-      const imageUrl =
-        value.asset.url || urlForImage(value).width(800).height(400).url();
-
       return (
         <Box className="my-8">
           <Box className="relative border border-foreground/80 h-48 md:h-[400px] w-full overflow-hidden bg-pastel-blue dark:bg-pastel-blue-dark">
-            <Image
-              src={imageUrl}
+            <SanityImage
+              image={value}
               alt={value?.alt || ''}
               fill
               className="object-cover"
+              sizes="(max-width: 768px) 100vw, 768px"
+              followHotspot={true}
             />
           </Box>
           {value?.caption && (

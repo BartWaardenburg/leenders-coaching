@@ -1,1 +1,1 @@
-export { SanityImage, ResponsiveImage, HeroImage } from './Image';
+export { SanityImage } from './SanityImage';

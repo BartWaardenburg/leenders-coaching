@@ -134,27 +134,15 @@ export const AllFeatures: Story = {
       {
         _type: 'block',
         style: 'h2',
-        children: [{ _type: 'span', text: 'Image' }],
+        children: [{ _type: 'span', text: 'Images' }],
       },
       {
         _type: 'block',
         style: 'normal',
         children: [
           {
-            _type: 'image',
-            asset: {
-              _ref: 'image-example',
-              _type: 'reference',
-              url: 'https://picsum.photos/800/400',
-            },
-            hotspot: {
-              x: 0.5,
-              y: 0.5,
-              height: 1,
-              width: 1,
-            },
-            alt: 'A sample image',
-            caption: 'This is a sample image caption',
+            _type: 'span',
+            text: 'Images in PortableText are handled by the SanityImage component and require real Sanity assets. In Storybook, we demonstrate other features instead.',
           },
         ],
       },

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import type { BlogPage, Post } from '@/types/sanity/schema';
 import { createPageComponent } from '@/utilities/page';
 import { getBlogPosts } from '@/groq/queries';
-import { client, urlForImage } from '@/utilities/sanity';
+import { client } from '@/utilities/sanity';
 import { SectionBlog, type BlogPost } from '@/components/sections/SectionBlog';
 
 /* Type for resolved post data from GROQ query */
@@ -54,7 +54,7 @@ const BlogPage = async () => {
           post.categories
             ?.map((cat) => cat?.title)
             .filter((title): title is string => Boolean(title)) || [],
-        image: post.image ? urlForImage(post.image).url() : '',
+        image: post.image || null,
         featured: post.featured,
         variant: post.variant,
       };
