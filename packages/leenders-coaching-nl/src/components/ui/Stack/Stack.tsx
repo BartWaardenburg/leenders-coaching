@@ -10,6 +10,7 @@ type StackProps = {
   direction?: 'col' | 'row';
   justify?: 'start' | 'end' | 'center' | 'between' | 'around' | 'evenly';
   as?: 'div';
+  testid?: string;
 } & Omit<ComponentPropsWithoutRef<'div'>, 'ref'>;
 
 /**
@@ -35,17 +36,19 @@ export const Stack = ({
   justify = 'start',
   as: Component = 'div',
   className,
+  testid,
   ...props
 }: StackProps) => {
   return (
     <Component
+      data-testid={testid}
       className={twMerge(
         direction === 'col' ? 'flex-col' : 'flex-row',
         'flex w-full',
         gap && `gap-${gap}`,
         space && `space-${direction === 'col' ? 'y' : 'x'}-${space}`,
         justify && `justify-${justify}`,
-        className,
+        className
       )}
       {...props}
     >

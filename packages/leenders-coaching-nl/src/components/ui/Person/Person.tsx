@@ -44,7 +44,7 @@ export const Person = ({
       direction="row"
       className={twMerge(
         'items-stretch border border-foreground/80',
-        className,
+        className
       )}
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -128,3 +128,5 @@ export const Person = ({
     </MotionStack>
   );
 };
+
+export default Person;

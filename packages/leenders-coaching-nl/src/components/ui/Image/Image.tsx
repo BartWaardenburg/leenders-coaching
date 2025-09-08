@@ -24,6 +24,8 @@ type ImageProps = {
   usePicture?: boolean;
   /** Custom quality setting */
   quality?: number;
+  /** Test ID for testing */
+  testid?: string;
 };
 
 /**
@@ -40,6 +42,7 @@ export const SanityImage = ({
   sizes = '100vw',
   usePicture = false,
   quality = 75,
+  testid,
 }: ImageProps) => {
   if (!image?.asset) {
     return (
@@ -64,7 +67,7 @@ export const SanityImage = ({
     });
 
     return (
-      <picture className={className}>
+      <picture className={className} data-testid={testid}>
         {pictureProps.sources.map((source, index) => (
           <source
             key={index}
@@ -93,7 +96,14 @@ export const SanityImage = ({
     sizes,
   });
 
-  return <Image {...imageProps} className={className} quality={quality} />;
+  return (
+    <Image
+      {...imageProps}
+      className={className}
+      quality={quality}
+      data-testid={testid}
+    />
+  );
 };
 
 /**
@@ -105,6 +115,7 @@ export const ResponsiveImage = ({
   className,
   priority = false,
   sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
+  testid,
 }: Omit<ImageProps, 'width' | 'height' | 'usePicture'>) => {
   if (!image?.asset) {
     return (
@@ -133,6 +144,7 @@ export const ResponsiveImage = ({
       className={className}
       fill
       style={{ objectFit: 'cover' }}
+      data-testid={testid}
     />
   );
 };

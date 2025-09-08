@@ -70,7 +70,8 @@ export type CardProps = {
   variant?: CardVariant;
   border?: boolean;
   reverse?: boolean;
-};
+  testid?: string;
+} & React.ComponentPropsWithoutRef<'div'>;
 
 /**
  * Card component for displaying article previews with fancy animations
@@ -86,6 +87,8 @@ export const Card: FC<CardProps> = ({
   variant = 'blue',
   border = false,
   reverse = false,
+  testid,
+  ...props
 }) => {
   const hasMetaData = date || categories.length > 0;
   const cardClasses = twMerge(
@@ -94,7 +97,7 @@ export const Card: FC<CardProps> = ({
     border ? cardBordersDark[variant] : cardBordersLight[variant],
     slug &&
       (border ? cardBordersHoverLight[variant] : cardBordersHoverDark[variant]),
-    slug && 'cursor-pointer',
+    slug && 'cursor-pointer'
   );
 
   /* Get the full path for blog posts */
@@ -175,7 +178,7 @@ export const Card: FC<CardProps> = ({
           <Box
             className={twMerge(
               'relative border-b @lg:border-b-0 @lg:border-l-0 @lg:border-r border-foreground/80 h-48 @lg:h-auto w-full @lg:w-1/3 @4xl:w-1/2 shrink-0 overflow-hidden',
-              reverse && '@lg:order-last @lg:border-r-0 @lg:border-l',
+              reverse && '@lg:order-last @lg:border-r-0 @lg:border-l'
             )}
           >
             <motion.div variants={imageVariants} className="h-full w-full">
@@ -270,12 +273,32 @@ export const Card: FC<CardProps> = ({
   const MotionLink = motion.create(Link);
 
   if (slug) {
+    // Create a clean props object with only anchor-compatible props
+    const linkProps = {
+      className: cardClasses,
+      'data-testid': testid,
+      // Only include basic HTML attributes that are valid for both div and anchor
+      id: props.id,
+      style: props.style,
+      role: props.role,
+      'aria-label': props['aria-label'],
+      'aria-labelledby': props['aria-labelledby'],
+      'aria-describedby': props['aria-describedby'],
+      tabIndex: props.tabIndex,
+    };
+
     return (
-      <MotionLink href={href} className={cardClasses}>
+      <MotionLink href={href} {...linkProps}>
         {content}
       </MotionLink>
     );
   }
 
-  return <Box className={cardClasses}>{content}</Box>;
+  return (
+    <Box className={cardClasses} data-testid={testid} {...props}>
+      {content}
+    </Box>
+  );
 };
+
+export default Card;

@@ -193,15 +193,21 @@ type PortableTextProps = {
   content: PortableTextBlock[];
   /** Optional className for the wrapper */
   className?: string;
+  /** Test ID for the component */
+  testid?: string;
 };
 
 /**
  * Enhanced Portable Text component with themed components
  * Supports various block types, marks, and custom components
  */
-export const PortableText = ({ content, className }: PortableTextProps) => {
+export const PortableText = ({
+  content,
+  className,
+  testid,
+}: PortableTextProps) => {
   return (
-    <Box className={className}>
+    <Box className={className} data-testid={testid}>
       <BasePortableText value={content} components={components} />
     </Box>
   );

@@ -38,22 +38,27 @@ const BlogPage = async () => {
   console.log(posts);
 
   /* Transform posts to match SectionBlog format */
-  const transformedPosts = posts.map((post: _ResolvedPost): BlogPost => {
-    if (!post.slug?.current) {
-      throw new Error(`Post "${post.title}" is missing a slug`);
-    }
+  const transformedPosts = posts
+    .filter((post: _ResolvedPost) => post != null) // Filter out null/undefined posts
+    .map((post: _ResolvedPost): BlogPost => {
+      if (!post.slug?.current) {
+        throw new Error(`Post "${post.title || 'Unknown'}" is missing a slug`);
+      }
 
-    return {
-      title: post.title || 'Untitled Post',
-      description: post.description || '',
-      slug: post.slug.current || '',
-      date: post.publishedAt || '',
-      categories: post.categories?.map((cat) => cat.title) || [],
-      image: post.image ? urlForImage(post.image).url() : '',
-      featured: post.featured,
-      variant: post.variant,
-    };
-  });
+      return {
+        title: post.title || 'Untitled Post',
+        description: post.description || '',
+        slug: post.slug.current || '',
+        date: post.publishedAt || '',
+        categories:
+          post.categories
+            ?.map((cat) => cat?.title)
+            .filter((title): title is string => Boolean(title)) || [],
+        image: post.image ? urlForImage(post.image).url() : '',
+        featured: post.featured,
+        variant: post.variant,
+      };
+    });
 
   /* Find the blog section from page data if it exists */
   const blogSection = pageData?.sections?.find(

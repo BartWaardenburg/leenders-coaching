@@ -29,6 +29,8 @@ type TimelineProps = {
   className?: string;
   /** Optional pastel color for the timeline */
   color?: Color;
+  /** Test ID for the component */
+  testid?: string;
 } & ComponentPropsWithoutRef<'div'>;
 
 const MotionBox = motion.create(Box);
@@ -68,6 +70,7 @@ export const Timeline = ({
   steps,
   className,
   color = 'blue',
+  testid,
   ...props
 }: TimelineProps) => {
   const colorClasses = {
@@ -104,7 +107,11 @@ export const Timeline = ({
   };
 
   return (
-    <Box className={twMerge('relative', className)} {...props}>
+    <Box
+      className={twMerge('relative', className)}
+      data-testid={testid}
+      {...props}
+    >
       {/* Timeline steps */}
       <Stack gap={6} className="relative">
         {/* Timeline line with decorative elements */}
@@ -113,7 +120,7 @@ export const Timeline = ({
           <Box
             className={twMerge(
               'absolute left-4 md:left-1/2 -top-1 w-3 h-3 rounded-full -translate-x-[5px] md:-translate-x-[6px] z-10',
-              colorClasses[color].line,
+              colorClasses[color].line
             )}
           />
 
@@ -121,7 +128,7 @@ export const Timeline = ({
           <MotionBox
             className={twMerge(
               'absolute left-4 md:left-1/2 top-0 h-full w-px -translate-x-[0.5px] origin-top',
-              colorClasses[color].line,
+              colorClasses[color].line
             )}
             initial={{ scaleY: 0 }}
             whileInView={{ scaleY: 1 }}
@@ -133,7 +140,7 @@ export const Timeline = ({
           <Box
             className={twMerge(
               'absolute left-4 md:left-1/2 -bottom-1 w-3 h-3 rounded-full -translate-x-[5px] md:-translate-x-[6px] z-10',
-              colorClasses[color].line,
+              colorClasses[color].line
             )}
           />
         </Box>
@@ -155,7 +162,7 @@ export const Timeline = ({
                   <MotionBox
                     className={twMerge(
                       'absolute top-1/2 left-4 h-px',
-                      colorClasses[stepColor].line,
+                      colorClasses[stepColor].line
                     )}
                     initial={{ width: 0 }}
                     whileInView={{ width: '32px' }}
@@ -170,7 +177,7 @@ export const Timeline = ({
                     className={twMerge(
                       'w-4 h-4 rounded-full border z-10',
                       'bg-background dark:bg-background-dark',
-                      colorClasses[stepColor].border,
+                      colorClasses[stepColor].border
                     )}
                     initial={{ scale: 0 }}
                     whileInView={{ scale: 1 }}
@@ -207,7 +214,7 @@ export const Timeline = ({
                       'p-6 border',
                       colorClasses[stepColor].bg,
                       colorClasses[stepColor].border,
-                      'text-left',
+                      'text-left'
                     )}
                   >
                     <Heading level="h3" variant="small" className="font-medium">
@@ -245,7 +252,7 @@ export const Timeline = ({
                           <MotionBox
                             className={twMerge(
                               'absolute right-0 top-1/2 h-px',
-                              colorClasses[stepColor].line,
+                              colorClasses[stepColor].line
                             )}
                             initial={{ width: 0 }}
                             whileInView={{ width: '32px' }}
@@ -261,7 +268,7 @@ export const Timeline = ({
                               'p-6 border',
                               colorClasses[stepColor].bg,
                               colorClasses[stepColor].border,
-                              'text-right',
+                              'text-right'
                             )}
                           >
                             <Heading
@@ -311,7 +318,7 @@ export const Timeline = ({
                     className={twMerge(
                       'w-4 h-4 rounded-full border-2 z-10',
                       'bg-background dark:bg-background-dark',
-                      colorClasses[stepColor].border,
+                      colorClasses[stepColor].border
                     )}
                   />
                 </MotionBox>
@@ -334,7 +341,7 @@ export const Timeline = ({
                           <MotionBox
                             className={twMerge(
                               'absolute left-0 top-1/2 h-px',
-                              colorClasses[stepColor].line,
+                              colorClasses[stepColor].line
                             )}
                             initial={{ width: 0 }}
                             whileInView={{ width: '32px' }}
@@ -350,7 +357,7 @@ export const Timeline = ({
                               'p-6 border',
                               colorClasses[stepColor].bg,
                               colorClasses[stepColor].border,
-                              'text-left',
+                              'text-left'
                             )}
                           >
                             <Heading

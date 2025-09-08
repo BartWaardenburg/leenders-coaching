@@ -90,7 +90,7 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
         setPage([newPage, newDirection]);
       }
     },
-    [page, slides.length],
+    [page, slides.length]
   );
 
   const goToSlide = useCallback(
@@ -98,7 +98,7 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
       const newDirection = index > page ? 1 : -1;
       setPage([index, newDirection]);
     },
-    [page],
+    [page]
   );
 
   return (
@@ -118,7 +118,7 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
               className={twMerge(
                 'h-10 w-10 min-w-[2.5rem] p-0',
                 'disabled:opacity-0',
-                page === 0 && 'hidden',
+                page === 0 && 'hidden'
               )}
             >
               <IoChevronBack className="h-4 w-4" />
@@ -148,7 +148,16 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={1}
                 style={{ x }}
-                onDragEnd={(_: MouseEvent | TouchEvent | PointerEvent, { offset, velocity }: { offset: { x: number; y: number }; velocity: { x: number; y: number } }) => {
+                onDragEnd={(
+                  _: MouseEvent | TouchEvent | PointerEvent,
+                  {
+                    offset,
+                    velocity,
+                  }: {
+                    offset: { x: number; y: number };
+                    velocity: { x: number; y: number };
+                  }
+                ) => {
                   const swipe = swipePower(offset.x, velocity.x);
 
                   if (swipe < -swipeConfidenceThreshold) {
@@ -175,7 +184,7 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
               className={twMerge(
                 'h-10 w-10 min-w-[2.5rem] p-0',
                 'disabled:opacity-0',
-                page === slides.length - 1 && 'hidden',
+                page === slides.length - 1 && 'hidden'
               )}
             >
               <IoChevronForward className="h-4 w-4" />
@@ -196,7 +205,7 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
                 'focus-visible:ring-offset-background',
                 index === page
                   ? 'bg-pastel-blue dark:bg-pastel-blue-dark'
-                  : 'bg-pastel-blue/30 dark:bg-pastel-blue-dark/30 hover:bg-pastel-blue/50 dark:hover:bg-pastel-blue-dark/50',
+                  : 'bg-pastel-blue/30 dark:bg-pastel-blue-dark/30 hover:bg-pastel-blue/50 dark:hover:bg-pastel-blue-dark/50'
               )}
               whileHover={{ scale: 1.2 }}
               whileTap={{ scale: 0.9 }}
@@ -208,3 +217,5 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
     </Box>
   );
 };
+
+export default Carousel;

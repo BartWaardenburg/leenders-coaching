@@ -13,14 +13,14 @@ type CallToAction = {
   href: string;
   label: string;
   variant?:
-  | 'black'
-  | 'transparent'
-  | 'blue'
-  | 'purple'
-  | 'green'
-  | 'pink'
-  | 'yellow'
-  | 'teal';
+    | 'black'
+    | 'transparent'
+    | 'blue'
+    | 'purple'
+    | 'green'
+    | 'pink'
+    | 'yellow'
+    | 'teal';
 };
 
 type SectionFeaturedProps = {
@@ -59,15 +59,13 @@ export const SectionFeatured = ({
   ...props
 }: SectionFeaturedProps) => {
   const Content = (
-    <Stack gap={6} className="justify-center max-w-lg">
+    <Stack gap={6} className="justify-center max-w-lg" testid="content-stack">
       {title && (
         <Heading level="h2" variant="medium">
           {title}
         </Heading>
       )}
-      {description && (
-        <Text className="text-lg">{description}</Text>
-      )}
+      {description && <Text className="text-lg">{description}</Text>}
       {cta && (
         <Box className="mt-2 flex justify-end">
           <Button href={cta.href} variant={cta.variant} size="lg">
@@ -105,16 +103,22 @@ export const SectionFeatured = ({
       <Grid
         columns={{
           default: 1,
-          'sm': 2,
+          sm: 2,
         }}
         className="overflow-hidden"
         gap={0}
       >
-        <Box className={`${reverse ? 'sm:order-2' : ''} -ml-4 sm:-ml-6 lg:-ml-12`}>{ImageContainer}</Box>
+        <Box
+          className={`${reverse ? 'sm:order-2' : ''} -ml-4 sm:-ml-6 lg:-ml-12`}
+        >
+          {ImageContainer}
+        </Box>
         <Stack
           gap={6}
-          className={`justify-center p-4 sm:p-8 md:p-12 lg:p-16 ${reverse ? 'sm:order-1' : ''
-            }`}
+          className={`justify-center p-4 sm:p-8 md:p-12 lg:p-16 ${
+            reverse ? 'sm:order-1' : ''
+          }`}
+          testid="stack"
         >
           {title || description ? Content : null}
         </Stack>

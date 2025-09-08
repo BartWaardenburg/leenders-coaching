@@ -80,7 +80,7 @@ const BlogPostPage = async ({ params }: BlogPostPageProps) => {
                 })}
             </Text>
             <Flex gap={2}>
-              {post.categories?.map((category) => (
+              {post.categories?.filter(Boolean).map((category) => (
                 <Box
                   key={category.title}
                   className="bg-gray-100 px-3 py-1 rounded-full"

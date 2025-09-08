@@ -261,7 +261,7 @@ export const getGlobalData = async (): Promise<GLOBAL_DATA_QUERYResult> => {
 export const getBlogPosts = async () => {
   const { isEnabled } = await draftMode();
 
-  const query = `*[_type == "post"] | order(publishedAt desc) {
+  const query = `*[_type == "post" && defined(title) && defined(slug)] | order(publishedAt desc) {
     ...,
     "image": image.asset->url,
     categories[]-> {
@@ -297,7 +297,7 @@ export const getBlogPosts = async () => {
 export const getBlogPostBySlug = async (slug: string) => {
   const { isEnabled } = await draftMode();
 
-  const query = `*[_type == "post" && slug.current == "${slug}"][0] {
+  const query = `*[_type == "post" && slug.current == "${slug}" && defined(title)][0] {
     ...,
     "image": image.asset->url,
     categories[]-> {

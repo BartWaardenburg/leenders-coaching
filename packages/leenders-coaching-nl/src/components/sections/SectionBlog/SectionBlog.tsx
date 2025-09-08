@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { useState, useRef } from 'react'
-import { PastelColor, Section } from '@/components/ui/Section'
-import { Heading } from '@/components/ui/Heading'
-import { Text } from '@/components/ui/Text'
-import { Box } from '@/components/ui/Box'
-import { Flex } from '@/components/ui/Flex'
-import { Grid } from '@/components/ui/Grid'
-import { Card } from '@/components/ui/Card'
-import { Pagination } from '@/components/ui/Pagination'
+import { useState, useRef } from 'react';
+import { PastelColor, Section } from '@/components/ui/Section';
+import { Heading } from '@/components/ui/Heading';
+import { Text } from '@/components/ui/Text';
+import { Box } from '@/components/ui/Box';
+import { Flex } from '@/components/ui/Flex';
+import { Grid } from '@/components/ui/Grid';
+import { Card } from '@/components/ui/Card';
+import { Pagination } from '@/components/ui/Pagination';
 
 export type BlogPost = {
-  title: string,
-  description: string,
-  slug: string,
-  date: string,
-  categories: string[],
-  image: string,
-  featured?: boolean,
-  variant?: PastelColor,
-}
+  title: string;
+  description: string;
+  slug: string;
+  date: string;
+  categories: string[];
+  image: string;
+  featured?: boolean;
+  variant?: PastelColor;
+};
 
 interface SectionBlogProps {
   /** The title of the section */
@@ -38,6 +38,8 @@ interface SectionBlogProps {
   background?: PastelColor;
   /** Whether to show a border */
   border?: boolean;
+  /** Test ID for the section */
+  testid?: string;
 }
 
 /**
@@ -51,45 +53,50 @@ export const SectionBlog = ({
   className,
   background,
   border = false,
+  testid,
+  ...props
 }: SectionBlogProps) => {
-  const [currentPage, setCurrentPage] = useState(1)
-  const gridRef = useRef<HTMLDivElement>(null)
-  const totalPages = Math.ceil(posts.length / postsPerPage)
+  const [currentPage, setCurrentPage] = useState(1);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const totalPages = Math.ceil(posts.length / postsPerPage);
 
   /* Get current page posts */
   const getCurrentPosts = () => {
-    const startIndex = (currentPage - 1) * postsPerPage
-    const endIndex = startIndex + postsPerPage
-    return posts.slice(startIndex, endIndex)
-  }
+    const startIndex = (currentPage - 1) * postsPerPage;
+    const endIndex = startIndex + postsPerPage;
+    return posts.slice(startIndex, endIndex);
+  };
 
-  const currentPosts = getCurrentPosts()
+  const currentPosts = getCurrentPosts();
 
   /* Handle page change with scroll behavior */
   const handlePageChange = (page: number) => {
-    setCurrentPage(page)
+    setCurrentPage(page);
 
     // Use requestAnimationFrame to ensure DOM has updated
     requestAnimationFrame(() => {
       if (gridRef.current) {
-        const offset = 100 // Adjust this value to control how far above the grid to scroll
-        const gridTop = gridRef.current.getBoundingClientRect().top
-        const targetPosition = window.scrollY + gridTop - offset
+        const offset = 100; // Adjust this value to control how far above the grid to scroll
+        const gridTop = gridRef.current.getBoundingClientRect().top;
+        const targetPosition = window.scrollY + gridTop - offset;
 
         window.scrollTo({
           top: targetPosition,
-          behavior: 'smooth'
-        })
+          behavior: 'smooth',
+        });
       }
-    })
-  }
+    });
+  };
 
   return (
     <Section
       background={background}
       border={border}
       className={className}
-      maxWidth="7xl">
+      maxWidth="7xl"
+      data-testid={testid}
+      {...props}
+    >
       {(title || description) && (
         <Flex direction="column" items="center" className="mb-16">
           {title && (
@@ -104,7 +111,10 @@ export const SectionBlog = ({
             </Heading>
           )}
           {description && (
-            <Text className="text-muted-foreground text-center max-w-2xl">
+            <Text
+              testid="section-description"
+              className="text-muted-foreground text-center max-w-2xl"
+            >
               {description}
             </Text>
           )}
@@ -135,8 +145,14 @@ export const SectionBlog = ({
                   featured={post.featured}
                   border
                   reverse={index % 2 === 1}
+                  testid="card"
                 >
-                  <Text className="text-muted-foreground">{post.description}</Text>
+                  <Text
+                    testid="post-description"
+                    className="text-muted-foreground"
+                  >
+                    {post.description}
+                  </Text>
                 </Card>
               ))}
             </Grid>
@@ -151,11 +167,14 @@ export const SectionBlog = ({
             )}
           </>
         ) : (
-          <Text className="text-muted-foreground text-center">
+          <Text
+            testid="no-posts-message"
+            className="text-muted-foreground text-center"
+          >
             Er zijn momenteel geen blog artikelen beschikbaar.
           </Text>
         )}
       </Box>
     </Section>
-  )
-} 
+  );
+};

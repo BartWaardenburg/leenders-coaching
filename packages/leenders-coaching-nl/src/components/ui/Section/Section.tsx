@@ -29,7 +29,17 @@ const borderStyles: Record<PastelColor, string> = {
   teal: 'border-pastel-teal-dark dark:border-pastel-teal',
 };
 
-type MaxWidth = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl';
+type MaxWidth =
+  | 'sm'
+  | 'md'
+  | 'lg'
+  | 'xl'
+  | '2xl'
+  | '3xl'
+  | '4xl'
+  | '5xl'
+  | '6xl'
+  | '7xl';
 
 const maxWidthStyles: Record<MaxWidth, string> = {
   sm: 'max-w-sm',
@@ -52,6 +62,7 @@ type SectionProps = {
   noPadding?: boolean;
   /** Maximum width constraint of the section */
   maxWidth?: MaxWidth;
+  testid?: string;
 } & ComponentPropsWithoutRef<'section'>;
 
 /**
@@ -64,6 +75,7 @@ export const Section = ({
   noPadding = false,
   maxWidth,
   className,
+  testid,
   ...props
 }: SectionProps) => {
   return (
@@ -74,15 +86,18 @@ export const Section = ({
         'transition-theme bg-background',
         background && backgroundStyles[background],
         border && background && ['border-y', borderStyles[background]],
-        className,
+        className
       )}
+      data-testid={testid || 'section'}
       {...props}
     >
       {!noPadding ? (
         <Container className={maxWidth ? maxWidthStyles[maxWidth] : undefined}>
           {children}
         </Container>
-      ) : children}
+      ) : (
+        children
+      )}
     </Box>
   );
 };

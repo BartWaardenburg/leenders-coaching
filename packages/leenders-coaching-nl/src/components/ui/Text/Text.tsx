@@ -19,6 +19,7 @@ type TextProps<T extends ElementType = 'p'> = {
   as?: T;
   textAlign?: 'left' | 'center' | 'right';
   italic?: boolean;
+  testid?: string;
 } & Omit<ComponentPropsWithoutRef<T>, 'as'>;
 
 /**
@@ -32,12 +33,14 @@ export const Text = <T extends ElementType = 'p'>({
   className,
   textAlign,
   italic,
+  testid,
   ...props
 }: TextProps<T>) => {
   const Component = as || 'p';
 
   return (
     <Component
+      data-testid={testid}
       className={twMerge(
         'leading-relaxed transition-theme',
         /* Font family */
@@ -64,7 +67,7 @@ export const Text = <T extends ElementType = 'p'>({
         textAlign === 'center' && 'text-center',
         textAlign === 'right' && 'text-right',
         italic && 'italic',
-        className,
+        className
       )}
       {...props}
     >
