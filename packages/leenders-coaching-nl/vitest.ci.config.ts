@@ -11,6 +11,17 @@ export default defineConfig({
   test: {
     ...jsdomSetup,
     include: ['src/**/*.test.{ts,tsx}'],
+    exclude: [
+      'node_modules/**',
+      'dist/**',
+      '.storybook/**',
+      '**/*.stories.{js,jsx,ts,tsx}',
+      'coverage/**',
+      'storybook-static/**',
+    ],
+    browser: {
+      enabled: false,
+    },
     coverage: {
       ...coverageBase,
       reportsDirectory: 'coverage/unit',

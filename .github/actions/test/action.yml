@@ -83,6 +83,11 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: pnpm run ${{ inputs.quality-command }}
 
+    - name: Install Playwright browsers
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: pnpm --filter leenders-coaching-nl run ci:install-playwright
+
     - name: Run comprehensive tests
       shell: bash
       working-directory: ${{ inputs.working-directory }}
