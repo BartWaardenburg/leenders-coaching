@@ -23,11 +23,12 @@ type TestSectionBlog = {
   border?: boolean;
 };
 
-// Mock the urlForImage function
+// Mock the sanity utilities
 vi.mock('@/utilities/sanity', () => ({
-  urlForImage: () => ({
-    url: () => 'https://example.com/image.jpg',
-  }),
+  groq: vi.fn(),
+  client: {},
+  sanityConfig: {},
+  defineQuery: vi.fn(),
 }));
 
 /**
@@ -87,7 +88,10 @@ describe('transformBlogSection', () => {
           date: '2024-01-01',
           categories: ['test'],
           featured: true,
-          image: 'https://example.com/image.jpg',
+          image: {
+            _type: 'image',
+            asset: { _ref: 'image-1', _type: 'reference' },
+          },
           variant: 'blue',
         },
       ],
@@ -128,7 +132,7 @@ describe('transformBlogSection', () => {
           date: '2024-01-01',
           categories: [],
           featured: false,
-          image: '',
+          image: null,
           variant: undefined,
         },
       ],

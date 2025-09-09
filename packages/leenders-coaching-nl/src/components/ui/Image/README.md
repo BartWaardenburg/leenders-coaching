@@ -81,8 +81,8 @@ import { SanityImage } from '@/components/ui/Image';
 Replace old image usage:
 
 ```tsx
-// Old way
-<Image src={urlForImage(sanityImage).url()} alt="..." />
+// Old way (legacy)
+<Image src={sanityImageUrl} alt="..." />
 
 // New way
 <SanityImage image={sanityImage} alt="..." />

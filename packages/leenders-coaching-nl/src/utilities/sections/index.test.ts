@@ -2,7 +2,23 @@ import { describe, it, expect, vi } from 'vitest';
 
 // Mock the sanity utilities to avoid environment variable issues
 vi.mock('@/utilities/sanity', () => ({
-  urlForImage: vi.fn(),
+  groq: vi.fn(),
+  client: {},
+  sanityConfig: {},
+  defineQuery: vi.fn(),
+}));
+
+// Mock the image utilities to avoid Sanity client issues
+vi.mock('@/lib/image', () => ({
+  createSanityLoader: vi.fn(() => vi.fn()),
+  getLQIP: vi.fn(() => null),
+  getImageDimensions: vi.fn(() => null),
+  getDominantColor: vi.fn(() => null),
+}));
+
+// Mock the SanityImage component
+vi.mock('@/components/ui/Image', () => ({
+  SanityImage: vi.fn(() => null),
 }));
 
 import { sectionRegistry, isSectionType, sectionTransformers } from './index';

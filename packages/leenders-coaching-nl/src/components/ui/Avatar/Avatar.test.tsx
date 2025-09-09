@@ -16,6 +16,21 @@ vi.mock('next/image', () => ({
   ),
 }));
 
+// Mock SanityImage component
+vi.mock('@/components/ui/Image', () => ({
+  SanityImage: ({ image, alt, fill, className, ...props }: any) => (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={`sanity-image-${image?.asset?._ref || 'default'}`}
+      alt={alt}
+      className={className}
+      data-fill={fill}
+      data-sanity-image="true"
+      {...props}
+    />
+  ),
+}));
+
 describe('Avatar', () => {
   const defaultProps = {
     src: '/test-image.jpg',
@@ -108,5 +123,30 @@ describe('Avatar', () => {
     rerender(<Avatar src="/test.jpg" alt="Second alt" />);
     avatar = screen.getByAltText('Second alt');
     expect(avatar).toBeInTheDocument();
+  });
+
+  it('should handle Sanity image objects', () => {
+    const sanityImage = {
+      _type: 'image',
+      asset: { _ref: 'image-123', _type: 'reference' },
+    };
+
+    render(<Avatar src={sanityImage} alt="Sanity avatar" />);
+
+    const avatar = screen.getByAltText('Sanity avatar');
+    expect(avatar).toBeInTheDocument();
+    expect(avatar).toHaveAttribute('src', 'sanity-image-image-123');
+    expect(avatar).toHaveAttribute('data-sanity-image', 'true');
+  });
+
+  it('should show fallback when no src is provided', () => {
+    render(<Avatar alt="Fallback avatar" />);
+
+    const fallback = screen.getByText('F');
+    expect(fallback).toBeInTheDocument();
+    expect(fallback.closest('div')).toHaveClass(
+      'bg-muted',
+      'text-muted-foreground'
+    );
   });
 });

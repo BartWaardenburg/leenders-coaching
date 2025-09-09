@@ -1,7 +1,5 @@
 import { createClient } from 'next-sanity';
 import type { QueryParams } from '@sanity/client';
-import imageUrlBuilder from '@sanity/image-url';
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
 /**
  * Returns true if the hostname matches 'chromatic.com' or is a subdomain of 'chromatic.com'.
@@ -128,34 +126,6 @@ const createSanityClient = () => {
 };
 
 export const client = createSanityClient();
-
-/* Create image URL builder instance with graceful fallbacks */
-const createImageBuilder = () => {
-  try {
-    return imageUrlBuilder(client);
-  } catch (error) {
-    // In non-production environments, create a fallback image builder if the real one fails
-    if (isNonProductionEnvironment()) {
-      const fallbackClient = createClient({
-        projectId: FALLBACK_CONFIG.projectId,
-        dataset: FALLBACK_CONFIG.dataset,
-        apiVersion: FALLBACK_CONFIG.apiVersion,
-        useCdn: false,
-      });
-      return imageUrlBuilder(fallbackClient);
-    }
-    throw error;
-  }
-};
-
-const imageBuilder = createImageBuilder();
-
-/**
- * Get image URL for a Sanity image reference
- */
-export const urlForImage = (source: SanityImageSource) => {
-  return imageBuilder.image(source);
-};
 
 /**
  * Helper to define a GROQ query with proper typing

@@ -13,4 +13,4 @@ export {
   renderPageSections,
   createPageComponent,
 } from './page';
-export { urlForImage, groq, client, sanityConfig, defineQuery } from './sanity';
+export { groq, client, sanityConfig, defineQuery } from './sanity';
