@@ -56,10 +56,10 @@ export const Default: Story = {
   play: async ({ canvas }) => {
     // Wait for the modal to be visible and animations to complete
     await expect(canvas.getByRole('dialog')).toBeInTheDocument();
+    await waitForAnimations();
     await expect(
       canvas.getByText('This is the content of the modal dialog.')
     ).toBeVisible();
-    await waitForAnimations();
   },
 };
 

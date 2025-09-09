@@ -163,7 +163,7 @@ export const FormValidation: Story = {
 
     await step('Fill form partially and test validation', async () => {
       // Fill only name field
-      await userEvent.type(canvas.getByLabelText('Name'), 'John Doe');
+      await userEvent.type(canvas.getByLabelText('Name *'), 'John Doe');
 
       // Try to submit
       await userEvent.click(canvas.getByRole('button', { name: 'Submit' }));
@@ -174,9 +174,12 @@ export const FormValidation: Story = {
 
     await step('Complete the form and submit', async () => {
       // Fill remaining required fields
-      await userEvent.type(canvas.getByLabelText('Email'), 'john@example.com');
       await userEvent.type(
-        canvas.getByLabelText('Message'),
+        canvas.getByLabelText('Email *'),
+        'john@example.com'
+      );
+      await userEvent.type(
+        canvas.getByLabelText('Message *'),
         'This is a test message'
       );
 

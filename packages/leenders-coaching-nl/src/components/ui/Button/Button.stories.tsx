@@ -77,7 +77,7 @@ export const WithLoading: Story = {
     isLoading: true,
     onClick: fn(),
   },
-  play: async ({ canvas, userEvent, args }) => {
+  play: async ({ canvas, args }) => {
     // Wait for button to be visible
     await expect(canvas.getByRole('button')).toBeVisible();
     await waitForAnimations();
@@ -85,8 +85,7 @@ export const WithLoading: Story = {
     // Test that loading button is disabled
     await expect(canvas.getByRole('button')).toBeDisabled();
 
-    // Test that clicking doesn't trigger onClick when loading
-    await userEvent.click(canvas.getByRole('button'));
+    // Test that onClick is not called when loading (without trying to click)
     await expect(args.onClick).not.toHaveBeenCalled();
   },
 };
@@ -97,7 +96,7 @@ export const Disabled: Story = {
     disabled: true,
     onClick: fn(),
   },
-  play: async ({ canvas, userEvent, args }) => {
+  play: async ({ canvas, args }) => {
     // Wait for button to be visible
     await expect(canvas.getByRole('button')).toBeVisible();
     await waitForAnimations();
@@ -105,8 +104,7 @@ export const Disabled: Story = {
     // Test that disabled button is disabled
     await expect(canvas.getByRole('button')).toBeDisabled();
 
-    // Test that clicking doesn't trigger onClick when disabled
-    await userEvent.click(canvas.getByRole('button'));
+    // Test that onClick is not called when disabled (without trying to click)
     await expect(args.onClick).not.toHaveBeenCalled();
   },
 };

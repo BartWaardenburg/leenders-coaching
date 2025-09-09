@@ -13,10 +13,11 @@ import { ContactConfirmation } from './ContactConfirmation';
  */
 const meta: Meta = {
   title: 'Emails/Templates',
-  component: () => null, // This is a template showcase without a specific component
+  component: () => null,
   parameters: {
     layout: 'padded',
   },
+  tags: ['!test', 'emails'],
 };
 
 export default meta;

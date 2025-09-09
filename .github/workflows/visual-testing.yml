@@ -30,6 +30,49 @@ permissions:
   issues: write
 
 jobs:
+  storybook-component-tests:
+    name: 'Storybook Component Tests'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: '🔄 Checkout repository'
+        uses: actions/checkout@v5
+
+      - name: '⚙️ Setup Environment'
+        uses: ./.github/actions/setup
+        with:
+          node-version: '22'
+          pnpm-version: '10.15.1'
+          working-directory: ''
+
+      # Vitest addon runs in browser mode; ensure Playwright Chromium is available
+      - name: '🔍 Install Playwright browsers'
+        run: pnpm --filter leenders-coaching-nl run ci:install-playwright
+
+      - name: '🧪 Run Storybook tests (Vitest addon)'
+        run: pnpm --filter leenders-coaching-nl run test-storybook
+
+      - name: '🧪 Generate Storybook coverage'
+        run: pnpm --filter leenders-coaching-nl run test-storybook:coverage
+
+      - name: '⬆️ Upload Storybook coverage to Codecov'
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: packages/leenders-coaching-nl/coverage/storybook/lcov.info
+          flags: storybook
+          name: storybook
+          fail_ci_if_error: true
+          verbose: true
+
+      - name: '📤 Upload coverage artifacts'
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook-coverage-${{ github.sha }}
+          path: packages/leenders-coaching-nl/coverage/storybook
+          retention-days: 7
+
   visual-testing:
     name: 'Visual Regression Testing'
     runs-on: ubuntu-latest
@@ -64,7 +107,7 @@ jobs:
           working-directory: ''
 
       - name: '🏗️ Build Storybook'
-        run: pnpm run storybook:build
+        run: pnpm --filter leenders-coaching-nl run build-storybook
         env:
           NODE_OPTIONS: '--max_old_space_size=4096'
           NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
@@ -146,7 +189,7 @@ jobs:
           working-directory: ''
 
       - name: '🏗️ Build Storybook for testing'
-        run: pnpm run storybook:build
+        run: pnpm --filter leenders-coaching-nl run build-storybook
         env:
           NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
           NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}

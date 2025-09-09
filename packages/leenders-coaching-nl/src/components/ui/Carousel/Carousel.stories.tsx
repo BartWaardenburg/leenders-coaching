@@ -73,7 +73,13 @@ export const Default: Story = {
   play: async ({ canvas }) => {
     // Wait for the carousel to be visible and animations to complete
     await expect(
-      canvas.getByText('The coaching sessions have been transformative.')
+      canvas.getAllByText((_, element) => {
+        return (
+          element?.textContent?.includes(
+            'The coaching sessions have been transformative'
+          ) ?? false
+        );
+      })[0]
     ).toBeVisible();
     await waitForAnimations();
   },

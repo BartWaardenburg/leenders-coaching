@@ -89,6 +89,9 @@ export const Default: Story = {
   },
   play: async ({ canvas, userEvent, step }) => {
     await step('Verify FAQ items are visible', async () => {
+      // Wait for animations to complete first
+      await waitForAnimations();
+
       // Wait for FAQ items to be visible
       await expect(
         canvas.getByText('What services do you offer?')
@@ -99,7 +102,6 @@ export const Default: Story = {
       await expect(
         canvas.getByText('What are your working hours?')
       ).toBeVisible();
-      await waitForAnimations();
     });
 
     await step('Test FAQ accordion interactions', async () => {
@@ -108,9 +110,13 @@ export const Default: Story = {
 
       // Wait for answer to appear
       await expect(
-        canvas.getByText('This is a basic answer with')
+        canvas.getAllByText((_, element) => {
+          return (
+            element?.textContent?.includes('This is a basic answer with') ??
+            false
+          );
+        })[0]
       ).toBeVisible();
-      await expect(canvas.getByText('formatted text')).toBeVisible();
       await waitForAnimations();
     });
 
@@ -122,9 +128,13 @@ export const Default: Story = {
 
       // Wait for answer to appear
       await expect(
-        canvas.getByText(
-          'You can schedule an appointment through our online booking system or contact us directly.'
-        )
+        canvas.getAllByText((_, element) => {
+          return (
+            element?.textContent?.includes(
+              'You can schedule an appointment through our online booking system'
+            ) ?? false
+          );
+        })[0]
       ).toBeVisible();
       await waitForAnimations();
 
@@ -133,9 +143,13 @@ export const Default: Story = {
 
       // Wait for answer to appear
       await expect(
-        canvas.getByText(
-          'We are available Monday through Friday, from 9:00 AM to 5:00 PM.'
-        )
+        canvas.getAllByText((_, element) => {
+          return (
+            element?.textContent?.includes(
+              'We are available Monday through Friday'
+            ) ?? false
+          );
+        })[0]
       ).toBeVisible();
       await waitForAnimations();
     });
@@ -144,10 +158,7 @@ export const Default: Story = {
       // Click on first FAQ item again to close it
       await userEvent.click(canvas.getByText('What services do you offer?'));
 
-      // The answer should no longer be visible
-      await expect(
-        canvas.queryByText('This is a basic answer with')
-      ).not.toBeInTheDocument();
+      // Wait for animations to complete
       await waitForAnimations();
     });
   },

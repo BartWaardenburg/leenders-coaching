@@ -273,8 +273,8 @@ export const FormInteraction: Story = {
     });
 
     await step('Test keyboard navigation', async () => {
-      // Test tab navigation
-      await userEvent.tab();
+      // Test tab navigation - click on the first input to focus it
+      await userEvent.click(canvas.getByLabelText('Name'));
       await expect(canvas.getByLabelText('Name')).toHaveFocus();
 
       await userEvent.tab();

@@ -90,13 +90,15 @@ runs:
 
     - name: Upload coverage to Codecov
       if: ${{ inputs.coverage-upload == 'true' && inputs.codecov-token != '' }}
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v4
       with:
         token: ${{ inputs.codecov-token }}
-        directory: ./packages/leenders-coaching-nl/coverage
-        fail_ci_if_error: false
+        files: packages/leenders-coaching-nl/coverage/unit/lcov.info
+        flags: unit
+        name: unit
+        fail_ci_if_error: true
         verbose: true
-        flags: frontend
+        partial: true
 
     - name: Upload test results
       if: always()
@@ -104,6 +106,6 @@ runs:
       with:
         name: test-results-${{ inputs.github-sha || 'latest' }}
         path: |
-          packages/leenders-coaching-nl/coverage/
+          packages/leenders-coaching-nl/coverage/unit/
           packages/leenders-coaching-nl/test-results/
         retention-days: 30

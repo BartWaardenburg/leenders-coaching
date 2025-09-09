@@ -60,9 +60,9 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => <ToastDemo />,
   play: async ({ canvas }) => {
-    // Wait for the toast to appear and animations to complete
-    await expect(canvas.getByText('Default toast message')).toBeVisible();
+    // Wait for animations to complete first, then check visibility
     await waitForAnimations();
+    await expect(canvas.getByText('Default toast message')).toBeVisible();
   },
 };
 
