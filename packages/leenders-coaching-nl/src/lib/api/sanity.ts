@@ -2,12 +2,68 @@ import { createClient } from 'next-sanity';
 import type { QueryParams } from '@sanity/client';
 
 /**
- * Sanity client configuration for Next.js with cache tag support
+ * Returns true if the hostname matches 'chromatic.com' or is a subdomain of 'chromatic.com'.
  */
+function isChromaticHost(hostname: string): boolean {
+  if (!hostname) return false;
+  return (
+    hostname === 'chromatic.com' ||
+    (hostname.endsWith('.chromatic.com') &&
+      hostname.length > '.chromatic.com'.length)
+  );
+}
+
+/* Check if we're running on the server or client */
+const isServer = typeof window === 'undefined';
+
+/* Check if we're in a Storybook, test, or mock environment */
+const isNonProductionEnvironment = () => {
+  // Check for test environments (Jest, Vitest)
+  if (typeof process !== 'undefined' && process.env) {
+    if (
+      process.env.NODE_ENV === 'test' ||
+      process.env.VITEST === 'true' ||
+      process.env.JEST_WORKER_ID !== undefined ||
+      process.env.STORYBOOK === 'true'
+    ) {
+      return true;
+    }
+  }
+
+  // Check for browser-based Storybook/Chromatic environments
+  if (typeof window !== 'undefined' && window.location) {
+    const hostname = window.location.hostname;
+    const href = window.location.href;
+
+    // Use explicit check function for chromatic hostnames
+    return (
+      isChromaticHost(hostname) ||
+      hostname === 'capture-loopback.chromatic.com' ||
+      href.includes('iframe.html') || // Storybook iframe
+      (hostname === 'localhost' && window.parent !== window) // Storybook localhost
+    );
+  }
+
+  return false;
+};
+
+/* Default fallback values for non-production environments */
+const FALLBACK_CONFIG = {
+  projectId: 'storybook-fallback',
+  dataset: 'production',
+  apiVersion: '2024-02-14',
+} as const;
+
+/* Sanity client configuration for Next.js with cache tag support and fallbacks */
 export const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
-  apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-02-14',
+  projectId:
+    process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
+    (isNonProductionEnvironment() ? FALLBACK_CONFIG.projectId : ''),
+  dataset:
+    process.env.NEXT_PUBLIC_SANITY_DATASET ||
+    (isNonProductionEnvironment() ? FALLBACK_CONFIG.dataset : ''),
+  apiVersion:
+    process.env.NEXT_PUBLIC_SANITY_API_VERSION || FALLBACK_CONFIG.apiVersion,
   useCdn: process.env.NODE_ENV === 'production',
   token: process.env.SANITY_API_TOKEN,
 });

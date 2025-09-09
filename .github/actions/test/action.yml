@@ -95,7 +95,7 @@ runs:
 
     - name: Upload coverage to Codecov
       if: ${{ inputs.coverage-upload == 'true' && inputs.codecov-token != '' }}
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       with:
         token: ${{ inputs.codecov-token }}
         files: packages/leenders-coaching-nl/coverage/unit/lcov.info
@@ -103,7 +103,6 @@ runs:
         name: unit
         fail_ci_if_error: true
         verbose: true
-        partial: true
 
     - name: Upload test results
       if: always()
