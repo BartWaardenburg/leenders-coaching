@@ -92,9 +92,7 @@ jobs:
           storybookBaseDir: packages/leenders-coaching-nl
           storybookConfigDir: packages/leenders-coaching-nl/.storybook
           onlyChanged: ${{ github.event_name == 'push' }}
-          externals: |
-            packages/leenders-coaching-nl/public/**
-            packages/leenders-coaching-nl/src/assets/**
+          externals: ${{ github.event_name == 'push' && 'packages/leenders-coaching-nl/public/**\npackages/leenders-coaching-nl/src/assets/**' || '' }}
           exitZeroOnChanges: true
           exitOnceUploaded: true
           ignoreLastBuildOnBranch: ${{ github.event_name == 'pull_request' }}
