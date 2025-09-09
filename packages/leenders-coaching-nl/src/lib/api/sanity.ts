@@ -13,9 +13,6 @@ function isChromaticHost(hostname: string): boolean {
   );
 }
 
-/* Check if we're running on the server or client */
-const isServer = typeof window === 'undefined';
-
 /* Check if we're in a Storybook, test, or mock environment */
 const isNonProductionEnvironment = () => {
   // Check for test environments (Jest, Vitest)
