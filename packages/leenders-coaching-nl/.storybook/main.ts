@@ -33,6 +33,15 @@ const config: StorybookConfig = {
       '@': path.resolve(__dirname, '../src'),
     };
 
+    // Mock Next.js navigation for Storybook
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'next/navigation': path.resolve(
+        __dirname,
+        '../src/test/mocks/next-navigation.ts'
+      ),
+    };
+
     // Define environment variables for Storybook
     config.plugins = config.plugins || [];
     config.plugins.push(
