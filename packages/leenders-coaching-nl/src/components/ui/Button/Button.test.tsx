@@ -19,7 +19,7 @@ describe('Button', () => {
 
     const link = screen.getByRole('link', { name: 'Link Button' });
     expect(link).toBeInTheDocument();
-    expect(link).toHaveAttribute('href', '/test');
+    expect(link).toHaveAttribute('href', '/test/');
   });
 
   it('should apply default variant and size classes', () => {

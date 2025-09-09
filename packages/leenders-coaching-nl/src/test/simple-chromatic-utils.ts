@@ -5,16 +5,22 @@
 
 /**
  * Simple delay function to wait for animations
- * Currently disabled for testing - resolves immediately
  */
-export const waitForAnimations = async (_ms = 300) => {
-  return Promise.resolve();
+export const waitForAnimations = async (ms = 300) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
 /**
  * Wait for element to be visible
- * Currently disabled for testing - returns null immediately
  */
-export const waitForElement = async (_selector: string, _timeout = 3000) => {
-  return Promise.resolve(null);
+export const waitForElement = async (selector: string, timeout = 3000) => {
+  const start = Date.now();
+  while (Date.now() - start < timeout) {
+    const element = document.querySelector(selector);
+    if (element && (element as HTMLElement).offsetParent !== null) {
+      return element;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  throw new Error(`Element ${selector} not found within ${timeout}ms`);
 };

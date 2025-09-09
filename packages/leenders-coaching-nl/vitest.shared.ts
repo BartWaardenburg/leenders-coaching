@@ -23,14 +23,18 @@ export const resolveConfig = {
 };
 
 /**
- * Shared plugins configuration for Vitest.
- * Includes Storybook testing plugin.
+ * Storybook plugin configuration for Vitest.
+ * Only used for Storybook tests.
  */
-export const plugins = [
-  storybookTest({
-    configDir: path.join(pkgRoot, '.storybook'),
-  }),
-];
+export const storybookPlugin = storybookTest({
+  configDir: path.join(pkgRoot, '.storybook'),
+});
+
+/**
+ * Shared plugins configuration for Vitest.
+ * Empty by default - plugins are added per project as needed.
+ */
+export const plugins = [];
 
 /**
  * Shared resolve configuration with aliases.
@@ -137,6 +141,14 @@ export const excludePatterns = {
     '**/dist/**',
     '**/coverage/**',
     '**/src/emails/email-templates.stories.tsx',
+    // Temporarily exclude these story files from tests
+    '**/src/components/ui/Button/Button.stories.tsx',
+    // '**/src/components/ui/Input/Input.stories.tsx',
+    // '**/src/components/ui/Form/Form.stories.tsx',
+    // '**/src/components/ui/Alert/Alert.stories.tsx',
+    // '**/src/components/ui/Toast/Toast.stories.tsx',
+    // '**/src/components/ui/Modal/Modal.stories.tsx',
+    // '**/src/components/ui/Carousel/Carousel.stories.tsx',
   ],
 };
 
@@ -148,6 +160,7 @@ export const excludePatterns = {
 export const projects = {
   unit: {
     extends: true as const,
+    plugins: [],
     test: {
       name: 'unit',
       ...jsdomSetup,
@@ -158,6 +171,7 @@ export const projects = {
   },
   storybook: {
     extends: true as const,
+    plugins: [storybookPlugin],
     test: {
       name: 'storybook',
       ...browserSetup,

@@ -4,7 +4,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   baseConfig,
-  plugins,
   resolve,
   projects,
   coverageConfigs,
@@ -16,7 +15,6 @@ export default defineConfig({
   root: pkgRoot,
   cacheDir: path.join(pkgRoot, 'node_modules/.vite-vitest'),
   ...baseConfig,
-  plugins,
   resolve,
 
   test: {
