@@ -1,4 +1,6 @@
-import { expect, waitFor } from '@storybook/test';
+import '@testing-library/jest-dom';
+import { waitFor } from '@testing-library/react';
+import { expect } from 'vitest';
 
 /**
  * Utility function to wait for all animations to complete

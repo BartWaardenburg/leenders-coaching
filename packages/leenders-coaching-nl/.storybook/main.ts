@@ -7,7 +7,6 @@ const config: StorybookConfig = {
   addons: [
     '@storybook/addon-docs',
     '@storybook/addon-links',
-    '@storybook/addon-controls',
     '@storybook/addon-themes',
     '@storybook/addon-a11y',
   ],
