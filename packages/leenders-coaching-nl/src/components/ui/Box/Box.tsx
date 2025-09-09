@@ -1,4 +1,5 @@
 import type { ComponentProps, ElementType } from 'react';
+import { forwardRef } from 'react';
 
 type BoxProps<T extends ElementType> = {
   as?: T;
@@ -7,10 +8,11 @@ type BoxProps<T extends ElementType> = {
 /**
  * Basic layout component that can render as any HTML element
  */
-export const Box = <T extends ElementType = 'div'>({
-  as,
-  ...props
-}: BoxProps<T>) => {
-  const Component = as || 'div';
-  return <Component {...props} />;
-};
+export const Box = forwardRef<HTMLElement, BoxProps<ElementType>>(
+  ({ as, ...props }, ref) => {
+    const Component = as || 'div';
+    return <Component ref={ref} {...props} />;
+  }
+);
+
+Box.displayName = 'Box';

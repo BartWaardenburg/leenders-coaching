@@ -10,6 +10,8 @@ const meta: Meta<typeof DisableDraftMode> = {
       appDirectory: true,
       navigation: {
         pathname: '/blog/sample-post',
+        query: {},
+        asPath: '/blog/sample-post',
       },
     },
     docs: {

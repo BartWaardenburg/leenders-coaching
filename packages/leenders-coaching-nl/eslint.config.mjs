@@ -12,8 +12,14 @@ import jsxA11yPlugin from "eslint-plugin-jsx-a11y";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+/**
+ * ESLint configuration for the leenders-coaching-nl package.
+ * - Applies recommended rules for TypeScript, React, Next.js, Storybook, and accessibility.
+ * - Enforces strict typing (no 'any'), code style, and disables unnecessary rules for test and story files.
+ * - Ignores build, generated, and output folders.
+ */
 const eslintConfig = [
-  // Base config for all files
+  /* Base config for all files */
   {
     ignores: [
       "**/node_modules/**",
@@ -30,14 +36,14 @@ const eslintConfig = [
       "**/*.min.js",
       "**/*.cjs",
       "**/scripts/**/*.cjs",
-      "!.storybook" // Ensure .storybook directory is linted
+      "!.storybook" /* Ensure .storybook directory is linted */
     ]
   },
 
-  // Storybook recommended configuration
+  /* Storybook recommended configuration */
   ...storybookPlugin.configs['flat/recommended'],
 
-  // Global plugins and settings
+  /* Global plugins and settings */
   {
     plugins: {
       "@typescript-eslint": typescriptPlugin,
@@ -63,7 +69,7 @@ const eslintConfig = [
     }
   },
 
-  // TypeScript files only
+  /* TypeScript files only */
   {
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
@@ -76,7 +82,7 @@ const eslintConfig = [
       }
     },
     rules: {
-      // TypeScript rules
+      /* TypeScript rules */
       "@typescript-eslint/no-floating-promises": "off",
       "@typescript-eslint/no-misused-promises": ["error", {
         "checksVoidReturn": false
@@ -87,35 +93,37 @@ const eslintConfig = [
       }],
       "@typescript-eslint/no-explicit-any": "error",
 
-      // React rules
+      /* React rules */
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
       "react/jsx-uses-react": "off",
       "react/jsx-uses-vars": "error",
 
-      // Import rules
-      // "import/order": ["error", {
-      //   "newlines-between": "always",
-      //   "alphabetize": {
-      //     "order": "asc",
-      //     "caseInsensitive": true
-      //   }
-      // }],
+      /* Import rules */
+      /*
+      "import/order": ["error", {
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }],
+      */
 
-      // Next.js rules
+      /* Next.js rules */
       "@next/next/no-html-link-for-pages": "error",
       "@next/next/no-img-element": "warn",
       "@next/next/no-sync-scripts": "error",
       "@next/next/no-title-in-document-head": "error",
 
-      // General rules
+      /* General rules */
       "no-console": "off",
       "prefer-const": "error",
       "no-var": "error"
     }
   },
 
-  // Storybook files
+  /* Storybook files */
   {
     files: [".storybook/**/*"],
     rules: {
@@ -123,11 +131,11 @@ const eslintConfig = [
     },
   },
 
-  // Story files - apply Storybook-specific rules
+  /* Story files - apply Storybook-specific rules */
   {
     files: ['**/*.stories.@(ts|tsx|js|jsx|mjs|cjs)'],
     rules: {
-      // Enable specific Storybook rules to catch anti-patterns
+      /* Enable specific Storybook rules to catch anti-patterns */
       'storybook/csf-component': 'error',
       'storybook/default-exports': 'error',
       'storybook/hierarchy-separator': 'error',
@@ -144,7 +152,7 @@ const eslintConfig = [
     },
   },
 
-  // Test files
+  /* Test files */
   {
     files: ["**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}"],
     rules: {
@@ -153,7 +161,7 @@ const eslintConfig = [
     }
   },
 
-  // JavaScript files (including CommonJS)
+  /* JavaScript files (including CommonJS) */
   {
     files: ["**/*.{js,jsx,cjs}"],
     languageOptions: {

@@ -1,34 +1,26 @@
 /// <reference types="vitest/config" />
 import { defineConfig } from 'vitest/config';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
-  aliases,
-  optimizeDeps,
-  coverageBase,
-  jsdomSetup,
+  baseConfig,
+  plugins,
+  resolve,
+  projects,
+  coverageConfigs,
 } from './vitest.shared';
 
+const pkgRoot = fileURLToPath(new URL('.', import.meta.url));
+
 export default defineConfig({
+  root: pkgRoot,
+  cacheDir: path.join(pkgRoot, 'node_modules/.vite-vitest-ci'),
+  ...baseConfig,
+  plugins,
+  resolve,
+
   test: {
-    ...jsdomSetup,
-    include: ['src/**/*.test.{ts,tsx}'],
-    exclude: [
-      'node_modules/**',
-      'dist/**',
-      '.storybook/**',
-      '**/*.stories.{js,jsx,ts,tsx}',
-      'coverage/**',
-      'storybook-static/**',
-    ],
-    browser: {
-      enabled: false,
-    },
-    coverage: {
-      ...coverageBase,
-      reportsDirectory: 'coverage/unit',
-      clean: true,
-      thresholds: { statements: 0, branches: 0, functions: 0, lines: 0 },
-    },
+    coverage: coverageConfigs.ci,
+    projects: [projects.unit, projects.storybook],
   },
-  resolve: { alias: aliases },
-  optimizeDeps,
 });

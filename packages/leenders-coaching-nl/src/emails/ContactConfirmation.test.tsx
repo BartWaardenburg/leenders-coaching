@@ -6,9 +6,9 @@ import { ContactConfirmation } from './ContactConfirmation';
 // Mock @react-email/components
 vi.mock('@react-email/components', () => ({
   Html: ({ children }: { children: React.ReactNode }) =>
-    React.createElement('html', {}, children),
+    React.createElement('div', { 'data-testid': 'html' }, children),
   Body: ({ children }: { children: React.ReactNode }) =>
-    React.createElement('body', {}, children),
+    React.createElement('div', { 'data-testid': 'body' }, children),
   Container: ({ children }: { children: React.ReactNode }) =>
     React.createElement('div', { 'data-testid': 'container' }, children),
   Text: ({ children }: { children: React.ReactNode }) =>
@@ -19,7 +19,7 @@ vi.mock('@react-email/components', () => ({
     React.createElement('section', {}, children),
   Hr: () => React.createElement('hr', {}),
   Head: ({ children }: { children: React.ReactNode }) =>
-    React.createElement('head', {}, children),
+    React.createElement('div', { 'data-testid': 'head' }, children),
   Row: ({ children }: { children: React.ReactNode }) =>
     React.createElement('div', { 'data-testid': 'row' }, children),
   Column: ({ children }: { children: React.ReactNode }) =>

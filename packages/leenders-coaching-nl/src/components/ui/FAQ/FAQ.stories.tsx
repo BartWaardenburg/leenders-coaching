@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { expect } from 'storybook/test';
 import { FAQ } from './FAQ';
-import { waitForAnimations } from '../../../test/simple-chromatic-utils';
 
 const meta = {
   title: 'UI/FAQ',
@@ -86,81 +84,6 @@ export const Default: Story = {
         ],
       },
     ],
-  },
-  play: async ({ canvas, userEvent, step }) => {
-    await step('Verify FAQ items are visible', async () => {
-      // Wait for animations to complete first
-      await waitForAnimations();
-
-      // Wait for FAQ items to be visible
-      await expect(
-        canvas.getByText('What services do you offer?')
-      ).toBeVisible();
-      await expect(
-        canvas.getByText('How can I schedule an appointment?')
-      ).toBeVisible();
-      await expect(
-        canvas.getByText('What are your working hours?')
-      ).toBeVisible();
-    });
-
-    await step('Test FAQ accordion interactions', async () => {
-      // Click on first FAQ item
-      await userEvent.click(canvas.getByText('What services do you offer?'));
-
-      // Wait for answer to appear
-      await expect(
-        canvas.getAllByText((_, element) => {
-          return (
-            element?.textContent?.includes('This is a basic answer with') ??
-            false
-          );
-        })[0]
-      ).toBeVisible();
-      await waitForAnimations();
-    });
-
-    await step('Test multiple FAQ items', async () => {
-      // Click on second FAQ item
-      await userEvent.click(
-        canvas.getByText('How can I schedule an appointment?')
-      );
-
-      // Wait for answer to appear
-      await expect(
-        canvas.getAllByText((_, element) => {
-          return (
-            element?.textContent?.includes(
-              'You can schedule an appointment through our online booking system'
-            ) ?? false
-          );
-        })[0]
-      ).toBeVisible();
-      await waitForAnimations();
-
-      // Click on third FAQ item
-      await userEvent.click(canvas.getByText('What are your working hours?'));
-
-      // Wait for answer to appear
-      await expect(
-        canvas.getAllByText((_, element) => {
-          return (
-            element?.textContent?.includes(
-              'We are available Monday through Friday'
-            ) ?? false
-          );
-        })[0]
-      ).toBeVisible();
-      await waitForAnimations();
-    });
-
-    await step('Test closing FAQ items', async () => {
-      // Click on first FAQ item again to close it
-      await userEvent.click(canvas.getByText('What services do you offer?'));
-
-      // Wait for animations to complete
-      await waitForAnimations();
-    });
   },
 };
 

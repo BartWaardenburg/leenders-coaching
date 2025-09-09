@@ -11,8 +11,9 @@ import { allModes } from './modes';
 import '../src/app/globals.css';
 
 /**
- * Custom viewports that align with Tailwind CSS default breakpoints
+ * Custom viewports that align with Tailwind CSS default breakpoints.
  * Tailwind breakpoints: sm: 640px, md: 768px, lg: 1024px, xl: 1280px, 2xl: 1536px
+ * Used for Storybook viewport switching.
  */
 const tailwindViewports = {
   xs: {
@@ -65,23 +66,46 @@ const tailwindViewports = {
   },
 };
 
+/**
+ * Storybook global preview configuration.
+ * - Sets up parameters for actions, Chromatic, Next.js, docs, themes, viewport, and a11y.
+ * - Applies global decorators for theming and context providers.
+ * @see https://storybook.js.org/docs/react/configure/overview
+ */
 const preview: Preview = {
   parameters: {
+    /**
+     * Automatically match action handlers for props starting with "on".
+     */
     actions: { argTypesRegex: '^on[A-Z].*' },
 
+    /**
+     * Chromatic visual regression testing configuration.
+     * - pauseAnimationAtEnd: Pauses animations for snapshot stability.
+     * - modes: Custom theme/viewport modes for Chromatic.
+     */
     chromatic: {
       pauseAnimationAtEnd: true,
       modes: allModes,
     },
 
+    /**
+     * Next.js app directory mode for Storybook.
+     */
     nextjs: {
       appDirectory: true,
     },
 
+    /**
+     * Enable autodocs globally using the 'autodocs' tag.
+     */
     docs: {
       autodocs: 'tag',
     },
 
+    /**
+     * Theme switching configuration for Storybook UI.
+     */
     themes: {
       default: 'light',
       list: [
@@ -91,20 +115,35 @@ const preview: Preview = {
       ],
     },
 
+    /**
+     * Custom viewport options matching Tailwind breakpoints.
+     */
     viewport: {
       options: tailwindViewports,
       defaultViewport: 'lg',
     },
 
+    /**
+     * Accessibility (a11y) testing configuration.
+     * - 'todo': Show a11y violations in the test UI only.
+     * - 'error': Fail CI on a11y violations.
+     * - 'off': Skip a11y checks entirely.
+     */
     a11y: {
-      // 'todo' - show a11y violations in the test UI only
-      // 'error' - fail CI on a11y violations
-      // 'off' - skip a11y checks entirely
       test: 'todo',
     },
   },
+  /**
+   * Enable Storybook autodocs globally.
+   */
   tags: ['autodocs'],
+  /**
+   * Global decorators to wrap all stories with providers and theming.
+   */
   decorators: [
+    /**
+     * Theme switching decorator using class names.
+     */
     withThemeByClassName({
       themes: {
         light: 'light',
@@ -113,6 +152,10 @@ const preview: Preview = {
       },
       defaultTheme: 'light',
     }),
+    /**
+     * Wrap all stories with ConfigProvider, ThemeProvider, and ToastProvider.
+     * @param Story - The story component to render.
+     */
     (Story) => (
       <ConfigProvider config={defaultConfig}>
         <ThemeProvider>

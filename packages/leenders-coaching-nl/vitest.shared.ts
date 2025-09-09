@@ -1,35 +1,51 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
+
+const pkgRoot = fileURLToPath(new URL('.', import.meta.url));
 
 /**
- * The directory name of the current module.
+ * Dependencies to optimize and exclude for Vitest runs.
+ * Used to speed up test startup and avoid unnecessary bundling.
  */
-const __dirname: string = fileURLToPath(new URL('.', import.meta.url));
-
-/**
- * Absolute path to the src directory.
- */
-const SRC: string = path.resolve(__dirname, './src');
-
-/**
- * Aliases for module resolution.
- * @type {{ [key: string]: string }}
- */
-export const aliases: { [key: string]: string } = {
-  '@': SRC,
+export const optimizeDeps = {
+  include: ['sb-original/default-loader', 'sb-original/image-context'],
+  exclude: ['@react-email/render', 'markdown-to-jsx'],
 };
 
 /**
- * Dependencies to exclude from optimization.
- * @type {{ exclude: string[] }}
+ * Shared resolve configuration for aliases and extensions.
+ * Ensures consistency across all Vitest configs.
  */
-export const optimizeDeps: { exclude: string[] } = {
-  exclude: ['@react-email/render'],
+export const resolveConfig = {
+  extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
+  dedupe: ['react', 'react-dom'],
 };
 
 /**
- * Base configuration for code coverage.
- * Specifies which files are included/excluded from coverage reports.
+ * Shared plugins configuration for Vitest.
+ * Includes Storybook testing plugin.
+ */
+export const plugins = [
+  storybookTest({
+    configDir: path.join(pkgRoot, '.storybook'),
+  }),
+];
+
+/**
+ * Shared resolve configuration with aliases.
+ * Maps "@" to the src directory.
+ */
+export const resolve = {
+  alias: {
+    '@': path.resolve(pkgRoot, 'src'),
+  },
+  ...resolveConfig,
+};
+
+/**
+ * Base coverage configuration for Vitest.
+ * Used as a base for both development and CI coverage configs.
  */
 export const coverageBase = {
   provider: 'v8' as const,
@@ -66,11 +82,115 @@ export const coverageBase = {
 };
 
 /**
- * JSDOM environment setup for Vitest.
+ * JSDOM environment setup for unit tests.
+ * Used for React and DOM-based testing.
  */
 export const jsdomSetup = {
   environment: 'jsdom' as const,
   globals: true,
   setupFiles: ['./src/test/setup.ts'],
   environmentOptions: { jsdom: { url: 'http://localhost' } },
+};
+
+/**
+ * Browser environment setup for Storybook tests.
+ * Uses Playwright for browser-based testing.
+ */
+export const browserSetup = {
+  browser: {
+    enabled: true,
+    headless: true,
+    provider: 'playwright',
+    instances: [{ browser: 'chromium' }],
+  },
+  setupFiles: ['.storybook/vitest.setup.ts'],
+};
+
+/**
+ * Patterns for test file inclusion and exclusion.
+ */
+export const testPatterns = {
+  unit: ['src/**/*.test.{ts,tsx}'],
+  storybook: ['src/**/*.stories.{ts,tsx}'],
+  exclude: [
+    '**/node_modules/**',
+    '**/dist/**',
+    '**/coverage/**',
+    '**/src/emails/email-templates.stories.tsx',
+  ],
+};
+
+/**
+ * Exclude patterns for different test types.
+ */
+export const excludePatterns = {
+  unit: [
+    'node_modules/**',
+    'dist/**',
+    '.storybook/**',
+    '**/*.stories.{js,jsx,ts,tsx}',
+    'coverage/**',
+    'storybook-static/**',
+  ],
+  storybook: [
+    '**/node_modules/**',
+    '**/dist/**',
+    '**/coverage/**',
+    '**/src/emails/email-templates.stories.tsx',
+  ],
+};
+
+/**
+ * Shared project configurations for Vitest.
+ * - unit: for unit tests (jsdom)
+ * - storybook: for Storybook stories (browser)
+ */
+export const projects = {
+  unit: {
+    extends: true as const,
+    test: {
+      name: 'unit',
+      ...jsdomSetup,
+      include: testPatterns.unit,
+      exclude: excludePatterns.unit,
+      browser: { enabled: false },
+    },
+  },
+  storybook: {
+    extends: true as const,
+    test: {
+      name: 'storybook',
+      ...browserSetup,
+      include: testPatterns.storybook,
+      exclude: excludePatterns.storybook,
+    },
+  },
+};
+
+/**
+ * Shared coverage configurations for development and CI.
+ */
+export const coverageConfigs = {
+  development: {
+    ...coverageBase,
+    reportsDirectory: 'coverage',
+    clean: true,
+    thresholds: { statements: 70, branches: 70, functions: 70, lines: 70 },
+  },
+  ci: {
+    ...coverageBase,
+    reportsDirectory: 'coverage',
+    clean: true,
+    thresholds: { statements: 0, branches: 0, functions: 0, lines: 0 },
+  },
+};
+
+/**
+ * Base Vitest config fragment.
+ * Used in all Vitest config files for this package.
+ */
+export const baseConfig = {
+  optimizeDeps,
+  define: { 'import.meta.vitest': 'undefined' },
+  esbuild: { jsx: 'transform' as const },
 };

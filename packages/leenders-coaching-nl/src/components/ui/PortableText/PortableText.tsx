@@ -73,27 +73,27 @@ const components: PortableTextComponents = {
       </Heading>
     ),
     normal: ({ children }) => (
-      <Box className="mb-4">
-        <Text>{children}</Text>
-      </Box>
+      <Text as="div" className="mb-4">
+        {children}
+      </Text>
     ),
     blockquote: ({ children }) => (
       <Box
         as="blockquote"
         className="pl-4 border-l-4 border-gray-300 my-4 italic"
       >
-        <Text>{children}</Text>
+        {children}
       </Box>
     ),
     bullet: ({ children }) => (
-      <Box className="mb-4">
-        <Text>{children}</Text>
-      </Box>
+      <Text as="div" className="mb-4">
+        {children}
+      </Text>
     ),
     number: ({ children }) => (
-      <Box className="mb-4">
-        <Text>{children}</Text>
-      </Box>
+      <Text as="div" className="mb-4">
+        {children}
+      </Text>
     ),
   },
   marks: {
@@ -162,7 +162,7 @@ const components: PortableTextComponents = {
       );
     },
     callToAction: ({ value }) => (
-      <Box className="my-4">
+      <div className="my-4">
         <Button
           href={value?.url}
           variant="blue"
@@ -171,15 +171,12 @@ const components: PortableTextComponents = {
         >
           {value?.text}
         </Button>
-      </Box>
+      </div>
     ),
     code: ({ value }) => (
-      <Box
-        as="pre"
-        className="bg-pastel-blue/20 dark:bg-pastel-blue-dark/20 border border-foreground/80 p-4 my-4 overflow-x-auto"
-      >
+      <pre className="bg-pastel-blue/20 dark:bg-pastel-blue-dark/20 border border-foreground/80 p-4 my-4 overflow-x-auto">
         <code className="font-mono text-sm">{value?.code}</code>
-      </Box>
+      </pre>
     ),
   },
   list: {

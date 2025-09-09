@@ -98,9 +98,9 @@ runs:
       uses: codecov/codecov-action@v5
       with:
         token: ${{ inputs.codecov-token }}
-        files: packages/leenders-coaching-nl/coverage/unit/lcov.info
-        flags: unit
-        name: unit
+        files: packages/leenders-coaching-nl/coverage/lcov.info
+        flags: unit,storybook
+        name: combined
         fail_ci_if_error: true
         verbose: true
 
@@ -110,6 +110,6 @@ runs:
       with:
         name: test-results-${{ inputs.github-sha || 'latest' }}
         path: |
-          packages/leenders-coaching-nl/coverage/unit/
+          packages/leenders-coaching-nl/coverage/
           packages/leenders-coaching-nl/test-results/
         retention-days: 30

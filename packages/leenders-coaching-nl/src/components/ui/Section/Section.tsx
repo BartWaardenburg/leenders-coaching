@@ -1,7 +1,7 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { Box } from '@/components/ui/Box';
-import { Container } from '@/components/ui/Container';
+import { Box } from '../Box';
+import { Container } from '../Container';
 
 export type PastelColor =
   | 'blue'
