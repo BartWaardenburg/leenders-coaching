@@ -1,11 +1,10 @@
 import React from 'react';
-import type { Preview } from '@storybook/nextjs';
-import { withThemeByClassName } from '@storybook/addon-themes';
+import type { Preview } from '@storybook/react';
 import {
   ConfigProvider,
-  defaultConfig as baseConfig,
+  defaultConfig,
 } from '../src/components/providers/ConfigProvider';
-import { ToastProvider } from '../src/components/ui/Toast/ToastManager';
+import { ThemeProvider } from '../src/components/providers/ThemeProvider';
 import '../src/app/globals.css';
 
 const preview: Preview = {
@@ -14,34 +13,23 @@ const preview: Preview = {
     controls: {
       matchers: {
         color: /(background|color)$/i,
-        date: /Date$/,
+        date: /Date$/i,
       },
     },
-    layout: 'fullscreen',
-    backgrounds: {
-      disable: true,
-    },
-    nextjs: {
-      appDirectory: true,
+    // Disable Chromatic for stories that use external services
+    chromatic: {
+      // Disable for stories that might have timing issues
+      delay: 1000,
     },
   },
   decorators: [
-    withThemeByClassName({
-      themes: {
-        light: '',
-        dark: 'dark',
-      },
-      defaultTheme: 'light',
-    }),
-    (Story) => {
-      return (
-        <ConfigProvider config={baseConfig}>
-          <ToastProvider>
-            <Story />
-          </ToastProvider>
-        </ConfigProvider>
-      );
-    },
+    (Story) => (
+      <ConfigProvider config={defaultConfig}>
+        <ThemeProvider>
+          <Story />
+        </ThemeProvider>
+      </ConfigProvider>
+    ),
   ],
 };
 
