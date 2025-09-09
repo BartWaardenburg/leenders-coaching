@@ -32,7 +32,7 @@ const defaultArgs = {
   title: 'Featured Section',
   description:
     'This is a featured section with an image and some descriptive text. It can be used to highlight important content or features.',
-  image: 'https://picsum.photos/id/237/1200/800', // Dog image for consistent Storybook/Chromatic testing
+  image: 'https://picsum.photos/id/237/1200/800',
   cta: {
     href: '#',
     label: 'Learn More',

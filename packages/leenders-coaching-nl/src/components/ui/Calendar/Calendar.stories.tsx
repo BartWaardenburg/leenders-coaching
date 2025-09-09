@@ -16,7 +16,7 @@ type Story = StoryObj<typeof Calendar>;
 
 export const Default: Story = {
   args: {
-    initialDate: new Date(),
+    initialDate: new Date('2024-03-15'), // Fixed date for consistent Storybook/Chromatic testing
     onSelectDate: (date) => {
       console.log('Selected date:', date.toLocaleDateString());
     },
@@ -25,7 +25,7 @@ export const Default: Story = {
 
 export const WithCustomDayContent: Story = {
   args: {
-    initialDate: new Date(),
+    initialDate: new Date('2024-03-15'), // Fixed date for consistent Storybook/Chromatic testing
     onSelectDate: (date) => {
       console.log('Selected date:', date.toLocaleDateString());
     },
@@ -38,17 +38,13 @@ export const WithCustomDayContent: Story = {
   },
 };
 
-/* Get a date for next week */
-const nextWeek = new Date();
-nextWeek.setDate(nextWeek.getDate() + 7);
-
-/* Get a date for next month */
-const nextMonth = new Date();
-nextMonth.setMonth(nextMonth.getMonth() + 1);
+/* Fixed dates for consistent Storybook/Chromatic testing */
+const nextWeek = new Date('2024-03-22');
+const nextMonth = new Date('2024-04-15');
 
 export const WithDisabledDates: Story = {
   args: {
-    initialDate: new Date(),
+    initialDate: new Date('2024-03-15'), // Fixed date for consistent Storybook/Chromatic testing
     onSelectDate: (date) => {
       console.log('Selected date:', date.toLocaleDateString());
     },
@@ -56,7 +52,7 @@ export const WithDisabledDates: Story = {
       // Disable weekends
       daysOfWeek: [0, 6],
       // Disable specific dates
-      dates: [new Date()],
+      dates: [new Date('2024-03-15')], // Fixed date for consistent Storybook/Chromatic testing
       // Disable a date range
       ranges: [
         {

@@ -23,21 +23,21 @@ const testimonials = [
       "The coaching sessions have been transformative. I've gained clarity about my goals and the confidence to pursue them.",
     name: 'Sarah Johnson',
     role: 'Marketing Director',
-    image: 'https://picsum.photos/id/64/256/256', // Woman portrait for consistent Storybook/Chromatic testing
+    image: 'https://picsum.photos/id/64/256/256',
   },
   {
     quote:
       "Working with this coach has helped me overcome obstacles I didn't think were possible. The results speak for themselves.",
     name: 'Michael Chen',
     role: 'Software Engineer',
-    image: 'https://picsum.photos/id/1027/256/256', // Man portrait for consistent Storybook/Chromatic testing
+    image: 'https://picsum.photos/id/1027/256/256',
   },
   {
     quote:
       'The personalized approach and actionable strategies have made a real difference in both my professional and personal life.',
     name: 'Emma Davis',
     role: 'Business Owner',
-    image: 'https://picsum.photos/id/1025/256/256', // Woman portrait for consistent Storybook/Chromatic testing
+    image: 'https://picsum.photos/id/1025/256/256',
   },
 ];
 
@@ -73,15 +73,15 @@ export const Default: Story = {
 
 const images = [
   {
-    src: 'https://picsum.photos/id/237/1200/800', // Dog image for consistent Storybook/Chromatic testing
+    src: 'https://picsum.photos/id/237/1200/800',
     alt: 'Team collaborating in a modern office',
   },
   {
-    src: 'https://picsum.photos/id/870/1200/800', // Mountain landscape for consistent Storybook/Chromatic testing
+    src: 'https://picsum.photos/id/870/1200/800',
     alt: 'Personal coaching session',
   },
   {
-    src: 'https://picsum.photos/id/1015/1200/800', // Beach scene for consistent Storybook/Chromatic testing
+    src: 'https://picsum.photos/id/1015/1200/800',
     alt: 'Group workshop session',
   },
 ];

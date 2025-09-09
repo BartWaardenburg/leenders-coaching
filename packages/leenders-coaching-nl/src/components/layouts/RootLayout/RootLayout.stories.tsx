@@ -75,21 +75,21 @@ const mockContent = {
         "The coaching sessions have been transformative for my career. I've gained clarity and confidence.",
       name: 'John Doe',
       role: 'Marketing Manager',
-      image: 'https://picsum.photos/id/1027/150/150', // Man portrait for consistent Storybook/Chromatic testing
+      image: 'https://picsum.photos/id/1027/150/150',
     },
     {
       quote:
         'Working with Leenders Coaching has helped me achieve my goals faster than I thought possible.',
       name: 'Jane Smith',
       role: 'Entrepreneur',
-      image: 'https://picsum.photos/id/64/150/150', // Woman portrait for consistent Storybook/Chromatic testing
+      image: 'https://picsum.photos/id/64/150/150',
     },
     {
       quote:
         'The insights and strategies I gained have completely transformed my approach to leadership.',
       name: 'Michael Johnson',
       role: 'CEO',
-      image: 'https://picsum.photos/id/1025/150/150', // Woman portrait for consistent Storybook/Chromatic testing
+      image: 'https://picsum.photos/id/1025/150/150',
     },
   ],
   extendedTestimonials: [
@@ -98,14 +98,14 @@ const mockContent = {
         'My journey with Leenders Coaching began during a crucial career transition. The depth of understanding and personalized guidance I received was exceptional. Through our sessions, I not only achieved my immediate goals but also developed a long-term vision for my professional growth.',
       name: 'Sarah Williams',
       role: 'Senior Product Manager',
-      image: 'https://picsum.photos/id/1025/150/150', // Woman portrait for consistent Storybook/Chromatic testing
+      image: 'https://picsum.photos/id/1025/150/150',
     },
     {
       quote:
         'The holistic approach to coaching at Leenders has been eye-opening. We worked on both professional challenges and personal development, creating a perfect balance that led to sustainable growth in all areas of my life.',
       name: 'Robert Chen',
       role: 'Tech Entrepreneur',
-      image: 'https://picsum.photos/id/1027/150/150', // Man portrait for consistent Storybook/Chromatic testing
+      image: 'https://picsum.photos/id/1027/150/150',
     },
   ],
   faq: [
@@ -237,7 +237,7 @@ export const AllSections: Story = {
       <SectionFeatured
         title="Transform Your Life"
         description="Take the first step towards a better future with professional coaching"
-        image="https://picsum.photos/id/1015/1200/800" // Beach scene for consistent Storybook/Chromatic testing
+        image="https://picsum.photos/id/1015/1200/800"
         cta={{
           href: '/contact',
           label: 'Start Your Journey',
@@ -305,7 +305,7 @@ export const AllSections: Story = {
             slug: 'finding-your-purpose',
             date: '2024-03-15',
             categories: ['Personal Development'],
-            image: 'https://picsum.photos/id/237/800/400', // Dog image for consistent Storybook/Chromatic testing
+            image: 'https://picsum.photos/id/237/800/400',
             featured: true,
             variant: 'blue',
           },
@@ -315,7 +315,7 @@ export const AllSections: Story = {
             slug: 'building-better-habits',
             date: '2024-03-10',
             categories: ['Self Improvement'],
-            image: 'https://picsum.photos/id/870/800/400', // Mountain landscape for consistent Storybook/Chromatic testing
+            image: 'https://picsum.photos/id/870/800/400',
             variant: 'purple',
           },
           {
@@ -324,7 +324,7 @@ export const AllSections: Story = {
             slug: 'modern-leadership',
             date: '2024-03-05',
             categories: ['Leadership'],
-            image: 'https://picsum.photos/id/1016/800/400', // Forest path for consistent Storybook/Chromatic testing
+            image: 'https://picsum.photos/id/1016/800/400',
             variant: 'teal',
           },
         ]}

@@ -24,13 +24,12 @@ const generatePosts = (count: number): BlogPost[] => {
     'teal',
   ] as const;
 
-  /* Fixed images for consistent Storybook/Chromatic testing using specific picsum.photos IDs */
   const fixedImages = [
-    'https://picsum.photos/id/237/800/600', // Dog image
-    'https://picsum.photos/id/870/800/600', // Mountain landscape
-    'https://picsum.photos/id/1015/800/600', // Beach scene
-    'https://picsum.photos/id/1016/800/600', // Forest path
-    'https://picsum.photos/id/1018/800/600', // City skyline
+    'https://picsum.photos/id/237/800/600',
+    'https://picsum.photos/id/870/800/600',
+    'https://picsum.photos/id/1015/800/600',
+    'https://picsum.photos/id/1016/800/600',
+    'https://picsum.photos/id/1018/800/600',
   ];
 
   return Array.from({ length: count }, (_, i) => ({

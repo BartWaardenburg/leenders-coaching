@@ -28,7 +28,7 @@ export const Default: Story = {
   args: {
     title: 'Calendar',
     description: 'Select a date to schedule your appointment.',
-    initialDate: new Date(),
+    initialDate: new Date('2024-03-15'), // Fixed date for consistent Storybook/Chromatic testing
   },
 };
 
