@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { SectionBlog } from './SectionBlog';
+import { SectionBlog, type BlogPost } from './SectionBlog';
 
 const meta = {
   title: 'Sections/SectionBlog',
@@ -14,7 +14,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /* Generate more posts for pagination demo */
-const generatePosts = (count: number) => {
+const generatePosts = (count: number): BlogPost[] => {
   const variants = [
     'blue',
     'purple',
@@ -23,6 +23,16 @@ const generatePosts = (count: number) => {
     'yellow',
     'teal',
   ] as const;
+
+  /* Fixed images for consistent Storybook/Chromatic testing using specific picsum.photos IDs */
+  const fixedImages = [
+    'https://picsum.photos/id/237/800/600', // Dog image
+    'https://picsum.photos/id/870/800/600', // Mountain landscape
+    'https://picsum.photos/id/1015/800/600', // Beach scene
+    'https://picsum.photos/id/1016/800/600', // Forest path
+    'https://picsum.photos/id/1018/800/600', // City skyline
+  ];
+
   return Array.from({ length: count }, (_, i) => ({
     title: `Blog Post ${i + 1}: ${i % 2 === 0 ? 'Persoonlijke Groei' : 'Professionele Ontwikkeling'}`,
     description:
@@ -32,7 +42,7 @@ const generatePosts = (count: number) => {
     categories: [
       i % 2 === 0 ? 'Persoonlijke Groei' : 'Professionele Ontwikkeling',
     ],
-    image: `https://picsum.photos/800/600?random=${i + 1}`,
+    image: fixedImages[i % fixedImages.length] as string,
     featured: i === 0,
     variant: variants[i % variants.length],
   }));

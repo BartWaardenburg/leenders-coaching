@@ -23,24 +23,21 @@ const testimonials = [
       "The coaching sessions have been transformative. I've gained clarity about my goals and the confidence to pursue them.",
     name: 'Sarah Johnson',
     role: 'Marketing Director',
-    image:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80',
+    image: 'https://picsum.photos/id/64/256/256', // Woman portrait for consistent Storybook/Chromatic testing
   },
   {
     quote:
       "Working with this coach has helped me overcome obstacles I didn't think were possible. The results speak for themselves.",
     name: 'Michael Chen',
     role: 'Software Engineer',
-    image:
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80',
+    image: 'https://picsum.photos/id/1027/256/256', // Man portrait for consistent Storybook/Chromatic testing
   },
   {
     quote:
       'The personalized approach and actionable strategies have made a real difference in both my professional and personal life.',
     name: 'Emma Davis',
     role: 'Business Owner',
-    image:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80',
+    image: 'https://picsum.photos/id/1025/256/256', // Woman portrait for consistent Storybook/Chromatic testing
   },
 ];
 
@@ -76,15 +73,15 @@ export const Default: Story = {
 
 const images = [
   {
-    src: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80',
+    src: 'https://picsum.photos/id/237/1200/800', // Dog image for consistent Storybook/Chromatic testing
     alt: 'Team collaborating in a modern office',
   },
   {
-    src: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80',
+    src: 'https://picsum.photos/id/870/1200/800', // Mountain landscape for consistent Storybook/Chromatic testing
     alt: 'Personal coaching session',
   },
   {
-    src: 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80',
+    src: 'https://picsum.photos/id/1015/1200/800', // Beach scene for consistent Storybook/Chromatic testing
     alt: 'Group workshop session',
   },
 ];

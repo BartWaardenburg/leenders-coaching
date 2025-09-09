@@ -75,24 +75,21 @@ const mockContent = {
         "The coaching sessions have been transformative for my career. I've gained clarity and confidence.",
       name: 'John Doe',
       role: 'Marketing Manager',
-      image:
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=faces',
+      image: 'https://picsum.photos/id/1027/150/150', // Man portrait for consistent Storybook/Chromatic testing
     },
     {
       quote:
         'Working with Leenders Coaching has helped me achieve my goals faster than I thought possible.',
       name: 'Jane Smith',
       role: 'Entrepreneur',
-      image:
-        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=faces',
+      image: 'https://picsum.photos/id/64/150/150', // Woman portrait for consistent Storybook/Chromatic testing
     },
     {
       quote:
         'The insights and strategies I gained have completely transformed my approach to leadership.',
       name: 'Michael Johnson',
       role: 'CEO',
-      image:
-        'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=150&h=150&fit=crop&crop=faces',
+      image: 'https://picsum.photos/id/1025/150/150', // Woman portrait for consistent Storybook/Chromatic testing
     },
   ],
   extendedTestimonials: [
@@ -101,16 +98,14 @@ const mockContent = {
         'My journey with Leenders Coaching began during a crucial career transition. The depth of understanding and personalized guidance I received was exceptional. Through our sessions, I not only achieved my immediate goals but also developed a long-term vision for my professional growth.',
       name: 'Sarah Williams',
       role: 'Senior Product Manager',
-      image:
-        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=faces',
+      image: 'https://picsum.photos/id/1025/150/150', // Woman portrait for consistent Storybook/Chromatic testing
     },
     {
       quote:
         'The holistic approach to coaching at Leenders has been eye-opening. We worked on both professional challenges and personal development, creating a perfect balance that led to sustainable growth in all areas of my life.',
       name: 'Robert Chen',
       role: 'Tech Entrepreneur',
-      image:
-        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=faces',
+      image: 'https://picsum.photos/id/1027/150/150', // Man portrait for consistent Storybook/Chromatic testing
     },
   ],
   faq: [
@@ -242,7 +237,7 @@ export const AllSections: Story = {
       <SectionFeatured
         title="Transform Your Life"
         description="Take the first step towards a better future with professional coaching"
-        image="https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&h=800&fit=crop"
+        image="https://picsum.photos/id/1015/1200/800" // Beach scene for consistent Storybook/Chromatic testing
         cta={{
           href: '/contact',
           label: 'Start Your Journey',
@@ -310,8 +305,7 @@ export const AllSections: Story = {
             slug: 'finding-your-purpose',
             date: '2024-03-15',
             categories: ['Personal Development'],
-            image:
-              'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=400&fit=crop',
+            image: 'https://picsum.photos/id/237/800/400', // Dog image for consistent Storybook/Chromatic testing
             featured: true,
             variant: 'blue',
           },
@@ -321,8 +315,7 @@ export const AllSections: Story = {
             slug: 'building-better-habits',
             date: '2024-03-10',
             categories: ['Self Improvement'],
-            image:
-              'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=800&h=400&fit=crop',
+            image: 'https://picsum.photos/id/870/800/400', // Mountain landscape for consistent Storybook/Chromatic testing
             variant: 'purple',
           },
           {
@@ -331,8 +324,7 @@ export const AllSections: Story = {
             slug: 'modern-leadership',
             date: '2024-03-05',
             categories: ['Leadership'],
-            image:
-              'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=400&fit=crop',
+            image: 'https://picsum.photos/id/1016/800/400', // Forest path for consistent Storybook/Chromatic testing
             variant: 'teal',
           },
         ]}

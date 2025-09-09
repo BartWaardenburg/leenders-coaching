@@ -75,7 +75,7 @@ const generateCards = (count: number) => {
       ...card,
       slug: `${card.slug}-${index}`,
     }))
-    .sort(() => Math.random() - 0.5);
+    .sort((a, b) => a.slug.localeCompare(b.slug)); // Deterministic sort for consistent Storybook/Chromatic testing
 
   return shuffledCards.map((card) => (
     <Card key={card.slug} title={card.title} slug={card.slug}>

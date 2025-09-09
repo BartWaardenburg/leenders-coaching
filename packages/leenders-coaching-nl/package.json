@@ -19,7 +19,7 @@
     "test:coverage:ci": "vitest run --config vitest.ci.config.ts --coverage --reporter=verbose",
     "test:ui": "vitest --ui",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
+    "build-storybook": "storybook build --webpack-stats-json",
     "chromatic": "chromatic",
     "analyze:storybook": "pnpm dlx bundlesize2 check --config bundlesize.config.json",
     "analyze:bundle": "cross-env ANALYZE=true ANALYZE_JSON=true next build",
