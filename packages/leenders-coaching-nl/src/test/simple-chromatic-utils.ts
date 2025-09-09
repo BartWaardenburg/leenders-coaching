@@ -17,7 +17,7 @@ export const waitForElement = async (selector: string, timeout = 3000) => {
   const start = Date.now();
   while (Date.now() - start < timeout) {
     const element = document.querySelector(selector);
-    if (element && element.offsetParent !== null) {
+    if (element && (element as HTMLElement).offsetParent !== null) {
       return element;
     }
     await new Promise((resolve) => setTimeout(resolve, 100));
