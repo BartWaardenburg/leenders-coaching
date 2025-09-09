@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionCalendar } from './SectionCalendar';
 
 const meta = {
@@ -7,7 +7,6 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
   },
-  tags: ['autodocs'],
   argTypes: {
     background: {
       control: 'select',
@@ -17,6 +16,14 @@ const meta = {
     border: {
       control: 'boolean',
       description: 'Show top and bottom borders',
+    },
+    initialDate: {
+      control: 'date',
+      description: 'The initial date to display in the calendar',
+    },
+    renderDay: {
+      control: false,
+      description: 'Custom render function for day content',
     },
   },
 } satisfies Meta<typeof SectionCalendar>;
@@ -30,12 +37,30 @@ export const Default: Story = {
     description: 'Select a date to schedule your appointment.',
     initialDate: new Date('2024-03-15'), // Fixed date for consistent Storybook/Chromatic testing
   },
+  render: (args) => {
+    // Convert timestamp to Date object if needed (for Storybook date control)
+    const initialDate =
+      typeof args.initialDate === 'number'
+        ? new Date(args.initialDate)
+        : args.initialDate;
+
+    return <SectionCalendar {...args} initialDate={initialDate} />;
+  },
 };
 
 export const WithBackground: Story = {
   args: {
     ...Default.args,
     background: 'blue',
+  },
+  render: (args) => {
+    // Convert timestamp to Date object if needed (for Storybook date control)
+    const initialDate =
+      typeof args.initialDate === 'number'
+        ? new Date(args.initialDate)
+        : args.initialDate;
+
+    return <SectionCalendar {...args} initialDate={initialDate} />;
   },
 };
 
@@ -44,6 +69,15 @@ export const WithBackgroundAndBorder: Story = {
     ...Default.args,
     background: 'blue',
     border: true,
+  },
+  render: (args) => {
+    // Convert timestamp to Date object if needed (for Storybook date control)
+    const initialDate =
+      typeof args.initialDate === 'number'
+        ? new Date(args.initialDate)
+        : args.initialDate;
+
+    return <SectionCalendar {...args} initialDate={initialDate} />;
   },
 };
 
@@ -62,5 +96,14 @@ export const WithCustomDayContent: Story = {
         </div>
       );
     },
+  },
+  render: (args) => {
+    // Convert timestamp to Date object if needed (for Storybook date control)
+    const initialDate =
+      typeof args.initialDate === 'number'
+        ? new Date(args.initialDate)
+        : args.initialDate;
+
+    return <SectionCalendar {...args} initialDate={initialDate} />;
   },
 };

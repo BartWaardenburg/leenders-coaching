@@ -1,19 +1,19 @@
 {
   "files": [
     {
-      "path": "storybook-static/*.iframe.bundle.js",
+      "path": "storybook-static/assets/*.js",
       "maxSize": "1.5 MB",
-      "name": "Storybook iframe bundles"
+      "name": "Storybook Vite assets"
     },
     {
-      "path": "storybook-static/main.*.iframe.bundle.js",
+      "path": "storybook-static/assets/index-*.js",
       "maxSize": "250 kB",
       "name": "Storybook main bundle"
     },
     {
-      "path": "storybook-static/runtime~main.*.iframe.bundle.js",
-      "maxSize": "50 kB",
-      "name": "Storybook runtime bundle"
+      "path": "storybook-static/assets/vendor-*.js",
+      "maxSize": "500 kB",
+      "name": "Storybook vendor bundle"
     }
   ]
 }

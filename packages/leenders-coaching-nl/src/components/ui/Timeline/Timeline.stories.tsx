@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Timeline } from './Timeline';
 import { Button } from '@/components/ui/Button';
 import type { ComponentProps } from 'react';
@@ -12,7 +12,6 @@ const meta = {
   parameters: {
     layout: 'padded',
   },
-  tags: ['autodocs'],
   argTypes: {
     color: {
       control: 'select',
@@ -72,6 +71,14 @@ export const WithColor: Story = {
 };
 
 export const WithCustomContent: Story = {
+  parameters: {
+    nextjs: {
+      appDirectory: true,
+      navigation: {
+        pathname: '/coaching',
+      },
+    },
+  },
   args: {
     steps: [
       ...defaultSteps.slice(0, 3),

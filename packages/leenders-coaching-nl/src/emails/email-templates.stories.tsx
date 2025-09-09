@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useEffect, useRef, useState } from 'react';
 import { render } from '@react-email/render';
 import { Box } from '@/components/ui/Box';
@@ -13,7 +13,7 @@ import { ContactConfirmation } from './ContactConfirmation';
  */
 const meta: Meta = {
   title: 'Emails/Templates',
-  tags: ['autodocs'],
+  component: () => null, // This is a template showcase without a specific component
   parameters: {
     layout: 'padded',
   },

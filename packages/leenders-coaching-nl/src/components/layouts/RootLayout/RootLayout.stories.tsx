@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionBlog } from '@/components/sections/SectionBlog';
 import { SectionCalendar } from '@/components/sections/SectionCalendar';
 import { SectionCards } from '@/components/sections/SectionCards';
@@ -14,6 +14,7 @@ import { Card } from '@/components/ui/Card';
 
 const meta = {
   title: 'Layouts/RootLayout',
+  component: () => null, // This is a layout story without a specific component
   parameters: {
     layout: 'fullscreen',
   },

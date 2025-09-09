@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionTimeline } from './SectionTimeline';
 import { Button } from '@/components/ui/Button';
 
@@ -8,7 +8,6 @@ const meta = {
   parameters: {
     layout: 'padded',
   },
-  tags: ['autodocs'],
 } satisfies Meta<typeof SectionTimeline>;
 
 export default meta;
@@ -65,6 +64,14 @@ export const WithBackground: Story = {
 };
 
 export const WithCustomContent: Story = {
+  parameters: {
+    nextjs: {
+      appDirectory: true,
+      navigation: {
+        pathname: '/coaching',
+      },
+    },
+  },
   args: {
     title: 'Start Your Journey Today',
     description:

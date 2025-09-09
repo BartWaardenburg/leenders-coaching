@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionCards } from './SectionCards';
 import { Card } from '@/components/ui/Card';
 import { ComponentProps } from 'react';

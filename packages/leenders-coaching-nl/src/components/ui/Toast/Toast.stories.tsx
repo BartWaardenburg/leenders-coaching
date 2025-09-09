@@ -1,11 +1,13 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useEffect, useState } from 'react';
+import { expect } from 'storybook/test';
 import { ToastProvider, useToast } from './ToastManager';
 import type { ModalVariant } from '../Modal/Modal';
 import { Stack } from '@/components/ui/Stack';
 import { Box } from '@/components/ui/Box';
 import { Heading } from '@/components/ui/Heading';
 import { Button } from '@/components/ui/Button';
+import { waitForAnimations } from '../../../test/simple-chromatic-utils';
 
 const ToastDemo = () => {
   const toast = useToast();
@@ -39,6 +41,7 @@ const ToastDemo = () => {
 
 const meta = {
   title: 'UI/Toast',
+  component: ToastDemo, // Add component property
   parameters: {
     layout: 'fullscreen',
   },
@@ -56,6 +59,11 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => <ToastDemo />,
+  play: async ({ canvas }) => {
+    // Wait for the toast to appear and animations to complete
+    await expect(canvas.getByText('Default toast message')).toBeVisible();
+    await waitForAnimations();
+  },
 };
 
 export const Interactive: Story = {

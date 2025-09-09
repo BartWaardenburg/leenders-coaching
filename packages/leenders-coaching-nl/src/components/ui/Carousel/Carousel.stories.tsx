@@ -1,9 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
 import { Carousel } from './Carousel';
 import { Quote } from '@/components/ui/Quote';
 import { Person } from '@/components/ui/Person';
 import { Box } from '@/components/ui/Box';
 import Image from 'next/image';
+import { waitForAnimations } from '../../../test/simple-chromatic-utils';
 
 const meta = {
   title: 'UI/Carousel',
@@ -11,7 +13,6 @@ const meta = {
   parameters: {
     layout: 'padded',
   },
-  tags: ['autodocs'],
 } satisfies Meta<typeof Carousel>;
 
 export default meta;
@@ -69,6 +70,13 @@ export const Default: Story = {
       <TestimonialSlide key={testimonial.name} {...testimonial} />
     )),
   },
+  play: async ({ canvas }) => {
+    // Wait for the carousel to be visible and animations to complete
+    await expect(
+      canvas.getByText('The coaching sessions have been transformative.')
+    ).toBeVisible();
+    await waitForAnimations();
+  },
 };
 
 const images = [
@@ -101,5 +109,12 @@ const ImageSlide = ({ src, alt }: (typeof images)[number]) => (
 export const WithImages: Story = {
   args: {
     slides: images.map((image) => <ImageSlide key={image.src} {...image} />),
+  },
+  play: async ({ canvas }) => {
+    // Wait for the carousel with images to be visible and animations to complete
+    await expect(
+      canvas.getByAltText('Team collaborating in a modern office')
+    ).toBeVisible();
+    await waitForAnimations();
   },
 };

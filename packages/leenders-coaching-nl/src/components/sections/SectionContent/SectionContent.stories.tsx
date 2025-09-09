@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionContent } from './SectionContent';
 import type { PortableTextBlock } from '@portabletext/react';
 
@@ -8,7 +8,6 @@ const meta = {
   parameters: {
     layout: 'padded',
   },
-  tags: ['autodocs'],
   argTypes: {
     title: {
       control: 'text',

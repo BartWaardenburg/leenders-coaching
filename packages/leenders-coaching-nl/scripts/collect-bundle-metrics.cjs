@@ -57,21 +57,23 @@ if (!clientStats.assets || clientStats.assets.length === 0) {
   const staticDir = path.join(NEXT_DIR, 'static');
   if (fs.existsSync(staticDir)) {
     try {
-      // Use recursive readdir since we're on Node.js 22
-      const staticContents = fs.readdirSync(staticDir, { recursive: true });
-      const jsFiles = staticContents.filter(f => typeof f === 'string' && f.endsWith('.js'));
-      
-      // Create basic asset entries for JS files
-      for (const jsFile of jsFiles.slice(0, 20)) { // Limit to first 20
-        const fullPath = path.join(staticDir, jsFile);
-        if (fs.existsSync(fullPath)) {
-          const stats = fs.statSync(fullPath);
-          clientStats.assets.push({
-            name: jsFile,
-            size: stats.size
-          });
+      const walk = (d) => {
+        const entries = fs.readdirSync(d, { withFileTypes: true });
+        for (const ent of entries) {
+          const fullPath = path.join(d, ent.name);
+          if (ent.isDirectory()) {
+            walk(fullPath);
+          } else if (ent.isFile() && ent.name.endsWith('.js')) {
+            const relativePath = path.relative(staticDir, fullPath);
+            const stats = fs.statSync(fullPath);
+            clientStats.assets.push({
+              name: relativePath,
+              size: stats.size
+            });
+          }
         }
-      }
+      };
+      walk(staticDir);
     } catch (e) {
       console.log(`Error reading static directory: ${e.message}`);
     }

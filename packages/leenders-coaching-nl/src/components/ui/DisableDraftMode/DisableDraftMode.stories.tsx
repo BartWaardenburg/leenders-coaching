@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { DisableDraftMode } from './DisableDraftMode';
 
 const meta: Meta<typeof DisableDraftMode> = {
@@ -6,6 +6,12 @@ const meta: Meta<typeof DisableDraftMode> = {
   component: DisableDraftMode,
   parameters: {
     layout: 'fullscreen',
+    nextjs: {
+      appDirectory: true,
+      navigation: {
+        pathname: '/blog/sample-post',
+      },
+    },
     docs: {
       description: {
         component:

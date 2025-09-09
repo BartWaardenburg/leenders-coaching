@@ -85,6 +85,16 @@ const components: PortableTextComponents = {
         <Text>{children}</Text>
       </Box>
     ),
+    bullet: ({ children }) => (
+      <Box className="mb-4">
+        <Text>{children}</Text>
+      </Box>
+    ),
+    number: ({ children }) => (
+      <Box className="mb-4">
+        <Text>{children}</Text>
+      </Box>
+    ),
   },
   marks: {
     strong: ({ children }) => <strong className="font-bold">{children}</strong>,

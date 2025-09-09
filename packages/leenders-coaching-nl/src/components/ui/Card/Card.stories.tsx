@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Card } from './Card';
 
 import { Section } from '@/components/ui/Section';
@@ -21,7 +21,6 @@ const meta = {
       </Section>
     ),
   ],
-  tags: ['autodocs'],
   argTypes: {
     border: {
       control: 'boolean',

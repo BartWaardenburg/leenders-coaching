@@ -1,15 +1,18 @@
-import type { StorybookConfig } from '@storybook/nextjs';
+import type { StorybookConfig } from '@storybook/nextjs-vite';
 import path from 'path';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.tsx'],
   addons: [
+    '@storybook/addon-docs',
     '@storybook/addon-links',
+    '@storybook/addon-controls',
     '@storybook/addon-themes',
     '@storybook/addon-a11y',
   ],
   framework: {
-    name: '@storybook/nextjs',
+    name: '@storybook/nextjs-vite',
     options: {
       nextConfigPath: path.resolve(__dirname, '../next.config.ts'),
     },
@@ -18,45 +21,30 @@ const config: StorybookConfig = {
   docs: {
     defaultName: 'Documentation',
   },
-  webpackFinal: async (config) => {
-    // Provide fallback environment variables for Storybook
-    config.resolve = config.resolve || {};
-    config.resolve.fallback = {
-      ...config.resolve.fallback,
-      fs: false,
-      path: false,
-    };
-
+  viteFinal: async (config) => {
     // Add path aliases to match tsconfig.json
+    config.resolve = config.resolve || {};
     config.resolve.alias = {
       ...config.resolve.alias,
       '@': path.resolve(__dirname, '../src'),
     };
 
-    // Mock Next.js navigation for Storybook
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      'next/navigation': path.resolve(
-        __dirname,
-        '../src/test/mocks/next-navigation.ts'
-      ),
-    };
-
-    // Define environment variables for Storybook
-    config.plugins = config.plugins || [];
-    config.plugins.push(
-      new (require('webpack').DefinePlugin)({
-        'process.env.NEXT_PUBLIC_SANITY_PROJECT_ID': JSON.stringify(
-          'storybook-mock-project'
-        ),
-        'process.env.NEXT_PUBLIC_SANITY_DATASET': JSON.stringify(
-          'storybook-mock-dataset'
-        ),
-        'process.env.NEXT_PUBLIC_SANITY_API_VERSION':
-          JSON.stringify('2024-02-14'),
-        'process.env.SANITY_API_TOKEN': JSON.stringify('storybook-mock-token'),
-      })
-    );
+    // Add bundle analysis plugin when building
+    if (process.env.ANALYZE_STORYBOOK === 'true') {
+      config.plugins = config.plugins || [];
+      config.plugins.push(
+        visualizer({
+          filename: path.resolve(
+            __dirname,
+            '../storybook-static/storybook-bundle-analysis.html'
+          ),
+          open: false,
+          gzipSize: true,
+          brotliSize: true,
+          template: 'treemap', // or 'sunburst', 'network'
+        })
+      );
+    }
 
     return config;
   },

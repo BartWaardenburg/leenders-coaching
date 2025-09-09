@@ -1,5 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
 import { Alert } from './Alert';
+import { waitForAnimations } from '../../../test/simple-chromatic-utils';
 
 const meta = {
   title: 'UI/Alert',
@@ -7,7 +9,6 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
   argTypes: {
     variant: {
       control: 'select',
@@ -43,6 +44,14 @@ export const Default: Story = {
     size: 'medium',
     children: 'This is a default alert message.',
   },
+  play: async ({ canvas }) => {
+    // Wait for the alert to be visible and animations to complete
+    await expect(canvas.getByRole('alert')).toBeInTheDocument();
+    await expect(
+      canvas.getByText('This is a default alert message.')
+    ).toBeVisible();
+    await waitForAnimations();
+  },
 };
 
 export const WithCloseButton: Story = {
@@ -51,6 +60,15 @@ export const WithCloseButton: Story = {
     size: 'medium',
     showCloseButton: true,
     children: 'This is an alert with a close button.',
+  },
+  play: async ({ canvas }) => {
+    // Wait for the alert and close button to be visible
+    await expect(canvas.getByRole('alert')).toBeInTheDocument();
+    await expect(
+      canvas.getByText('This is an alert with a close button.')
+    ).toBeVisible();
+    await expect(canvas.getByLabelText('Close alert')).toBeVisible();
+    await waitForAnimations();
   },
 };
 
@@ -127,6 +145,13 @@ export const AllSizes: Story = {
       </Alert>
     </div>
   ),
+  play: async ({ canvas }) => {
+    // Wait for all three alerts to be visible
+    await expect(canvas.getByText('Small Alert Message')).toBeVisible();
+    await expect(canvas.getByText('Medium Alert Message')).toBeVisible();
+    await expect(canvas.getByText('Large Alert Message')).toBeVisible();
+    await waitForAnimations();
+  },
 };
 
 export const AllVariants: Story = {
@@ -160,6 +185,16 @@ export const AllVariants: Story = {
       </Alert>
     </div>
   ),
+  play: async ({ canvas }) => {
+    // Wait for all variant alerts to be visible
+    await expect(canvas.getByText('Blue Alert Message')).toBeVisible();
+    await expect(canvas.getByText('Purple Alert Message')).toBeVisible();
+    await expect(canvas.getByText('Green Alert Message')).toBeVisible();
+    await expect(canvas.getByText('Pink Alert Message')).toBeVisible();
+    await expect(canvas.getByText('Yellow Alert Message')).toBeVisible();
+    await expect(canvas.getByText('Teal Alert Message')).toBeVisible();
+    await waitForAnimations();
+  },
 };
 
 export const LongContent: Story = {

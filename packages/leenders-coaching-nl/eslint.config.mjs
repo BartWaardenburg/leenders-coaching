@@ -29,9 +29,13 @@ const eslintConfig = [
       "**/*.bundle.js",
       "**/*.min.js",
       "**/*.cjs",
-      "**/scripts/**/*.cjs"
+      "**/scripts/**/*.cjs",
+      "!.storybook" // Ensure .storybook directory is linted
     ]
   },
+
+  // Storybook recommended configuration
+  ...storybookPlugin.configs['flat/recommended'],
 
   // Global plugins and settings
   {
@@ -116,6 +120,27 @@ const eslintConfig = [
     files: [".storybook/**/*"],
     rules: {
       "@typescript-eslint/no-var-requires": "off",
+    },
+  },
+
+  // Story files - apply Storybook-specific rules
+  {
+    files: ['**/*.stories.@(ts|tsx|js|jsx|mjs|cjs)'],
+    rules: {
+      // Enable specific Storybook rules to catch anti-patterns
+      'storybook/csf-component': 'error',
+      'storybook/default-exports': 'error',
+      'storybook/hierarchy-separator': 'error',
+      'storybook/no-redundant-story-name': 'error',
+      'storybook/no-stories-of': 'error',
+      'storybook/prefer-pascal-case': 'error',
+      'storybook/story-exports': 'error',
+      'storybook/use-storybook-expect': 'error',
+      'storybook/use-storybook-testing-library': 'error',
+      'storybook/await-interactions': 'error',
+      'storybook/context-in-play-function': 'error',
+      'storybook/no-renderer-packages': 'error',
+      'storybook/no-uninstalled-addons': 'error',
     },
   },
 

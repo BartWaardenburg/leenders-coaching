@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Calendar } from './Calendar';
 import { Box } from '../Box';
 import { Text } from '../Text';
@@ -9,6 +9,24 @@ const meta = {
   parameters: {
     layout: 'padded',
   },
+  argTypes: {
+    initialDate: {
+      control: 'date',
+      description: 'The initial date to display in the calendar',
+    },
+    onSelectDate: {
+      action: 'dateSelected',
+      description: 'Callback function when a date is selected',
+    },
+    renderDay: {
+      control: false,
+      description: 'Custom render function for day content',
+    },
+    disabledDates: {
+      control: false,
+      description: 'Configuration for disabled dates',
+    },
+  },
 } satisfies Meta<typeof Calendar>;
 
 export default meta;
@@ -16,10 +34,19 @@ type Story = StoryObj<typeof Calendar>;
 
 export const Default: Story = {
   args: {
-    initialDate: new Date('2024-03-15'), // Fixed date for consistent Storybook/Chromatic testing
+    initialDate: new Date('2024-03-15'),
     onSelectDate: (date) => {
       console.log('Selected date:', date.toLocaleDateString());
     },
+  },
+  render: (args) => {
+    // Convert timestamp to Date object if needed (for Storybook date control)
+    const initialDate =
+      typeof args.initialDate === 'number'
+        ? new Date(args.initialDate)
+        : args.initialDate;
+
+    return <Calendar {...args} initialDate={initialDate} />;
   },
 };
 
@@ -35,6 +62,15 @@ export const WithCustomDayContent: Story = {
           <Text variant="small">Event at 2 PM</Text>
         </Box>
       ),
+  },
+  render: (args) => {
+    // Convert timestamp to Date object if needed (for Storybook date control)
+    const initialDate =
+      typeof args.initialDate === 'number'
+        ? new Date(args.initialDate)
+        : args.initialDate;
+
+    return <Calendar {...args} initialDate={initialDate} />;
   },
 };
 
@@ -61,5 +97,14 @@ export const WithDisabledDates: Story = {
         },
       ],
     },
+  },
+  render: (args) => {
+    // Convert timestamp to Date object if needed (for Storybook date control)
+    const initialDate =
+      typeof args.initialDate === 'number'
+        ? new Date(args.initialDate)
+        : args.initialDate;
+
+    return <Calendar {...args} initialDate={initialDate} />;
   },
 };

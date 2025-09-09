@@ -1,10 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Avatar } from './Avatar';
 
 const meta = {
   title: 'UI/Avatar',
   component: Avatar,
-  tags: ['autodocs'],
   argTypes: {
     size: {
       control: 'select',

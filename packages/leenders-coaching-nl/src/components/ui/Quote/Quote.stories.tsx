@@ -1,10 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Quote } from './Quote';
 
 const meta = {
   title: 'UI/Quote',
   component: Quote,
-  tags: ['autodocs'],
 } satisfies Meta<typeof Quote>;
 
 export default meta;

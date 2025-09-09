@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
 import { Modal } from './Modal';
 import { Stack } from '@/components/ui/Stack';
 import { Box } from '@/components/ui/Box';
@@ -6,6 +7,7 @@ import { Text } from '@/components/ui/Text';
 import { Button } from '@/components/ui/Button';
 import { Section } from '@/components/ui/Section';
 import { Heading } from '@/components/ui/Heading';
+import { waitForAnimations } from '../../../test/simple-chromatic-utils';
 
 const meta = {
   title: 'UI/Modal',
@@ -13,7 +15,6 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
   argTypes: {
     isOpen: {
       control: 'boolean',
@@ -51,6 +52,14 @@ export const Default: Story = {
     isOpen: true,
     label: 'Example Modal',
     children: 'This is the content of the modal dialog.',
+  },
+  play: async ({ canvas }) => {
+    // Wait for the modal to be visible and animations to complete
+    await expect(canvas.getByRole('dialog')).toBeInTheDocument();
+    await expect(
+      canvas.getByText('This is the content of the modal dialog.')
+    ).toBeVisible();
+    await waitForAnimations();
   },
 };
 
