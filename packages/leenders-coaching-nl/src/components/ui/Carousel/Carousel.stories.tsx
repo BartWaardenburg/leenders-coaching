@@ -5,7 +5,7 @@ import { Quote } from '@/components/ui/Quote';
 import { Person } from '@/components/ui/Person';
 import { Box } from '@/components/ui/Box';
 import Image from 'next/image';
-import { waitForAnimations } from '../../../test/simple-chromatic-utils';
+import { settleFrames } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Carousel',
@@ -81,7 +81,7 @@ export const Default: Story = {
         );
       })[0]
     ).toBeVisible();
-    await waitForAnimations();
+    await settleFrames(3);
   },
 };
 
@@ -121,6 +121,6 @@ export const WithImages: Story = {
     await expect(
       canvas.getByAltText('Team collaborating in a modern office')
     ).toBeVisible();
-    await waitForAnimations();
+    await settleFrames(3);
   },
 };

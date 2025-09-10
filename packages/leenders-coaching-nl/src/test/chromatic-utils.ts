@@ -1,97 +1,155 @@
-import '@testing-library/jest-dom';
-import { waitFor } from '@testing-library/react';
-import { expect } from 'vitest';
+import { expect, waitFor, screen } from 'storybook/test';
 
 /**
- * Utility function to wait for all animations to complete
- * This ensures Chromatic takes snapshots after the UI is ready
+ * A thin "query API" that works with either Storybook's `canvas` or global `screen`.
+ * Pass `canvas` from play(): e.g. `const q = queries(canvas)`.
  */
-export const waitForAnimationsToComplete = async (timeout = 5000) => {
-  return waitFor(
-    () => {
-      // Check for any elements with animation-related data attributes
-      const animatedElements = document.querySelectorAll('[data-animation]');
+export const queries = (q?: typeof screen) => q ?? screen;
 
-      // Ensure all animations are marked as complete
-      animatedElements.forEach((element) => {
-        expect(element).toHaveAttribute('data-animation', 'complete');
+/**
+ * Wait until all images matching `selector` are fully loaded (no broken images).
+ * Chromatic already waits for resources, but this can help with custom loaders.
+ * @see https://www.chromatic.com/docs/resource-loading/
+ */
+export async function waitForImagesToLoad(
+  selector = 'img',
+  timeout = 5000,
+  q?: typeof screen
+) {
+  const query = queries(q);
+  await waitFor(
+    () => {
+      const imgs: HTMLImageElement[] = Array.from(
+        (query as typeof screen & { container?: HTMLElement }).container
+          ? (
+              query as typeof screen & { container: HTMLElement }
+            ).container.querySelectorAll(selector)
+          : document.querySelectorAll(selector)
+      ) as HTMLImageElement[];
+
+      if (imgs.length === 0) return; // no images is fine
+      const anyPending = imgs.some(
+        (img) => !img.complete || img.naturalWidth === 0
+      );
+      expect(anyPending).toBe(false);
+    },
+    { timeout }
+  );
+}
+
+/**
+ * Wait for animation completion using a data attribute you set when the animation finishes.
+ * Recommended approach for JS-driven animations (e.g., Framer Motion).
+ * @see https://www.chromatic.com/docs/animations/#use-a-play-function-to-wait-for-animations-to-complete
+ */
+export async function waitForAnimationsToComplete(
+  {
+    testId = 'animated-element',
+    attribute = 'data-animation',
+    doneValue = 'complete',
+    timeout = 5000,
+  }: {
+    testId?: string;
+    attribute?: string;
+    doneValue?: string;
+    timeout?: number;
+  },
+  q?: typeof screen | { queryAllByTestId?: typeof screen.queryAllByTestId }
+) {
+  await waitFor(
+    () => {
+      const nodes = q?.queryAllByTestId
+        ? q.queryAllByTestId(testId)
+        : screen.queryAllByTestId(testId);
+
+      expect(nodes.length).toBeGreaterThan(0);
+
+      nodes.forEach((el: HTMLElement) => {
+        expect(el).toHaveAttribute(attribute, doneValue);
       });
     },
     { timeout }
   );
-};
+}
 
 /**
- * Utility function to wait for specific elements to be visible
- * Use this when you need to ensure certain UI elements are rendered
+ * Wait for an element (by role) to be visible.
+ * Prefer semantic queries over CSS selectors.
  */
-export const waitForElementToBeVisible = async (
-  selector: string,
+export async function waitForRoleVisible(
+  q: typeof screen,
+  role: Parameters<typeof screen.findByRole>[0],
+  options?: Parameters<typeof screen.findByRole>[1],
   timeout = 3000
-) => {
-  return waitFor(
-    () => {
-      const element = document.querySelector(selector);
-      expect(element).toBeInTheDocument();
-      expect(element).toBeVisible();
-    },
-    { timeout }
-  );
-};
+) {
+  const el = await q.findByRole(role, options, { timeout });
+  await expect(el).toBeVisible();
+  return el;
+}
 
 /**
- * Utility function to wait for text content to be present
- * Useful for ensuring dynamic content has loaded
+ * Wait for specific text to appear (case-insensitive by default via RegExp).
  */
-export const waitForTextContent = async (text: string, timeout = 3000) => {
-  return waitFor(
-    () => {
-      const element = document.querySelector(`*:contains("${text}")`);
-      expect(element).toBeInTheDocument();
-    },
-    { timeout }
-  );
-};
-
-/**
- * Utility function to wait for multiple conditions to be met
- * Useful for complex components with multiple async operations
- */
-export const waitForMultipleConditions = async (
-  conditions: (() => void)[],
-  timeout = 5000
-) => {
-  return waitFor(
-    () => {
-      conditions.forEach((condition) => condition());
-    },
-    { timeout }
-  );
-};
-
-/**
- * Utility function to wait for CSS animations to complete
- * Checks for elements with specific animation classes or states
- */
-export const waitForCSSAnimations = async (
-  animationSelector = '[class*="animate-"], [class*="transition-"]',
+export async function waitForText(
+  q: typeof screen,
+  text: string | RegExp,
   timeout = 3000
-) => {
-  return waitFor(
-    () => {
-      const animatedElements = document.querySelectorAll(animationSelector);
+) {
+  const matcher = typeof text === 'string' ? new RegExp(text, 'i') : text;
+  const el = await q.findByText(matcher, undefined, { timeout });
+  await expect(el).toBeInTheDocument();
+  return el;
+}
 
-      // Check if any elements are still animating
-      const stillAnimating = Array.from(animatedElements).some((element) => {
-        const computedStyle = window.getComputedStyle(element);
-        return (
-          computedStyle.animationPlayState === 'running' ||
-          computedStyle.transitionProperty !== 'none'
-        );
-      });
+/**
+ * Convenience: run a user-defined interaction, then ensure the UI is "stable".
+ * - optional images loaded
+ * - optional animations complete
+ * Rely on Chromatic's pause/delay where possible; this is an extra safety net.
+ */
+export async function interactThenStabilize(
+  q: typeof screen,
+  interact: () => Promise<void> | void,
+  options?: {
+    waitImages?: boolean | { selector?: string; timeout?: number };
+    waitAnimations?:
+      | boolean
+      | {
+          testId?: string;
+          attribute?: string;
+          doneValue?: string;
+          timeout?: number;
+        };
+  }
+) {
+  await interact();
 
-      expect(stillAnimating).toBe(false);
-    },
-    { timeout }
-  );
+  if (options?.waitImages) {
+    const cfg = options.waitImages === true ? {} : options.waitImages;
+    await waitForImagesToLoad(cfg?.selector, cfg?.timeout, q);
+  }
+
+  if (options?.waitAnimations) {
+    const cfg = options.waitAnimations === true ? {} : options.waitAnimations;
+    await waitForAnimationsToComplete(cfg, q);
+  }
+}
+
+/**
+ * Very small utility to yield a couple of RAFs – sometimes useful after complex layout thrashes.
+ * Prefer assertions-based waits first; use this sparingly.
+ */
+export async function settleFrames(count = 2) {
+  for (let i = 0; i < count; i++) {
+    await new Promise(requestAnimationFrame);
+  }
+}
+
+/**
+ * Simple delay function for backward compatibility with existing stories.
+ * Prefer assertions-based waits first; use this sparingly.
+ * @deprecated Use settleFrames() or assertions-based waits instead
+ */
+export const waitForAnimations = async (ms = 300) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 };

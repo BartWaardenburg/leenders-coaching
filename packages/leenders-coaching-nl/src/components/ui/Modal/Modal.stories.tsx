@@ -7,7 +7,7 @@ import { Text } from '@/components/ui/Text';
 import { Button } from '@/components/ui/Button';
 import { Section } from '@/components/ui/Section';
 import { Heading } from '@/components/ui/Heading';
-import { waitForAnimations } from '../../../test/simple-chromatic-utils';
+import { waitForAnimationsToComplete } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Modal',
@@ -56,7 +56,7 @@ export const Default: Story = {
   play: async ({ canvas }) => {
     // Wait for the modal to be visible and animations to complete
     await expect(canvas.getByRole('dialog')).toBeInTheDocument();
-    await waitForAnimations();
+    await waitForAnimationsToComplete({ testId: 'modal-content' }, canvas);
     await expect(
       canvas.getByText('This is the content of the modal dialog.')
     ).toBeVisible();

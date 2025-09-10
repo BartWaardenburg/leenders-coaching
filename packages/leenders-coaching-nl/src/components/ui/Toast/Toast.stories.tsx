@@ -7,7 +7,7 @@ import { Stack } from '@/components/ui/Stack';
 import { Box } from '@/components/ui/Box';
 import { Heading } from '@/components/ui/Heading';
 import { Button } from '@/components/ui/Button';
-import { waitForAnimations } from '../../../test/simple-chromatic-utils';
+import { waitForAnimationsToComplete } from '../../../test/chromatic-utils';
 
 const ToastDemo = () => {
   const toast = useToast();
@@ -61,7 +61,7 @@ export const Default: Story = {
   render: () => <ToastDemo />,
   play: async ({ canvas }) => {
     // Wait for animations to complete first, then check visibility
-    await waitForAnimations();
+    await waitForAnimationsToComplete({ testId: 'toast-content' }, canvas);
     await expect(canvas.getByText('Default toast message')).toBeVisible();
   },
 };

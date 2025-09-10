@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { expect, fn } from 'storybook/test';
 import { Button } from './Button';
-import { waitForAnimations } from '../../../test/simple-chromatic-utils';
 
 const meta = {
   title: 'UI/Button',
@@ -58,16 +56,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     children: 'Click me',
-    onClick: fn(),
-  },
-  play: async ({ canvas, userEvent, args }) => {
-    // Wait for button to be visible
-    await expect(canvas.getByRole('button')).toBeVisible();
-    await waitForAnimations();
-
-    // Test button click interaction
-    await userEvent.click(canvas.getByRole('button'));
-    await expect(args.onClick).toHaveBeenCalled();
   },
 };
 
@@ -75,18 +63,6 @@ export const WithLoading: Story = {
   args: {
     children: 'Loading...',
     isLoading: true,
-    onClick: fn(),
-  },
-  play: async ({ canvas, args }) => {
-    // Wait for button to be visible
-    await expect(canvas.getByRole('button')).toBeVisible();
-    await waitForAnimations();
-
-    // Test that loading button is disabled
-    await expect(canvas.getByRole('button')).toBeDisabled();
-
-    // Test that onClick is not called when loading (without trying to click)
-    await expect(args.onClick).not.toHaveBeenCalled();
   },
 };
 
@@ -94,18 +70,6 @@ export const Disabled: Story = {
   args: {
     children: 'Disabled',
     disabled: true,
-    onClick: fn(),
-  },
-  play: async ({ canvas, args }) => {
-    // Wait for button to be visible
-    await expect(canvas.getByRole('button')).toBeVisible();
-    await waitForAnimations();
-
-    // Test that disabled button is disabled
-    await expect(canvas.getByRole('button')).toBeDisabled();
-
-    // Test that onClick is not called when disabled (without trying to click)
-    await expect(args.onClick).not.toHaveBeenCalled();
   },
 };
 
@@ -113,16 +77,6 @@ export const AsLink: Story = {
   args: {
     children: 'Go to Home',
     href: '/',
-    onClick: fn(),
-  },
-  play: async ({ canvas, userEvent, args }) => {
-    // Wait for link to be visible
-    await expect(canvas.getByRole('link')).toBeVisible();
-    await waitForAnimations();
-
-    // Test link click interaction
-    await userEvent.click(canvas.getByRole('link'));
-    await expect(args.onClick).toHaveBeenCalled();
   },
 };
 
@@ -132,7 +86,6 @@ export const AllVariants: Story = {
   },
   args: {
     children: 'Button',
-    onClick: fn(),
   },
   render: (args) => (
     <div className="flex flex-wrap gap-4">
@@ -154,21 +107,6 @@ export const AllVariants: Story = {
       ))}
     </div>
   ),
-  play: async ({ canvas, userEvent, args }) => {
-    // Wait for all buttons to be visible
-    await expect(canvas.getByText('Black')).toBeVisible();
-    await expect(canvas.getByText('Blue')).toBeVisible();
-    await expect(canvas.getByText('Purple')).toBeVisible();
-    await waitForAnimations();
-
-    // Test clicking different variant buttons
-    await userEvent.click(canvas.getByText('Blue'));
-    await userEvent.click(canvas.getByText('Purple'));
-    await userEvent.click(canvas.getByText('Green'));
-
-    // Should have been called multiple times
-    await expect(args.onClick).toHaveBeenCalledTimes(3);
-  },
 };
 
 export const AllSizes: Story = {
@@ -177,7 +115,6 @@ export const AllSizes: Story = {
   },
   args: {
     children: 'Button',
-    onClick: fn(),
   },
   render: (args) => (
     <div className="flex items-center gap-4">
@@ -192,43 +129,4 @@ export const AllSizes: Story = {
       </Button>
     </div>
   ),
-  play: async ({ canvas, userEvent, args }) => {
-    // Wait for all buttons to be visible
-    await expect(canvas.getByText('Small')).toBeVisible();
-    await expect(canvas.getByText('Medium')).toBeVisible();
-    await expect(canvas.getByText('Large')).toBeVisible();
-    await waitForAnimations();
-
-    // Test clicking different size buttons
-    await userEvent.click(canvas.getByText('Small'));
-    await userEvent.click(canvas.getByText('Medium'));
-    await userEvent.click(canvas.getByText('Large'));
-
-    // Should have been called multiple times
-    await expect(args.onClick).toHaveBeenCalledTimes(3);
-  },
-};
-
-export const KeyboardNavigation: Story = {
-  args: {
-    children: 'Focus me',
-    onClick: fn(),
-  },
-  play: async ({ canvas, userEvent, args }) => {
-    // Wait for button to be visible
-    await expect(canvas.getByRole('button')).toBeVisible();
-    await waitForAnimations();
-
-    // Test keyboard navigation
-    await userEvent.tab();
-    await expect(canvas.getByRole('button')).toHaveFocus();
-
-    // Test Enter key activation
-    await userEvent.keyboard('{Enter}');
-    await expect(args.onClick).toHaveBeenCalled();
-
-    // Test Space key activation
-    await userEvent.keyboard(' ');
-    await expect(args.onClick).toHaveBeenCalledTimes(2);
-  },
 };

@@ -141,14 +141,6 @@ export const excludePatterns = {
     '**/dist/**',
     '**/coverage/**',
     '**/src/emails/email-templates.stories.tsx',
-    // Temporarily exclude these story files from tests
-    '**/src/components/ui/Button/Button.stories.tsx',
-    // '**/src/components/ui/Input/Input.stories.tsx',
-    // '**/src/components/ui/Form/Form.stories.tsx',
-    // '**/src/components/ui/Alert/Alert.stories.tsx',
-    // '**/src/components/ui/Toast/Toast.stories.tsx',
-    // '**/src/components/ui/Modal/Modal.stories.tsx',
-    // '**/src/components/ui/Carousel/Carousel.stories.tsx',
   ],
 };
 

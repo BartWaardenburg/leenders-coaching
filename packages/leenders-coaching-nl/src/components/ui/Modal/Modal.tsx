@@ -102,7 +102,7 @@ export const Modal = ({
           items="center"
           justify="center"
           className={twMerge(
-            'fixed inset-0 z-50 p-4 bg-background/80 backdrop-blur-sm',
+            'fixed inset-0 z-50 p-4 bg-background/80 backdrop-blur-sm'
           )}
           role="dialog"
           aria-modal="true"
@@ -119,7 +119,7 @@ export const Modal = ({
             className={twMerge(
               'relative max-w-lg w-full border p-6 shadow-lg',
               modalStyles[variant],
-              className,
+              className
             )}
             onClick={(e: React.MouseEvent<HTMLDivElement>) =>
               e.stopPropagation()
@@ -135,6 +135,16 @@ export const Modal = ({
                 stiffness: 300,
               },
             }}
+            onAnimationComplete={() => {
+              // Set animation complete marker for testing
+              const element = document.querySelector(
+                '[data-testid="modal-content"]'
+              );
+              if (element) {
+                element.setAttribute('data-animation', 'complete');
+              }
+            }}
+            data-testid="modal-content"
             exit={{
               opacity: 0,
               y: 50,
@@ -153,7 +163,7 @@ export const Modal = ({
                   'absolute right-2 top-2 p-2 z-10',
                   'text-inherit opacity-80 hover:opacity-100',
                   'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-                  'focus-visible:ring-current focus-visible:ring-offset-inherit',
+                  'focus-visible:ring-current focus-visible:ring-offset-inherit'
                 )}
                 aria-label={accessibility.closeButtons.modal}
                 initial={{ opacity: 0, scale: 0 }}

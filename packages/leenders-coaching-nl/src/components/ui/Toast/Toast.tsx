@@ -117,7 +117,7 @@ export const Toast = ({
           className={twMerge(
             'relative border p-4 max-w-md w-full shadow-lg overflow-hidden',
             modalStyles[variant],
-            className,
+            className
           )}
           role="alert"
           initial={{ opacity: 0, y: 50, scale: 0.95 }}
@@ -131,6 +131,16 @@ export const Toast = ({
               stiffness: 300,
             },
           }}
+          onAnimationComplete={() => {
+            // Set animation complete marker for testing
+            const element = document.querySelector(
+              '[data-testid="toast-content"]'
+            );
+            if (element) {
+              element.setAttribute('data-animation', 'complete');
+            }
+          }}
+          data-testid="toast-content"
           exit={{
             opacity: 0,
             y: 20,
@@ -166,7 +176,7 @@ export const Toast = ({
                   'ml-2 p-2',
                   'text-inherit opacity-80 hover:opacity-100',
                   'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-                  'focus-visible:ring-current focus-visible:ring-offset-inherit',
+                  'focus-visible:ring-current focus-visible:ring-offset-inherit'
                 )}
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{

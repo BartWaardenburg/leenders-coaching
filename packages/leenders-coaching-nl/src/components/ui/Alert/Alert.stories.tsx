@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Alert } from './Alert';
-import { waitForAnimations } from '../../../test/simple-chromatic-utils';
+import { settleFrames } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Alert',
@@ -50,7 +50,7 @@ export const Default: Story = {
     await expect(
       canvas.getByText('This is a default alert message.')
     ).toBeVisible();
-    await waitForAnimations();
+    await settleFrames(3);
   },
 };
 
@@ -68,7 +68,7 @@ export const WithCloseButton: Story = {
       canvas.getByText('This is an alert with a close button.')
     ).toBeVisible();
     await expect(canvas.getByLabelText('Close alert')).toBeVisible();
-    await waitForAnimations();
+    await settleFrames(3);
   },
 };
 
@@ -150,7 +150,7 @@ export const AllSizes: Story = {
     await expect(canvas.getByText('Small Alert Message')).toBeVisible();
     await expect(canvas.getByText('Medium Alert Message')).toBeVisible();
     await expect(canvas.getByText('Large Alert Message')).toBeVisible();
-    await waitForAnimations();
+    await settleFrames(3);
   },
 };
 
@@ -193,7 +193,7 @@ export const AllVariants: Story = {
     await expect(canvas.getByText('Pink Alert Message')).toBeVisible();
     await expect(canvas.getByText('Yellow Alert Message')).toBeVisible();
     await expect(canvas.getByText('Teal Alert Message')).toBeVisible();
-    await waitForAnimations();
+    await settleFrames(3);
   },
 };
 

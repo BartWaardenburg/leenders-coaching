@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import * as React from 'react';
 import { expect, fn } from 'storybook/test';
 import { Input } from './Input';
-import { waitForAnimations } from '../../../test/simple-chromatic-utils';
+import { settleFrames } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Input',
@@ -47,7 +47,7 @@ export const Default: Story = {
     // Wait for input to be visible
     const input = canvas.getByPlaceholderText('Enter your text here');
     await expect(input).toBeVisible();
-    await waitForAnimations();
+    await settleFrames(3);
 
     // Test typing interaction
     await userEvent.type(input, 'Hello World');
@@ -74,7 +74,7 @@ export const WithLabel: Story = {
     // Wait for input to be visible
     const input = canvas.getByLabelText('Email Address');
     await expect(input).toBeVisible();
-    await waitForAnimations();
+    await settleFrames(3);
 
     // Test typing email
     await userEvent.type(input, 'test@example.com');
@@ -123,7 +123,7 @@ export const Disabled: Story = {
     const input = canvas.getByLabelText('Username');
     await expect(input).toBeVisible();
     await expect(input).toBeDisabled();
-    await waitForAnimations();
+    await settleFrames(3);
 
     // Test that typing doesn't work when disabled
     await userEvent.type(input, 'test');
@@ -152,7 +152,7 @@ export const Textarea: Story = {
     // Wait for textarea to be visible
     const textarea = canvas.getByLabelText('Message');
     await expect(textarea).toBeVisible();
-    await waitForAnimations();
+    await settleFrames(3);
 
     // Test typing in textarea
     await userEvent.type(
