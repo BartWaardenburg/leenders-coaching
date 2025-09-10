@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
 import { Box } from './Box';
 
 const meta = {
@@ -15,5 +16,9 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     children: 'Box Example',
+  },
+  play: async ({ canvas }) => {
+    // Wait for box content to be visible
+    await expect(canvas.getByText('Box Example')).toBeVisible();
   },
 };

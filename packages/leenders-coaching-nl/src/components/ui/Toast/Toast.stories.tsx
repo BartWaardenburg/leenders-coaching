@@ -7,7 +7,7 @@ import { Stack } from '@/components/ui/Stack';
 import { Box } from '@/components/ui/Box';
 import { Heading } from '@/components/ui/Heading';
 import { Button } from '@/components/ui/Button';
-import { waitForAnimationsToComplete } from '../../../test/chromatic-utils';
+import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const ToastDemo = () => {
   const toast = useToast();
@@ -60,9 +60,9 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => <ToastDemo />,
   play: async ({ canvas }) => {
-    // Wait for animations to complete first, then check visibility
-    await waitForAnimationsToComplete({ testId: 'toast-content' }, canvas);
-    await expect(canvas.getByText('Default toast message')).toBeVisible();
+    // Wait for toast to be present in the DOM (it may be animated)
+    expect(canvas.getByText('Default toast message')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -113,5 +113,31 @@ export const Interactive: Story = {
         </Stack>
       </Box>
     );
+  },
+  play: async ({ canvas, userEvent }) => {
+    // Wait for the demo interface to be visible
+    await expect(canvas.getByText('Toast Demo')).toBeVisible();
+
+    // Test clicking a toast button
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Show blue toast' })
+    );
+
+    // Wait for the toast to appear (it may be animated)
+    expect(
+      canvas.getByText('This is a blue toast message')
+    ).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
+
+    // Test clicking another toast button
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Show persistent toast' })
+    );
+
+    // Wait for the persistent toast to appear (it may be animated)
+    expect(
+      canvas.getByText("This toast won't auto-dismiss")
+    ).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
   },
 };

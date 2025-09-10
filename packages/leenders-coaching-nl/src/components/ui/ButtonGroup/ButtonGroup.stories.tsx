@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
 import { ButtonGroup } from './ButtonGroup';
+import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/ButtonGroup',
@@ -15,5 +17,10 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     children: 'ButtonGroup Example',
+  },
+  play: async ({ canvas }) => {
+    // Wait for button group content to be visible
+    await expect(canvas.getByText('ButtonGroup Example')).toBeVisible();
+    await waitForMotionAnimations({ canvas });
   },
 };

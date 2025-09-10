@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
 import { Timeline } from './Timeline';
 import { Button } from '@/components/ui/Button';
 import type { ComponentProps } from 'react';
+import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 type TimelineProps = ComponentProps<typeof Timeline>;
 type TimelineStep = TimelineProps['steps'][number];
@@ -61,12 +63,52 @@ export const Default: Story = {
   args: {
     steps: defaultSteps,
   },
+  play: async ({ canvas }) => {
+    // Wait for timeline steps to be present in the DOM (they may be animated)
+    const initialConsultation = canvas.getAllByText('Initial Consultation');
+    expect(initialConsultation.length).toBeGreaterThan(0);
+
+    const goalSetting = canvas.getAllByText('Goal Setting');
+    expect(goalSetting.length).toBeGreaterThan(0);
+
+    const regularSessions = canvas.getAllByText('Regular Sessions');
+    expect(regularSessions.length).toBeGreaterThan(0);
+
+    const progressReview = canvas.getAllByText('Progress Review');
+    expect(progressReview.length).toBeGreaterThan(0);
+
+    const finalEvaluation = canvas.getAllByText('Final Evaluation');
+    expect(finalEvaluation.length).toBeGreaterThan(0);
+
+    // Wait for animations to settle
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const WithColor: Story = {
   args: {
     steps: defaultSteps,
     color: 'purple',
+  },
+  play: async ({ canvas }) => {
+    // Wait for timeline with color to be present in the DOM (they may be animated)
+    const initialConsultation = canvas.getAllByText('Initial Consultation');
+    expect(initialConsultation.length).toBeGreaterThan(0);
+
+    const goalSetting = canvas.getAllByText('Goal Setting');
+    expect(goalSetting.length).toBeGreaterThan(0);
+
+    const regularSessions = canvas.getAllByText('Regular Sessions');
+    expect(regularSessions.length).toBeGreaterThan(0);
+
+    const progressReview = canvas.getAllByText('Progress Review');
+    expect(progressReview.length).toBeGreaterThan(0);
+
+    const finalEvaluation = canvas.getAllByText('Final Evaluation');
+    expect(finalEvaluation.length).toBeGreaterThan(0);
+
+    // Wait for animations to settle
+    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -96,6 +138,27 @@ export const WithCustomContent: Story = {
     ],
     color: 'blue',
   },
+  play: async ({ canvas }) => {
+    // Wait for timeline with custom content to be present in the DOM (they may be animated)
+    const initialConsultation = canvas.getAllByText('Initial Consultation');
+    expect(initialConsultation.length).toBeGreaterThan(0);
+
+    const goalSetting = canvas.getAllByText('Goal Setting');
+    expect(goalSetting.length).toBeGreaterThan(0);
+
+    const regularSessions = canvas.getAllByText('Regular Sessions');
+    expect(regularSessions.length).toBeGreaterThan(0);
+
+    // Check for custom content (use getAllByText to handle multiple instances)
+    const bookYourSession = canvas.getAllByText('Book Your Session');
+    expect(bookYourSession.length).toBeGreaterThan(0);
+    expect(
+      canvas.getByRole('link', { name: 'Schedule Now' })
+    ).toBeInTheDocument();
+
+    // Wait for animations to settle
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const WithIndividualColors: Story = {
@@ -110,5 +173,25 @@ export const WithIndividualColors: Story = {
       ];
       return { ...step, color: colors[index] };
     }),
+  },
+  play: async ({ canvas }) => {
+    // Wait for timeline with individual colors to be present in the DOM (they may be animated)
+    const initialConsultation = canvas.getAllByText('Initial Consultation');
+    expect(initialConsultation.length).toBeGreaterThan(0);
+
+    const goalSetting = canvas.getAllByText('Goal Setting');
+    expect(goalSetting.length).toBeGreaterThan(0);
+
+    const regularSessions = canvas.getAllByText('Regular Sessions');
+    expect(regularSessions.length).toBeGreaterThan(0);
+
+    const progressReview = canvas.getAllByText('Progress Review');
+    expect(progressReview.length).toBeGreaterThan(0);
+
+    const finalEvaluation = canvas.getAllByText('Final Evaluation');
+    expect(finalEvaluation.length).toBeGreaterThan(0);
+
+    // Wait for animations to settle
+    await waitForMotionAnimations({ canvas });
   },
 };

@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
 import { Card } from './Card';
+import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 import { Section } from '@/components/ui/Section';
 import { Text } from '@/components/ui/Text';
@@ -67,6 +69,14 @@ const defaultArgs = {
 
 export const Default: Story = {
   args: defaultArgs,
+  play: async ({ canvas }) => {
+    // Wait for card content to be visible
+    expect(canvas.getByText('Communicatievaardigheden')).toBeInTheDocument();
+    expect(
+      canvas.getByText('Voorbeeldinhoud voor blauwe variant')
+    ).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const WithImage: Story = {
@@ -74,12 +84,23 @@ export const WithImage: Story = {
     ...defaultArgs,
     image: exampleImage,
   },
+  play: async ({ canvas }) => {
+    // Wait for card with image to be visible
+    expect(canvas.getByText('Communicatievaardigheden')).toBeInTheDocument();
+    expect(canvas.getByRole('img')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const Featured: Story = {
   args: {
     ...defaultArgs,
     featured: true,
+  },
+  play: async ({ canvas }) => {
+    // Wait for featured card to be visible
+    expect(canvas.getByText('Communicatievaardigheden')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -154,6 +175,16 @@ export const AllVariants: Story = {
     slug: defaultArgs.slug,
     title: 'Kleur Variant',
     border: true,
+  },
+  play: async ({ canvas }) => {
+    // Wait for all card variants to be visible
+    expect(canvas.getByText('Blauwe Variant')).toBeInTheDocument();
+    expect(canvas.getByText('Paarse Variant')).toBeInTheDocument();
+    expect(canvas.getByText('Groene Variant')).toBeInTheDocument();
+    expect(canvas.getByText('Roze Variant')).toBeInTheDocument();
+    expect(canvas.getByText('Gele Variant')).toBeInTheDocument();
+    expect(canvas.getByText('Turquoise Variant')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
   },
 };
 

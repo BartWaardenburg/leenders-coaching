@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
 import { Heading } from './Heading';
+import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Heading',
@@ -59,6 +61,13 @@ export const LargeHeading: Story = {
     children: 'Large Heading',
     showBorder: true,
   },
+  play: async ({ canvas }) => {
+    // Wait for heading to be visible
+    await expect(
+      canvas.getByRole('heading', { name: 'Large Heading' })
+    ).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const MediumHeading: Story = {
@@ -66,6 +75,13 @@ export const MediumHeading: Story = {
     level: 'h2',
     variant: 'medium',
     children: 'Medium Heading',
+  },
+  play: async ({ canvas }) => {
+    // Wait for heading to be visible
+    await expect(
+      canvas.getByRole('heading', { name: 'Medium Heading' })
+    ).toBeVisible();
+    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -75,6 +91,13 @@ export const SmallHeading: Story = {
     variant: 'small',
     children: 'Small Heading',
   },
+  play: async ({ canvas }) => {
+    // Wait for heading to be visible
+    await expect(
+      canvas.getByRole('heading', { name: 'Small Heading' })
+    ).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const WithBorder: Story = {
@@ -82,6 +105,13 @@ export const WithBorder: Story = {
     level: 'h2',
     children: 'Heading With Border',
     showBorder: true,
+  },
+  play: async ({ canvas }) => {
+    // Wait for heading to be visible
+    await expect(
+      canvas.getByRole('heading', { name: 'Heading With Border' })
+    ).toBeVisible();
+    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -115,6 +145,28 @@ export const WithColoredBorder: Story = {
       </Heading>
     </div>
   ),
+  play: async ({ canvas }) => {
+    // Wait for all colored border headings to be visible
+    await expect(
+      canvas.getByRole('heading', { name: 'Blue Border' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('heading', { name: 'Purple Border' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('heading', { name: 'Green Border' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('heading', { name: 'Pink Border' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('heading', { name: 'Yellow Border' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('heading', { name: 'Teal Border' })
+    ).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const MutedHeading: Story = {
@@ -123,6 +175,13 @@ export const MutedHeading: Story = {
     children: 'Muted Heading',
     color: 'muted',
   },
+  play: async ({ canvas }) => {
+    // Wait for heading to be visible
+    await expect(
+      canvas.getByRole('heading', { name: 'Muted Heading' })
+    ).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const NoSpacing: Story = {
@@ -130,5 +189,12 @@ export const NoSpacing: Story = {
     level: 'h2',
     spacing: 'none',
     children: 'Heading Without Bottom Margin',
+  },
+  play: async ({ canvas }) => {
+    // Wait for heading to be visible
+    await expect(
+      canvas.getByRole('heading', { name: 'Heading Without Bottom Margin' })
+    ).toBeVisible();
+    await waitForMotionAnimations({ canvas });
   },
 };

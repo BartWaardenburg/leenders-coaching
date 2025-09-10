@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
 import { IconButton } from './IconButton';
+import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/IconButton',
@@ -59,6 +61,11 @@ export const Primary: Story = {
     label: 'Search',
     variant: 'primary',
   },
+  play: async ({ canvas }) => {
+    // Wait for icon button to be visible
+    await expect(canvas.getByRole('button', { name: 'Search' })).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const Ghost: Story = {
@@ -67,6 +74,11 @@ export const Ghost: Story = {
     label: 'Search',
     variant: 'ghost',
   },
+  play: async ({ canvas }) => {
+    // Wait for icon button to be visible
+    await expect(canvas.getByRole('button', { name: 'Search' })).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const Disabled: Story = {
@@ -74,5 +86,12 @@ export const Disabled: Story = {
     children: <SearchIcon />,
     label: 'Search',
     disabled: true,
+  },
+  play: async ({ canvas }) => {
+    // Wait for disabled icon button to be visible
+    const button = canvas.getByRole('button', { name: 'Search' });
+    await expect(button).toBeVisible();
+    await expect(button).toBeDisabled();
+    await waitForMotionAnimations({ canvas });
   },
 };

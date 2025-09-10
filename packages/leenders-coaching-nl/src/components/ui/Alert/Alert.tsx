@@ -81,6 +81,8 @@ export const Alert = ({
         className
       )}
       role="alert"
+      data-testid="alert-content"
+      data-animation={isVisible ? 'complete' : 'in-progress'}
       {...props}
     >
       <Flex items="start" gap={3}>

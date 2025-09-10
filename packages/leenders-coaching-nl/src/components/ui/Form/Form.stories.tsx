@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import * as React from 'react';
 import { expect, fn } from 'storybook/test';
 import { Form } from './Form';
-import { settleFrames } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Form',
@@ -94,7 +93,6 @@ export const Default: Story = {
       // Submit the form
       await userEvent.click(canvas.getByRole('button', { name: 'Submit' }));
       await expect(args.onSubmit).toHaveBeenCalled();
-      await settleFrames(3);
     });
   },
 };
@@ -186,7 +184,6 @@ export const FormValidation: Story = {
       // Submit the form
       await userEvent.click(canvas.getByRole('button', { name: 'Submit' }));
       await expect(args.onSubmit).toHaveBeenCalled();
-      await settleFrames(3);
     });
   },
 };
@@ -280,7 +277,6 @@ export const KeyboardNavigation: Story = {
       await userEvent.keyboard('{Enter}'); // Submit with Enter key
 
       await expect(args.onSubmit).toHaveBeenCalled();
-      await settleFrames(3);
     });
   },
 };

@@ -1,87 +1,295 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect, userEvent, within } from 'storybook/test';
 import { DisableDraftMode } from './DisableDraftMode';
+import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
-const meta: Meta<typeof DisableDraftMode> = {
+const meta = {
   title: 'UI/DisableDraftMode',
   component: DisableDraftMode,
   parameters: {
     layout: 'fullscreen',
-    nextjs: {
-      appDirectory: true,
-      navigation: {
-        pathname: '/blog/sample-post',
-        query: {},
-        asPath: '/blog/sample-post',
-      },
-    },
-    docs: {
-      description: {
-        component:
-          'Component to disable draft mode when viewing draft content outside of Presentation tool. Shows a floating toast-like button with edit icon in the bottom-right corner when not in an iframe. Features smooth animations, loading states, and Toast styling variants.',
-      },
-    },
   },
   argTypes: {
     variant: {
       control: 'select',
       options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
-      description: 'Visual style variant of the toast-like component',
+      description: 'The visual style variant of the modal',
     },
     className: {
       control: 'text',
-      description: 'Additional CSS classes to apply to the component',
+      description: 'Additional CSS classes',
     },
   },
-};
+} satisfies Meta<typeof DisableDraftMode>;
 
 export default meta;
-type Story = StoryObj<typeof DisableDraftMode>;
+type Story = StoryObj<typeof meta>;
 
-/**
- * Default state with blue variant
- * Shows a floating button with edit icon to disable draft mode
- * Note: This component only renders when not in an iframe and when mounted on the client
- */
 export const Default: Story = {
   args: {
     variant: 'blue',
   },
+  decorators: [
+    (Story) => {
+      // Mock non-iframe environment for Storybook
+      const originalParent = window.parent;
+      const originalOpener = window.opener;
+
+      // @ts-ignore - Mock non-iframe environment
+      window.parent = window;
+      // @ts-ignore - Mock non-iframe environment
+      window.opener = null;
+
+      return <Story />;
+    },
+  ],
+  play: async ({ canvas }) => {
+    // Wait for the component to be visible
+    await expect(
+      canvas.getByLabelText('Disable draft mode')
+    ).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
-/**
- * Purple variant
- * Shows a floating button with edit icon to disable draft mode
- */
-export const PurpleVariant: Story = {
+const mockNonIframeDecorator = (Story: any) => {
+  // Mock non-iframe environment for Storybook
+  const originalParent = window.parent;
+  const originalOpener = window.opener;
+
+  // @ts-ignore - Mock non-iframe environment
+  window.parent = window;
+  // @ts-ignore - Mock non-iframe environment
+  window.opener = null;
+
+  return <Story />;
+};
+
+export const Purple: Story = {
   args: {
     variant: 'purple',
   },
+  decorators: [mockNonIframeDecorator],
+  play: async ({ canvas }) => {
+    // Wait for the component to be visible
+    await expect(
+      canvas.getByLabelText('Disable draft mode')
+    ).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
-/**
- * Green variant
- */
-export const GreenVariant: Story = {
+export const Green: Story = {
   args: {
     variant: 'green',
   },
-};
-
-/**
- * Pink variant
- */
-export const PinkVariant: Story = {
-  args: {
-    variant: 'pink',
+  decorators: [mockNonIframeDecorator],
+  play: async ({ canvas }) => {
+    // Wait for the component to be visible
+    await expect(
+      canvas.getByLabelText('Disable draft mode')
+    ).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
   },
 };
 
-/**
- * With custom positioning
- */
-export const WithCustomPosition: Story = {
+export const Pink: Story = {
+  args: {
+    variant: 'pink',
+  },
+  decorators: [mockNonIframeDecorator],
+  play: async ({ canvas }) => {
+    // Wait for the component to be visible
+    await expect(
+      canvas.getByLabelText('Disable draft mode')
+    ).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const Yellow: Story = {
+  args: {
+    variant: 'yellow',
+  },
+  decorators: [mockNonIframeDecorator],
+  play: async ({ canvas }) => {
+    // Wait for the component to be visible
+    await expect(
+      canvas.getByLabelText('Disable draft mode')
+    ).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const Teal: Story = {
   args: {
     variant: 'teal',
+  },
+  decorators: [mockNonIframeDecorator],
+  play: async ({ canvas }) => {
+    // Wait for the component to be visible
+    await expect(
+      canvas.getByLabelText('Disable draft mode')
+    ).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const WithCustomClassName: Story = {
+  args: {
+    variant: 'blue',
     className: 'bottom-8 right-8',
+  },
+  decorators: [mockNonIframeDecorator],
+  play: async ({ canvas }) => {
+    // Wait for the component to be visible
+    await expect(
+      canvas.getByLabelText('Disable draft mode')
+    ).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const Interactive: Story = {
+  args: {
+    variant: 'blue',
+  },
+  decorators: [mockNonIframeDecorator],
+  play: async ({ canvas }) => {
+    // Wait for the component to be visible
+    const button = canvas.getByLabelText('Disable draft mode');
+    await expect(button).toBeInTheDocument();
+
+    // Click the button to test interaction
+    await userEvent.click(button);
+
+    // Wait for animations to complete
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const AllVariants: Story = {
+  parameters: {
+    controls: { hideNoControlsWarning: true },
+  },
+  render: () => (
+    <div className="relative w-full h-screen bg-gray-100 dark:bg-gray-900">
+      <div className="absolute top-4 left-4 space-y-4">
+        <DisableDraftMode
+          variant="blue"
+          className="relative bottom-auto right-auto"
+        />
+        <DisableDraftMode
+          variant="purple"
+          className="relative bottom-auto right-auto"
+        />
+        <DisableDraftMode
+          variant="green"
+          className="relative bottom-auto right-auto"
+        />
+        <DisableDraftMode
+          variant="pink"
+          className="relative bottom-auto right-auto"
+        />
+        <DisableDraftMode
+          variant="yellow"
+          className="relative bottom-auto right-auto"
+        />
+        <DisableDraftMode
+          variant="teal"
+          className="relative bottom-auto right-auto"
+        />
+      </div>
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    // Wait for all variants to be visible
+    const buttons = canvas.getAllByLabelText('Disable draft mode');
+    await expect(buttons).toHaveLength(6);
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const InIframe: Story = {
+  parameters: {
+    // Mock iframe environment
+    docs: {
+      description: {
+        story:
+          'This story simulates the component behavior when rendered in an iframe (like Sanity Studio). The component should not render in this case.',
+      },
+    },
+  },
+  args: {
+    variant: 'blue',
+  },
+  decorators: [
+    (Story) => {
+      // Mock iframe environment by setting window.parent to a different object
+      const originalParent = window.parent;
+      // @ts-ignore - Mock iframe environment
+      window.parent = {};
+
+      return <Story />;
+    },
+  ],
+  play: async ({ canvas }) => {
+    // In iframe mode, the component should not render
+    await expect(
+      canvas.queryByLabelText('Disable draft mode')
+    ).not.toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const LoadingState: Story = {
+  args: {
+    variant: 'blue',
+  },
+  decorators: [mockNonIframeDecorator],
+  play: async ({ canvas }) => {
+    // Wait for the component to be visible
+    await expect(
+      canvas.getByLabelText('Disable draft mode')
+    ).toBeInTheDocument();
+
+    // Wait for animations to complete
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const Responsive: Story = {
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+  args: {
+    variant: 'blue',
+  },
+  play: async ({ canvas }) => {
+    // Wait for the component to be visible on mobile
+    await expect(
+      canvas.getByLabelText('Disable draft mode')
+    ).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const DarkMode: Story = {
+  parameters: {
+    themes: {
+      defaultTheme: 'dark',
+    },
+  },
+  args: {
+    variant: 'blue',
+  },
+  play: async ({ canvas }) => {
+    // Wait for the component to be visible in dark mode
+    await expect(
+      canvas.getByLabelText('Disable draft mode')
+    ).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
   },
 };

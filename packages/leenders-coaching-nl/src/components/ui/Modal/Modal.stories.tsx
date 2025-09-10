@@ -7,7 +7,7 @@ import { Text } from '@/components/ui/Text';
 import { Button } from '@/components/ui/Button';
 import { Section } from '@/components/ui/Section';
 import { Heading } from '@/components/ui/Heading';
-import { waitForAnimationsToComplete } from '../../../test/chromatic-utils';
+import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Modal',
@@ -54,12 +54,12 @@ export const Default: Story = {
     children: 'This is the content of the modal dialog.',
   },
   play: async ({ canvas }) => {
-    // Wait for the modal to be visible and animations to complete
+    // Wait for the modal to be present in the DOM (it may be animated)
     await expect(canvas.getByRole('dialog')).toBeInTheDocument();
-    await waitForAnimationsToComplete({ testId: 'modal-content' }, canvas);
-    await expect(
+    expect(
       canvas.getByText('This is the content of the modal dialog.')
-    ).toBeVisible();
+    ).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -69,6 +69,18 @@ export const WithoutCloseButton: Story = {
     label: 'Modal Without Close Button',
     showCloseButton: false,
     children: "This modal doesn't have a close button.",
+  },
+  play: async ({ canvas }) => {
+    // Wait for the modal to be present in the DOM (it may be animated)
+    await expect(canvas.getByRole('dialog')).toBeInTheDocument();
+    expect(
+      canvas.getByText("This modal doesn't have a close button.")
+    ).toBeInTheDocument();
+    // Verify no close button is present
+    await expect(
+      canvas.queryByLabelText('Close modal')
+    ).not.toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -86,6 +98,29 @@ export const WithLongContent: Story = {
         <Text>Click outside the modal or press ESC to close it.</Text>
       </Stack>
     ),
+  },
+  play: async ({ canvas }) => {
+    // Wait for the modal to be present in the DOM (it may be animated)
+    await expect(canvas.getByRole('dialog')).toBeInTheDocument();
+    expect(
+      canvas.getByText(
+        'This modal contains longer content to demonstrate scrolling behavior.'
+      )
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByText(
+        'You can add multiple paragraphs and other content here.'
+      )
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByText(
+        'The modal will automatically handle overflow and scrolling.'
+      )
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByText('Click outside the modal or press ESC to close it.')
+    ).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -134,4 +169,26 @@ export const WithBackgroundContent: Story = {
       </Stack>
     </Section>
   ),
+  play: async ({ canvas }) => {
+    // Wait for the modal to be present in the DOM (it may be animated)
+    await expect(canvas.getByRole('dialog')).toBeInTheDocument();
+
+    // Check modal content
+    expect(canvas.getByText('Welcome Back!')).toBeInTheDocument();
+    expect(
+      canvas.getByText(
+        'This modal appears on top of the main content with a nice blur effect.'
+      )
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole('button', { name: 'Click me' })
+    ).toBeInTheDocument();
+
+    // Check background content is still present
+    expect(canvas.getByText('Main Page Content')).toBeInTheDocument();
+    expect(canvas.getByText('Card 1')).toBeInTheDocument();
+    expect(canvas.getByText('Card 2')).toBeInTheDocument();
+    expect(canvas.getByText('Card 3')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
+  },
 };

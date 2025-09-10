@@ -50,15 +50,6 @@ export function SanityImage({
   qualityHint = 75,
   ...rest
 }: Props) {
-  // Generate loader function for Next.js Image
-  const loader = createSanityLoader(image, qualityHint);
-
-  // Get base image URL for src (Next.js will use loader for different sizes)
-  const baseUrl = createSanityLoader(
-    image,
-    qualityHint
-  )({ src: '', width: 1200 });
-
   if (!image?.asset) {
     return (
       <div
@@ -67,6 +58,15 @@ export function SanityImage({
       />
     );
   }
+
+  // Generate loader function for Next.js Image
+  const loader = createSanityLoader(image, qualityHint);
+
+  // Get base image URL for src (Next.js will use loader for different sizes)
+  const baseUrl = createSanityLoader(
+    image,
+    qualityHint
+  )({ src: '', width: 1200 });
 
   // Extract LQIP for blur placeholder
   const blurDataURL = getLQIP(

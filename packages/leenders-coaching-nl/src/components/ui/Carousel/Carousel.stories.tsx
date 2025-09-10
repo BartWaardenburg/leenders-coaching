@@ -5,7 +5,7 @@ import { Quote } from '@/components/ui/Quote';
 import { Person } from '@/components/ui/Person';
 import { Box } from '@/components/ui/Box';
 import Image from 'next/image';
-import { settleFrames } from '../../../test/chromatic-utils';
+import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Carousel',
@@ -81,7 +81,7 @@ export const Default: Story = {
         );
       })[0]
     ).toBeVisible();
-    await settleFrames(3);
+    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -121,6 +121,155 @@ export const WithImages: Story = {
     await expect(
       canvas.getByAltText('Team collaborating in a modern office')
     ).toBeVisible();
-    await settleFrames(3);
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const SingleSlide: Story = {
+  args: {
+    slides: [
+      <Box key="single" className="p-8 text-center">
+        <h2 className="text-2xl font-bold mb-4">Single Slide</h2>
+        <p className="text-gray-600 dark:text-gray-400">
+          This carousel has only one slide, so navigation should be hidden.
+        </p>
+      </Box>,
+    ],
+  },
+  play: async ({ canvas }) => {
+    // Wait for the single slide to be visible
+    await expect(canvas.getByText('Single Slide')).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const EmptyCarousel: Story = {
+  args: {
+    slides: [],
+  },
+  play: async ({ canvas }) => {
+    // Empty carousel should render without errors
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const ManySlides: Story = {
+  args: {
+    slides: Array.from({ length: 10 }, (_, i) => (
+      <Box key={i} className="p-8 text-center">
+        <h2 className="text-2xl font-bold mb-4">Slide {i + 1}</h2>
+        <p className="text-gray-600 dark:text-gray-400">
+          This is slide number {i + 1} of 10 slides.
+        </p>
+      </Box>
+    )),
+  },
+  play: async ({ canvas }) => {
+    // Wait for the first slide to be visible
+    await expect(canvas.getByText('Slide 1')).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const WithCustomClassName: Story = {
+  args: {
+    slides: testimonials.map((testimonial) => (
+      <TestimonialSlide key={testimonial.name} {...testimonial} />
+    )),
+    className: 'border-2 border-blue-500 rounded-lg p-4',
+  },
+  play: async ({ canvas }) => {
+    // Wait for the carousel to be visible and animations to complete
+    await expect(
+      canvas.getAllByText((_, element) => {
+        return (
+          element?.textContent?.includes(
+            'The coaching sessions have been transformative'
+          ) ?? false
+        );
+      })[0]
+    ).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const MixedContent: Story = {
+  args: {
+    slides: [
+      <Box key="text" className="p-8 text-center">
+        <h2 className="text-2xl font-bold mb-4">Text Content</h2>
+        <p className="text-gray-600 dark:text-gray-400">
+          This slide contains only text content.
+        </p>
+      </Box>,
+      <ImageSlide key="image" {...images[0]} />,
+      <TestimonialSlide key="testimonial" {...testimonials[0]} />,
+      <Box key="form" className="p-8">
+        <h2 className="text-2xl font-bold mb-4">Form Content</h2>
+        <div className="space-y-4">
+          <input
+            type="text"
+            placeholder="Enter your name"
+            className="w-full p-2 border rounded"
+          />
+          <button className="px-4 py-2 bg-blue-500 text-white rounded">
+            Submit
+          </button>
+        </div>
+      </Box>,
+    ],
+  },
+  play: async ({ canvas }) => {
+    // Wait for the first slide to be visible
+    await expect(canvas.getByText('Text Content')).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const AllVariants: Story = {
+  parameters: {
+    controls: { hideNoControlsWarning: true },
+  },
+  args: {},
+  render: () => (
+    <div className="space-y-8">
+      <div>
+        <h3 className="text-lg font-semibold mb-4">Default Carousel</h3>
+        <Carousel
+          slides={testimonials.map((testimonial) => (
+            <TestimonialSlide key={testimonial.name} {...testimonial} />
+          ))}
+        />
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold mb-4">Image Carousel</h3>
+        <Carousel
+          slides={images.map((image) => (
+            <ImageSlide key={image.src} {...image} />
+          ))}
+        />
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold mb-4">Single Slide</h3>
+        <Carousel
+          slides={[
+            <Box key="single" className="p-8 text-center">
+              <h2 className="text-2xl font-bold mb-4">Single Slide</h2>
+              <p className="text-gray-600 dark:text-gray-400">
+                This carousel has only one slide.
+              </p>
+            </Box>,
+          ]}
+        />
+      </div>
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    // Wait for all carousel variants to be visible
+    await expect(canvas.getByText('Default Carousel')).toBeVisible();
+    await expect(canvas.getAllByText('Single Slide')).toHaveLength(2);
+    await waitForMotionAnimations({ canvas });
   },
 };

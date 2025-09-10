@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
 import { Calendar } from './Calendar';
 import { Box } from '../Box';
 import { Text } from '../Text';
+import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Calendar',
@@ -48,6 +50,13 @@ export const Default: Story = {
 
     return <Calendar {...args} initialDate={initialDate} />;
   },
+  play: async ({ canvas }) => {
+    // Wait for calendar to be visible
+    const monthElements = canvas.getAllByText('Maart 2024');
+    expect(monthElements.length).toBeGreaterThan(0);
+    expect(canvas.getByText('Ma')).toBeInTheDocument(); // Day header
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const WithCustomDayContent: Story = {
@@ -71,6 +80,14 @@ export const WithCustomDayContent: Story = {
         : args.initialDate;
 
     return <Calendar {...args} initialDate={initialDate} />;
+  },
+  play: async ({ canvas }) => {
+    // Wait for calendar to be visible
+    const monthElements = canvas.getAllByText('Maart 2024');
+    expect(monthElements.length).toBeGreaterThan(0);
+    expect(canvas.getByText('Ma')).toBeInTheDocument(); // Day header
+    expect(canvas.getByText('Event at 2 PM')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -106,5 +123,12 @@ export const WithDisabledDates: Story = {
         : args.initialDate;
 
     return <Calendar {...args} initialDate={initialDate} />;
+  },
+  play: async ({ canvas }) => {
+    // Wait for calendar to be visible
+    const monthElements = canvas.getAllByText('Maart 2024');
+    expect(monthElements.length).toBeGreaterThan(0);
+    expect(canvas.getByText('Ma')).toBeInTheDocument(); // Day header
+    await waitForMotionAnimations({ canvas });
   },
 };

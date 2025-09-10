@@ -10,6 +10,9 @@ import { ToastProvider } from '../src/components/providers/ToastProvider';
 import { allModes } from './modes';
 import '../src/app/globals.css';
 
+// Motion configuration for deterministic testing
+import { MotionConfig } from 'motion/react';
+
 /**
  * Custom viewports that align with Tailwind CSS default breakpoints.
  * Tailwind breakpoints: sm: 640px, md: 768px, lg: 1024px, xl: 1280px, 2xl: 1536px
@@ -81,13 +84,24 @@ const preview: Preview = {
 
     /**
      * Chromatic visual regression testing configuration.
-     * - pauseAnimationAtEnd: Pauses animations for snapshot stability.
+     * - pauseAnimationAtEnd: Pauses CSS animations for snapshot stability.
      * - modes: Custom theme/viewport modes for Chromatic.
+     * - Use 'delay' sparingly, only if assertions don't suffice.
      */
     chromatic: {
       pauseAnimationAtEnd: true,
       modes: allModes,
+      // delay: 300, // Use sparingly, only if assertions don't suffice
     },
+
+    /**
+     * Motion configuration for deterministic testing.
+     * - reducedMotion: 'always' disables animations by default for fast, deterministic tests.
+     * - motionTransition: { duration: 0 } makes remaining animations instant.
+     * - Override per-story when you need to test actual animation behavior.
+     */
+    reducedMotion: 'always',
+    motionTransition: { duration: 0 },
 
     /**
      * Next.js app directory mode for Storybook.
@@ -152,6 +166,22 @@ const preview: Preview = {
       },
       defaultTheme: 'light',
     }),
+    /**
+     * Motion configuration decorator for deterministic testing.
+     * Enforces reduced motion and zero-duration transitions by default.
+     * Stories can override via parameters when testing actual animation behavior.
+     */
+    (Story, context) => {
+      // Get motion settings from story parameters or use defaults
+      const reduced = context.parameters.reducedMotion ?? 'always'; // 'always' | 'never' | 'user'
+      const transition = context.parameters.motionTransition ?? { duration: 0 }; // zap to end
+
+      return (
+        <MotionConfig reducedMotion={reduced} transition={transition}>
+          <Story />
+        </MotionConfig>
+      );
+    },
     /**
      * Wrap all stories with ConfigProvider, ThemeProvider, and ToastProvider.
      * @param Story - The story component to render.

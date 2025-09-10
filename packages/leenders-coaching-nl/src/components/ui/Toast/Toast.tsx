@@ -131,15 +131,6 @@ export const Toast = ({
               stiffness: 300,
             },
           }}
-          onAnimationComplete={() => {
-            // Set animation complete marker for testing
-            const element = document.querySelector(
-              '[data-testid="toast-content"]'
-            );
-            if (element) {
-              element.setAttribute('data-animation', 'complete');
-            }
-          }}
           data-testid="toast-content"
           exit={{
             opacity: 0,

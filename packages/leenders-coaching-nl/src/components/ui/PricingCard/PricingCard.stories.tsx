@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
 import { PricingCard } from './PricingCard';
+import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/PricingCard',
@@ -33,6 +35,15 @@ export const Default: Story = {
     onCtaClick: () => console.log('CTA clicked'),
     variant: 'blue',
   },
+  play: async ({ canvas }) => {
+    // Wait for pricing card to be visible
+    await expect(canvas.getByText('Kennismakingsgesprek')).toBeVisible();
+    await expect(canvas.getByText('Gratis')).toBeVisible();
+    await expect(
+      canvas.getByRole('button', { name: 'Plan gesprek' })
+    ).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const Popular: Story = {
@@ -50,6 +61,15 @@ export const Popular: Story = {
     ctaLabel: 'Start traject',
     onCtaClick: () => console.log('CTA clicked'),
     variant: 'purple',
+  },
+  play: async ({ canvas }) => {
+    // Wait for popular pricing card to be visible
+    await expect(canvas.getByText('Coaching traject')).toBeVisible();
+    await expect(canvas.getByText('€85')).toBeVisible();
+    await expect(
+      canvas.getByRole('button', { name: 'Start traject' })
+    ).toBeVisible();
+    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -69,5 +89,14 @@ export const Extended: Story = {
     ctaLabel: 'Start traject',
     onCtaClick: () => console.log('CTA clicked'),
     variant: 'teal',
+  },
+  play: async ({ canvas }) => {
+    // Wait for extended pricing card to be visible
+    await expect(canvas.getByText('Intensief traject')).toBeVisible();
+    await expect(canvas.getByText('€75')).toBeVisible();
+    await expect(
+      canvas.getByRole('button', { name: 'Start traject' })
+    ).toBeVisible();
+    await waitForMotionAnimations({ canvas });
   },
 };

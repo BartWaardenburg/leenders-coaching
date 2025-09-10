@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
 import { FAQ } from './FAQ';
+import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/FAQ',
@@ -85,11 +87,33 @@ export const Default: Story = {
       },
     ],
   },
+  play: async ({ canvas }) => {
+    // Wait for FAQ questions to be visible
+    expect(canvas.getByText('What services do you offer?')).toBeInTheDocument();
+    expect(
+      canvas.getByText('How can I schedule an appointment?')
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByText('What are your working hours?')
+    ).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const WithVariant: Story = {
   args: {
     ...Default.args,
     variant: 'purple',
+  },
+  play: async ({ canvas }) => {
+    // Wait for FAQ questions to be visible
+    expect(canvas.getByText('What services do you offer?')).toBeInTheDocument();
+    expect(
+      canvas.getByText('How can I schedule an appointment?')
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByText('What are your working hours?')
+    ).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
   },
 };
