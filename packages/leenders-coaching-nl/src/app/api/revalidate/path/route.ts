@@ -5,14 +5,16 @@ import { parseBody } from 'next-sanity/webhook';
 type WebhookPayload = { path?: string };
 
 /**
- * Path-based revalidation endpoint for Sanity webhooks
- * Surgically revalidates individual pages by their path when updates are made
+ * Handles POST requests from Sanity webhooks to surgically revalidate individual pages by their path.
+ * This provides more granular control than tag-based revalidation and allows for longer cache times
+ * since individual pages can be revalidated on-demand.
  *
- * This provides more granular control than tag-based revalidation and allows
- * for longer cache times since individual pages can be revalidated on-demand
+ * @param req - The incoming Next.js request object
+ * @returns A JSON response indicating the result of the revalidation
  */
-export async function POST(req: NextRequest) {
+export const POST = async (req: NextRequest) => {
   try {
+    /* Ensure the secret environment variable is set */
     if (!process.env.SANITY_REVALIDATE_SECRET) {
       return new Response(
         'Missing environment variable SANITY_REVALIDATE_SECRET',
@@ -20,6 +22,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    /* Parse the webhook body and validate the signature */
     const { isValidSignature, body } = await parseBody<WebhookPayload>(
       req,
       process.env.SANITY_REVALIDATE_SECRET
@@ -35,15 +38,20 @@ export async function POST(req: NextRequest) {
       return new Response(JSON.stringify({ message, body }), { status: 400 });
     }
 
-    // Revalidate the specific path
+    /* Revalidate the specific path */
     revalidatePath(body.path);
 
     const message = `Updated route: ${body.path}`;
+    /* Log the successful revalidation */
     console.log(`✅ Path revalidated: ${body.path}`);
 
     return NextResponse.json({ body, message });
   } catch (err) {
+    /* Log and return any errors that occur during revalidation */
     console.error('❌ Path revalidation error:', err);
-    return NextResponse.json({ error: (err as Error).message }, { status: 500 });
+    return NextResponse.json(
+      { error: (err as Error).message },
+      { status: 500 }
+    );
   }
-}
+};

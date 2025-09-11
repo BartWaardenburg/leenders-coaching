@@ -5,7 +5,10 @@ import { metadataConfig } from '@/config/metadata.config';
 
 export const runtime = 'edge';
 
-/* Font loading - using optimized subset fonts */
+/**
+ * Loads the Playfair Display Bold font as an ArrayBuffer.
+ * Uses an optimized subset for performance.
+ */
 const playfairDisplayData = fetch(
   new URL(
     '../../../assets/fonts/PlayfairDisplay-Bold-subset.ttf',
@@ -13,6 +16,10 @@ const playfairDisplayData = fetch(
   )
 ).then((res) => res.arrayBuffer());
 
+/**
+ * Loads the Montserrat Regular font as an ArrayBuffer.
+ * Uses an optimized subset for performance.
+ */
 const montserratData = fetch(
   new URL(
     '../../../assets/fonts/Montserrat-Regular-subset.ttf',
@@ -20,20 +27,28 @@ const montserratData = fetch(
   )
 ).then((res) => res.arrayBuffer());
 
-// Default image configuration
+/**
+ * Default image configuration for the OG image.
+ */
 const defaultImageConfig = {
   url: '/images/99-Simone-louise-boonstoppel-fotografie.jpg',
   width: 1200,
   height: 800,
 };
 
+/**
+ * Handles GET requests for generating Open Graph images.
+ *
+ * @param request - The incoming Request object
+ * @returns A Response containing the generated image or an error message
+ */
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const title = searchParams.get('title');
   const description = searchParams.get('description');
   const variant = searchParams.get('variant') || 'blue';
 
-  // Get the base URL from the request
+  /* Get the base URL from the request */
   const baseUrl = new URL(request.url).origin;
   const imagePath =
     searchParams.get('image') || `${baseUrl}${defaultImageConfig.url}`;
@@ -42,7 +57,9 @@ export async function GET(request: Request) {
     return new Response('Missing title parameter', { status: 400 });
   }
 
-  // Card background colors matching the Card component
+  /**
+   * Card background colors matching the Card component.
+   */
   const backgrounds = {
     blue: '#F0F8FF',
     purple: '#F8F0FF',
@@ -53,7 +70,7 @@ export async function GET(request: Request) {
   };
 
   try {
-    /* Load optimized fonts */
+    /* Load optimized fonts in parallel */
     const [playfairDisplay, montserrat] = await Promise.all([
       playfairDisplayData,
       montserratData,
@@ -284,6 +301,7 @@ export async function GET(request: Request) {
       }
     );
   } catch (e) {
+    /* Log error and return a 500 response if image generation fails */
     console.error(e);
     return new Response('Failed to generate image', { status: 500 });
   }

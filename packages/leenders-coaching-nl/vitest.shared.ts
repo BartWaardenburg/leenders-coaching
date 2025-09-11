@@ -28,6 +28,10 @@ export const resolveConfig = {
  */
 export const storybookPlugin = storybookTest({
   configDir: path.join(pkgRoot, '.storybook'),
+  storybookScript: 'pnpm storybook',
+  tags: {
+    include: ['test'],
+  },
 });
 
 /**
@@ -188,6 +192,12 @@ export const coverageConfigs = {
     reportsDirectory: 'coverage',
     clean: true,
     thresholds: { statements: 0, branches: 0, functions: 0, lines: 0 },
+    watermarks: {
+      statements: [50, 80] as [number, number],
+      branches: [50, 80] as [number, number],
+      functions: [50, 80] as [number, number],
+      lines: [50, 80] as [number, number],
+    },
   },
 };
 

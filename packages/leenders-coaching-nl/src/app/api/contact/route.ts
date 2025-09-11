@@ -71,7 +71,6 @@ export async function POST(request: Request) {
         'Failed to send confirmation email:',
         confirmationResult.error
       );
-      // We still return success since the primary notification was sent
     }
 
     return NextResponse.json({

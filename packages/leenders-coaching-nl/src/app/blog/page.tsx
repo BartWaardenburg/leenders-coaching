@@ -39,7 +39,7 @@ const BlogPage = async () => {
 
   /* Transform posts to match SectionBlog format */
   const transformedPosts = posts
-    .filter((post: _ResolvedPost) => post != null) // Filter out null/undefined posts
+    .filter((post: _ResolvedPost) => post != null)
     .map((post: _ResolvedPost): BlogPost => {
       if (!post.slug?.current) {
         throw new Error(`Post "${post.title || 'Unknown'}" is missing a slug`);

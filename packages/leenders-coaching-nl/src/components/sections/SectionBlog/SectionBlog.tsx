@@ -75,10 +75,9 @@ export const SectionBlog = ({
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
 
-    // Use requestAnimationFrame to ensure DOM has updated
     requestAnimationFrame(() => {
       if (gridRef.current) {
-        const offset = 100; // Adjust this value to control how far above the grid to scroll
+        const offset = 100;
         const gridTop = gridRef.current.getBoundingClientRect().top;
         const targetPosition = window.scrollY + gridTop - offset;
 

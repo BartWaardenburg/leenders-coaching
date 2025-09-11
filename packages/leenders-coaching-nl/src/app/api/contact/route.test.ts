@@ -1,23 +1,30 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
 
-// Set environment variables before importing the module
+/* Set environment variables before importing the module */
 process.env.RESEND_API_KEY = 'test-api-key';
 
 import { POST } from './route';
 
-// Mock the contact utility
+/*
+ * Mock the contact utility.
+ * sendContactEmail is mocked but not used directly in these tests.
+ */
 vi.mock('@/lib/api/contact', () => ({
   sendContactEmail: vi.fn(),
 }));
 
-// Mock the email templates
+/*
+ * Mock the email templates for confirmation and notification.
+ */
 vi.mock('@/emails', () => ({
   ContactConfirmation: vi.fn(() => 'confirmation-email'),
   ContactNotification: vi.fn(() => 'notification-email'),
 }));
 
-// Mock Resend
+/*
+ * Mock the Resend email service.
+ */
 vi.mock('resend', () => ({
   Resend: vi.fn().mockImplementation(() => ({
     emails: {
@@ -29,22 +36,27 @@ vi.mock('resend', () => ({
   })),
 }));
 
-// Remove the unused import since we're not using sendContactEmail in the test
-
 /**
- * Test suite for contact API route
+ * Test suite for the contact API route.
+ * Covers valid submissions, missing fields, invalid JSON, and error handling.
  */
 describe('POST /api/contact', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Mock the sendContactEmail function if needed
-    // vi.mocked(sendContactEmail).mockResolvedValue({ success: true });
+    /*
+     * If you need to mock sendContactEmail's resolved value, do it here.
+     * Example:
+     * vi.mocked(sendContactEmail).mockResolvedValue({ success: true });
+     */
   });
 
   afterEach(() => {
     vi.clearAllMocks();
   });
 
+  /**
+   * Should handle valid contact form submission.
+   */
   it('should handle valid contact form submission', async () => {
     const mockData = {
       name: 'John Doe',
@@ -70,10 +82,13 @@ describe('POST /api/contact', () => {
     });
   });
 
+  /**
+   * Should handle missing required fields (email, subject).
+   */
   it('should handle missing required fields', async () => {
     const mockData = {
       name: 'John Doe',
-      // Missing email, subject
+      /* Missing email, subject */
       message: 'Test message',
     };
 
@@ -91,12 +106,15 @@ describe('POST /api/contact', () => {
     });
   });
 
+  /**
+   * Should handle missing subject field.
+   */
   it('should handle missing subject field', async () => {
     const mockData = {
       name: 'John Doe',
       email: 'john@example.com',
       message: 'Test message',
-      // Missing subject
+      /* Missing subject */
     };
 
     const request = new NextRequest('http://localhost:3000/api/contact', {
@@ -113,12 +131,15 @@ describe('POST /api/contact', () => {
     });
   });
 
+  /**
+   * Should handle missing name field.
+   */
   it('should handle missing name field', async () => {
     const mockData = {
       email: 'john@example.com',
       subject: 'Test subject',
       message: 'Test message',
-      // Missing name
+      /* Missing name */
     };
 
     const request = new NextRequest('http://localhost:3000/api/contact', {
@@ -135,12 +156,15 @@ describe('POST /api/contact', () => {
     });
   });
 
+  /**
+   * Should handle missing email field.
+   */
   it('should handle missing email field', async () => {
     const mockData = {
       name: 'John Doe',
       subject: 'Test subject',
       message: 'Test message',
-      // Missing email
+      /* Missing email */
     };
 
     const request = new NextRequest('http://localhost:3000/api/contact', {
@@ -157,12 +181,15 @@ describe('POST /api/contact', () => {
     });
   });
 
+  /**
+   * Should handle missing message field.
+   */
   it('should handle missing message field', async () => {
     const mockData = {
       name: 'John Doe',
       email: 'john@example.com',
       subject: 'Test subject',
-      // Missing message
+      /* Missing message */
     };
 
     const request = new NextRequest('http://localhost:3000/api/contact', {
@@ -179,6 +206,9 @@ describe('POST /api/contact', () => {
     });
   });
 
+  /**
+   * Should handle invalid JSON in request body.
+   */
   it('should handle invalid JSON in request body', async () => {
     const request = new NextRequest('http://localhost:3000/api/contact', {
       method: 'POST',
@@ -192,11 +222,5 @@ describe('POST /api/contact', () => {
     expect(result).toEqual({
       error: 'Failed to send message',
     });
-  });
-
-  it('should handle Resend API errors', async () => {
-    // This test is simplified since we can't easily mock the Resend module
-    // The actual error handling is tested by the invalid JSON test
-    expect(true).toBe(true);
   });
 });

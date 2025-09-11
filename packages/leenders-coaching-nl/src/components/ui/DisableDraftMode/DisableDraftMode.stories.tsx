@@ -197,7 +197,6 @@ export const AllVariants: Story = {
 
 export const InIframe: Story = {
   parameters: {
-    // Mock iframe environment
     docs: {
       description: {
         story:

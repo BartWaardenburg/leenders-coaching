@@ -86,7 +86,7 @@ export const WithCustomDayContent: Story = {
     renderDay: (date: Date) => {
       /* Example of rendering available time slots */
       const day = date.getDay();
-      if (day === 0 || day === 6) return null; // Weekend
+      if (day === 0 || day === 6) return null;
       return (
         <div className="text-xs text-foreground/70">
           {day % 2 === 0 ? '2 slots available' : '1 slot available'}

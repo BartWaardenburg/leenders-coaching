@@ -14,7 +14,7 @@ import { Card } from '@/components/ui/Card';
 
 const meta = {
   title: 'Layouts/RootLayout',
-  component: () => null, // This is a layout story without a specific component
+  component: () => null,
   parameters: {
     layout: 'fullscreen',
   },

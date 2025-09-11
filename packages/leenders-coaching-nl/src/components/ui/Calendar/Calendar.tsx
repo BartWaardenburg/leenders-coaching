@@ -51,7 +51,6 @@ export const Calendar: FC<CalendarProps> = ({
   const [currentDate, setCurrentDate] = useState(initialDate);
   const [direction, setDirection] = useState(0);
 
-  // Update currentDate when initialDate prop changes
   useEffect(() => {
     setCurrentDate(initialDate);
   }, [initialDate]);

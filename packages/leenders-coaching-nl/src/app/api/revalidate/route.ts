@@ -2,24 +2,27 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
 
 /**
- * Webhook endpoint for Sanity to trigger cache revalidation
- * This endpoint is called when content is published in Sanity
+ * Handles POST requests from Sanity webhooks to trigger cache revalidation.
+ * This endpoint is called when content is published or updated in Sanity.
+ *
+ * @param request - The incoming Next.js request object
+ * @returns A JSON response indicating which tags were revalidated
  */
-export async function POST(request: NextRequest) {
+export const POST = async (request: NextRequest) => {
   try {
     const body = await request.json();
     const secret = request.nextUrl.searchParams.get('secret');
 
-    // Verify the secret token to prevent unauthorized access
+    /* Verify the secret token to prevent unauthorized access */
     if (secret !== process.env.SANITY_REVALIDATE_SECRET) {
       return NextResponse.json({ message: 'Invalid token' }, { status: 401 });
     }
 
-    // Determine which tags to revalidate based on the document type
-    const documentType = body._type;
+    /* Determine which tags to revalidate based on the document type */
+    const documentType: string = body._type;
     const tagsToRevalidate: string[] = ['sanity'];
 
-    // Add specific tags based on document type
+    /* Add specific tags based on document type */
     switch (documentType) {
       case 'post':
         tagsToRevalidate.push('posts', 'blog');
@@ -48,11 +51,11 @@ export async function POST(request: NextRequest) {
         tagsToRevalidate.push('categories', 'posts');
         break;
       default:
-        // For unknown types, revalidate all content
+        /* For unknown types, revalidate all content */
         tagsToRevalidate.push('pages', 'posts', 'global');
     }
 
-    // Revalidate all relevant tags
+    /* Revalidate all relevant tags */
     for (const tag of tagsToRevalidate) {
       revalidateTag(tag);
     }
@@ -69,4 +72,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+};
