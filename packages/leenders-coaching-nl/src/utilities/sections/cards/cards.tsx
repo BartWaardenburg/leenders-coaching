@@ -4,7 +4,11 @@ import type { SectionCards } from '@/components/sections/SectionCards';
 import type { SectionCards as SanitySectionCards } from '@/types/sanity/schema';
 import { Card } from '@/components/ui/Card';
 
-/* Type guard for cards section */
+/**
+ * Type guard to check if data is a valid Sanity cards section
+ * @param data - The data to check
+ * @returns True if data is a valid SanitySectionCards
+ */
 const isSanitySectionCards = (
   data: Record<string, unknown>
 ): data is SanitySectionCards => {
@@ -13,6 +17,9 @@ const isSanitySectionCards = (
 
 /**
  * Transform cards section data to component props
+ * @param data - The raw section data from Sanity
+ * @returns Transformed props for the SectionCards component
+ * @throws Error if data is not a valid cards section
  */
 export const transformCardsSection = (
   data: Record<string, unknown>

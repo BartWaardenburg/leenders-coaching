@@ -88,7 +88,6 @@ export const Default: Story = {
     ],
   },
   play: async ({ canvas }) => {
-    // Wait for FAQ questions to be visible
     expect(canvas.getByText('What services do you offer?')).toBeInTheDocument();
     expect(
       canvas.getByText('How can I schedule an appointment?')
@@ -106,7 +105,6 @@ export const WithVariant: Story = {
     variant: 'purple',
   },
   play: async ({ canvas }) => {
-    // Wait for FAQ questions to be visible
     expect(canvas.getByText('What services do you offer?')).toBeInTheDocument();
     expect(
       canvas.getByText('How can I schedule an appointment?')

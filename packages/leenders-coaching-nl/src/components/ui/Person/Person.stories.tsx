@@ -18,7 +18,6 @@ export const Default: Story = {
     imageSrc: 'https://i.pravatar.cc/300',
   },
   play: async ({ canvas }) => {
-    // Wait for person component to be present (may be animated)
     expect(canvas.getByText('John Doe')).toBeInTheDocument();
     expect(canvas.getByText('Software Engineer')).toBeInTheDocument();
     expect(canvas.getByRole('img')).toBeInTheDocument();
@@ -32,7 +31,6 @@ export const WithoutDescription: Story = {
     imageSrc: 'https://i.pravatar.cc/300?2',
   },
   play: async ({ canvas }) => {
-    // Wait for person component without description to be present (may be animated)
     expect(canvas.getByText('Jane Smith')).toBeInTheDocument();
     expect(canvas.getByRole('img')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
@@ -46,7 +44,6 @@ export const LongDescription: Story = {
     imageSrc: 'https://i.pravatar.cc/300?3',
   },
   play: async ({ canvas }) => {
-    // Wait for person component with long description to be present (may be animated)
     expect(canvas.getByText('Alex Johnson')).toBeInTheDocument();
     expect(
       canvas.getByText('Senior Marketing Director & Brand Strategy Consultant')

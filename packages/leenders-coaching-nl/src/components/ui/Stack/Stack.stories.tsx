@@ -19,7 +19,6 @@ export const Default: Story = {
     children: 'Stack Example',
   },
   play: async ({ canvas }) => {
-    // Wait for stack content to be visible
     await expect(canvas.getByText('Stack Example')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },

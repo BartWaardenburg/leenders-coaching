@@ -25,7 +25,6 @@ export const Default: Story = {
     size: 'md',
   },
   play: async ({ canvas }) => {
-    // Wait for avatar to be visible
     await expect(canvas.getByAltText('Avatar image')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
@@ -38,7 +37,6 @@ export const Small: Story = {
     size: 'sm',
   },
   play: async ({ canvas }) => {
-    // Wait for small avatar to be visible
     await expect(canvas.getByAltText('Small avatar')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
@@ -51,7 +49,6 @@ export const Large: Story = {
     size: 'lg',
   },
   play: async ({ canvas }) => {
-    // Wait for large avatar to be visible
     await expect(canvas.getByAltText('Large avatar')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
@@ -70,7 +67,6 @@ export const AllSizes: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    // Wait for all avatar sizes to be visible
     await expect(canvas.getByAltText('Small avatar')).toBeVisible();
     await expect(canvas.getByAltText('Medium avatar')).toBeVisible();
     await expect(canvas.getByAltText('Large avatar')).toBeVisible();

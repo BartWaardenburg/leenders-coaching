@@ -30,7 +30,6 @@ export const Close: Story = {
     path: iconPaths.close,
   },
   play: async ({ canvas }) => {
-    // Wait for icon SVG to be present (icons have aria-hidden so can't use getByRole)
     expect(document.querySelector('svg')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
@@ -41,7 +40,6 @@ export const MenuHamburger: Story = {
     path: iconPaths.menu.hamburger,
   },
   play: async ({ canvas }) => {
-    // Wait for icon SVG to be present (icons have aria-hidden so can't use getByRole)
     expect(document.querySelector('svg')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
@@ -52,7 +50,6 @@ export const MenuClose: Story = {
     path: iconPaths.menu.close,
   },
   play: async ({ canvas }) => {
-    // Wait for icon SVG to be present (icons have aria-hidden so can't use getByRole)
     expect(document.querySelector('svg')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
@@ -63,7 +60,6 @@ export const ThemeSun: Story = {
     path: iconPaths.theme.sun,
   },
   play: async ({ canvas }) => {
-    // Wait for icon SVG to be present (icons have aria-hidden so can't use getByRole)
     expect(document.querySelector('svg')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
@@ -74,7 +70,6 @@ export const ThemeMoon: Story = {
     path: iconPaths.theme.moon,
   },
   play: async ({ canvas }) => {
-    // Wait for icon SVG to be present (icons have aria-hidden so can't use getByRole)
     expect(document.querySelector('svg')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
@@ -85,7 +80,6 @@ export const Message: Story = {
     path: iconPaths.message,
   },
   play: async ({ canvas }) => {
-    // Wait for icon SVG to be present (icons have aria-hidden so can't use getByRole)
     expect(document.querySelector('svg')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },

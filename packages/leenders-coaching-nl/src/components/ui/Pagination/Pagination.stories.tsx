@@ -42,7 +42,6 @@ export const Default: Story = {
   },
   render: () => <PaginationWithState totalPages={10} />,
   play: async ({ canvas }) => {
-    // Wait for pagination buttons to be visible
     await expect(canvas.getByRole('button', { name: '1' })).toBeVisible();
     await expect(
       canvas.getByRole('button', { name: 'Previous page' })
@@ -62,7 +61,6 @@ export const FewPages: Story = {
   },
   render: () => <PaginationWithState totalPages={3} />,
   play: async ({ canvas }) => {
-    // Wait for pagination with few pages to be visible
     await expect(canvas.getByRole('button', { name: '1' })).toBeVisible();
     await expect(canvas.getByRole('button', { name: '2' })).toBeVisible();
     await expect(canvas.getByRole('button', { name: '3' })).toBeVisible();
@@ -84,7 +82,6 @@ export const ManyPages: Story = {
   },
   render: () => <PaginationWithState totalPages={20} />,
   play: async ({ canvas }) => {
-    // Wait for pagination with many pages to be visible
     await expect(canvas.getByRole('button', { name: '1' })).toBeVisible();
     await expect(
       canvas.getByRole('button', { name: 'Previous page' })

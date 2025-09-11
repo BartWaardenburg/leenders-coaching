@@ -5,6 +5,7 @@ import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'Utilities/Sections/Cards',
+  component: () => null, // Utility stories don't have a component
   parameters: {
     layout: 'padded',
   },
@@ -168,7 +169,9 @@ export const TransformValidCards: Story = {
               </p>
               <p>
                 <strong>Cards Count:</strong>{' '}
-                {transformed.children?.length || 0}
+                {Array.isArray(transformed.children)
+                  ? transformed.children.length
+                  : 0}
               </p>
             </div>
           </div>
@@ -176,14 +179,15 @@ export const TransformValidCards: Story = {
           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
             <h4 className="font-medium mb-2">Card Details:</h4>
             <div className="space-y-3">
-              {transformed.children?.map((card, index) => (
-                <div key={index} className="border-l-4 border-blue-500 pl-4">
-                  <p className="font-medium">Card {index + 1}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Type: {card?.type?.name || 'Unknown'}
-                  </p>
-                </div>
-              ))}
+              {Array.isArray(transformed.children) &&
+                transformed.children.map((card, index) => (
+                  <div key={index} className="border-l-4 border-blue-500 pl-4">
+                    <p className="font-medium">Card {index + 1}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Type: {card?.type?.name || 'Unknown'}
+                    </p>
+                  </div>
+                ))}
             </div>
           </div>
         </div>
@@ -202,7 +206,6 @@ export const TransformValidCards: Story = {
     }
   },
   play: async ({ canvas }) => {
-    // Wait for the component to render
     await expect(
       canvas.getByText('Valid Cards Section Transformation')
     ).toBeInTheDocument();
@@ -236,7 +239,9 @@ export const TransformCardsWithoutCards: Story = {
               </p>
               <p>
                 <strong>Cards Count:</strong>{' '}
-                {transformed.children?.length || 0}
+                {Array.isArray(transformed.children)
+                  ? transformed.children.length
+                  : 0}
               </p>
             </div>
           </div>
@@ -256,7 +261,6 @@ export const TransformCardsWithoutCards: Story = {
     }
   },
   play: async ({ canvas }) => {
-    // Wait for the component to render - should show error since no cards array
     await expect(canvas.getByText('Error')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
@@ -290,7 +294,9 @@ export const TransformCardsWithPartialCards: Story = {
               </p>
               <p>
                 <strong>Cards Count:</strong>{' '}
-                {transformed.children?.length || 0}
+                {Array.isArray(transformed.children)
+                  ? transformed.children.length
+                  : 0}
               </p>
             </div>
           </div>
@@ -298,14 +304,15 @@ export const TransformCardsWithPartialCards: Story = {
           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
             <h4 className="font-medium mb-2">Card Details:</h4>
             <div className="space-y-3">
-              {transformed.children?.map((card, index) => (
-                <div key={index} className="border-l-4 border-green-500 pl-4">
-                  <p className="font-medium">Card {index + 1}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Type: {card?.type?.name || 'Unknown'}
-                  </p>
-                </div>
-              ))}
+              {Array.isArray(transformed.children) &&
+                transformed.children.map((card, index) => (
+                  <div key={index} className="border-l-4 border-green-500 pl-4">
+                    <p className="font-medium">Card {index + 1}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Type: {card?.type?.name || 'Unknown'}
+                    </p>
+                  </div>
+                ))}
             </div>
           </div>
         </div>
@@ -324,7 +331,6 @@ export const TransformCardsWithPartialCards: Story = {
     }
   },
   play: async ({ canvas }) => {
-    // Wait for the component to render
     await expect(
       canvas.getByText('Cards Section With Partial Cards')
     ).toBeInTheDocument();
@@ -335,7 +341,7 @@ export const TransformCardsWithPartialCards: Story = {
 export const TransformInvalidCards: Story = {
   render: () => {
     try {
-      const transformed = transformCardsSection(mockInvalidCardsData);
+      transformCardsSection(mockInvalidCardsData);
 
       return (
         <div className="bg-green-100 dark:bg-green-900 p-4 rounded-lg">
@@ -361,7 +367,6 @@ export const TransformInvalidCards: Story = {
     }
   },
   play: async ({ canvas }) => {
-    // Wait for the component to render
     await expect(canvas.getByText('Expected Error')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
@@ -396,7 +401,9 @@ export const AllTransformations: Story = {
                     </div>
                     <div>
                       <strong>Cards:</strong>{' '}
-                      {transformed.children?.length || 0}
+                      {Array.isArray(transformed.children)
+                        ? transformed.children.length
+                        : 0}
                     </div>
                     <div>
                       <strong>Background:</strong> {transformed.background}
@@ -429,7 +436,6 @@ export const AllTransformations: Story = {
     );
   },
   play: async ({ canvas }) => {
-    // Wait for the component to render
     await expect(
       canvas.getByText('All Cards Transformations')
     ).toBeInTheDocument();

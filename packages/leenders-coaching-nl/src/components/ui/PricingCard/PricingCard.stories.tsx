@@ -36,7 +36,6 @@ export const Default: Story = {
     variant: 'blue',
   },
   play: async ({ canvas }) => {
-    // Wait for pricing card to be visible
     await expect(canvas.getByText('Kennismakingsgesprek')).toBeVisible();
     await expect(canvas.getByText('Gratis')).toBeVisible();
     await expect(
@@ -63,7 +62,6 @@ export const Popular: Story = {
     variant: 'purple',
   },
   play: async ({ canvas }) => {
-    // Wait for popular pricing card to be visible
     await expect(canvas.getByText('Coaching traject')).toBeVisible();
     await expect(canvas.getByText('€85')).toBeVisible();
     await expect(
@@ -91,7 +89,6 @@ export const Extended: Story = {
     variant: 'teal',
   },
   play: async ({ canvas }) => {
-    // Wait for extended pricing card to be visible
     await expect(canvas.getByText('Intensief traject')).toBeVisible();
     await expect(canvas.getByText('€75')).toBeVisible();
     await expect(

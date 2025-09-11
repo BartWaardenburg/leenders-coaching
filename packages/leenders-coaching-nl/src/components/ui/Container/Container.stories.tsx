@@ -19,7 +19,6 @@ export const Default: Story = {
     children: 'Container Example',
   },
   play: async ({ canvas }) => {
-    // Wait for container content to be visible
     await expect(canvas.getByText('Container Example')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },

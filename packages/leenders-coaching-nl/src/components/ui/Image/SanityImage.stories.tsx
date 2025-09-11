@@ -102,7 +102,6 @@ export const Default: Story = {
     qualityHint: 75,
   },
   play: async ({ canvas }) => {
-    // Wait for the image to load and animations to complete
     await expect(
       canvas.getByAltText('Default Sanity image')
     ).toBeInTheDocument();
@@ -120,7 +119,6 @@ export const WithHotspot: Story = {
     qualityHint: 75,
   },
   play: async ({ canvas }) => {
-    // Wait for the image to load and animations to complete
     await expect(
       canvas.getByAltText('Image with hotspot positioning')
     ).toBeInTheDocument();
@@ -138,7 +136,6 @@ export const HighPriority: Story = {
     qualityHint: 90,
   },
   play: async ({ canvas }) => {
-    // Wait for the image to load and animations to complete
     await expect(
       canvas.getByAltText('High priority image')
     ).toBeInTheDocument();
@@ -156,7 +153,6 @@ export const WithoutMetadata: Story = {
     qualityHint: 75,
   },
   play: async ({ canvas }) => {
-    // Wait for the image to load and animations to complete
     await expect(
       canvas.getByAltText('Image without metadata')
     ).toBeInTheDocument();
@@ -174,7 +170,6 @@ export const WithPartialMetadata: Story = {
     qualityHint: 75,
   },
   play: async ({ canvas }) => {
-    // Wait for the image to load and animations to complete
     await expect(
       canvas.getByAltText('Image with partial metadata')
     ).toBeInTheDocument();
@@ -198,7 +193,6 @@ export const FillMode: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    // Wait for the image to load and animations to complete
     await expect(canvas.getByAltText('Image in fill mode')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
@@ -214,7 +208,6 @@ export const CustomSizes: Story = {
     qualityHint: 80,
   },
   play: async ({ canvas }) => {
-    // Wait for the image to load and animations to complete
     await expect(
       canvas.getByAltText('Image with custom sizes')
     ).toBeInTheDocument();
@@ -232,7 +225,6 @@ export const LowQuality: Story = {
     qualityHint: 30,
   },
   play: async ({ canvas }) => {
-    // Wait for the image to load and animations to complete
     await expect(canvas.getByAltText('Low quality image')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
@@ -248,7 +240,6 @@ export const HighQuality: Story = {
     qualityHint: 95,
   },
   play: async ({ canvas }) => {
-    // Wait for the image to load and animations to complete
     await expect(canvas.getByAltText('High quality image')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
@@ -286,7 +277,6 @@ export const WithCustomClassName: Story = {
     className: 'rounded-lg shadow-lg border-2 border-blue-500',
   },
   play: async ({ canvas }) => {
-    // Wait for the image to load and animations to complete
     await expect(
       canvas.getByAltText('Image with custom styling')
     ).toBeInTheDocument();
@@ -308,7 +298,6 @@ export const WithCustomStyle: Story = {
     },
   },
   play: async ({ canvas }) => {
-    // Wait for the image to load and animations to complete
     await expect(
       canvas.getByAltText('Image with custom style')
     ).toBeInTheDocument();
@@ -319,6 +308,14 @@ export const WithCustomStyle: Story = {
 export const AllVariants: Story = {
   parameters: {
     controls: { hideNoControlsWarning: true },
+  },
+  args: {
+    image: mockImageWithMetadata,
+    alt: 'All variants image',
+    sizes: '100vw',
+    priority: false,
+    followHotspot: false,
+    qualityHint: 75,
   },
   render: () => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
@@ -368,7 +365,6 @@ export const AllVariants: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    // Wait for all images to load and animations to complete
     await expect(
       canvas.getByAltText('Full metadata image')
     ).toBeInTheDocument();

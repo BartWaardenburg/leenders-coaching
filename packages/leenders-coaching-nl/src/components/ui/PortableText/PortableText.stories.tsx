@@ -185,7 +185,6 @@ export const AllFeatures: Story = {
     ],
   },
   play: async ({ canvas }) => {
-    // Wait for portable text content to be visible
     await expect(canvas.getByText('All PortableText Features')).toBeVisible();
     await expect(canvas.getByText('Links')).toBeVisible();
     await expect(canvas.getByText('Lists')).toBeVisible();
@@ -213,7 +212,6 @@ export const SimpleText: Story = {
     ],
   },
   play: async ({ canvas }) => {
-    // Wait for simple text to be visible
     await expect(
       canvas.getByText('This is a simple paragraph with plain text.')
     ).toBeVisible();
@@ -257,7 +255,6 @@ export const Headings: Story = {
     ],
   },
   play: async ({ canvas }) => {
-    // Wait for all headings to be visible
     await expect(
       canvas.getByRole('heading', { name: 'Heading 1' })
     ).toBeVisible();
@@ -344,7 +341,6 @@ export const Lists: Story = {
     ],
   },
   play: async ({ canvas }) => {
-    // Wait for list content to be visible
     await expect(canvas.getByText('Unordered List')).toBeVisible();
     await expect(canvas.getByText('Ordered List')).toBeVisible();
     await waitForMotionAnimations({ canvas });
@@ -427,7 +423,6 @@ export const ComplexNestedContent: Story = {
     ],
   },
   play: async ({ canvas }) => {
-    // Wait for complex content to be visible
     await expect(canvas.getByText('Complex Nested Content')).toBeVisible();
     await expect(canvas.getByText('bold and italic text')).toBeVisible();
     await expect(
@@ -457,7 +452,6 @@ export const WithCustomClassName: Story = {
       'border-2 border-blue-500 rounded-lg p-4 bg-blue-50 dark:bg-blue-900/20',
   },
   play: async ({ canvas }) => {
-    // Wait for custom styled content to be visible
     await expect(canvas.getByText('Custom Styled Content')).toBeVisible();
     await expect(
       canvas.getByText('This content has custom styling applied.')
@@ -470,7 +464,15 @@ export const AllVariants: Story = {
   parameters: {
     controls: { hideNoControlsWarning: true },
   },
-  args: {},
+  args: {
+    content: [
+      {
+        _type: 'block',
+        style: 'normal',
+        children: [{ _type: 'span', text: 'This is simple text content.' }],
+      },
+    ],
+  },
   render: () => (
     <div className="space-y-8">
       <div>
@@ -529,7 +531,6 @@ export const AllVariants: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    // Wait for all variants to be visible
     await expect(
       canvas.getByText('This is simple text content.')
     ).toBeVisible();

@@ -70,7 +70,6 @@ const defaultArgs = {
 export const Default: Story = {
   args: defaultArgs,
   play: async ({ canvas }) => {
-    // Wait for card content to be visible
     expect(canvas.getByText('Communicatievaardigheden')).toBeInTheDocument();
     expect(
       canvas.getByText('Voorbeeldinhoud voor blauwe variant')
@@ -85,7 +84,6 @@ export const WithImage: Story = {
     image: exampleImage,
   },
   play: async ({ canvas }) => {
-    // Wait for card with image to be visible
     expect(canvas.getByText('Communicatievaardigheden')).toBeInTheDocument();
     expect(canvas.getByRole('img')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
@@ -98,7 +96,6 @@ export const Featured: Story = {
     featured: true,
   },
   play: async ({ canvas }) => {
-    // Wait for featured card to be visible
     expect(canvas.getByText('Communicatievaardigheden')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
@@ -177,7 +174,6 @@ export const AllVariants: Story = {
     border: true,
   },
   play: async ({ canvas }) => {
-    // Wait for all card variants to be visible
     expect(canvas.getByText('Blauwe Variant')).toBeInTheDocument();
     expect(canvas.getByText('Paarse Variant')).toBeInTheDocument();
     expect(canvas.getByText('Groene Variant')).toBeInTheDocument();

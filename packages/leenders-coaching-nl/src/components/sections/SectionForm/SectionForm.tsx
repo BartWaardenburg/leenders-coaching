@@ -53,14 +53,14 @@ export const SectionForm = ({
     reset,
   } = reactHookForm.useForm<ContactFormData>();
 
-  // Safely use toast - handle case where ToastProvider is not available during SSG
+  /* Safely use toast - handle case where ToastProvider is not available during SSG */
   let showToast: ((message: string, options?: ToastOptions) => void) | null =
     null;
   try {
     const toast = useToast();
     showToast = toast.showToast;
   } catch (error) {
-    // Toast provider not available (e.g., during static generation)
+    /* Toast provider not available (e.g., during static generation) */
     console.warn('Toast provider not available:', error);
   }
 

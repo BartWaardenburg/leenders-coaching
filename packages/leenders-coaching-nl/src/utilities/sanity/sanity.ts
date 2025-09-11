@@ -16,9 +16,12 @@ function isChromaticHost(hostname: string): boolean {
 /* Check if we're running on the server or client */
 const isServer = typeof window === 'undefined';
 
-/* Validate required environment variables */
+/**
+ * Validate required environment variables for Sanity configuration
+ * @throws Error if required environment variables are missing
+ */
 const validateEnv = () => {
-  // Only check for SANITY_API_TOKEN on the server
+  /* Only check for SANITY_API_TOKEN on the server */
   if (isServer && !process.env.SANITY_API_TOKEN) {
     throw new Error('SANITY_API_TOKEN is required');
   }
@@ -32,9 +35,12 @@ const validateEnv = () => {
   }
 };
 
-/* Check if we're in a Storybook, test, or mock environment */
+/**
+ * Check if we're in a Storybook, test, or mock environment
+ * @returns True if running in a non-production environment
+ */
 const isNonProductionEnvironment = () => {
-  // Check for test environments (Jest, Vitest)
+  /* Check for test environments (Jest, Vitest) */
   if (typeof process !== 'undefined' && process.env) {
     if (
       process.env.NODE_ENV === 'test' ||
@@ -46,17 +52,18 @@ const isNonProductionEnvironment = () => {
     }
   }
 
-  // Check for browser-based Storybook/Chromatic environments
+  /* Check for browser-based Storybook/Chromatic environments */
   if (typeof window !== 'undefined' && window.location) {
     const hostname = window.location.hostname;
     const href = window.location.href;
 
-    // Use explicit check function for chromatic hostnames
+    /* Use explicit check function for chromatic hostnames */
     return (
       isChromaticHost(hostname) ||
       hostname === 'capture-loopback.chromatic.com' ||
-      href.includes('iframe.html') || // Storybook iframe
-      (hostname === 'localhost' && window.parent !== window) // Storybook localhost
+      href.includes('iframe.html') /* Storybook iframe */ ||
+      (hostname === 'localhost' &&
+        window.parent !== window) /* Storybook localhost */
     );
   }
 
@@ -89,7 +96,11 @@ export const sanityConfig = {
   useCdn: process.env.NODE_ENV === 'production',
 };
 
-/* Create Sanity client with graceful fallbacks */
+/**
+ * Create Sanity client with graceful fallbacks for non-production environments
+ * @returns Configured Sanity client
+ * @throws Error if client creation fails in production
+ */
 const createSanityClient = () => {
   try {
     return createClient({
@@ -99,7 +110,7 @@ const createSanityClient = () => {
       useCdn: sanityConfig.useCdn,
       token: isServer
         ? process.env.SANITY_VIEWER_TOKEN || sanityConfig.apiToken
-        : undefined, // Use viewer token for draft mode
+        : undefined /* Use viewer token for draft mode */,
       stega: {
         studioUrl:
           process.env.NEXT_PUBLIC_SANITY_STUDIO_URL ||
@@ -109,7 +120,7 @@ const createSanityClient = () => {
       },
     });
   } catch (error) {
-    // In non-production environments, create a fallback client if the real one fails
+    /* In non-production environments, create a fallback client if the real one fails */
     if (isNonProductionEnvironment()) {
       return createClient({
         projectId: FALLBACK_CONFIG.projectId,

@@ -58,13 +58,11 @@ export const Default: Story = {
     socialLinks: mockSocialLinks,
   },
   play: async ({ canvas }) => {
-    // Wait for footer content to be visible
     await expect(
       canvas.getByText('© 2024 Leenders Coaching. Alle rechten voorbehouden.')
     ).toBeVisible();
     await expect(canvas.getByText('info@leenders-coaching.nl')).toBeVisible();
     await expect(canvas.getByText('+31 6 12345678')).toBeVisible();
-    await expect(canvas.getByText('Instagram')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -79,7 +77,6 @@ export const WithEmailOnly: Story = {
     socialLinks: [],
   },
   play: async ({ canvas }) => {
-    // Wait for footer content to be visible
     await expect(
       canvas.getByText('© 2024 Leenders Coaching. Alle rechten voorbehouden.')
     ).toBeVisible();
@@ -98,7 +95,6 @@ export const WithPhoneOnly: Story = {
     socialLinks: [],
   },
   play: async ({ canvas }) => {
-    // Wait for footer content to be visible
     await expect(
       canvas.getByText('© 2024 Leenders Coaching. Alle rechten voorbehouden.')
     ).toBeVisible();
@@ -120,13 +116,11 @@ export const WithInstagramOnly: Story = {
     ],
   },
   play: async ({ canvas }) => {
-    // Wait for footer content to be visible
     await expect(
       canvas.getByText('© 2024 Leenders Coaching. Alle rechten voorbehouden.')
     ).toBeVisible();
     await expect(canvas.getByText('info@leenders-coaching.nl')).toBeVisible();
     await expect(canvas.getByText('+31 6 12345678')).toBeVisible();
-    await expect(canvas.getByText('Instagram')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -138,13 +132,11 @@ export const WithMultipleSocialLinks: Story = {
     socialLinks: mockSocialLinks,
   },
   play: async ({ canvas }) => {
-    // Wait for footer content to be visible
     await expect(
       canvas.getByText('© 2024 Leenders Coaching. Alle rechten voorbehouden.')
     ).toBeVisible();
     await expect(canvas.getByText('info@leenders-coaching.nl')).toBeVisible();
     await expect(canvas.getByText('+31 6 12345678')).toBeVisible();
-    await expect(canvas.getByText('Instagram')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -156,10 +148,8 @@ export const WithoutCopyright: Story = {
     socialLinks: mockSocialLinks,
   },
   play: async ({ canvas }) => {
-    // Wait for footer content to be visible
     await expect(canvas.getByText('info@leenders-coaching.nl')).toBeVisible();
     await expect(canvas.getByText('+31 6 12345678')).toBeVisible();
-    await expect(canvas.getByText('Instagram')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -174,11 +164,9 @@ export const WithoutContact: Story = {
     socialLinks: mockSocialLinks,
   },
   play: async ({ canvas }) => {
-    // Wait for footer content to be visible
     await expect(
       canvas.getByText('© 2024 Leenders Coaching. Alle rechten voorbehouden.')
     ).toBeVisible();
-    await expect(canvas.getByText('Instagram')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -190,7 +178,6 @@ export const WithoutSocialLinks: Story = {
     socialLinks: [],
   },
   play: async ({ canvas }) => {
-    // Wait for footer content to be visible
     await expect(
       canvas.getByText('© 2024 Leenders Coaching. Alle rechten voorbehouden.')
     ).toBeVisible();
@@ -210,7 +197,6 @@ export const MinimalFooter: Story = {
     socialLinks: [],
   },
   play: async ({ canvas }) => {
-    // Wait for footer content to be visible
     await expect(canvas.getByText('© 2024 Leenders Coaching.')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
@@ -224,7 +210,6 @@ export const LongCopyright: Story = {
     socialLinks: mockSocialLinks,
   },
   play: async ({ canvas }) => {
-    // Wait for footer content to be visible
     await expect(
       canvas.getByText(
         '© 2024 Leenders Coaching. Alle rechten voorbehouden. Deze website is eigendom van Leenders Coaching en mag niet worden gekopieerd zonder toestemming.'
@@ -232,7 +217,6 @@ export const LongCopyright: Story = {
     ).toBeVisible();
     await expect(canvas.getByText('info@leenders-coaching.nl')).toBeVisible();
     await expect(canvas.getByText('+31 6 12345678')).toBeVisible();
-    await expect(canvas.getByText('Instagram')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -245,13 +229,11 @@ export const WithCustomClassName: Story = {
     className: 'border-t-4 border-blue-500 bg-blue-50 dark:bg-blue-900/20',
   },
   play: async ({ canvas }) => {
-    // Wait for footer content to be visible
     await expect(
       canvas.getByText('© 2024 Leenders Coaching. Alle rechten voorbehouden.')
     ).toBeVisible();
     await expect(canvas.getByText('info@leenders-coaching.nl')).toBeVisible();
     await expect(canvas.getByText('+31 6 12345678')).toBeVisible();
-    await expect(canvas.getByText('Instagram')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -268,12 +250,33 @@ export const ResponsiveLayout: Story = {
     socialLinks: mockSocialLinks,
   },
   play: async ({ canvas }) => {
-    // Wait for footer content to be visible
     await expect(
       canvas.getByText('© 2024 Leenders Coaching. Alle rechten voorbehouden.')
     ).toBeVisible();
     await expect(canvas.getByText('info@leenders-coaching.nl')).toBeVisible();
     await expect(canvas.getByText('+31 6 12345678')).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const DesktopInstagramVisibility: Story = {
+  parameters: {
+    viewport: {
+      defaultViewport: 'desktop',
+    },
+  },
+  args: {
+    copyright: '© 2024 Leenders Coaching. Alle rechten voorbehouden.',
+    contact: mockContact,
+    socialLinks: mockSocialLinks,
+  },
+  play: async ({ canvas }) => {
+    await expect(
+      canvas.getByText('© 2024 Leenders Coaching. Alle rechten voorbehouden.')
+    ).toBeVisible();
+    await expect(canvas.getByText('info@leenders-coaching.nl')).toBeVisible();
+    await expect(canvas.getByText('+31 6 12345678')).toBeVisible();
+    await expect(canvas.getByText('Instagram')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -318,7 +321,6 @@ export const AllVariants: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    // Wait for all footer variants to be visible
     await expect(
       canvas.getAllByText(
         '© 2024 Leenders Coaching. Alle rechten voorbehouden.'

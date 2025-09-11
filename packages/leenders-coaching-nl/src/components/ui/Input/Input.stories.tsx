@@ -44,7 +44,6 @@ export const Default: Story = {
     onChange: fn(),
   },
   play: async ({ canvas, userEvent, args }) => {
-    // Wait for input to be visible
     const input = canvas.getByPlaceholderText('Enter your text here');
     await expect(input).toBeVisible();
     await waitForMotionAnimations({ canvas });
@@ -62,7 +61,6 @@ export const Bordered: Story = {
     variant: 'bordered',
   },
   play: async ({ canvas }) => {
-    // Wait for input to be visible
     const input = canvas.getByPlaceholderText('Enter your text here');
     await expect(input).toBeVisible();
     await waitForMotionAnimations({ canvas });
@@ -77,7 +75,6 @@ export const WithLabel: Story = {
     onChange: fn(),
   },
   play: async ({ canvas, userEvent, args }) => {
-    // Wait for input to be visible
     const input = canvas.getByLabelText('Email Address');
     await expect(input).toBeVisible();
     await waitForMotionAnimations({ canvas });
@@ -97,7 +94,6 @@ export const WithLabelBordered: Story = {
     variant: 'bordered',
   },
   play: async ({ canvas }) => {
-    // Wait for input to be visible
     const input = canvas.getByLabelText('Email Address');
     await expect(input).toBeVisible();
     await waitForMotionAnimations({ canvas });
@@ -112,7 +108,6 @@ export const WithError: Story = {
     placeholder: 'Enter your password',
   },
   play: async ({ canvas }) => {
-    // Wait for input and error message to be visible
     const input = canvas.getByLabelText('Password');
     await expect(input).toBeVisible();
     await expect(
@@ -131,7 +126,6 @@ export const WithErrorBordered: Story = {
     variant: 'bordered',
   },
   play: async ({ canvas }) => {
-    // Wait for input and error message to be visible
     const input = canvas.getByLabelText('Password');
     await expect(input).toBeVisible();
     await expect(
@@ -149,7 +143,6 @@ export const Disabled: Story = {
     onChange: fn(),
   },
   play: async ({ canvas, userEvent, args }) => {
-    // Wait for input to be visible
     const input = canvas.getByLabelText('Username');
     await expect(input).toBeVisible();
     await expect(input).toBeDisabled();
@@ -170,7 +163,6 @@ export const DisabledBordered: Story = {
     variant: 'bordered',
   },
   play: async ({ canvas }) => {
-    // Wait for input to be visible and disabled
     const input = canvas.getByLabelText('Username');
     await expect(input).toBeVisible();
     await expect(input).toBeDisabled();
@@ -186,7 +178,6 @@ export const Textarea: Story = {
     onChange: fn(),
   },
   play: async ({ canvas, userEvent, args }) => {
-    // Wait for textarea to be visible
     const textarea = canvas.getByLabelText('Message');
     await expect(textarea).toBeVisible();
     await waitForMotionAnimations({ canvas });
@@ -211,7 +202,6 @@ export const TextareaBordered: Story = {
     variant: 'bordered',
   },
   play: async ({ canvas }) => {
-    // Wait for textarea to be visible
     const textarea = canvas.getByLabelText('Message');
     await expect(textarea).toBeVisible();
     await waitForMotionAnimations({ canvas });
@@ -226,7 +216,6 @@ export const TextareaWithError: Story = {
     error: 'Message is required',
   },
   play: async ({ canvas }) => {
-    // Wait for textarea and error message to be visible
     const textarea = canvas.getByLabelText('Message');
     await expect(textarea).toBeVisible();
     await expect(canvas.getByText('Message is required')).toBeVisible();
@@ -243,7 +232,6 @@ export const TextareaWithErrorBordered: Story = {
     variant: 'bordered',
   },
   play: async ({ canvas }) => {
-    // Wait for textarea and error message to be visible
     const textarea = canvas.getByLabelText('Message');
     await expect(textarea).toBeVisible();
     await expect(canvas.getByText('Message is required')).toBeVisible();

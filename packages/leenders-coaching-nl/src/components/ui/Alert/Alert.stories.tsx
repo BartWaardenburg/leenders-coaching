@@ -45,7 +45,6 @@ export const Default: Story = {
     children: 'This is a default alert message.',
   },
   play: async ({ canvas }) => {
-    // Wait for the alert to be visible and animations to complete
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
     await expect(
       canvas.getByText('This is a default alert message.')
@@ -62,7 +61,6 @@ export const WithCloseButton: Story = {
     children: 'This is an alert with a close button.',
   },
   play: async ({ canvas }) => {
-    // Wait for the alert and close button to be visible
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
     await expect(
       canvas.getByText('This is an alert with a close button.')
@@ -79,7 +77,6 @@ export const Small: Story = {
     children: 'This is a small alert message.',
   },
   play: async ({ canvas }) => {
-    // Wait for the alert to be visible and animations to complete
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
     await expect(
       canvas.getByText('This is a small alert message.')
@@ -96,7 +93,6 @@ export const SmallWithClose: Story = {
     children: 'This is a small alert with a close button.',
   },
   play: async ({ canvas }) => {
-    // Wait for the alert and close button to be visible
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
     await expect(
       canvas.getByText('This is a small alert with a close button.')
@@ -113,7 +109,6 @@ export const Medium: Story = {
     children: 'This is a medium alert message.',
   },
   play: async ({ canvas }) => {
-    // Wait for the alert to be visible and animations to complete
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
     await expect(
       canvas.getByText('This is a medium alert message.')
@@ -130,7 +125,6 @@ export const MediumWithClose: Story = {
     children: 'This is a medium alert with a close button.',
   },
   play: async ({ canvas }) => {
-    // Wait for the alert and close button to be visible
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
     await expect(
       canvas.getByText('This is a medium alert with a close button.')
@@ -147,7 +141,6 @@ export const Large: Story = {
     children: 'This is a large alert message.',
   },
   play: async ({ canvas }) => {
-    // Wait for the alert to be visible and animations to complete
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
     await expect(
       canvas.getByText('This is a large alert message.')
@@ -164,7 +157,6 @@ export const LargeWithClose: Story = {
     children: 'This is a large alert with a close button.',
   },
   play: async ({ canvas }) => {
-    // Wait for the alert and close button to be visible
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
     await expect(
       canvas.getByText('This is a large alert with a close button.')
@@ -197,7 +189,6 @@ export const AllSizes: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    // Wait for all three alerts to be visible
     await expect(canvas.getByText('Small Alert Message')).toBeVisible();
     await expect(canvas.getByText('Medium Alert Message')).toBeVisible();
     await expect(canvas.getByText('Large Alert Message')).toBeVisible();
@@ -237,7 +228,6 @@ export const AllVariants: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    // Wait for all variant alerts to be visible
     await expect(canvas.getByText('Blue Alert Message')).toBeVisible();
     await expect(canvas.getByText('Purple Alert Message')).toBeVisible();
     await expect(canvas.getByText('Green Alert Message')).toBeVisible();
@@ -257,7 +247,6 @@ export const LongContent: Story = {
       'This is an alert with longer content that might wrap to multiple lines. It demonstrates how the alert handles longer text content while maintaining its layout and readability.',
   },
   play: async ({ canvas }) => {
-    // Wait for the alert and close button to be visible
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
     await expect(
       canvas.getByText(

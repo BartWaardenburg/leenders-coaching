@@ -19,7 +19,6 @@ export const Default: Story = {
     children: 'ButtonGroup Example',
   },
   play: async ({ canvas }) => {
-    // Wait for button group content to be visible
     await expect(canvas.getByText('ButtonGroup Example')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },

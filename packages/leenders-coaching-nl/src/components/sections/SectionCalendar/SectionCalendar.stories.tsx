@@ -35,10 +35,9 @@ export const Default: Story = {
   args: {
     title: 'Calendar',
     description: 'Select a date to schedule your appointment.',
-    initialDate: new Date('2024-03-15'), // Fixed date for consistent Storybook/Chromatic testing
+    initialDate: new Date('2024-03-15'),
   },
   render: (args) => {
-    // Convert timestamp to Date object if needed (for Storybook date control)
     const initialDate =
       typeof args.initialDate === 'number'
         ? new Date(args.initialDate)
@@ -54,7 +53,6 @@ export const WithBackground: Story = {
     background: 'blue',
   },
   render: (args) => {
-    // Convert timestamp to Date object if needed (for Storybook date control)
     const initialDate =
       typeof args.initialDate === 'number'
         ? new Date(args.initialDate)
@@ -71,7 +69,6 @@ export const WithBackgroundAndBorder: Story = {
     border: true,
   },
   render: (args) => {
-    // Convert timestamp to Date object if needed (for Storybook date control)
     const initialDate =
       typeof args.initialDate === 'number'
         ? new Date(args.initialDate)
@@ -98,7 +95,6 @@ export const WithCustomDayContent: Story = {
     },
   },
   render: (args) => {
-    // Convert timestamp to Date object if needed (for Storybook date control)
     const initialDate =
       typeof args.initialDate === 'number'
         ? new Date(args.initialDate)

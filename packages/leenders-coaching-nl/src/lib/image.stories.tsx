@@ -10,6 +10,7 @@ import { waitForMotionAnimations } from '../test/chromatic-utils';
 
 const meta = {
   title: 'Utilities/Image',
+  component: () => null, // Utility stories don't have a component
   parameters: {
     layout: 'padded',
   },
@@ -149,7 +150,6 @@ export const CreateSanityLoader: Story = {
     );
   },
   play: async ({ canvas }) => {
-    // Wait for the component to render
     await expect(
       canvas.getByText('Sanity Loader Function')
     ).toBeInTheDocument();
@@ -159,9 +159,25 @@ export const CreateSanityLoader: Story = {
 
 export const GetLQIP: Story = {
   render: () => {
-    const lqipWithMetadata = getLQIP(mockImageWithFullMetadata);
+    const lqipWithMetadata = getLQIP({
+      ...mockImageWithFullMetadata,
+      asset: {
+        ...mockImageWithFullMetadata.asset,
+        metadata: {
+          lqip: mockImageWithFullMetadata.asset.metadata?.lqip,
+        },
+      },
+    });
     const lqipWithoutMetadata = getLQIP(mockImageWithoutMetadata);
-    const lqipWithPartialMetadata = getLQIP(mockImageWithPartialMetadata);
+    const lqipWithPartialMetadata = getLQIP({
+      ...mockImageWithPartialMetadata,
+      asset: {
+        ...mockImageWithPartialMetadata.asset,
+        metadata: {
+          lqip: undefined,
+        },
+      },
+    });
 
     return (
       <div className="space-y-4">
@@ -204,7 +220,6 @@ export const GetLQIP: Story = {
     );
   },
   play: async ({ canvas }) => {
-    // Wait for the component to render
     await expect(
       canvas.getByText('LQIP (Low Quality Image Placeholder) Extraction')
     ).toBeInTheDocument();
@@ -269,7 +284,6 @@ export const GetImageDimensions: Story = {
     );
   },
   play: async ({ canvas }) => {
-    // Wait for the component to render
     await expect(
       canvas.getByText('Image Dimensions Extraction')
     ).toBeInTheDocument();
@@ -279,11 +293,25 @@ export const GetImageDimensions: Story = {
 
 export const GetDominantColor: Story = {
   render: () => {
-    const colorWithMetadata = getDominantColor(mockImageWithFullMetadata);
+    const colorWithMetadata = getDominantColor({
+      ...mockImageWithFullMetadata,
+      asset: {
+        ...mockImageWithFullMetadata.asset,
+        metadata: {
+          palette: mockImageWithFullMetadata.asset.metadata?.palette,
+        },
+      },
+    });
     const colorWithoutMetadata = getDominantColor(mockImageWithoutMetadata);
-    const colorWithPartialMetadata = getDominantColor(
-      mockImageWithPartialMetadata
-    );
+    const colorWithPartialMetadata = getDominantColor({
+      ...mockImageWithPartialMetadata,
+      asset: {
+        ...mockImageWithPartialMetadata.asset,
+        metadata: {
+          palette: undefined,
+        },
+      },
+    });
 
     return (
       <div className="space-y-4">
@@ -348,7 +376,6 @@ export const GetDominantColor: Story = {
     );
   },
   play: async ({ canvas }) => {
-    // Wait for the component to render
     await expect(
       canvas.getByText('Dominant Color Extraction')
     ).toBeInTheDocument();
@@ -423,7 +450,6 @@ export const AllUtilities: Story = {
     );
   },
   play: async ({ canvas }) => {
-    // Wait for the component to render
     await expect(canvas.getByText('All Image Utilities')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },

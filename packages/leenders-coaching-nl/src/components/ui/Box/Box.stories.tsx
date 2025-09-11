@@ -18,7 +18,6 @@ export const Default: Story = {
     children: 'Box Example',
   },
   play: async ({ canvas }) => {
-    // Wait for box content to be visible
     await expect(canvas.getByText('Box Example')).toBeVisible();
   },
 };

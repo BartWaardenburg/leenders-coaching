@@ -62,7 +62,6 @@ export const Primary: Story = {
     variant: 'primary',
   },
   play: async ({ canvas }) => {
-    // Wait for icon button to be visible
     await expect(canvas.getByRole('button', { name: 'Search' })).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
@@ -75,7 +74,6 @@ export const Ghost: Story = {
     variant: 'ghost',
   },
   play: async ({ canvas }) => {
-    // Wait for icon button to be visible
     await expect(canvas.getByRole('button', { name: 'Search' })).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
@@ -88,7 +86,6 @@ export const Disabled: Story = {
     disabled: true,
   },
   play: async ({ canvas }) => {
-    // Wait for disabled icon button to be visible
     const button = canvas.getByRole('button', { name: 'Search' });
     await expect(button).toBeVisible();
     await expect(button).toBeDisabled();

@@ -62,7 +62,6 @@ export const LargeHeading: Story = {
     showBorder: true,
   },
   play: async ({ canvas }) => {
-    // Wait for heading to be visible
     await expect(
       canvas.getByRole('heading', { name: 'Large Heading' })
     ).toBeVisible();
@@ -77,7 +76,6 @@ export const MediumHeading: Story = {
     children: 'Medium Heading',
   },
   play: async ({ canvas }) => {
-    // Wait for heading to be visible
     await expect(
       canvas.getByRole('heading', { name: 'Medium Heading' })
     ).toBeVisible();
@@ -92,7 +90,6 @@ export const SmallHeading: Story = {
     children: 'Small Heading',
   },
   play: async ({ canvas }) => {
-    // Wait for heading to be visible
     await expect(
       canvas.getByRole('heading', { name: 'Small Heading' })
     ).toBeVisible();
@@ -107,7 +104,6 @@ export const WithBorder: Story = {
     showBorder: true,
   },
   play: async ({ canvas }) => {
-    // Wait for heading to be visible
     await expect(
       canvas.getByRole('heading', { name: 'Heading With Border' })
     ).toBeVisible();
@@ -146,7 +142,6 @@ export const WithColoredBorder: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    // Wait for all colored border headings to be visible
     await expect(
       canvas.getByRole('heading', { name: 'Blue Border' })
     ).toBeVisible();
@@ -176,7 +171,6 @@ export const MutedHeading: Story = {
     color: 'muted',
   },
   play: async ({ canvas }) => {
-    // Wait for heading to be visible
     await expect(
       canvas.getByRole('heading', { name: 'Muted Heading' })
     ).toBeVisible();
@@ -191,7 +185,6 @@ export const NoSpacing: Story = {
     children: 'Heading Without Bottom Margin',
   },
   play: async ({ canvas }) => {
-    // Wait for heading to be visible
     await expect(
       canvas.getByRole('heading', { name: 'Heading Without Bottom Margin' })
     ).toBeVisible();

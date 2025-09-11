@@ -64,7 +64,6 @@ export const Default: Story = {
     steps: defaultSteps,
   },
   play: async ({ canvas }) => {
-    // Wait for timeline steps to be present in the DOM (they may be animated)
     const initialConsultation = canvas.getAllByText('Initial Consultation');
     expect(initialConsultation.length).toBeGreaterThan(0);
 
@@ -80,7 +79,6 @@ export const Default: Story = {
     const finalEvaluation = canvas.getAllByText('Final Evaluation');
     expect(finalEvaluation.length).toBeGreaterThan(0);
 
-    // Wait for animations to settle
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -91,7 +89,6 @@ export const WithColor: Story = {
     color: 'purple',
   },
   play: async ({ canvas }) => {
-    // Wait for timeline with color to be present in the DOM (they may be animated)
     const initialConsultation = canvas.getAllByText('Initial Consultation');
     expect(initialConsultation.length).toBeGreaterThan(0);
 
@@ -107,7 +104,6 @@ export const WithColor: Story = {
     const finalEvaluation = canvas.getAllByText('Final Evaluation');
     expect(finalEvaluation.length).toBeGreaterThan(0);
 
-    // Wait for animations to settle
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -139,7 +135,6 @@ export const WithCustomContent: Story = {
     color: 'blue',
   },
   play: async ({ canvas }) => {
-    // Wait for timeline with custom content to be present in the DOM (they may be animated)
     const initialConsultation = canvas.getAllByText('Initial Consultation');
     expect(initialConsultation.length).toBeGreaterThan(0);
 
@@ -156,7 +151,6 @@ export const WithCustomContent: Story = {
       canvas.getByRole('link', { name: 'Schedule Now' })
     ).toBeInTheDocument();
 
-    // Wait for animations to settle
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -175,7 +169,6 @@ export const WithIndividualColors: Story = {
     }),
   },
   play: async ({ canvas }) => {
-    // Wait for timeline with individual colors to be present in the DOM (they may be animated)
     const initialConsultation = canvas.getAllByText('Initial Consultation');
     expect(initialConsultation.length).toBeGreaterThan(0);
 
@@ -191,7 +184,6 @@ export const WithIndividualColors: Story = {
     const finalEvaluation = canvas.getAllByText('Final Evaluation');
     expect(finalEvaluation.length).toBeGreaterThan(0);
 
-    // Wait for animations to settle
     await waitForMotionAnimations({ canvas });
   },
 };

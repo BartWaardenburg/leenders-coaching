@@ -128,7 +128,6 @@ export const HeaderSection: Story = {
     data: mockHeaderSection,
   },
   play: async ({ canvas }) => {
-    // Wait for the section to render
     await expect(canvas.getByTestId('section')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
@@ -140,7 +139,6 @@ export const ContentSection: Story = {
     data: mockContentSection,
   },
   play: async ({ canvas }) => {
-    // Wait for the section to render
     await expect(canvas.getByTestId('section')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
@@ -152,7 +150,6 @@ export const CardsSection: Story = {
     data: mockCardsSection,
   },
   play: async ({ canvas }) => {
-    // Wait for the section to render
     await expect(canvas.getByText('Our Services')).toBeInTheDocument();
     await expect(
       canvas.getByText('Explore our range of services')
@@ -169,7 +166,6 @@ export const FAQSection: Story = {
     data: mockFAQSection,
   },
   play: async ({ canvas }) => {
-    // Wait for the section to render
     await expect(canvas.getByTestId('section')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
@@ -181,7 +177,6 @@ export const FormSection: Story = {
     data: mockFormSection,
   },
   play: async ({ canvas }) => {
-    // Wait for the section to render
     await expect(canvas.getByTestId('section')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
@@ -231,6 +226,10 @@ export const AllSectionTypes: Story = {
   parameters: {
     controls: { hideNoControlsWarning: true },
   },
+  args: {
+    type: 'sectionHeader',
+    data: mockHeaderSection,
+  },
   render: () => (
     <div className="space-y-8">
       <SectionRenderer type="sectionHeader" data={mockHeaderSection} />
@@ -241,7 +240,6 @@ export const AllSectionTypes: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    // Wait for all sections to render - check for section containers
     await expect(canvas.getAllByTestId('section')).toHaveLength(5);
     await waitForMotionAnimations({ canvas });
   },
@@ -250,6 +248,10 @@ export const AllSectionTypes: Story = {
 export const ErrorHandling: Story = {
   parameters: {
     controls: { hideNoControlsWarning: true },
+  },
+  args: {
+    type: 'sectionHeader',
+    data: mockHeaderSection,
   },
   render: () => (
     <div className="space-y-8">
@@ -273,7 +275,6 @@ export const ErrorHandling: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    // Wait for valid section to render
     await expect(canvas.getByTestId('section')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },

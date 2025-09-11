@@ -19,7 +19,6 @@ export const Default: Story = {
     children: 'Section Example',
   },
   play: async ({ canvas }) => {
-    // Wait for section content to be visible
     await expect(canvas.getByText('Section Example')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },

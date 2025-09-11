@@ -71,7 +71,6 @@ export const Default: Story = {
     )),
   },
   play: async ({ canvas }) => {
-    // Wait for the carousel to be visible and animations to complete
     await expect(
       canvas.getAllByText((_, element) => {
         return (
@@ -117,7 +116,6 @@ export const WithImages: Story = {
     slides: images.map((image) => <ImageSlide key={image.src} {...image} />),
   },
   play: async ({ canvas }) => {
-    // Wait for the carousel with images to be visible and animations to complete
     await expect(
       canvas.getByAltText('Team collaborating in a modern office')
     ).toBeVisible();
@@ -137,7 +135,6 @@ export const SingleSlide: Story = {
     ],
   },
   play: async ({ canvas }) => {
-    // Wait for the single slide to be visible
     await expect(canvas.getByText('Single Slide')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
@@ -165,7 +162,6 @@ export const ManySlides: Story = {
     )),
   },
   play: async ({ canvas }) => {
-    // Wait for the first slide to be visible
     await expect(canvas.getByText('Slide 1')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
@@ -179,7 +175,6 @@ export const WithCustomClassName: Story = {
     className: 'border-2 border-blue-500 rounded-lg p-4',
   },
   play: async ({ canvas }) => {
-    // Wait for the carousel to be visible and animations to complete
     await expect(
       canvas.getAllByText((_, element) => {
         return (
@@ -202,8 +197,18 @@ export const MixedContent: Story = {
           This slide contains only text content.
         </p>
       </Box>,
-      <ImageSlide key="image" {...images[0]} />,
-      <TestimonialSlide key="testimonial" {...testimonials[0]} />,
+      <ImageSlide
+        key="image"
+        src={images[0]?.src || ''}
+        alt={images[0]?.alt || ''}
+      />,
+      <TestimonialSlide
+        key="testimonial"
+        quote={testimonials[0]?.quote || ''}
+        name={testimonials[0]?.name || ''}
+        role={testimonials[0]?.role || ''}
+        image={testimonials[0]?.image || ''}
+      />,
       <Box key="form" className="p-8">
         <h2 className="text-2xl font-bold mb-4">Form Content</h2>
         <div className="space-y-4">
@@ -220,7 +225,6 @@ export const MixedContent: Story = {
     ],
   },
   play: async ({ canvas }) => {
-    // Wait for the first slide to be visible
     await expect(canvas.getByText('Text Content')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
@@ -230,7 +234,11 @@ export const AllVariants: Story = {
   parameters: {
     controls: { hideNoControlsWarning: true },
   },
-  args: {},
+  args: {
+    slides: testimonials.map((testimonial) => (
+      <TestimonialSlide key={testimonial.name} {...testimonial} />
+    )),
+  },
   render: () => (
     <div className="space-y-8">
       <div>
@@ -267,7 +275,6 @@ export const AllVariants: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    // Wait for all carousel variants to be visible
     await expect(canvas.getByText('Default Carousel')).toBeVisible();
     await expect(canvas.getAllByText('Single Slide')).toHaveLength(2);
     await waitForMotionAnimations({ canvas });

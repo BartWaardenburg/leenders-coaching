@@ -16,7 +16,6 @@ export const Default: Story = {
     children: "Life is what happens while you're busy making other plans.",
   },
   play: async ({ canvas }) => {
-    // Wait for quote to be present (text may be broken up by quotes and animated)
     expect(canvas.getByRole('blockquote')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
@@ -28,7 +27,6 @@ export const WithCitation: Story = {
     cite: 'John Lennon',
   },
   play: async ({ canvas }) => {
-    // Wait for quote with citation to be present (text may be broken up by quotes and animated)
     expect(canvas.getByRole('blockquote')).toBeInTheDocument();
     expect(canvas.getByText('John Lennon')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
@@ -42,7 +40,6 @@ export const LongQuote: Story = {
     cite: 'Multiple inspirational quotes combined',
   },
   play: async ({ canvas }) => {
-    // Wait for long quote with citation to be present (text may be broken up by quotes and animated)
     expect(canvas.getByRole('blockquote')).toBeInTheDocument();
     expect(
       canvas.getByText('Multiple inspirational quotes combined')

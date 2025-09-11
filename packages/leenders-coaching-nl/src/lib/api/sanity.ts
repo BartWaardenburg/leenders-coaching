@@ -13,9 +13,12 @@ function isChromaticHost(hostname: string): boolean {
   );
 }
 
-/* Check if we're in a Storybook, test, or mock environment */
+/**
+ * Check if we're in a Storybook, test, or mock environment
+ * @returns True if running in a non-production environment
+ */
 const isNonProductionEnvironment = () => {
-  // Check for test environments (Jest, Vitest)
+  /* Check for test environments (Jest, Vitest) */
   if (typeof process !== 'undefined' && process.env) {
     if (
       process.env.NODE_ENV === 'test' ||
@@ -27,17 +30,18 @@ const isNonProductionEnvironment = () => {
     }
   }
 
-  // Check for browser-based Storybook/Chromatic environments
+  /* Check for browser-based Storybook/Chromatic environments */
   if (typeof window !== 'undefined' && window.location) {
     const hostname = window.location.hostname;
     const href = window.location.href;
 
-    // Use explicit check function for chromatic hostnames
+    /* Use explicit check function for chromatic hostnames */
     return (
       isChromaticHost(hostname) ||
       hostname === 'capture-loopback.chromatic.com' ||
-      href.includes('iframe.html') || // Storybook iframe
-      (hostname === 'localhost' && window.parent !== window) // Storybook localhost
+      href.includes('iframe.html') /* Storybook iframe */ ||
+      (hostname === 'localhost' &&
+        window.parent !== window) /* Storybook localhost */
     );
   }
 

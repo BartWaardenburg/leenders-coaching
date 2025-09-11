@@ -25,7 +25,6 @@ export const Default: Story = {
     className: 'text-foreground',
   },
   play: async ({ canvas }) => {
-    // Wait for theme toggle button to be visible
     await expect(canvas.getByRole('button')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },

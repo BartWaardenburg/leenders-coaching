@@ -19,7 +19,6 @@ export const Default: Story = {
     children: 'Grid Example',
   },
   play: async ({ canvas }) => {
-    // Wait for grid content to be visible
     await expect(canvas.getByText('Grid Example')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },

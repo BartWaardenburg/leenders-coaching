@@ -5,6 +5,7 @@ import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'Utilities/Sections/FAQ',
+  component: () => null, // Utility stories don't have a component
   parameters: {
     layout: 'padded',
   },
@@ -179,10 +180,7 @@ export const TransformValidFAQ: Story = {
             <h4 className="font-medium mb-2">FAQ Items:</h4>
             <div className="space-y-3">
               {transformed.items.map((item, index) => (
-                <div
-                  key={item._key}
-                  className="border-l-4 border-blue-500 pl-4"
-                >
+                <div key={index} className="border-l-4 border-blue-500 pl-4">
                   <p className="font-medium">{item.question}</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     Answer: {item.answer.length} block(s)
@@ -207,7 +205,6 @@ export const TransformValidFAQ: Story = {
     }
   },
   play: async ({ canvas }) => {
-    // Wait for the component to render
     await expect(
       canvas.getByText('Valid FAQ Section Transformation')
     ).toBeInTheDocument();
@@ -260,7 +257,6 @@ export const TransformFAQWithoutItems: Story = {
     }
   },
   play: async ({ canvas }) => {
-    // Wait for the component to render
     await expect(
       canvas.getByText('FAQ Section Without Items')
     ).toBeInTheDocument();
@@ -305,10 +301,7 @@ export const TransformFAQWithInvalidItems: Story = {
             <h4 className="font-medium mb-2">Valid FAQ Items (filtered):</h4>
             <div className="space-y-3">
               {transformed.items.map((item, index) => (
-                <div
-                  key={item._key}
-                  className="border-l-4 border-green-500 pl-4"
-                >
+                <div key={index} className="border-l-4 border-green-500 pl-4">
                   <p className="font-medium">{item.question}</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     Answer: {item.answer.length} block(s)
@@ -333,7 +326,6 @@ export const TransformFAQWithInvalidItems: Story = {
     }
   },
   play: async ({ canvas }) => {
-    // Wait for the component to render
     await expect(
       canvas.getByText('FAQ Section With Invalid Items')
     ).toBeInTheDocument();
@@ -344,7 +336,7 @@ export const TransformFAQWithInvalidItems: Story = {
 export const TransformInvalidFAQ: Story = {
   render: () => {
     try {
-      const transformed = transformFAQSection(mockInvalidFAQData);
+      transformFAQSection(mockInvalidFAQData);
 
       return (
         <div className="bg-green-100 dark:bg-green-900 p-4 rounded-lg">
@@ -370,7 +362,6 @@ export const TransformInvalidFAQ: Story = {
     }
   },
   play: async ({ canvas }) => {
-    // Wait for the component to render
     await expect(canvas.getByText('Expected Error')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
@@ -437,7 +428,6 @@ export const AllTransformations: Story = {
     );
   },
   play: async ({ canvas }) => {
-    // Wait for the component to render
     await expect(
       canvas.getByText('All FAQ Transformations')
     ).toBeInTheDocument();

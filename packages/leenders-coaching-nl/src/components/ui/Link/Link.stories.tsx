@@ -50,7 +50,6 @@ export const Default: Story = {
     href: '#',
   },
   play: async ({ canvas }) => {
-    // Wait for link to be visible
     await expect(
       canvas.getByRole('link', { name: 'Default Link' })
     ).toBeVisible();
@@ -68,7 +67,6 @@ export const Subtle: Story = {
     variant: 'subtle',
   },
   play: async ({ canvas }) => {
-    // Wait for subtle link to be visible
     await expect(
       canvas.getByRole('link', { name: 'Subtle Link' })
     ).toBeVisible();
@@ -88,7 +86,6 @@ export const AnimatedSlideBelow: Story = {
     lineStyle: 'slide',
   },
   play: async ({ canvas }) => {
-    // Wait for animated link to be visible
     await expect(
       canvas.getByRole('link', { name: 'Animated Link (Slide Below)' })
     ).toBeVisible();
@@ -108,7 +105,6 @@ export const AnimatedSlideAbove: Story = {
     lineStyle: 'slide',
   },
   play: async ({ canvas }) => {
-    // Wait for animated link to be visible
     await expect(
       canvas.getByRole('link', { name: 'Animated Link (Slide Above)' })
     ).toBeVisible();
@@ -128,7 +124,6 @@ export const AnimatedMoveBelow: Story = {
     lineStyle: 'move',
   },
   play: async ({ canvas }) => {
-    // Wait for animated link to be visible
     await expect(
       canvas.getByRole('link', { name: 'Animated Link (Move Below)' })
     ).toBeVisible();
@@ -148,7 +143,6 @@ export const AnimatedMoveAbove: Story = {
     lineStyle: 'move',
   },
   play: async ({ canvas }) => {
-    // Wait for animated link to be visible
     await expect(
       canvas.getByRole('link', { name: 'Animated Link (Move Above)' })
     ).toBeVisible();
@@ -167,7 +161,6 @@ export const ExternalLink: Story = {
     rel: 'noopener noreferrer',
   },
   play: async ({ canvas }) => {
-    // Wait for external link to be visible
     const link = canvas.getByRole('link', { name: 'External Link' });
     await expect(link).toBeVisible();
     await expect(link).toHaveAttribute('href', 'https://example.com');
@@ -208,7 +201,6 @@ export const ExternalLinkVariants: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    // Wait for all external link variants to be visible
     await expect(
       canvas.getByRole('link', { name: 'Default External Link' })
     ).toBeVisible();
@@ -238,7 +230,6 @@ export const WithLongText: Story = {
     href: '#',
   },
   play: async ({ canvas }) => {
-    // Wait for long text link to be visible
     await expect(canvas.getByRole('link')).toBeVisible();
     await expect(
       canvas.getByText(

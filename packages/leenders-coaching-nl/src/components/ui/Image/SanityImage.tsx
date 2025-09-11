@@ -59,27 +59,27 @@ export function SanityImage({
     );
   }
 
-  // Generate loader function for Next.js Image
+  /* Generate loader function for Next.js Image */
   const loader = createSanityLoader(image, qualityHint);
 
-  // Get base image URL for src (Next.js will use loader for different sizes)
+  /* Get base image URL for src (Next.js will use loader for different sizes) */
   const baseUrl = createSanityLoader(
     image,
     qualityHint
   )({ src: '', width: 1200 });
 
-  // Extract LQIP for blur placeholder
+  /* Extract LQIP for blur placeholder */
   const blurDataURL = getLQIP(
     image as SanityImageSource & { asset?: { metadata?: { lqip?: string } } }
   );
 
-  // Calculate object position based on hotspot if requested
+  /* Calculate object position based on hotspot if requested */
   const objectPosition =
     followHotspot && image?.hotspot
       ? `${Math.round(image.hotspot.x * 100)}% ${Math.round(image.hotspot.y * 100)}%`
       : undefined;
 
-  // Get image dimensions for natural sizing
+  /* Get image dimensions for natural sizing */
   const dimensions = getImageDimensions(
     image as SanityImageSource & {
       asset?: {
@@ -90,7 +90,7 @@ export function SanityImage({
     }
   );
 
-  // Get dominant color for background
+  /* Get dominant color for background */
   const dominantColor = getDominantColor(
     image as SanityImageSource & {
       asset?: {
@@ -115,14 +115,14 @@ export function SanityImage({
     },
   } satisfies Partial<NextImageProps>;
 
-  // If caller uses `fill`, omit width/height and use loader
+  /* If caller uses `fill`, omit width/height and use loader */
   if ('fill' in rest && rest.fill) {
     return (
       <NextImage src={baseUrl} loader={loader} fill {...common} {...rest} />
     );
   }
 
-  // For fixed dimensions, use natural dimensions if available
+  /* For fixed dimensions, use natural dimensions if available */
   const width = dimensions?.width || 1200;
   const height = dimensions?.height || Math.round(width * 0.75);
 

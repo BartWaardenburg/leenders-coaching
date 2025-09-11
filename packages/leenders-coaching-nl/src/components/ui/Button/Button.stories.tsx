@@ -60,7 +60,6 @@ export const Default: Story = {
     children: 'Click me',
   },
   play: async ({ canvas }) => {
-    // Wait for button to be visible
     await expect(
       canvas.getByRole('button', { name: 'Click me' })
     ).toBeVisible();
@@ -74,7 +73,6 @@ export const WithLoading: Story = {
     isLoading: true,
   },
   play: async ({ canvas }) => {
-    // Wait for loading button to be visible
     await expect(
       canvas.getByRole('button', { name: 'Loading...' })
     ).toBeVisible();
@@ -91,7 +89,6 @@ export const Disabled: Story = {
     disabled: true,
   },
   play: async ({ canvas }) => {
-    // Wait for disabled button to be visible
     await expect(
       canvas.getByRole('button', { name: 'Disabled' })
     ).toBeVisible();
@@ -108,7 +105,6 @@ export const AsLink: Story = {
     href: '/',
   },
   play: async ({ canvas }) => {
-    // Wait for link button to be visible
     await expect(
       canvas.getByRole('link', { name: 'Go to Home' })
     ).toBeVisible();
@@ -147,7 +143,6 @@ export const AllVariants: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    // Wait for all variant buttons to be visible
     await expect(canvas.getByRole('button', { name: 'Black' })).toBeVisible();
     await expect(
       canvas.getByRole('button', { name: 'Transparent' })
@@ -183,7 +178,6 @@ export const AllSizes: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    // Wait for all size buttons to be visible
     await expect(canvas.getByRole('button', { name: 'Small' })).toBeVisible();
     await expect(canvas.getByRole('button', { name: 'Medium' })).toBeVisible();
     await expect(canvas.getByRole('button', { name: 'Large' })).toBeVisible();

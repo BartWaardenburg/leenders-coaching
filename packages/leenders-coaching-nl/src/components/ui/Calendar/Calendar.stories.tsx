@@ -42,7 +42,6 @@ export const Default: Story = {
     },
   },
   render: (args) => {
-    // Convert timestamp to Date object if needed (for Storybook date control)
     const initialDate =
       typeof args.initialDate === 'number'
         ? new Date(args.initialDate)
@@ -51,17 +50,16 @@ export const Default: Story = {
     return <Calendar {...args} initialDate={initialDate} />;
   },
   play: async ({ canvas }) => {
-    // Wait for calendar to be visible
     const monthElements = canvas.getAllByText('Maart 2024');
     expect(monthElements.length).toBeGreaterThan(0);
-    expect(canvas.getByText('Ma')).toBeInTheDocument(); // Day header
+    expect(canvas.getByText('Ma')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
 };
 
 export const WithCustomDayContent: Story = {
   args: {
-    initialDate: new Date('2024-03-15'), // Fixed date for consistent Storybook/Chromatic testing
+    initialDate: new Date('2024-03-15'),
     onSelectDate: (date) => {
       console.log('Selected date:', date.toLocaleDateString());
     },
@@ -73,7 +71,6 @@ export const WithCustomDayContent: Story = {
       ),
   },
   render: (args) => {
-    // Convert timestamp to Date object if needed (for Storybook date control)
     const initialDate =
       typeof args.initialDate === 'number'
         ? new Date(args.initialDate)
@@ -82,10 +79,9 @@ export const WithCustomDayContent: Story = {
     return <Calendar {...args} initialDate={initialDate} />;
   },
   play: async ({ canvas }) => {
-    // Wait for calendar to be visible
     const monthElements = canvas.getAllByText('Maart 2024');
     expect(monthElements.length).toBeGreaterThan(0);
-    expect(canvas.getByText('Ma')).toBeInTheDocument(); // Day header
+    expect(canvas.getByText('Ma')).toBeInTheDocument();
     expect(canvas.getByText('Event at 2 PM')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
@@ -97,16 +93,13 @@ const nextMonth = new Date('2024-04-15');
 
 export const WithDisabledDates: Story = {
   args: {
-    initialDate: new Date('2024-03-15'), // Fixed date for consistent Storybook/Chromatic testing
+    initialDate: new Date('2024-03-15'),
     onSelectDate: (date) => {
       console.log('Selected date:', date.toLocaleDateString());
     },
     disabledDates: {
-      // Disable weekends
       daysOfWeek: [0, 6],
-      // Disable specific dates
-      dates: [new Date('2024-03-15')], // Fixed date for consistent Storybook/Chromatic testing
-      // Disable a date range
+      dates: [new Date('2024-03-15')],
       ranges: [
         {
           start: nextWeek,
@@ -116,7 +109,6 @@ export const WithDisabledDates: Story = {
     },
   },
   render: (args) => {
-    // Convert timestamp to Date object if needed (for Storybook date control)
     const initialDate =
       typeof args.initialDate === 'number'
         ? new Date(args.initialDate)
@@ -125,10 +117,9 @@ export const WithDisabledDates: Story = {
     return <Calendar {...args} initialDate={initialDate} />;
   },
   play: async ({ canvas }) => {
-    // Wait for calendar to be visible
     const monthElements = canvas.getAllByText('Maart 2024');
     expect(monthElements.length).toBeGreaterThan(0);
-    expect(canvas.getByText('Ma')).toBeInTheDocument(); // Day header
+    expect(canvas.getByText('Ma')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
 };

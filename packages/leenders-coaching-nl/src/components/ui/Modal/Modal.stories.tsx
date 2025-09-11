@@ -54,7 +54,6 @@ export const Default: Story = {
     children: 'This is the content of the modal dialog.',
   },
   play: async ({ canvas }) => {
-    // Wait for the modal to be present in the DOM (it may be animated)
     await expect(canvas.getByRole('dialog')).toBeInTheDocument();
     expect(
       canvas.getByText('This is the content of the modal dialog.')
@@ -71,7 +70,6 @@ export const WithoutCloseButton: Story = {
     children: "This modal doesn't have a close button.",
   },
   play: async ({ canvas }) => {
-    // Wait for the modal to be present in the DOM (it may be animated)
     await expect(canvas.getByRole('dialog')).toBeInTheDocument();
     expect(
       canvas.getByText("This modal doesn't have a close button.")
@@ -100,7 +98,6 @@ export const WithLongContent: Story = {
     ),
   },
   play: async ({ canvas }) => {
-    // Wait for the modal to be present in the DOM (it may be animated)
     await expect(canvas.getByRole('dialog')).toBeInTheDocument();
     expect(
       canvas.getByText(
@@ -170,7 +167,6 @@ export const WithBackgroundContent: Story = {
     </Section>
   ),
   play: async ({ canvas }) => {
-    // Wait for the modal to be present in the DOM (it may be animated)
     await expect(canvas.getByRole('dialog')).toBeInTheDocument();
 
     // Check modal content
