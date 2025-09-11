@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
+import { fn } from 'storybook/test';
 import { Calendar } from './Calendar';
 import { Box } from '../Box';
 import { Text } from '../Text';
@@ -37,9 +38,7 @@ type Story = StoryObj<typeof Calendar>;
 export const Default: Story = {
   args: {
     initialDate: new Date('2024-03-15'),
-    onSelectDate: (date) => {
-      console.log('Selected date:', date.toLocaleDateString());
-    },
+    onSelectDate: fn(),
   },
   render: (args) => {
     const initialDate =
@@ -53,6 +52,7 @@ export const Default: Story = {
     const monthElements = canvas.getAllByText('Maart 2024');
     expect(monthElements.length).toBeGreaterThan(0);
     expect(canvas.getByText('Ma')).toBeInTheDocument();
+
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -120,6 +120,39 @@ export const WithDisabledDates: Story = {
     const monthElements = canvas.getAllByText('Maart 2024');
     expect(monthElements.length).toBeGreaterThan(0);
     expect(canvas.getByText('Ma')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const InteractiveCalendar: Story = {
+  args: {
+    initialDate: new Date('2024-03-15'),
+    onSelectDate: fn(),
+  },
+  render: (args) => {
+    const initialDate =
+      typeof args.initialDate === 'number'
+        ? new Date(args.initialDate)
+        : args.initialDate;
+
+    return <Calendar {...args} initialDate={initialDate} />;
+  },
+  play: async ({ canvas, userEvent, step }) => {
+    await step('Calendar is rendered correctly', async () => {
+      const monthElements = canvas.getAllByText('Maart 2024');
+      expect(monthElements.length).toBeGreaterThan(0);
+      expect(canvas.getByText('Ma')).toBeInTheDocument();
+      expect(canvas.getByText('Di')).toBeInTheDocument();
+      expect(canvas.getByText('Wo')).toBeInTheDocument();
+    });
+
+    await step('Hover interactions', async () => {
+      const day10 = canvas.getByText('10');
+      await userEvent.hover(day10);
+      // Wait for any hover effects
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    });
+
     await waitForMotionAnimations({ canvas });
   },
 };

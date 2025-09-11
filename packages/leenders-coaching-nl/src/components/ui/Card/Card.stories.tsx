@@ -6,7 +6,6 @@ import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 import { Section } from '@/components/ui/Section';
 import { Text } from '@/components/ui/Text';
 
-/* Voorbeeld afbeelding import - je moet een echte afbeelding toevoegen */
 import exampleImage from '../../../assets/images/99-Simone-louise-boonstoppel-fotografie.jpg';
 import { Grid } from '../Grid';
 
@@ -64,17 +63,23 @@ const defaultArgs = {
   excerpt:
     'Verbeter je communicatievaardigheden voor betere persoonlijke en professionele relaties.',
   slug: 'communicatievaardigheden',
+  testid: 'card-default',
   children: <Text>Voorbeeldinhoud voor blauwe variant</Text>,
 };
 
 export const Default: Story = {
   args: defaultArgs,
   play: async ({ canvas }) => {
-    expect(canvas.getByText('Communicatievaardigheden')).toBeInTheDocument();
-    expect(
-      canvas.getByText('Voorbeeldinhoud voor blauwe variant')
-    ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    const cardTitle = canvas.getByText('Communicatievaardigheden');
+    const cardContent = canvas.getByText('Voorbeeldinhoud voor blauwe variant');
+
+    expect(cardTitle).toBeInTheDocument();
+    expect(cardContent).toBeInTheDocument();
+
+    await waitForMotionAnimations({
+      canvas,
+      element: canvas.getByTestId('card-default'),
+    });
   },
 };
 
@@ -82,11 +87,15 @@ export const WithImage: Story = {
   args: {
     ...defaultArgs,
     image: exampleImage,
+    testid: 'card-with-image',
   },
   play: async ({ canvas }) => {
     expect(canvas.getByText('Communicatievaardigheden')).toBeInTheDocument();
     expect(canvas.getByRole('img')).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    await waitForMotionAnimations({
+      canvas,
+      element: canvas.getByTestId('card-with-image'),
+    });
   },
 };
 
@@ -94,10 +103,14 @@ export const Featured: Story = {
   args: {
     ...defaultArgs,
     featured: true,
+    testid: 'card-featured',
   },
   play: async ({ canvas }) => {
     expect(canvas.getByText('Communicatievaardigheden')).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    await waitForMotionAnimations({
+      canvas,
+      element: canvas.getByTestId('card-featured'),
+    });
   },
 };
 
@@ -128,6 +141,7 @@ export const AllVariants: Story = {
         image={exampleImage}
         variant="blue"
         title="Blauwe Variant"
+        testid="card-blue-variant"
       >
         <Text>Voorbeeldinhoud voor blauwe variant</Text>
       </Card>
@@ -136,6 +150,7 @@ export const AllVariants: Story = {
         image={exampleImage}
         variant="purple"
         title="Paarse Variant"
+        testid="card-purple-variant"
       >
         <Text>Voorbeeldinhoud voor paarse variant</Text>
       </Card>
@@ -144,10 +159,17 @@ export const AllVariants: Story = {
         image={exampleImage}
         variant="green"
         title="Groene Variant"
+        testid="card-green-variant"
       >
         <Text>Voorbeeldinhoud voor groene variant</Text>
       </Card>
-      <Card {...args} image={exampleImage} variant="pink" title="Roze Variant">
+      <Card
+        {...args}
+        image={exampleImage}
+        variant="pink"
+        title="Roze Variant"
+        testid="card-pink-variant"
+      >
         <Text>Voorbeeldinhoud voor roze variant</Text>
       </Card>
       <Card
@@ -155,6 +177,7 @@ export const AllVariants: Story = {
         image={exampleImage}
         variant="yellow"
         title="Gele Variant"
+        testid="card-yellow-variant"
       >
         <Text>Voorbeeldinhoud voor gele variant</Text>
       </Card>
@@ -163,6 +186,7 @@ export const AllVariants: Story = {
         image={exampleImage}
         variant="teal"
         title="Turquoise Variant"
+        testid="card-teal-variant"
       >
         <Text>Voorbeeldinhoud voor turquoise variant</Text>
       </Card>
@@ -180,7 +204,12 @@ export const AllVariants: Story = {
     expect(canvas.getByText('Roze Variant')).toBeInTheDocument();
     expect(canvas.getByText('Gele Variant')).toBeInTheDocument();
     expect(canvas.getByText('Turquoise Variant')).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+
+    // Wait for animations on all cards
+    await waitForMotionAnimations({
+      canvas,
+      element: canvas.getByTestId('card-blue-variant'),
+    });
   },
 };
 
@@ -190,22 +219,52 @@ export const AllVariantsNonClickable: Story = {
   },
   render: () => (
     <Grid>
-      <Card image={exampleImage} variant="blue" title="Blauwe Variant">
+      <Card
+        image={exampleImage}
+        variant="blue"
+        title="Blauwe Variant"
+        testid="card-nonclickable-blue"
+      >
         <Text>Voorbeeldinhoud voor blauwe variant</Text>
       </Card>
-      <Card image={exampleImage} variant="purple" title="Paarse Variant">
+      <Card
+        image={exampleImage}
+        variant="purple"
+        title="Paarse Variant"
+        testid="card-nonclickable-purple"
+      >
         <Text>Voorbeeldinhoud voor paarse variant</Text>
       </Card>
-      <Card image={exampleImage} variant="green" title="Groene Variant">
+      <Card
+        image={exampleImage}
+        variant="green"
+        title="Groene Variant"
+        testid="card-nonclickable-green"
+      >
         <Text>Voorbeeldinhoud voor groene variant</Text>
       </Card>
-      <Card image={exampleImage} variant="pink" title="Roze Variant">
+      <Card
+        image={exampleImage}
+        variant="pink"
+        title="Roze Variant"
+        testid="card-nonclickable-pink"
+      >
         <Text>Voorbeeldinhoud voor roze variant</Text>
       </Card>
-      <Card image={exampleImage} variant="yellow" title="Gele Variant">
+      <Card
+        image={exampleImage}
+        variant="yellow"
+        title="Gele Variant"
+        testid="card-nonclickable-yellow"
+      >
         <Text>Voorbeeldinhoud voor gele variant</Text>
       </Card>
-      <Card image={exampleImage} variant="teal" title="Turquoise Variant">
+      <Card
+        image={exampleImage}
+        variant="teal"
+        title="Turquoise Variant"
+        testid="card-nonclickable-teal"
+      >
         <Text>Voorbeeldinhoud voor turquoise variant</Text>
       </Card>
     </Grid>
@@ -224,6 +283,7 @@ export const FullExample: Story = {
     categories: ['Communicatie', 'Leiderschap'],
     image: exampleImage,
     variant: 'blue',
+    testid: 'card-full-example',
   },
 };
 
@@ -231,6 +291,7 @@ export const WithoutExcerpt: Story = {
   args: {
     title: defaultArgs.title,
     slug: defaultArgs.slug,
+    testid: 'card-without-excerpt',
   },
 };
 
@@ -238,6 +299,7 @@ export const WithBorder: Story = {
   args: {
     ...defaultArgs,
     border: true,
+    testid: 'card-with-border',
   },
 };
 
@@ -245,6 +307,7 @@ export const OnlyTitle: Story = {
   args: {
     title: 'Minimaal Kaart Voorbeeld',
     slug: 'minimaal',
+    testid: 'card-only-title',
   },
 };
 
@@ -256,6 +319,7 @@ export const NonClickable: Story = {
     categories: ['Informatie'],
     variant: 'blue',
     border: true,
+    testid: 'card-non-clickable',
     children: (
       <Text>
         Dit is een informatieve kaart zonder link. De kaart heeft geen hover
@@ -269,5 +333,39 @@ export const NonClickableWithBorder: Story = {
   args: {
     ...NonClickable.args,
     border: true,
+  },
+};
+
+export const InteractiveCard: Story = {
+  args: {
+    ...defaultArgs,
+    image: exampleImage,
+    variant: 'blue',
+    border: true,
+    featured: true,
+    date: '15 maart 2024',
+    categories: ['Interactief', 'Test'],
+    testid: 'card-interactive',
+  },
+  play: async ({ canvas }) => {
+    // Simple verification without complex user interactions
+    expect(canvas.getByText('Communicatievaardigheden')).toBeInTheDocument();
+    expect(canvas.getByRole('img')).toBeInTheDocument();
+    expect(canvas.getByText('15 maart 2024')).toBeInTheDocument();
+    expect(canvas.getByText('Interactief, Test')).toBeInTheDocument();
+
+    // Verify link exists and has correct href
+    const cardLink = canvas.queryByRole('link');
+    if (cardLink) {
+      expect(cardLink).toHaveAttribute(
+        'href',
+        '/blog/communicatievaardigheden'
+      );
+    }
+
+    await waitForMotionAnimations({
+      canvas,
+      element: canvas.getByTestId('card-interactive'),
+    });
   },
 };

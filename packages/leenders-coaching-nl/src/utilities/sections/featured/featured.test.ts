@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { transformFeaturedSection } from './featured';
+import { transformFeaturedSection } from './';
 import type { SectionFeatured as SanitySectionFeatured } from '@/types/sanity/schema';
 
 // Helper function to create Sanity document properties

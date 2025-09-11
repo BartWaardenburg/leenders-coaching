@@ -12,7 +12,7 @@ import { Card } from '@/components/ui/Card';
 const isSanitySectionCards = (
   data: Record<string, unknown>
 ): data is SanitySectionCards => {
-  return data._type === 'sectionCards' && Array.isArray(data.cards);
+  return data._type === 'sectionCards';
 };
 
 /**

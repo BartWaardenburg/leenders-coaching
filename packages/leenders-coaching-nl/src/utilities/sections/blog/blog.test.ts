@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { transformBlogSection } from './blog';
+import { transformBlogSection } from './';
 import type { Post } from '@/types/sanity/schema';
 
 // Test-specific type for resolved category (simulating Sanity's reference resolution)

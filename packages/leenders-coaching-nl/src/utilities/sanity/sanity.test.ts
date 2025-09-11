@@ -12,7 +12,7 @@ vi.mock('./sanity', () => ({
   groq: vi.fn(),
 }));
 
-import { defineQuery, groq } from './sanity';
+import { defineQuery, groq } from './';
 
 // Mock next-sanity
 vi.mock('next-sanity', () => ({

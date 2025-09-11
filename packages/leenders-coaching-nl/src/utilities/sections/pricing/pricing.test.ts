@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { transformPricingSection } from './pricing';
+import { transformPricingSection } from './';
 import type { SectionPricing as SanitySectionPricing } from '@/types/sanity/schema';
 
 // Helper function to create Sanity document properties

@@ -9,8 +9,8 @@ import { ThemeProvider } from '../src/components/providers/ThemeProvider';
 import { ToastProvider } from '../src/components/providers/ToastProvider';
 import { allModes } from './modes';
 import '../src/app/globals.css';
+import isChromatic from 'chromatic/isChromatic';
 
-// Motion configuration for deterministic testing
 import { MotionConfig } from 'motion/react';
 
 /**
@@ -91,17 +91,18 @@ const preview: Preview = {
     chromatic: {
       pauseAnimationAtEnd: true,
       modes: allModes,
+      // Tell Chromatic to emulate reduced motion at the browser level, too.
+      prefersReducedMotion: 'reduce',
       // delay: 300, // Use sparingly, only if assertions don't suffice
     },
 
     /**
      * Motion configuration for deterministic testing.
-     * - reducedMotion: 'always' disables animations by default for fast, deterministic tests.
-     * - motionTransition: { duration: 0 } makes remaining animations instant.
+     * - Keep these as *defaults* for dev; the decorator will override in tests.
      * - Override per-story when you need to test actual animation behavior.
      */
-    reducedMotion: 'always',
-    motionTransition: { duration: 0 },
+    reducedMotion: 'user',
+    motionTransition: undefined,
 
     /**
      * Next.js app directory mode for Storybook.
@@ -168,13 +169,22 @@ const preview: Preview = {
     }),
     /**
      * Motion configuration decorator for deterministic testing.
-     * Enforces reduced motion and zero-duration transitions by default.
+     * Enforces reduced motion and zero-duration transitions in test contexts.
      * Stories can override via parameters when testing actual animation behavior.
      */
     (Story, context) => {
-      // Get motion settings from story parameters or use defaults
-      const reduced = context.parameters.reducedMotion ?? 'always'; // 'always' | 'never' | 'user'
-      const transition = context.parameters.motionTransition ?? { duration: 0 }; // zap to end
+      const isStorybookTestRunner =
+        typeof navigator !== 'undefined' &&
+        /StorybookTestRunner/i.test(navigator.userAgent);
+      const inTest = isStorybookTestRunner || isChromatic();
+
+      // In tests: zero-duration, no animations.
+      const reduced = inTest
+        ? 'always'
+        : (context.parameters.reducedMotion ?? 'user');
+      const transition = inTest
+        ? { duration: 0 }
+        : (context.parameters.motionTransition ?? undefined);
 
       return (
         <MotionConfig reducedMotion={reduced} transition={transition}>

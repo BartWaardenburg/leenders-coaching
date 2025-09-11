@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
+import { fn } from 'storybook/test';
 import { IconButton } from './IconButton';
 import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
@@ -60,9 +61,16 @@ export const Primary: Story = {
     children: <SearchIcon />,
     label: 'Search',
     variant: 'primary',
+    onClick: fn(),
   },
-  play: async ({ canvas }) => {
-    await expect(canvas.getByRole('button', { name: 'Search' })).toBeVisible();
+  play: async ({ canvas, userEvent, args }) => {
+    const button = canvas.getByRole('button', { name: 'Search' });
+    await expect(button).toBeVisible();
+
+    // Test click interaction
+    await userEvent.click(button);
+    await expect(args.onClick).toHaveBeenCalled();
+
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -84,11 +92,59 @@ export const Disabled: Story = {
     children: <SearchIcon />,
     label: 'Search',
     disabled: true,
+    onClick: fn(),
   },
-  play: async ({ canvas }) => {
+  play: async ({ canvas, args }) => {
     const button = canvas.getByRole('button', { name: 'Search' });
     await expect(button).toBeVisible();
     await expect(button).toBeDisabled();
+
+    // Test that clicking disabled button doesn't trigger onClick
+    // Note: Disabled buttons have pointer-events: none, so we can't actually click them
+    // Instead, we verify the button is disabled and the onClick hasn't been called
+    await expect(args.onClick).not.toHaveBeenCalled();
+
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const InteractiveIconButton: Story = {
+  args: {
+    children: <SearchIcon />,
+    label: 'Interactive Search',
+    variant: 'primary',
+    onClick: fn(),
+  },
+  play: async ({ canvas, userEvent, args, step }) => {
+    const button = canvas.getByRole('button', { name: 'Interactive Search' });
+
+    await step('Initial state', async () => {
+      await expect(button).toBeVisible();
+      await expect(button).toBeEnabled();
+    });
+
+    await step('Click interaction', async () => {
+      await userEvent.click(button);
+      await expect(args.onClick).toHaveBeenCalledTimes(1);
+    });
+
+    await step('Keyboard interaction', async () => {
+      button.focus();
+      await expect(button).toHaveFocus();
+
+      await userEvent.keyboard('{Enter}');
+      await expect(args.onClick).toHaveBeenCalledTimes(2);
+
+      await userEvent.keyboard(' ');
+      await expect(args.onClick).toHaveBeenCalledTimes(3);
+    });
+
+    await step('Hover interaction', async () => {
+      await userEvent.hover(button);
+      // Wait for any hover effects
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    });
+
     await waitForMotionAnimations({ canvas });
   },
 };

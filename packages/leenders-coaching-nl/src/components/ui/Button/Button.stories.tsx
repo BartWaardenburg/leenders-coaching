@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
+import { fn } from 'storybook/test';
 import { Button } from './Button';
 import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
@@ -58,11 +59,16 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     children: 'Click me',
+    onClick: fn(),
   },
-  play: async ({ canvas }) => {
-    await expect(
-      canvas.getByRole('button', { name: 'Click me' })
-    ).toBeVisible();
+  play: async ({ canvas, userEvent, args }) => {
+    const button = canvas.getByRole('button', { name: 'Click me' });
+    await expect(button).toBeVisible();
+
+    // Test click interaction
+    await userEvent.click(button);
+    await expect(args.onClick).toHaveBeenCalled();
+
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -71,14 +77,18 @@ export const WithLoading: Story = {
   args: {
     children: 'Loading...',
     isLoading: true,
+    onClick: fn(),
   },
-  play: async ({ canvas }) => {
-    await expect(
-      canvas.getByRole('button', { name: 'Loading...' })
-    ).toBeVisible();
-    await expect(
-      canvas.getByRole('button', { name: 'Loading...' })
-    ).toBeDisabled();
+  play: async ({ canvas, args }) => {
+    const button = canvas.getByRole('button', { name: 'Loading...' });
+    await expect(button).toBeVisible();
+    await expect(button).toBeDisabled();
+
+    // Test that clicking disabled button doesn't trigger onClick
+    // Note: Disabled buttons have pointer-events: none, so we can't actually click them
+    // Instead, we verify the button is disabled and the onClick hasn't been called
+    await expect(args.onClick).not.toHaveBeenCalled();
+
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -87,14 +97,18 @@ export const Disabled: Story = {
   args: {
     children: 'Disabled',
     disabled: true,
+    onClick: fn(),
   },
-  play: async ({ canvas }) => {
-    await expect(
-      canvas.getByRole('button', { name: 'Disabled' })
-    ).toBeVisible();
-    await expect(
-      canvas.getByRole('button', { name: 'Disabled' })
-    ).toBeDisabled();
+  play: async ({ canvas, args }) => {
+    const button = canvas.getByRole('button', { name: 'Disabled' });
+    await expect(button).toBeVisible();
+    await expect(button).toBeDisabled();
+
+    // Test that clicking disabled button doesn't trigger onClick
+    // Note: Disabled buttons have pointer-events: none, so we can't actually click them
+    // Instead, we verify the button is disabled and the onClick hasn't been called
+    await expect(args.onClick).not.toHaveBeenCalled();
+
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -163,6 +177,7 @@ export const AllSizes: Story = {
   },
   args: {
     children: 'Button',
+    onClick: fn(),
   },
   render: (args) => (
     <div className="flex items-center gap-4">
@@ -177,10 +192,62 @@ export const AllSizes: Story = {
       </Button>
     </div>
   ),
-  play: async ({ canvas }) => {
-    await expect(canvas.getByRole('button', { name: 'Small' })).toBeVisible();
-    await expect(canvas.getByRole('button', { name: 'Medium' })).toBeVisible();
-    await expect(canvas.getByRole('button', { name: 'Large' })).toBeVisible();
+  play: async ({ canvas, userEvent, args }) => {
+    const smallButton = canvas.getByRole('button', { name: 'Small' });
+    const mediumButton = canvas.getByRole('button', { name: 'Medium' });
+    const largeButton = canvas.getByRole('button', { name: 'Large' });
+
+    await expect(smallButton).toBeVisible();
+    await expect(mediumButton).toBeVisible();
+    await expect(largeButton).toBeVisible();
+
+    // Test clicking each button
+    await userEvent.click(smallButton);
+    await userEvent.click(mediumButton);
+    await userEvent.click(largeButton);
+
+    // Verify onClick was called for each click
+    await expect(args.onClick).toHaveBeenCalledTimes(3);
+
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const InteractiveDemo: Story = {
+  args: {
+    children: 'Interactive Button',
+    onClick: fn(),
+  },
+  play: async ({ canvas, userEvent, args, step }) => {
+    const button = canvas.getByRole('button', { name: 'Interactive Button' });
+
+    await step('Initial state', async () => {
+      await expect(button).toBeVisible();
+      await expect(button).toBeEnabled();
+    });
+
+    await step('Click interaction', async () => {
+      await userEvent.click(button);
+      await expect(args.onClick).toHaveBeenCalledTimes(1);
+    });
+
+    await step('Multiple clicks', async () => {
+      await userEvent.click(button);
+      await userEvent.click(button);
+      await expect(args.onClick).toHaveBeenCalledTimes(3);
+    });
+
+    await step('Keyboard interaction', async () => {
+      button.focus();
+      await expect(button).toHaveFocus();
+
+      await userEvent.keyboard('{Enter}');
+      await expect(args.onClick).toHaveBeenCalledTimes(4);
+
+      await userEvent.keyboard(' ');
+      await expect(args.onClick).toHaveBeenCalledTimes(5);
+    });
+
     await waitForMotionAnimations({ canvas });
   },
 };

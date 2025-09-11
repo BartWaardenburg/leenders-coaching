@@ -46,19 +46,37 @@ export const waitForMotion = async (
 /**
  * Waits for Motion animations to complete using the Web Animations API.
  * This is the recommended approach for Motion components.
+ * If reduced motion is active, returns immediately for faster tests.
  *
  * @param {object} options - Configuration options.
  * @param {Element | null | undefined} [options.element] - The element to wait for animations on (defaults to document.body).
  * @param {object} [options.canvas] - Optional canvas object from Storybook play function.
+ * @param {number} [options.idle=50] - Idle time in ms before considering animations complete.
+ * @param {number} [options.max=2000] - Maximum time to wait in ms.
  * @returns {Promise<void>} A promise that resolves when animations are finished.
  */
 export const waitForMotionAnimations = async ({
   element,
   canvas,
+  idle = 50,
+  max = 2000,
 }: {
   element?: Element | null;
   canvas?: { canvasElement?: Element } | { [key: string]: unknown };
+  idle?: number;
+  max?: number;
 } = {}): Promise<void> => {
+  // If reduced motion is active, don't wait.
+  if (
+    typeof window !== 'undefined' &&
+    window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  ) {
+    // One frame so DOM can settle after interactions
+    await new Promise((r) => requestAnimationFrame(r));
+    return;
+  }
+
   const targetElement =
     element ||
     (canvas &&
@@ -69,6 +87,23 @@ export const waitForMotionAnimations = async ({
     document.body;
 
   if (targetElement) {
-    await waitForMotion(targetElement);
+    // Fallback: wait until there are no running WAAPI animations for a brief idle.
+    const deadline = performance.now() + max;
+    let lastActive = performance.now();
+
+    while (true) {
+      const running = document.getAnimations
+        ? document.getAnimations().filter((a) => a.playState === 'running')
+        : [];
+
+      if (running.length === 0) {
+        if (performance.now() - lastActive >= idle) return;
+      } else {
+        lastActive = performance.now();
+      }
+
+      if (performance.now() > deadline) return;
+      await new Promise((r) => setTimeout(r, 16));
+    }
   }
 };

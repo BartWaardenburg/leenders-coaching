@@ -9,7 +9,11 @@ const pkgRoot = fileURLToPath(new URL('.', import.meta.url));
  * Used to speed up test startup and avoid unnecessary bundling.
  */
 export const optimizeDeps = {
-  include: ['sb-original/default-loader', 'sb-original/image-context'],
+  include: [
+    'sb-original/default-loader',
+    'sb-original/image-context',
+    'chromatic/isChromatic',
+  ],
   exclude: ['@react-email/render', 'markdown-to-jsx'],
 };
 
@@ -62,6 +66,7 @@ export const coverageBase = {
   exclude: [
     'node_modules/**',
     'src/test/**',
+    'src/types/**',
     '.storybook/**',
     /* Config files */
     '**/*.config.{js,ts,mjs,cjs}',
