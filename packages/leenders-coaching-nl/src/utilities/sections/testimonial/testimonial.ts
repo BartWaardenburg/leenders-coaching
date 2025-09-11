@@ -1,7 +1,6 @@
 import type { ComponentProps } from 'react';
 import type { SectionTestimonial } from '@/components/sections/SectionTestimonial';
 import type { SectionTestimonial as SanitySectionTestimonial } from '@/types/sanity/schema';
-import { urlForImage } from '@/utilities/sanity';
 
 /* Type guard for testimonial section */
 const isSanitySectionTestimonial = (
@@ -29,7 +28,7 @@ export const transformTestimonialSection = (
         quote: testimonial.quote || '',
         name: testimonial.name || '',
         role: testimonial.role,
-        image: testimonial.image ? urlForImage(testimonial.image).url() : '',
+        image: testimonial.image,
       })) || [],
     background: data.background,
     border: data.border,

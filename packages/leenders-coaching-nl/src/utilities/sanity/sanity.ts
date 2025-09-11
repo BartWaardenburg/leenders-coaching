@@ -1,8 +1,5 @@
-import { createClient } from '@sanity/client';
+import { createClient } from 'next-sanity';
 import type { QueryParams } from '@sanity/client';
-import imageUrlBuilder from '@sanity/image-url';
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
-
 
 /**
  * Returns true if the hostname matches 'chromatic.com' or is a subdomain of 'chromatic.com'.
@@ -11,16 +8,20 @@ function isChromaticHost(hostname: string): boolean {
   if (!hostname) return false;
   return (
     hostname === 'chromatic.com' ||
-    (hostname.endsWith('.chromatic.com') && hostname.length > '.chromatic.com'.length)
+    (hostname.endsWith('.chromatic.com') &&
+      hostname.length > '.chromatic.com'.length)
   );
 }
 
 /* Check if we're running on the server or client */
 const isServer = typeof window === 'undefined';
 
-/* Validate required environment variables */
+/**
+ * Validate required environment variables for Sanity configuration
+ * @throws Error if required environment variables are missing
+ */
 const validateEnv = () => {
-  // Only check for SANITY_API_TOKEN on the server
+  /* Only check for SANITY_API_TOKEN on the server */
   if (isServer && !process.env.SANITY_API_TOKEN) {
     throw new Error('SANITY_API_TOKEN is required');
   }
@@ -34,9 +35,12 @@ const validateEnv = () => {
   }
 };
 
-/* Check if we're in a Storybook, test, or mock environment */
+/**
+ * Check if we're in a Storybook, test, or mock environment
+ * @returns True if running in a non-production environment
+ */
 const isNonProductionEnvironment = () => {
-  // Check for test environments (Jest, Vitest)
+  /* Check for test environments (Jest, Vitest) */
   if (typeof process !== 'undefined' && process.env) {
     if (
       process.env.NODE_ENV === 'test' ||
@@ -48,17 +52,18 @@ const isNonProductionEnvironment = () => {
     }
   }
 
-  // Check for browser-based Storybook/Chromatic environments
+  /* Check for browser-based Storybook/Chromatic environments */
   if (typeof window !== 'undefined' && window.location) {
     const hostname = window.location.hostname;
     const href = window.location.href;
 
-    // Use explicit check function for chromatic hostnames
+    /* Use explicit check function for chromatic hostnames */
     return (
       isChromaticHost(hostname) ||
       hostname === 'capture-loopback.chromatic.com' ||
-      href.includes('iframe.html') || // Storybook iframe
-      (hostname === 'localhost' && window.parent !== window) // Storybook localhost
+      href.includes('iframe.html') /* Storybook iframe */ ||
+      (hostname === 'localhost' &&
+        window.parent !== window) /* Storybook localhost */
     );
   }
 
@@ -91,7 +96,11 @@ export const sanityConfig = {
   useCdn: process.env.NODE_ENV === 'production',
 };
 
-/* Create Sanity client with graceful fallbacks */
+/**
+ * Create Sanity client with graceful fallbacks for non-production environments
+ * @returns Configured Sanity client
+ * @throws Error if client creation fails in production
+ */
 const createSanityClient = () => {
   try {
     return createClient({
@@ -99,16 +108,28 @@ const createSanityClient = () => {
       dataset: sanityConfig.dataset,
       apiVersion: sanityConfig.apiVersion,
       useCdn: sanityConfig.useCdn,
-      token: isServer ? sanityConfig.apiToken : undefined, // Only include token on server
+      token: isServer
+        ? process.env.SANITY_VIEWER_TOKEN || sanityConfig.apiToken
+        : undefined /* Use viewer token for draft mode */,
+      stega: {
+        studioUrl:
+          process.env.NEXT_PUBLIC_SANITY_STUDIO_URL ||
+          (process.env.NODE_ENV === 'development'
+            ? 'http://localhost:3333'
+            : 'https://studio.leenders-coaching.nl'),
+      },
     });
   } catch (error) {
-    // In non-production environments, create a fallback client if the real one fails
+    /* In non-production environments, create a fallback client if the real one fails */
     if (isNonProductionEnvironment()) {
       return createClient({
         projectId: FALLBACK_CONFIG.projectId,
         dataset: FALLBACK_CONFIG.dataset,
         apiVersion: FALLBACK_CONFIG.apiVersion,
         useCdn: false,
+        stega: {
+          studioUrl: 'http://localhost:3333',
+        },
       });
     }
     throw error;
@@ -116,34 +137,6 @@ const createSanityClient = () => {
 };
 
 export const client = createSanityClient();
-
-/* Create image URL builder instance with graceful fallbacks */
-const createImageBuilder = () => {
-  try {
-    return imageUrlBuilder(client);
-  } catch (error) {
-    // In non-production environments, create a fallback image builder if the real one fails
-    if (isNonProductionEnvironment()) {
-      const fallbackClient = createClient({
-        projectId: FALLBACK_CONFIG.projectId,
-        dataset: FALLBACK_CONFIG.dataset,
-        apiVersion: FALLBACK_CONFIG.apiVersion,
-        useCdn: false,
-      });
-      return imageUrlBuilder(fallbackClient);
-    }
-    throw error;
-  }
-};
-
-const imageBuilder = createImageBuilder();
-
-/**
- * Get image URL for a Sanity image reference
- */
-export const urlForImage = (source: SanityImageSource) => {
-  return imageBuilder.image(source);
-};
 
 /**
  * Helper to define a GROQ query with proper typing

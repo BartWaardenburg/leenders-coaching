@@ -1,6 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
 import { Icon } from './Icon';
 import { iconPaths } from '@/config/icons.config';
+import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Icon',
@@ -8,7 +10,6 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
   argTypes: {
     path: {
       control: 'text',
@@ -28,11 +29,19 @@ export const Close: Story = {
   args: {
     path: iconPaths.close,
   },
+  play: async ({ canvas }) => {
+    expect(document.querySelector('svg')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const MenuHamburger: Story = {
   args: {
     path: iconPaths.menu.hamburger,
+  },
+  play: async ({ canvas }) => {
+    expect(document.querySelector('svg')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -40,11 +49,19 @@ export const MenuClose: Story = {
   args: {
     path: iconPaths.menu.close,
   },
+  play: async ({ canvas }) => {
+    expect(document.querySelector('svg')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const ThemeSun: Story = {
   args: {
     path: iconPaths.theme.sun,
+  },
+  play: async ({ canvas }) => {
+    expect(document.querySelector('svg')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -52,10 +69,18 @@ export const ThemeMoon: Story = {
   args: {
     path: iconPaths.theme.moon,
   },
+  play: async ({ canvas }) => {
+    expect(document.querySelector('svg')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const Message: Story = {
   args: {
     path: iconPaths.message,
+  },
+  play: async ({ canvas }) => {
+    expect(document.querySelector('svg')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
   },
 };

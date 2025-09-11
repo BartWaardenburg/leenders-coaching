@@ -51,7 +51,7 @@ export const defaultConfig: ConfigType = {
   accessibility: {
     closeButtons: {
       toast: 'Sluit melding',
-      modal: 'Sluit venster',
+      modal: 'Sluiten',
     },
     calendar: {
       previousMonth: 'Vorige maand',
@@ -93,7 +93,6 @@ export const defaultConfig: ConfigType = {
   },
 };
 
-
 type ConfigProviderProps = {
   children: ReactNode;
   config: ConfigType;
@@ -103,5 +102,7 @@ type ConfigProviderProps = {
  * Server component that provides configuration data to the application
  */
 export const ConfigProvider = ({ children, config }: ConfigProviderProps) => {
-  return <ClientConfigProvider config={config}>{children}</ClientConfigProvider>;
-}; 
+  return (
+    <ClientConfigProvider config={config}>{children}</ClientConfigProvider>
+  );
+};

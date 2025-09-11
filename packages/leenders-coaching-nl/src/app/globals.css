@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* Class-based dark mode */
 @custom-variant dark (&:where(.dark, .dark *));
@@ -6,8 +6,8 @@
 /* Design tokens */
 @theme {
   --font-montserrat:
-    "var(--font-montserrat)", ui-sans-serif, system-ui, sans-serif;
-  --font-playfair: "var(--font-playfair)", ui-serif, Georgia, serif;
+    'var(--font-montserrat)', ui-sans-serif, system-ui, sans-serif;
+  --font-playfair: 'var(--font-playfair)', ui-serif, Georgia, serif;
 
   /* Base colors */
   --color-background: hsl(0 0% 100%);
@@ -81,6 +81,18 @@
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+}
+
+/* Reduced motion kill-switch - stops any stray CSS animations/transitions */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001s !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Text selection */

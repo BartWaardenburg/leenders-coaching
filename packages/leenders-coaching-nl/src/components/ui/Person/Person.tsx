@@ -2,6 +2,8 @@
 
 import { twMerge } from 'tailwind-merge';
 import { motion, type HTMLMotionProps } from 'motion/react';
+import type { StaticImageData } from 'next/image';
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 import { Avatar } from '@/components/ui/Avatar';
 import { Heading } from '@/components/ui/Heading';
 import { Text } from '@/components/ui/Text';
@@ -11,7 +13,7 @@ import { Box } from '@/components/ui/Box';
 type PersonProps = {
   name: string;
   description?: string;
-  imageSrc: string;
+  imageSrc: string | StaticImageData | SanityImageSource;
   imageAlt?: string;
 } & Omit<
   HTMLMotionProps<'div'>,
@@ -30,6 +32,7 @@ const MotionBox = motion.create(Box);
 
 /**
  * Person component for displaying a person's information with avatar and animations
+ * Supports both static images and Sanity images for avatars
  */
 export const Person = ({
   name,
@@ -44,7 +47,7 @@ export const Person = ({
       direction="row"
       className={twMerge(
         'items-stretch border border-foreground/80',
-        className,
+        className
       )}
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -128,3 +131,5 @@ export const Person = ({
     </MotionStack>
   );
 };
+
+export default Person;

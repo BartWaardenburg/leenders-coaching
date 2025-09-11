@@ -1,58 +1,24 @@
-/// <reference types="vitest" />
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vitest/config';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { resolve } from 'node:path';
+import {
+  baseConfig,
+  resolve,
+  projects,
+  coverageConfigs,
+} from './vitest.shared';
 
-const __dirname = fileURLToPath(new URL('.', import.meta.url));
+const pkgRoot = fileURLToPath(new URL('.', import.meta.url));
 
 export default defineConfig({
+  root: pkgRoot,
+  cacheDir: path.join(pkgRoot, 'node_modules/.vite-vitest-ci'),
+  ...baseConfig,
+  resolve,
+
   test: {
-    environment: 'jsdom',
-    include: ['src/**/*.test.{ts,tsx}'],
-    globals: true,
-    setupFiles: ['./src/test/setup.ts'],
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'html', 'lcov', 'json-summary'],
-      exclude: [
-        'node_modules/',
-        'src/test/setup.ts',
-        // Configuration files
-        '**/*.config.{js,ts,mjs}',
-        '**/lighthouserc.js',
-        '**/next.config.ts',
-        '**/tailwind.config.ts',
-        '**/postcss.config.mjs',
-        '**/eslint.config.mjs',
-        '**/vitest.config.ts',
-        '**/vitest.ci.config.ts',
-        // Type definitions
-        '**/*.d.ts',
-        // Build and output directories
-        '.next/**',
-        'dist/**',
-        'build/**',
-        'coverage/**',
-        'storybook-static/**',
-        // Stories and test files
-        '**/*.stories.{js,jsx,ts,tsx}',
-        '**/*.test.{js,jsx,ts,tsx}',
-        '**/*.spec.{js,jsx,ts,tsx}',
-      ],
-      include: ['src/**/*.{js,jsx,ts,tsx}'],
-      reportOnFailure: true,
-      // Lower thresholds for CI to prevent blocking
-      thresholds: {
-        statements: 0,
-        branches: 0,
-        functions: 0,
-        lines: 0,
-      },
-    },
-  },
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, './src'),
-    },
+    coverage: coverageConfigs.ci,
+    projects: [projects.unit, projects.storybook],
   },
 });

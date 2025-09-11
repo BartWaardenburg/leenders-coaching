@@ -1,10 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
 import { Avatar } from './Avatar';
+import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Avatar',
   component: Avatar,
-  tags: ['autodocs'],
   argTypes: {
     size: {
       control: 'select',
@@ -23,6 +24,10 @@ export const Default: Story = {
     alt: 'Avatar image',
     size: 'md',
   },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByAltText('Avatar image')).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const Small: Story = {
@@ -31,6 +36,10 @@ export const Small: Story = {
     alt: 'Small avatar',
     size: 'sm',
   },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByAltText('Small avatar')).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const Large: Story = {
@@ -38,6 +47,10 @@ export const Large: Story = {
     src: 'https://i.pravatar.cc/300',
     alt: 'Large avatar',
     size: 'lg',
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByAltText('Large avatar')).toBeVisible();
+    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -53,4 +66,10 @@ export const AllSizes: Story = {
       <Avatar src="https://i.pravatar.cc/300?3" alt="Large avatar" size="lg" />
     </div>
   ),
+  play: async ({ canvas }) => {
+    await expect(canvas.getByAltText('Small avatar')).toBeVisible();
+    await expect(canvas.getByAltText('Medium avatar')).toBeVisible();
+    await expect(canvas.getByAltText('Large avatar')).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
 };

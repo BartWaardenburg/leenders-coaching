@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { Box } from '@/components/ui/Box';
 import { Text } from '@/components/ui/Text';
 import { twMerge } from 'tailwind-merge';
@@ -51,17 +51,21 @@ export const Calendar: FC<CalendarProps> = ({
   const [currentDate, setCurrentDate] = useState(initialDate);
   const [direction, setDirection] = useState(0);
 
+  useEffect(() => {
+    setCurrentDate(initialDate);
+  }, [initialDate]);
+
   const handlePreviousMonth = () => {
     setDirection(-1);
     setCurrentDate(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() - 1),
+      new Date(currentDate.getFullYear(), currentDate.getMonth() - 1)
     );
   };
 
   const handleNextMonth = () => {
     setDirection(1);
     setCurrentDate(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1),
+      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1)
     );
   };
 
@@ -108,7 +112,7 @@ export const Calendar: FC<CalendarProps> = ({
               'w-6 h-6',
               isCurrentMonthTodayValue
                 ? 'text-foreground/50'
-                : 'text-foreground',
+                : 'text-foreground'
             )}
           />
         </IconButton>
@@ -153,7 +157,7 @@ export const Calendar: FC<CalendarProps> = ({
             'hidden md:flex w-8 self-center cursor-pointer group transition-opacity duration-200',
             !isCurrentMonthTodayValue
               ? 'cursor-pointer hover:opacity-70'
-              : 'opacity-50 cursor-default',
+              : 'opacity-50 cursor-default'
           )}
         >
           <Text
@@ -161,7 +165,7 @@ export const Calendar: FC<CalendarProps> = ({
             weight="medium"
             className={twMerge(
               'border-l border-foreground/80 transition-colors duration-200 [writing-mode:vertical-rl] rotate-180',
-              !isCurrentMonthTodayValue && 'group-hover:border-primary',
+              !isCurrentMonthTodayValue && 'group-hover:border-primary'
             )}
           >
             {accessibility.calendar.previousMonth}
@@ -203,7 +207,7 @@ export const Calendar: FC<CalendarProps> = ({
                   key={day}
                   className={twMerge(
                     'p-2 md:p-3 text-center bg-pastel-pink dark:bg-pastel-pink-dark',
-                    index !== 0 && 'border-l border-foreground/20',
+                    index !== 0 && 'border-l border-foreground/20'
                   )}
                 >
                   <Text variant="small" weight="medium">
@@ -247,12 +251,12 @@ export const Calendar: FC<CalendarProps> = ({
                             : 'hover:bg-pastel-blue/80 dark:hover:bg-pastel-blue-dark/80',
                         ],
                         dayIsToday &&
-                        'after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary',
+                          'after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary',
                         isInteractive &&
-                        dayIsCurrentMonth &&
-                        'ring-inset ring-1 ring-foreground/80',
+                          dayIsCurrentMonth &&
+                          'ring-inset ring-1 ring-foreground/80',
                         (dayIsPastDay || dayIsDisabled) &&
-                        'opacity-50 cursor-default',
+                          'opacity-50 cursor-default'
                       )}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
@@ -263,17 +267,17 @@ export const Calendar: FC<CalendarProps> = ({
                       whileHover={
                         isInteractive
                           ? {
-                            scale: 0.97,
-                            transition: { duration: 0.2 },
-                          }
+                              scale: 0.97,
+                              transition: { duration: 0.2 },
+                            }
                           : undefined
                       }
                       whileTap={
                         isInteractive
                           ? {
-                            scale: 0.95,
-                            transition: { duration: 0.1 },
-                          }
+                              scale: 0.95,
+                              transition: { duration: 0.1 },
+                            }
                           : undefined
                       }
                     >
@@ -283,7 +287,7 @@ export const Calendar: FC<CalendarProps> = ({
                           className={twMerge(
                             'text-right',
                             (dayIsPastDay || dayIsDisabled) && 'line-through',
-                            !dayIsCurrentMonth && 'text-foreground/50',
+                            !dayIsCurrentMonth && 'text-foreground/50'
                           )}
                           color={
                             dayIsCurrentMonth && isInteractive
@@ -297,7 +301,7 @@ export const Calendar: FC<CalendarProps> = ({
                       </Flex>
                     </MotionBox>
                   );
-                }),
+                })
               )}
             </Box>
           </Box>

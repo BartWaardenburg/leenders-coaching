@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { transformTestimonialSection } from './testimonial';
+import { transformTestimonialSection } from './';
 import type { SectionTestimonial as SanitySectionTestimonial } from '@/types/sanity/schema';
 
 // Helper function to create Sanity document properties
@@ -14,11 +14,12 @@ const createSanityDoc = (
   ...overrides,
 });
 
-// Mock the urlForImage function
+// Mock the sanity utilities
 vi.mock('@/utilities/sanity', () => ({
-  urlForImage: () => ({
-    url: () => 'https://example.com/image.jpg',
-  }),
+  groq: vi.fn(),
+  client: {},
+  sanityConfig: {},
+  defineQuery: vi.fn(),
 }));
 
 /**
@@ -68,14 +69,20 @@ describe('transformTestimonialSection', () => {
           quote: 'Great service!',
           name: 'John Doe',
           role: 'CEO',
-          image: 'https://example.com/image.jpg',
+          image: {
+            _type: 'image',
+            asset: { _ref: 'image-1', _type: 'reference' },
+          },
         },
         {
           _key: 'testimonial-2',
           quote: 'Amazing results!',
           name: 'Jane Smith',
           role: 'Manager',
-          image: 'https://example.com/image.jpg',
+          image: {
+            _type: 'image',
+            asset: { _ref: 'image-2', _type: 'reference' },
+          },
         },
       ],
       background: 'blue',
@@ -136,7 +143,7 @@ describe('transformTestimonialSection', () => {
       quote: 'Great service!',
       name: 'John Doe',
       role: undefined,
-      image: '',
+      image: undefined,
     });
   });
 
@@ -156,7 +163,7 @@ describe('transformTestimonialSection', () => {
 
     const result = transformTestimonialSection(mockData);
 
-    expect(result.testimonials?.[0]?.image).toBe('');
+    expect(result.testimonials?.[0]?.image).toBeUndefined();
   });
 
   it('should handle empty testimonials array', () => {
@@ -202,7 +209,7 @@ describe('transformTestimonialSection', () => {
           quote: '',
           name: '',
           role: '',
-          image: '',
+          image: undefined,
         },
       ],
       background: undefined,

@@ -34,6 +34,16 @@ export const testimonial = defineType({
         hotspot: true,
       },
       validation: (Rule: any) => Rule.required(),
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alternative text',
+          description:
+            'Beschrijf de inhoud van de afbeelding (voor toegankelijkheid)',
+          validation: (Rule: any) => Rule.required().min(3),
+        },
+      ],
     },
   ],
 });

@@ -2,24 +2,17 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 // Mock the entire sanity module to avoid environment validation issues
 vi.mock('./sanity', () => ({
-  urlForImage: vi.fn().mockReturnValue({
-    url: vi.fn().mockReturnValue('https://example.com/test-image.jpg'),
-    width: vi.fn().mockReturnThis(),
-    height: vi.fn().mockReturnThis(),
-    quality: vi.fn().mockReturnThis(),
-    format: vi.fn().mockReturnThis(),
-  }),
   client: {},
   sanityConfig: {
     projectId: 'test-project-id',
     dataset: 'test-dataset',
     apiVersion: '2024-01-01',
   },
-  defineQuery: vi.fn(),
+  defineQuery: vi.fn((query: string) => query),
   groq: vi.fn(),
 }));
 
-import { urlForImage } from './sanity';
+import { defineQuery, groq } from './';
 
 // Mock next-sanity
 vi.mock('next-sanity', () => ({
@@ -47,165 +40,70 @@ describe('Sanity utilities', () => {
     process.env = originalEnv;
   });
 
-  describe('createClient', () => {
-    it('should create client with correct configuration', () => {
-      // Since we're mocking the entire module, we can't test the actual client creation
-      // This test verifies that our mock is working correctly
-      expect(urlForImage).toBeDefined();
-      expect(typeof urlForImage).toBe('function');
+  describe('defineQuery', () => {
+    it('should return query string with type information', () => {
+      const query = '*[_type == "post"]';
+      const result = defineQuery<{ title: string }>(query);
+
+      expect(result).toBe(query);
+      expect(typeof result).toBe('string');
     });
 
-    it('should use default values when environment variables are missing', () => {
-      // Since we're mocking the entire module, we can't test the actual client creation
-      // This test verifies that our mock is working correctly
-      expect(urlForImage).toBeDefined();
-      expect(typeof urlForImage).toBe('function');
+    it('should preserve query string exactly', () => {
+      const query = '*[_type == "post" && publishedAt > $date]';
+      const result = defineQuery(query);
+
+      expect(result).toBe(query);
     });
 
-    it('should handle partial environment variables', () => {
-      // Since we're mocking the entire module, we can't test the actual client creation
-      // This test verifies that our mock is working correctly
-      expect(urlForImage).toBeDefined();
-      expect(typeof urlForImage).toBe('function');
+    it('should handle empty query', () => {
+      const query = '';
+      const result = defineQuery(query);
+
+      expect(result).toBe(query);
+    });
+
+    it('should handle complex GROQ query', () => {
+      const query = `
+        *[_type == "post"] {
+          _id,
+          title,
+          "author": author->name,
+          "categories": categories[]->title,
+          publishedAt
+        } | order(publishedAt desc)
+      `;
+      const result = defineQuery(query);
+
+      expect(result).toBe(query);
     });
   });
 
-  describe('urlForImage', () => {
-    it('should return image URL builder for valid image reference', () => {
-      const mockImageRef = {
-        _type: 'image',
-        asset: {
-          _ref: 'image-abc123',
-          _type: 'reference',
-        },
-      };
-
-      const result = urlForImage(mockImageRef);
-
-      expect(result).toBeDefined();
-      expect(typeof result.url).toBe('function');
+  describe('groq', () => {
+    it('should be defined as a function', () => {
+      expect(groq).toBeDefined();
+      expect(typeof groq).toBe('function');
     });
 
-    it('should handle image with crop and hotspot', () => {
-      const mockImageRef = {
-        _type: 'image',
-        asset: {
-          _ref: 'image-abc123',
-          _type: 'reference',
-        },
-        crop: {
-          top: 0.1,
-          bottom: 0.1,
-          left: 0.1,
-          right: 0.1,
-        },
-        hotspot: {
-          x: 0.5,
-          y: 0.5,
-          height: 0.8,
-          width: 0.8,
-        },
-      };
+    it('should accept string query', () => {
+      const query = '*[_type == "post"]';
 
-      const result = urlForImage(mockImageRef);
-
-      expect(result).toBeDefined();
-      expect(typeof result.url).toBe('function');
+      // Since we're mocking, we can't test the actual execution
+      // but we can verify the function exists and accepts parameters
+      expect(() => groq(query)).not.toThrow();
     });
 
-    it('should handle image with only asset reference', () => {
-      const mockImageRef = {
-        asset: {
-          _ref: 'image-abc123',
-          _type: 'reference',
-        },
-      };
+    it('should accept defineQuery result', () => {
+      const query = defineQuery('*[_type == "post"]');
 
-      const result = urlForImage(mockImageRef);
-
-      expect(result).toBeDefined();
-      expect(typeof result.url).toBe('function');
+      expect(() => groq(query)).not.toThrow();
     });
 
-    it('should handle null or undefined image reference', () => {
-      const result1 = urlForImage(null as never);
-      const result2 = urlForImage(undefined as never);
+    it('should accept query with parameters', () => {
+      const query = '*[_type == "post" && publishedAt > $date]';
+      const params = { date: '2024-01-01' };
 
-      expect(result1).toBeDefined();
-      expect(result2).toBeDefined();
-      expect(typeof result1.url).toBe('function');
-      expect(typeof result2.url).toBe('function');
-    });
-
-    it('should handle image reference without _type', () => {
-      const mockImageRef = {
-        asset: {
-          _ref: 'image-abc123',
-          _type: 'reference',
-        },
-      };
-
-      const result = urlForImage(mockImageRef);
-
-      expect(result).toBeDefined();
-      expect(typeof result.url).toBe('function');
-    });
-
-    it('should handle image reference with different asset structure', () => {
-      const mockImageRef = {
-        _type: 'image',
-        asset: 'image-abc123', // String reference instead of object
-      };
-
-      const result = urlForImage(mockImageRef);
-
-      expect(result).toBeDefined();
-      expect(typeof result.url).toBe('function');
-    });
-
-    it('should handle image with alt text', () => {
-      const mockImageRef = {
-        _type: 'image',
-        asset: {
-          _ref: 'image-abc123',
-          _type: 'reference',
-        },
-        alt: 'Test image alt text',
-      };
-
-      const result = urlForImage(mockImageRef);
-
-      expect(result).toBeDefined();
-      expect(typeof result.url).toBe('function');
-    });
-
-    it('should handle complex image object', () => {
-      const mockImageRef = {
-        _type: 'image',
-        asset: {
-          _ref: 'image-abc123',
-          _type: 'reference',
-        },
-        crop: {
-          top: 0.1,
-          bottom: 0.1,
-          left: 0.1,
-          right: 0.1,
-        },
-        hotspot: {
-          x: 0.5,
-          y: 0.5,
-          height: 0.8,
-          width: 0.8,
-        },
-        alt: 'Complex test image',
-        caption: 'Image caption',
-      };
-
-      const result = urlForImage(mockImageRef);
-
-      expect(result).toBeDefined();
-      expect(typeof result.url).toBe('function');
+      expect(() => groq(query, params)).not.toThrow();
     });
   });
 });

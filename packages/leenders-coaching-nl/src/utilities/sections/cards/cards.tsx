@@ -3,17 +3,23 @@ import type { ComponentProps } from 'react';
 import type { SectionCards } from '@/components/sections/SectionCards';
 import type { SectionCards as SanitySectionCards } from '@/types/sanity/schema';
 import { Card } from '@/components/ui/Card';
-import { urlForImage } from '@/utilities/sanity';
 
-/* Type guard for cards section */
+/**
+ * Type guard to check if data is a valid Sanity cards section
+ * @param data - The data to check
+ * @returns True if data is a valid SanitySectionCards
+ */
 const isSanitySectionCards = (
   data: Record<string, unknown>
 ): data is SanitySectionCards => {
-  return data._type === 'sectionCards' && Array.isArray(data.cards);
+  return data._type === 'sectionCards';
 };
 
 /**
  * Transform cards section data to component props
+ * @param data - The raw section data from Sanity
+ * @returns Transformed props for the SectionCards component
+ * @throws Error if data is not a valid cards section
  */
 export const transformCardsSection = (
   data: Record<string, unknown>
@@ -35,7 +41,7 @@ export const transformCardsSection = (
         date={card.date}
         categories={card.categories}
         slug={card.slug}
-        image={card.image ? urlForImage(card.image).url() : undefined}
+        image={card.image || undefined}
         variant={card.variant}
         border
         reverse={card.reverse}

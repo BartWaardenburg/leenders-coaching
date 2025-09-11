@@ -1,32 +1,33 @@
-import { Section, PastelColor } from '@/components/ui/Section'
-import { Heading } from '@/components/ui/Heading'
-import { Text } from '@/components/ui/Text'
-import { Flex } from '@/components/ui/Flex'
-import { PricingCard } from '@/components/ui/PricingCard/PricingCard'
-import { Grid } from '@/components/ui/Grid'
+import { Section, PastelColor } from '@/components/ui/Section';
+import { Heading } from '@/components/ui/Heading';
+import { Text } from '@/components/ui/Text';
+import { Flex } from '@/components/ui/Flex';
+import { PricingCard } from '@/components/ui/PricingCard/PricingCard';
+import { Grid } from '@/components/ui/Grid';
 
 interface PricingFeature {
-  text: string
+  text: string;
 }
 
 interface PricingPackage {
-  title: string
-  description: string
-  price: string
-  features: PricingFeature[]
-  isPopular?: boolean
-  ctaLabel: string
-  variant?: 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal'
+  title: string;
+  description: string;
+  price: string;
+  features: PricingFeature[];
+  isPopular?: boolean;
+  ctaLabel: string;
+  variant?: 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal';
 }
 
 interface SectionPricingProps {
-  title?: string
-  description?: string
-  packages: PricingPackage[]
-  onBooking?: () => void
-  className?: string
-  background?: PastelColor
-  border?: boolean
+  title?: string;
+  description?: string;
+  packages: PricingPackage[];
+  onBooking?: () => void;
+  className?: string;
+  background?: PastelColor;
+  border?: boolean;
+  testid?: string;
 }
 
 /**
@@ -40,22 +41,35 @@ export const SectionPricing = ({
   onBooking,
   background,
   border = false,
+  testid,
+  ...props
 }: SectionPricingProps) => {
   return (
     <Section
       background={background}
       border={border}
       className={className}
+      testid={testid}
+      {...props}
     >
       {(title || description) && (
-        <Flex direction="column" items="center" className="mb-16">
+        <Flex direction="column" items="center" className="mb-16" testid="flex">
           {title && (
-            <Heading level="h2" variant="large" showBorder borderColor={background} textAlign="center">
+            <Heading
+              level="h2"
+              variant="large"
+              showBorder
+              borderColor={background}
+              textAlign="center"
+            >
               {title}
             </Heading>
           )}
           {description && (
-            <Text className="text-muted-foreground text-center max-w-2xl">
+            <Text
+              testid="text"
+              className="text-muted-foreground text-center max-w-2xl"
+            >
               {description}
             </Text>
           )}
@@ -78,10 +92,11 @@ export const SectionPricing = ({
             isPopular={pkg.isPopular}
             ctaLabel={pkg.ctaLabel}
             variant={pkg.variant}
+            testid="pricing-card"
             {...(onBooking && { onCtaClick: onBooking })}
           />
         ))}
       </Grid>
     </Section>
-  )
-} 
+  );
+};

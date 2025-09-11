@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionFAQ } from './SectionFAQ';
 
 const meta = {
@@ -7,7 +7,6 @@ const meta = {
   parameters: {
     layout: 'full',
   },
-  tags: ['autodocs'],
   argTypes: {
     background: {
       control: 'select',

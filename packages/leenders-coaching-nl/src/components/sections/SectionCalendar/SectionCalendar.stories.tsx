@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionCalendar } from './SectionCalendar';
 
 const meta = {
@@ -7,7 +7,6 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
   },
-  tags: ['autodocs'],
   argTypes: {
     background: {
       control: 'select',
@@ -17,6 +16,14 @@ const meta = {
     border: {
       control: 'boolean',
       description: 'Show top and bottom borders',
+    },
+    initialDate: {
+      control: 'date',
+      description: 'The initial date to display in the calendar',
+    },
+    renderDay: {
+      control: false,
+      description: 'Custom render function for day content',
     },
   },
 } satisfies Meta<typeof SectionCalendar>;
@@ -28,7 +35,15 @@ export const Default: Story = {
   args: {
     title: 'Calendar',
     description: 'Select a date to schedule your appointment.',
-    initialDate: new Date(),
+    initialDate: new Date('2024-03-15'),
+  },
+  render: (args) => {
+    const initialDate =
+      typeof args.initialDate === 'number'
+        ? new Date(args.initialDate)
+        : args.initialDate;
+
+    return <SectionCalendar {...args} initialDate={initialDate} />;
   },
 };
 
@@ -37,6 +52,14 @@ export const WithBackground: Story = {
     ...Default.args,
     background: 'blue',
   },
+  render: (args) => {
+    const initialDate =
+      typeof args.initialDate === 'number'
+        ? new Date(args.initialDate)
+        : args.initialDate;
+
+    return <SectionCalendar {...args} initialDate={initialDate} />;
+  },
 };
 
 export const WithBackgroundAndBorder: Story = {
@@ -44,6 +67,14 @@ export const WithBackgroundAndBorder: Story = {
     ...Default.args,
     background: 'blue',
     border: true,
+  },
+  render: (args) => {
+    const initialDate =
+      typeof args.initialDate === 'number'
+        ? new Date(args.initialDate)
+        : args.initialDate;
+
+    return <SectionCalendar {...args} initialDate={initialDate} />;
   },
 };
 
@@ -55,12 +86,20 @@ export const WithCustomDayContent: Story = {
     renderDay: (date: Date) => {
       /* Example of rendering available time slots */
       const day = date.getDay();
-      if (day === 0 || day === 6) return null; // Weekend
+      if (day === 0 || day === 6) return null;
       return (
         <div className="text-xs text-foreground/70">
           {day % 2 === 0 ? '2 slots available' : '1 slot available'}
         </div>
       );
     },
+  },
+  render: (args) => {
+    const initialDate =
+      typeof args.initialDate === 'number'
+        ? new Date(args.initialDate)
+        : args.initialDate;
+
+    return <SectionCalendar {...args} initialDate={initialDate} />;
   },
 };

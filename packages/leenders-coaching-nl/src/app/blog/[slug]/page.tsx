@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { BLOG_POST_BY_SLUG_QUERY } from '@/groq/queries';
-import { client, urlForImage } from '@/utilities/sanity';
+import { getBlogPostBySlug } from '@/groq/queries';
 import { PortableText } from '@portabletext/react';
 import { format } from 'date-fns';
 import { nl } from 'date-fns/locale';
@@ -10,7 +9,20 @@ import { Box } from '@/components/ui/Box';
 import { Heading } from '@/components/ui/Heading';
 import { Text } from '@/components/ui/Text';
 import { Flex } from '@/components/ui/Flex';
-import Image from 'next/image';
+import { SanityImage } from '@/components/ui/Image';
+import type { Post } from '@/types/sanity/schema';
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+
+/* Type for resolved blog post data from GROQ query */
+type _ResolvedBlogPost = Omit<Post, 'categories'> & {
+  categories?: Array<{ title: string }>;
+  content?: unknown;
+  metadata?: {
+    title?: string;
+    description?: string;
+    openGraph?: unknown;
+  };
+};
 
 /* Types for the blog post page */
 type BlogPostPageProps = {
@@ -20,27 +32,33 @@ type BlogPostPageProps = {
 };
 
 /* Generate metadata for the blog post */
-export const generateMetadata = async ({ params }: BlogPostPageProps): Promise<Metadata> => {
+export const generateMetadata = async ({
+  params,
+}: BlogPostPageProps): Promise<Metadata> => {
   const resolvedParams = await params;
-  const post = await client.fetch(BLOG_POST_BY_SLUG_QUERY(resolvedParams.slug));
+  const post = (await getBlogPostBySlug(
+    resolvedParams.slug
+  )) as _ResolvedBlogPost;
 
   if (!post) {
     return {};
   }
 
-  const { metadata = {}, title, description } = post;
+  const { metadata, title, description } = post;
 
   return {
-    title: metadata.title || title,
-    description: metadata.description || description,
-    openGraph: metadata.openGraph,
+    title: metadata?.title || title || 'Untitled Post',
+    description: metadata?.description || description || '',
+    openGraph: metadata?.openGraph,
   };
 };
 
 /* Blog post page component */
 const BlogPostPage = async ({ params }: BlogPostPageProps) => {
   const resolvedParams = await params;
-  const post = await client.fetch(BLOG_POST_BY_SLUG_QUERY(resolvedParams.slug));
+  const post = (await getBlogPostBySlug(
+    resolvedParams.slug
+  )) as _ResolvedBlogPost;
 
   if (!post) {
     notFound();
@@ -56,15 +74,18 @@ const BlogPostPage = async ({ params }: BlogPostPageProps) => {
           </Heading>
           <Flex gap={4} className="mt-4">
             <Text variant="muted">
-              {format(new Date(post.publishedAt), 'd MMMM yyyy', { locale: nl })}
+              {post.publishedAt &&
+                format(new Date(post.publishedAt), 'd MMMM yyyy', {
+                  locale: nl,
+                })}
             </Text>
             <Flex gap={2}>
-              {post.categories.map((category: string) => (
+              {post.categories?.filter(Boolean).map((category) => (
                 <Box
-                  key={category}
-                  className="bg-gray-100 px-3 py-1 rounded-full"
+                  key={category.title}
+                  className="bg-muted px-3 py-1 rounded-full"
                 >
-                  <Text variant="small">{category}</Text>
+                  <Text variant="small">{category.title}</Text>
                 </Box>
               ))}
             </Flex>
@@ -74,23 +95,26 @@ const BlogPostPage = async ({ params }: BlogPostPageProps) => {
         {/* Featured Image */}
         {post.image && (
           <Box className="relative w-full h-[400px] mb-8">
-            <Image
-              src={urlForImage(post.image).url()}
-              alt={post.title}
+            <SanityImage
+              image={post.image as SanityImageSource}
+              alt={post.title || 'Blog post image'}
               fill
               className="object-cover rounded-lg"
               priority
+              followHotspot={true}
             />
           </Box>
         )}
 
         {/* Content */}
-        <Box className="prose prose-lg max-w-none">
-          <PortableText value={post.content} />
-        </Box>
+        {post.content && (
+          <Box className="prose prose-lg max-w-none">
+            <PortableText value={post.content} />
+          </Box>
+        )}
       </Box>
     </Section>
   );
 };
 
-export default BlogPostPage; 
+export default BlogPostPage;

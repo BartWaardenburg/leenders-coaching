@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 
     const { name, email, subject, message } = data;
 
-    // Validate the request data
+    /* Validate the request data */
     if (!name || !email || !subject || !message) {
       console.log('Missing required fields:', {
         name,
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Send notification email to Leenders Coaching
+    /* Send notification email to Leenders Coaching */
     const notificationResult = await resend.emails.send({
       from: 'noreply@informatie.leenders-coaching.nl',
       to: 'info@leenders-coaching.nl',
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Send confirmation email to the sender
+    /* Send confirmation email to the sender */
     const confirmationResult = await resend.emails.send({
       from: 'noreply@informatie.leenders-coaching.nl',
       to: email,
@@ -71,7 +71,6 @@ export async function POST(request: Request) {
         'Failed to send confirmation email:',
         confirmationResult.error
       );
-      // We still return success since the primary notification was sent
     }
 
     return NextResponse.json({

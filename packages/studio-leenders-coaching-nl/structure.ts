@@ -1,5 +1,13 @@
 import type { StructureBuilder } from 'sanity/structure';
-import { CogIcon } from '@sanity/icons';
+import {
+  CogIcon,
+  DocumentIcon,
+  EditIcon,
+  EyeOpenIcon,
+  HomeIcon,
+} from '@sanity/icons';
+import { BlogPostsView } from './src/views/BlogPostsView';
+import { DashboardView } from './src/views/DashboardView';
 
 /* Define singleton document types */
 const singletons = [
@@ -12,6 +20,7 @@ const singletons = [
   'blogPage',
   'contactPage',
   'post',
+  'category',
   'sectionHeader',
   'sectionBlog',
   'sectionPricing',
@@ -30,6 +39,11 @@ export const structure = (S: StructureBuilder) =>
   S.list()
     .title('Content')
     .items([
+      /* Dashboard */
+      S.listItem()
+        .title('Dashboard')
+        .icon(HomeIcon)
+        .child(S.component().component(DashboardView).title('Dashboard')),
       /* Main Pages Section */
       S.listItem()
         .title('Pages')
@@ -41,13 +55,13 @@ export const structure = (S: StructureBuilder) =>
                 .title('Home')
                 .id('homePage')
                 .child(
-                  S.document().schemaType('homePage').documentId('homePage'),
+                  S.document().schemaType('homePage').documentId('homePage')
                 ),
               S.listItem()
                 .title('Over Mij')
                 .id('aboutPage')
                 .child(
-                  S.document().schemaType('aboutPage').documentId('aboutPage'),
+                  S.document().schemaType('aboutPage').documentId('aboutPage')
                 ),
               S.listItem()
                 .title('Coaching')
@@ -55,7 +69,7 @@ export const structure = (S: StructureBuilder) =>
                 .child(
                   S.document()
                     .schemaType('coachingPage')
-                    .documentId('coachingPage'),
+                    .documentId('coachingPage')
                 ),
               S.listItem()
                 .title('Aanpak')
@@ -63,13 +77,13 @@ export const structure = (S: StructureBuilder) =>
                 .child(
                   S.document()
                     .schemaType('approachPage')
-                    .documentId('approachPage'),
+                    .documentId('approachPage')
                 ),
               S.listItem()
                 .title('Blog')
                 .id('blogPage')
                 .child(
-                  S.document().schemaType('blogPage').documentId('blogPage'),
+                  S.document().schemaType('blogPage').documentId('blogPage')
                 ),
               S.listItem()
                 .title('Contact')
@@ -77,9 +91,9 @@ export const structure = (S: StructureBuilder) =>
                 .child(
                   S.document()
                     .schemaType('contactPage')
-                    .documentId('contactPage'),
+                    .documentId('contactPage')
                 ),
-            ]),
+            ])
         ),
 
       /* Sections */
@@ -122,7 +136,7 @@ export const structure = (S: StructureBuilder) =>
               S.listItem()
                 .title('Testimonial Sections')
                 .child(S.documentTypeList('sectionTestimonial')),
-            ]),
+            ])
         ),
 
       /* Blog & Content Section */
@@ -132,9 +146,29 @@ export const structure = (S: StructureBuilder) =>
           S.list()
             .title('Blog & Content')
             .items([
-              S.documentTypeListItem('post').title('Blog Posts'),
-              // Add more content types here as needed
-            ]),
+              S.listItem()
+                .title('Blog Posts')
+                .icon(DocumentIcon)
+                .child(
+                  S.documentTypeList('post')
+                    .title('Blog Posts')
+                    .child((id) =>
+                      S.document()
+                        .documentId(id)
+                        .views([
+                          S.view.form().icon(EditIcon),
+                          S.view
+                            .component(BlogPostsView)
+                            .title('Overview')
+                            .icon(EyeOpenIcon),
+                        ])
+                    )
+                ),
+              S.listItem()
+                .title('Categories')
+                .icon(DocumentIcon)
+                .child(S.documentTypeList('category').title('Categories')),
+            ])
         ),
 
       /* Navigation & Layout Section */
@@ -152,7 +186,7 @@ export const structure = (S: StructureBuilder) =>
                 .title('Footer')
                 .id('footer')
                 .child(S.document().schemaType('footer').documentId('footer')),
-            ]),
+            ])
         ),
 
       /* Configuration Section */
@@ -164,11 +198,11 @@ export const structure = (S: StructureBuilder) =>
           S.document()
             .schemaType('configuration')
             .documentId('configuration')
-            .title('Site Configuration'),
+            .title('Site Configuration')
         ),
 
       /* Filter out singletons from remaining types */
       ...S.documentTypeListItems().filter(
-        (listItem) => !singletons.includes(listItem.getId() as string),
+        (listItem) => !singletons.includes(listItem.getId() as string)
       ),
     ]);

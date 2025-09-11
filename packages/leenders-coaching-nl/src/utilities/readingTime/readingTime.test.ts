@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calculateReadingTime } from './readingTime';
+import { calculateReadingTime } from './';
 import type { PortableTextBlock } from '@portabletext/types';
 
 /**

@@ -1,13 +1,26 @@
 {
-  "storybookBuildDir": "storybook-static",
-  "storybookBaseDir": ".",
-  "untraced": [
-    "node_modules/**",
-    ".git/**",
-    "dist/**",
-    "build/**",
-    ".next/**",
-    "coverage/**"
+  "buildScriptName": "build-storybook",
+  "exitZeroOnChanges": true,
+  "ignoreLastBuildOnBranch": "main",
+  "onlyChanged": true,
+  "storybookBaseDir": "packages/leenders-coaching-nl",
+  "storybookConfigDir": "packages/leenders-coaching-nl/.storybook",
+  "externals": [
+    "packages/leenders-coaching-nl/public/**",
+    "packages/leenders-coaching-nl/src/assets/**"
   ],
-  "buildScriptName": "build-storybook"
+  "untraced": [
+    "package.json",
+    "pnpm-lock.yaml",
+    "*.md",
+    "*.log",
+    "coverage/**",
+    ".next/**",
+    "node_modules/**",
+    "storybook-static/**"
+  ],
+  "skip": false,
+  "storybookBuildDir": "storybook-static",
+  "storybookUrl": null,
+  "uploadTimeout": 300000
 }

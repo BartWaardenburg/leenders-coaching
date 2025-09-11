@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionPricing } from './SectionPricing';
 
 const meta = {
@@ -7,7 +7,6 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
   },
-  tags: ['autodocs'],
 } satisfies Meta<typeof SectionPricing>;
 
 export default meta;

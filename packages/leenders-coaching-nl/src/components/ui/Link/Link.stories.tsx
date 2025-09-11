@@ -1,5 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
 import { Link } from './Link';
+import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Link',
@@ -7,7 +9,6 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
   argTypes: {
     variant: {
       control: 'select',
@@ -48,6 +49,15 @@ export const Default: Story = {
     children: 'Default Link',
     href: '#',
   },
+  play: async ({ canvas }) => {
+    await expect(
+      canvas.getByRole('link', { name: 'Default Link' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('link', { name: 'Default Link' })
+    ).toHaveAttribute('href', '#');
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const Subtle: Story = {
@@ -55,6 +65,15 @@ export const Subtle: Story = {
     children: 'Subtle Link',
     href: '#',
     variant: 'subtle',
+  },
+  play: async ({ canvas }) => {
+    await expect(
+      canvas.getByRole('link', { name: 'Subtle Link' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('link', { name: 'Subtle Link' })
+    ).toHaveAttribute('href', '#');
+    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -66,6 +85,15 @@ export const AnimatedSlideBelow: Story = {
     linePosition: 'below',
     lineStyle: 'slide',
   },
+  play: async ({ canvas }) => {
+    await expect(
+      canvas.getByRole('link', { name: 'Animated Link (Slide Below)' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('link', { name: 'Animated Link (Slide Below)' })
+    ).toHaveAttribute('href', '#');
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const AnimatedSlideAbove: Story = {
@@ -75,6 +103,15 @@ export const AnimatedSlideAbove: Story = {
     variant: 'animated',
     linePosition: 'above',
     lineStyle: 'slide',
+  },
+  play: async ({ canvas }) => {
+    await expect(
+      canvas.getByRole('link', { name: 'Animated Link (Slide Above)' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('link', { name: 'Animated Link (Slide Above)' })
+    ).toHaveAttribute('href', '#');
+    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -86,6 +123,15 @@ export const AnimatedMoveBelow: Story = {
     linePosition: 'below',
     lineStyle: 'move',
   },
+  play: async ({ canvas }) => {
+    await expect(
+      canvas.getByRole('link', { name: 'Animated Link (Move Below)' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('link', { name: 'Animated Link (Move Below)' })
+    ).toHaveAttribute('href', '#');
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const AnimatedMoveAbove: Story = {
@@ -96,6 +142,15 @@ export const AnimatedMoveAbove: Story = {
     linePosition: 'above',
     lineStyle: 'move',
   },
+  play: async ({ canvas }) => {
+    await expect(
+      canvas.getByRole('link', { name: 'Animated Link (Move Above)' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('link', { name: 'Animated Link (Move Above)' })
+    ).toHaveAttribute('href', '#');
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const ExternalLink: Story = {
@@ -104,6 +159,14 @@ export const ExternalLink: Story = {
     href: 'https://example.com',
     target: '_blank',
     rel: 'noopener noreferrer',
+  },
+  play: async ({ canvas }) => {
+    const link = canvas.getByRole('link', { name: 'External Link' });
+    await expect(link).toBeVisible();
+    await expect(link).toHaveAttribute('href', 'https://example.com');
+    await expect(link).toHaveAttribute('target', '_blank');
+    await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -137,6 +200,27 @@ export const ExternalLinkVariants: Story = {
       </Link>
     </div>
   ),
+  play: async ({ canvas }) => {
+    await expect(
+      canvas.getByRole('link', { name: 'Default External Link' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('link', { name: 'Subtle External Link' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('link', { name: 'Animated External Link (Slide Below)' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('link', { name: 'Animated External Link (Slide Above)' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('link', { name: 'Animated External Link (Move Below)' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('link', { name: 'Animated External Link (Move Above)' })
+    ).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const WithLongText: Story = {
@@ -144,5 +228,14 @@ export const WithLongText: Story = {
     children:
       'This is a link with a longer text that might wrap to multiple lines to demonstrate how the link component handles longer content',
     href: '#',
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole('link')).toBeVisible();
+    await expect(
+      canvas.getByText(
+        'This is a link with a longer text that might wrap to multiple lines to demonstrate how the link component handles longer content'
+      )
+    ).toBeVisible();
+    await waitForMotionAnimations({ canvas });
   },
 };

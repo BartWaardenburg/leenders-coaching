@@ -229,6 +229,8 @@ graph TB
    NEXT_PUBLIC_SANITY_DATASET=production
    NEXT_PUBLIC_SANITY_API_VERSION=2024-02-14
    SANITY_API_TOKEN=your_sanity_api_token
+   SANITY_REVALIDATE_SECRET=your_random_secret_string
+   SANITY_VIEWER_TOKEN=your_sanity_viewer_token
 
    # Email Configuration (Required for contact form)
    RESEND_API_KEY=your_resend_api_key
@@ -795,6 +797,46 @@ This project is private and proprietary. All rights reserved.
 <div align="center">
 <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=bartwaardenburg&layout=compact&hide_border=true&langs_count=10" alt="Top Languages" width="100%" />
 </div>
+
+---
+
+## 📋 TODO: Storybook Interaction Testing Improvements
+
+### 🎯 Priority Tasks
+
+#### 🔥 High Priority
+
+- [ ] **Expand interaction test coverage** - Add `play` functions to interactive components (Button, Card, Modal, Calendar)
+- [ ] **Implement setup/teardown patterns** - Add `beforeEach`/`beforeAll` for component state management
+- [ ] **Add complex interaction scenarios** - Multi-step workflows, error states, loading interactions
+- [ ] **Enhance form testing** - Validation states, error handling, submission flows
+
+#### 🚀 Medium Priority
+
+- [ ] **Add `mount` function usage** - Pre-render setup for components requiring initial state
+- [ ] **Implement `afterEach` patterns** - Post-interaction assertions and cleanup
+- [ ] **Expand userEvent coverage** - Hover, keyboard navigation, drag & drop interactions
+- [ ] **Add accessibility interaction tests** - Screen reader navigation, keyboard-only flows
+
+#### 💡 Low Priority
+
+- [ ] **Mock external modules** - API calls, third-party integrations
+- [ ] **Add visual + interaction testing** - Combine with Chromatic for comprehensive coverage
+- [ ] **Performance interaction testing** - Measure interaction performance
+- [ ] **Cross-browser interaction testing** - Ensure consistent behavior
+
+### 📊 Current Status
+
+- ✅ **Infrastructure**: Perfect setup (33/33 files import `expect`)
+- ✅ **Core APIs**: Good implementation where used
+- ⚠️ **Coverage**: Only 12% of stories have interaction tests (4/33 files)
+- ⚠️ **Advanced Patterns**: Missing setup/teardown, mount, afterEach
+
+### 🎯 Target Goals
+
+- **Coverage**: 80% of interactive components should have interaction tests
+- **Quality**: All interaction tests should use proper setup/teardown patterns
+- **Accessibility**: All interactive components should have a11y interaction tests
 
 ---
 

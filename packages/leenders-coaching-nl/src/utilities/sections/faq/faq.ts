@@ -3,7 +3,11 @@ import type { SectionFAQ } from '@/components/sections/SectionFAQ';
 import type { SectionFAQ as SanitySectionFAQ } from '@/types/sanity/schema';
 import type { PortableTextBlock } from '@portabletext/types';
 
-/* Type guard for FAQ section */
+/**
+ * Type guard to check if data is a valid Sanity FAQ section
+ * @param data - The data to check
+ * @returns True if data is a valid SanitySectionFAQ
+ */
 const isSanitySectionFAQ = (
   data: Record<string, unknown>
 ): data is SanitySectionFAQ => {
@@ -12,6 +16,9 @@ const isSanitySectionFAQ = (
 
 /**
  * Transform FAQ section data to component props
+ * @param data - The raw section data from Sanity
+ * @returns Transformed props for the SectionFAQ component
+ * @throws Error if data is not a valid FAQ section
  */
 export const transformFAQSection = (
   data: Record<string, unknown>

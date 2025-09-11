@@ -1,5 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
 import { Text } from './Text';
+import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Text',
@@ -7,7 +9,6 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
 } satisfies Meta<typeof Text>;
 
 export default meta;
@@ -16,5 +17,9 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     children: 'Text Example',
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByText('Text Example')).toBeVisible();
+    await waitForMotionAnimations({ canvas });
   },
 };

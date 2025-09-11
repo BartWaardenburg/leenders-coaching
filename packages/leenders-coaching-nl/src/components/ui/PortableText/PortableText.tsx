@@ -3,14 +3,13 @@ import type {
   PortableTextComponents,
   PortableTextBlock,
 } from '@portabletext/react';
-import Image from 'next/image';
+import { SanityImage } from '@/components/ui/Image';
 
 import { Heading } from '@/components/ui/Heading';
 import { Link } from '@/components/ui/Link';
 import { Text } from '@/components/ui/Text';
 import { Box } from '@/components/ui/Box';
 import { Button } from '@/components/ui/Button';
-import { urlForImage } from '@/utilities/sanity';
 
 type LinkAnnotation = {
   _type: 'link';
@@ -43,21 +42,58 @@ type SanityImage = {
 
 const components: PortableTextComponents = {
   block: {
-    h1: ({ children }) => <Heading level="h1" variant="large">{children}</Heading>,
-    h2: ({ children }) => <Heading level="h2" variant="medium">{children}</Heading>,
-    h3: ({ children }) => <Heading level="h3" variant="small">{children}</Heading>,
-    h4: ({ children }) => <Heading level="h4" variant="small">{children}</Heading>,
-    h5: ({ children }) => <Heading level="h5" variant="small">{children}</Heading>,
-    h6: ({ children }) => <Heading level="h6" variant="small">{children}</Heading>,
+    h1: ({ children }) => (
+      <Heading level="h1" variant="large">
+        {children}
+      </Heading>
+    ),
+    h2: ({ children }) => (
+      <Heading level="h2" variant="medium">
+        {children}
+      </Heading>
+    ),
+    h3: ({ children }) => (
+      <Heading level="h3" variant="small">
+        {children}
+      </Heading>
+    ),
+    h4: ({ children }) => (
+      <Heading level="h4" variant="small">
+        {children}
+      </Heading>
+    ),
+    h5: ({ children }) => (
+      <Heading level="h5" variant="small">
+        {children}
+      </Heading>
+    ),
+    h6: ({ children }) => (
+      <Heading level="h6" variant="small">
+        {children}
+      </Heading>
+    ),
     normal: ({ children }) => (
-      <Box className="mb-4">
-        <Text>{children}</Text>
-      </Box>
+      <Text as="div" className="mb-4">
+        {children}
+      </Text>
     ),
     blockquote: ({ children }) => (
-      <Box as="blockquote" className="pl-4 border-l-4 border-gray-300 my-4 italic">
-        <Text>{children}</Text>
+      <Box
+        as="blockquote"
+        className="pl-4 border-l-4 border-gray-300 my-4 italic"
+      >
+        {children}
       </Box>
+    ),
+    bullet: ({ children }) => (
+      <Text as="div" className="mb-4">
+        {children}
+      </Text>
+    ),
+    number: ({ children }) => (
+      <Text as="div" className="mb-4">
+        {children}
+      </Text>
     ),
   },
   marks: {
@@ -75,7 +111,13 @@ const components: PortableTextComponents = {
         {children}
       </span>
     ),
-    link: ({ value, children }: { value?: LinkAnnotation; children: React.ReactNode }) => {
+    link: ({
+      value,
+      children,
+    }: {
+      value?: LinkAnnotation;
+      children: React.ReactNode;
+    }) => {
       const target = value?.blank ? '_blank' : undefined;
       const rel = value?.blank ? 'noopener noreferrer' : undefined;
       return (
@@ -94,20 +136,25 @@ const components: PortableTextComponents = {
     image: ({ value }: { value: SanityImage }) => {
       if (!value?.asset) return null;
 
-      const imageUrl = value.asset.url || urlForImage(value).width(800).height(400).url();
-
       return (
         <Box className="my-8">
           <Box className="relative border border-foreground/80 h-48 md:h-[400px] w-full overflow-hidden bg-pastel-blue dark:bg-pastel-blue-dark">
-            <Image
-              src={imageUrl}
+            <SanityImage
+              image={value}
               alt={value?.alt || ''}
               fill
               className="object-cover"
+              sizes="(max-width: 768px) 100vw, 768px"
+              followHotspot={true}
             />
           </Box>
           {value?.caption && (
-            <Text as="figcaption" variant="muted" textAlign="center" className="mt-2">
+            <Text
+              as="figcaption"
+              variant="muted"
+              textAlign="center"
+              className="mt-2"
+            >
               {value.caption}
             </Text>
           )}
@@ -115,7 +162,7 @@ const components: PortableTextComponents = {
       );
     },
     callToAction: ({ value }) => (
-      <Box className="my-4">
+      <div className="my-4">
         <Button
           href={value?.url}
           variant="blue"
@@ -124,12 +171,12 @@ const components: PortableTextComponents = {
         >
           {value?.text}
         </Button>
-      </Box>
+      </div>
     ),
     code: ({ value }) => (
-      <Box as="pre" className="bg-pastel-blue/20 dark:bg-pastel-blue-dark/20 border border-foreground/80 p-4 my-4 overflow-x-auto">
+      <pre className="bg-pastel-blue/20 dark:bg-pastel-blue-dark/20 border border-foreground/80 p-4 my-4 overflow-x-auto">
         <code className="font-mono text-sm">{value?.code}</code>
-      </Box>
+      </pre>
     ),
   },
   list: {
@@ -151,15 +198,21 @@ type PortableTextProps = {
   content: PortableTextBlock[];
   /** Optional className for the wrapper */
   className?: string;
+  /** Test ID for the component */
+  testid?: string;
 };
 
 /**
  * Enhanced Portable Text component with themed components
  * Supports various block types, marks, and custom components
  */
-export const PortableText = ({ content, className }: PortableTextProps) => {
+export const PortableText = ({
+  content,
+  className,
+  testid,
+}: PortableTextProps) => {
   return (
-    <Box className={className}>
+    <Box className={className} data-testid={testid}>
       <BasePortableText value={content} components={components} />
     </Box>
   );

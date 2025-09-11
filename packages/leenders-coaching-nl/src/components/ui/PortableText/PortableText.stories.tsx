@@ -1,5 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
 import { PortableText } from './PortableText';
+import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/PortableText',
@@ -7,7 +9,6 @@ const meta = {
   parameters: {
     layout: 'padded',
   },
-  tags: ['autodocs'],
   argTypes: {
     content: {
       control: 'object',
@@ -134,27 +135,15 @@ export const AllFeatures: Story = {
       {
         _type: 'block',
         style: 'h2',
-        children: [{ _type: 'span', text: 'Image' }],
+        children: [{ _type: 'span', text: 'Images' }],
       },
       {
         _type: 'block',
         style: 'normal',
         children: [
           {
-            _type: 'image',
-            asset: {
-              _ref: 'image-example',
-              _type: 'reference',
-              url: 'https://picsum.photos/800/400',
-            },
-            hotspot: {
-              x: 0.5,
-              y: 0.5,
-              height: 1,
-              width: 1,
-            },
-            alt: 'A sample image',
-            caption: 'This is a sample image caption',
+            _type: 'span',
+            text: 'Images in PortableText are handled by the SanityImage component and require real Sanity assets. In Storybook, we demonstrate other features instead.',
           },
         ],
       },
@@ -195,6 +184,16 @@ export const AllFeatures: Story = {
       },
     ],
   },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByText('All PortableText Features')).toBeVisible();
+    await expect(canvas.getByText('Links')).toBeVisible();
+    await expect(canvas.getByText('Lists')).toBeVisible();
+    await expect(canvas.getByText('Blockquote')).toBeVisible();
+    await expect(canvas.getByText('Images')).toBeVisible();
+    await expect(canvas.getByText('Code Block')).toBeVisible();
+    await expect(canvas.getByText('Call to Action')).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
 };
 
 export const SimpleText: Story = {
@@ -211,6 +210,12 @@ export const SimpleText: Story = {
         ],
       },
     ],
+  },
+  play: async ({ canvas }) => {
+    await expect(
+      canvas.getByText('This is a simple paragraph with plain text.')
+    ).toBeVisible();
+    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -248,6 +253,27 @@ export const Headings: Story = {
         children: [{ _type: 'span', text: 'Heading 6' }],
       },
     ],
+  },
+  play: async ({ canvas }) => {
+    await expect(
+      canvas.getByRole('heading', { name: 'Heading 1' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('heading', { name: 'Heading 2' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('heading', { name: 'Heading 3' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('heading', { name: 'Heading 4' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('heading', { name: 'Heading 5' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('heading', { name: 'Heading 6' })
+    ).toBeVisible();
+    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -313,5 +339,205 @@ export const Lists: Story = {
         children: [{ _type: 'span', text: 'Second item' }],
       },
     ],
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByText('Unordered List')).toBeVisible();
+    await expect(canvas.getByText('Ordered List')).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const EmptyContent: Story = {
+  args: {
+    content: [],
+  },
+  play: async ({ canvas }) => {
+    // Empty content should render without errors
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const InvalidContent: Story = {
+  args: {
+    content: [
+      {
+        _type: 'invalidBlock',
+        children: [{ _type: 'span', text: 'This should be ignored' }],
+      },
+      {
+        _type: 'block',
+        style: 'normal',
+        children: [
+          { _type: 'span', text: 'Valid content after invalid block' },
+        ],
+      },
+    ],
+  },
+  play: async ({ canvas }) => {
+    // Should render valid content and ignore invalid blocks
+    await expect(
+      canvas.getByText('Valid content after invalid block')
+    ).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const ComplexNestedContent: Story = {
+  args: {
+    content: [
+      {
+        _type: 'block',
+        style: 'h2',
+        children: [{ _type: 'span', text: 'Complex Nested Content' }],
+      },
+      {
+        _type: 'block',
+        style: 'normal',
+        children: [
+          { _type: 'span', text: 'This paragraph has ' },
+          {
+            _type: 'span',
+            marks: ['strong', 'em'],
+            text: 'bold and italic text',
+          },
+          { _type: 'span', text: ' and ' },
+          {
+            _type: 'span',
+            marks: ['underline', 'highlight'],
+            text: 'underlined and highlighted text',
+          },
+          { _type: 'span', text: '.' },
+        ],
+      },
+      {
+        _type: 'block',
+        style: 'blockquote',
+        children: [
+          { _type: 'span', text: 'A blockquote with ' },
+          { _type: 'span', marks: ['strong'], text: 'bold text' },
+          { _type: 'span', text: ' and ' },
+          { _type: 'span', marks: ['em'], text: 'italic text' },
+          { _type: 'span', text: '.' },
+        ],
+      },
+    ],
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByText('Complex Nested Content')).toBeVisible();
+    await expect(canvas.getByText('bold and italic text')).toBeVisible();
+    await expect(
+      canvas.getByText('underlined and highlighted text')
+    ).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const WithCustomClassName: Story = {
+  args: {
+    content: [
+      {
+        _type: 'block',
+        style: 'h2',
+        children: [{ _type: 'span', text: 'Custom Styled Content' }],
+      },
+      {
+        _type: 'block',
+        style: 'normal',
+        children: [
+          { _type: 'span', text: 'This content has custom styling applied.' },
+        ],
+      },
+    ],
+    className:
+      'border-2 border-blue-500 rounded-lg p-4 bg-blue-50 dark:bg-blue-900/20',
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByText('Custom Styled Content')).toBeVisible();
+    await expect(
+      canvas.getByText('This content has custom styling applied.')
+    ).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
+export const AllVariants: Story = {
+  parameters: {
+    controls: { hideNoControlsWarning: true },
+  },
+  args: {
+    content: [
+      {
+        _type: 'block',
+        style: 'normal',
+        children: [{ _type: 'span', text: 'This is simple text content.' }],
+      },
+    ],
+  },
+  render: () => (
+    <div className="space-y-8">
+      <div>
+        <h3 className="text-lg font-semibold mb-4">Simple Text</h3>
+        <PortableText
+          content={[
+            {
+              _type: 'block',
+              style: 'normal',
+              children: [
+                { _type: 'span', text: 'This is simple text content.' },
+              ],
+            },
+          ]}
+        />
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold mb-4">Rich Text</h3>
+        <PortableText
+          content={[
+            {
+              _type: 'block',
+              style: 'normal',
+              children: [
+                { _type: 'span', text: 'This has ' },
+                { _type: 'span', marks: ['strong'], text: 'bold' },
+                { _type: 'span', text: ' and ' },
+                { _type: 'span', marks: ['em'], text: 'italic' },
+                { _type: 'span', text: ' text.' },
+              ],
+            },
+          ]}
+        />
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold mb-4">Lists</h3>
+        <PortableText
+          content={[
+            {
+              _type: 'block',
+              style: 'normal',
+              listItem: 'bullet',
+              children: [{ _type: 'span', text: 'List item 1' }],
+            },
+            {
+              _type: 'block',
+              style: 'normal',
+              listItem: 'bullet',
+              children: [{ _type: 'span', text: 'List item 2' }],
+            },
+          ]}
+        />
+      </div>
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    await expect(
+      canvas.getByText('This is simple text content.')
+    ).toBeVisible();
+    await expect(canvas.getByText('bold')).toBeVisible();
+    await expect(canvas.getByText('italic')).toBeVisible();
+    await expect(canvas.getByText('List item 1')).toBeVisible();
+    await expect(canvas.getByText('List item 2')).toBeVisible();
+    await waitForMotionAnimations({ canvas });
   },
 };

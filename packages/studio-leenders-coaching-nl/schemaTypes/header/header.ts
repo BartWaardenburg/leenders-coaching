@@ -27,4 +27,16 @@ export const header = defineType({
       type: 'headerContact',
     },
   ],
+  preview: {
+    select: {
+      title: 'about.title',
+      subtitle: 'about.description',
+    },
+    prepare({ title, subtitle }) {
+      return {
+        title: title || 'Header',
+        subtitle: subtitle || 'Navigation & Layout',
+      };
+    },
+  },
 });

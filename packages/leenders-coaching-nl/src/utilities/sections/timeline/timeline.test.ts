@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { transformTimelineSection } from './timeline';
+import { transformTimelineSection } from './';
 import type { SectionTimeline as SanitySectionTimeline } from '@/types/sanity/schema';
 
 // Helper function to create Sanity document properties

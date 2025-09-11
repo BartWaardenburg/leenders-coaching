@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { transformFeaturedSection } from './featured';
+import { transformFeaturedSection } from './';
 import type { SectionFeatured as SanitySectionFeatured } from '@/types/sanity/schema';
 
 // Helper function to create Sanity document properties
@@ -14,11 +14,12 @@ const createSanityDoc = (
   ...overrides,
 });
 
-// Mock the urlForImage function
+// Mock the sanity utilities
 vi.mock('@/utilities/sanity', () => ({
-  urlForImage: () => ({
-    url: () => 'https://example.com/image.jpg',
-  }),
+  groq: vi.fn(),
+  client: {},
+  sanityConfig: {},
+  defineQuery: vi.fn(),
 }));
 
 /**
@@ -47,8 +48,10 @@ describe('transformFeaturedSection', () => {
     expect(result).toEqual({
       title: 'Featured Section',
       description: 'Featured section description',
-      image: 'https://example.com/image.jpg',
-      imageAlt: 'Featured image alt text',
+      image: {
+        _type: 'image',
+        asset: { _ref: 'image-1', _type: 'reference' },
+      },
       cta: {
         href: '/featured',
         label: 'Learn More',
@@ -68,8 +71,7 @@ describe('transformFeaturedSection', () => {
     expect(result).toEqual({
       title: undefined,
       description: '',
-      image: '',
-      imageAlt: '',
+      image: null,
       cta: undefined,
       background: undefined,
       border: undefined,
@@ -87,8 +89,7 @@ describe('transformFeaturedSection', () => {
     expect(result).toEqual({
       title: 'Featured Section',
       description: '',
-      image: '',
-      imageAlt: '',
+      image: null,
       cta: undefined,
       background: undefined,
       border: undefined,
@@ -107,8 +108,10 @@ describe('transformFeaturedSection', () => {
     expect(result).toEqual({
       title: 'Featured Section',
       description: '',
-      image: 'https://example.com/image.jpg',
-      imageAlt: '',
+      image: {
+        _type: 'image',
+        asset: { _ref: 'image-1', _type: 'reference' },
+      },
       cta: undefined,
       background: undefined,
       border: undefined,
@@ -131,8 +134,7 @@ describe('transformFeaturedSection', () => {
     expect(result).toEqual({
       title: 'Featured Section',
       description: '',
-      image: '',
-      imageAlt: '',
+      image: null,
       cta: {
         href: '/featured',
         label: 'Learn More',
@@ -161,8 +163,7 @@ describe('transformFeaturedSection', () => {
     expect(result).toEqual({
       title: undefined,
       description: '',
-      image: '',
-      imageAlt: '',
+      image: null,
       cta: {
         href: '',
         label: '',

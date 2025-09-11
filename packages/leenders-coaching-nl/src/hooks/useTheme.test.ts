@@ -115,4 +115,52 @@ describe('useTheme', () => {
 
     expect(result.current.themes).toEqual(['light', 'dark', 'system']);
   });
+
+  it('should handle system theme with light system preference', () => {
+    vi.mocked(useNextTheme).mockReturnValue({
+      theme: 'system',
+      setTheme: vi.fn(),
+      systemTheme: 'light',
+      resolvedTheme: 'light',
+      themes: ['light', 'dark', 'system'],
+    });
+
+    const { result } = renderHook(() => useTheme());
+
+    expect(result.current.theme).toBe('system');
+    expect(result.current.systemTheme).toBe('light');
+    expect(result.current.isDark).toBe(false);
+  });
+
+  it('should handle undefined theme gracefully', () => {
+    vi.mocked(useNextTheme).mockReturnValue({
+      theme: undefined,
+      setTheme: vi.fn(),
+      systemTheme: 'dark',
+      resolvedTheme: 'dark',
+      themes: ['light', 'dark', 'system'],
+    });
+
+    const { result } = renderHook(() => useTheme());
+
+    expect(result.current.theme).toBeUndefined();
+    expect(result.current.systemTheme).toBe('dark');
+    expect(result.current.isDark).toBe(false);
+  });
+
+  it('should handle undefined systemTheme gracefully', () => {
+    vi.mocked(useNextTheme).mockReturnValue({
+      theme: 'system',
+      setTheme: vi.fn(),
+      systemTheme: undefined,
+      resolvedTheme: 'light',
+      themes: ['light', 'dark', 'system'],
+    });
+
+    const { result } = renderHook(() => useTheme());
+
+    expect(result.current.theme).toBe('system');
+    expect(result.current.systemTheme).toBeUndefined();
+    expect(result.current.isDark).toBe(false);
+  });
 });

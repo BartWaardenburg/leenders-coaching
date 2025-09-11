@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useEffect, useRef, useState } from 'react';
 import { render } from '@react-email/render';
 import { Box } from '@/components/ui/Box';
@@ -13,10 +13,11 @@ import { ContactConfirmation } from './ContactConfirmation';
  */
 const meta: Meta = {
   title: 'Emails/Templates',
-  tags: ['autodocs'],
+  component: () => null,
   parameters: {
     layout: 'padded',
   },
+  tags: ['!test', 'emails'],
 };
 
 export default meta;
@@ -83,7 +84,7 @@ const EmailFrame = ({ title, description, html }: EmailFrameProps) => {
             body.offsetHeight,
             html.clientHeight,
             html.scrollHeight,
-            html.offsetHeight,
+            html.offsetHeight
           );
           iframe.style.height = `${height}px`;
         };
@@ -125,7 +126,7 @@ export const NotificationEmail: Story = {
       const renderEmail = async () => {
         try {
           const rendered = await render(
-            <ContactNotification {...sampleData} />,
+            <ContactNotification {...sampleData} />
           );
           setHtml(rendered);
         } catch (error) {
@@ -160,7 +161,7 @@ export const ConfirmationEmail: Story = {
             <ContactConfirmation
               name={sampleData.name}
               subject={sampleData.subject}
-            />,
+            />
           );
           setHtml(rendered);
         } catch (error) {

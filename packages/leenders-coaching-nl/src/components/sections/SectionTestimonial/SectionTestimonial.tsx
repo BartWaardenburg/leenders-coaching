@@ -1,4 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import type { StaticImageData } from 'next/image';
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
 import { Section, type PastelColor } from '@/components/ui/Section';
 import { Stack } from '@/components/ui/Stack';
@@ -16,8 +18,8 @@ export type Testimonial = {
   name: string;
   /** Optional role or description */
   role?: string;
-  /** Image source URL */
-  image: string;
+  /** Image source (URL, StaticImageData, or SanityImageSource) */
+  image?: string | StaticImageData | SanityImageSource;
 };
 
 type SectionTestimonialProps = {
@@ -40,7 +42,7 @@ const TestimonialSlide = ({ quote, name, role, image }: Testimonial) => (
         <Person
           name={name}
           description={role}
-          imageSrc={image}
+          imageSrc={image || ''}
           className="max-w-xs mx-auto"
         />
       }

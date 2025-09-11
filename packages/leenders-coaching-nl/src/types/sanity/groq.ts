@@ -24,8 +24,8 @@ export type GLOBAL_DATA_QUERYResult = {
   navigation: {
     navigation?: Array<{
       _key: string;
-      label: string;
-      href: string;
+      label?: string;
+      href?: string;
     }> | null;
     about?: {
       title?: string;
@@ -35,7 +35,7 @@ export type GLOBAL_DATA_QUERYResult = {
       title?: string;
       links?: Array<{
         _key: string;
-        platform?: string;
+        platform?: 'linkedin' | 'instagram' | 'facebook' | 'twitter';
         url?: string;
       }> | null;
     } | null;
@@ -61,7 +61,7 @@ export type GLOBAL_DATA_QUERYResult = {
     } | null;
     socialLinks?: Array<{
       _key: string;
-      platform?: string;
+      platform?: 'instagram' | 'linkedin';
       url?: string;
     }> | null;
   } | null;

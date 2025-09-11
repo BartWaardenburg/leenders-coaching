@@ -62,7 +62,11 @@ type OrganizationStructuredData = {
 };
 
 /**
- * Generates website structured data
+ * Generates website structured data for SEO
+ * @param title - The website title
+ * @param description - Optional website description
+ * @param url - Optional website URL
+ * @returns Website structured data object
  */
 export const generateWebsiteStructuredData = (
   title: string,
@@ -77,7 +81,14 @@ export const generateWebsiteStructuredData = (
 });
 
 /**
- * Generates article structured data
+ * Generates article structured data for SEO
+ * @param title - The article title
+ * @param description - Optional article description
+ * @param image - Optional article image URL
+ * @param datePublished - Optional publication date
+ * @param dateModified - Optional modification date
+ * @param author - Optional author name
+ * @returns Article structured data object
  */
 export const generateArticleStructuredData = ({
   title,
@@ -120,7 +131,13 @@ export const generateArticleStructuredData = ({
 });
 
 /**
- * Generates organization structured data
+ * Generates organization structured data for SEO
+ * @param name - The organization name
+ * @param description - Optional organization description
+ * @param url - Optional organization URL
+ * @param logo - Optional logo URL
+ * @param socialLinks - Optional array of social media URLs
+ * @returns Organization structured data object
  */
 export const generateOrganizationStructuredData = ({
   name,
@@ -146,6 +163,13 @@ export const generateOrganizationStructuredData = ({
 
 /**
  * Generates metadata for a page, merging with default metadata
+ * @param title - Optional page title
+ * @param description - Optional page description
+ * @param images - Optional array of images for OpenGraph
+ * @param type - OpenGraph type (default: 'website')
+ * @param noindex - Whether to prevent indexing (default: false)
+ * @param structuredData - Optional custom structured data
+ * @returns Complete metadata object for Next.js
  */
 export const generateMetadata = ({
   title,

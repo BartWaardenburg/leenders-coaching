@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionCards } from './SectionCards';
 import { Card } from '@/components/ui/Card';
 import { ComponentProps } from 'react';
@@ -75,7 +75,7 @@ const generateCards = (count: number) => {
       ...card,
       slug: `${card.slug}-${index}`,
     }))
-    .sort(() => Math.random() - 0.5);
+    .sort((a, b) => a.slug.localeCompare(b.slug));
 
   return shuffledCards.map((card) => (
     <Card key={card.slug} title={card.title} slug={card.slug}>

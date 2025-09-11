@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef } from 'react';
-import { forwardRef } from 'react';
+import { forwardRef, useId } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { Text } from '@/components/ui/Text';
@@ -24,8 +24,9 @@ export const Input = forwardRef<
 >(
   (
     { label, error, className, as, variant = 'default', disabled, ...props },
-    ref,
+    ref
   ) => {
+    const id = useId();
     const baseInputStyles = twMerge(
       'w-full px-4 py-2',
       'transition-all duration-200',
@@ -47,7 +48,7 @@ export const Input = forwardRef<
           'disabled:bg-muted disabled:border-muted-foreground/40 disabled:text-muted-foreground disabled:cursor-not-allowed',
         ].join(' '),
       error && '!border-destructive dark:!border-destructive',
-      className,
+      className
     );
 
     return (
@@ -55,17 +56,20 @@ export const Input = forwardRef<
         <Box className="group">
           {label && (
             <Box className="relative inline-block">
-              <Text
-                variant="label"
-                className={twMerge(disabled ? 'opacity-60' : undefined)}
+              <label
+                htmlFor={id}
+                className={twMerge(
+                  'block text-sm font-medium mb-1',
+                  disabled ? 'opacity-60' : undefined
+                )}
               >
                 {label}
-              </Text>
+              </label>
               <Box
                 className={twMerge(
                   'absolute -bottom-[2px] left-0 h-[2px] w-0 bg-primary/60 dark:bg-primary/40',
                   'transition-all duration-300 ease-out group-focus-within:w-12',
-                  disabled && 'hidden',
+                  disabled && 'hidden'
                 )}
               />
             </Box>
@@ -73,18 +77,20 @@ export const Input = forwardRef<
           <Box className="mt-3">
             {as === 'textarea' ? (
               <textarea
+                id={id}
                 ref={ref as React.Ref<HTMLTextAreaElement>}
                 disabled={disabled}
                 className={twMerge(
                   baseInputStyles,
                   'min-h-[120px] resize-y',
                   variant === 'default' && 'border-x-0 border-t-0',
-                  className,
+                  className
                 )}
                 {...(props as ComponentPropsWithoutRef<'textarea'>)}
               />
             ) : (
               <input
+                id={id}
                 ref={ref as React.Ref<HTMLInputElement>}
                 disabled={disabled}
                 className={twMerge(baseInputStyles, className)}
@@ -100,7 +106,7 @@ export const Input = forwardRef<
         )}
       </Stack>
     );
-  },
+  }
 );
 
 Input.displayName = 'Input';

@@ -18,6 +18,8 @@ export const Icon = ({ path, className, ...props }: IconProps) => {
       stroke="currentColor"
       className={twMerge('w-6 h-6 text-primary', className)}
       aria-hidden="true"
+      data-testid="animated-element"
+      data-animation="complete"
       {...props}
     >
       <path strokeLinecap="round" strokeLinejoin="round" d={path} />

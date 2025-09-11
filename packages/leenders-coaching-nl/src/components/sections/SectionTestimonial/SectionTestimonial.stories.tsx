@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionTestimonial } from './SectionTestimonial';
 
 const meta = {
@@ -7,7 +7,6 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
   },
-  tags: ['autodocs'],
   argTypes: {
     background: {
       control: 'select',
@@ -30,24 +29,21 @@ const defaultTestimonials = [
       "The coaching sessions have been transformative. I've gained clarity about my goals and the confidence to pursue them.",
     name: 'Sarah Johnson',
     role: 'Marketing Director',
-    image:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80',
+    image: 'https://picsum.photos/id/64/256/256',
   },
   {
     quote:
       "Working with this coach has helped me overcome obstacles I didn't think were possible. The results speak for themselves.",
     name: 'Michael Chen',
     role: 'Software Engineer',
-    image:
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80',
+    image: 'https://picsum.photos/id/1027/256/256',
   },
   {
     quote:
       'The personalized approach and actionable strategies have made a real difference in both my professional and personal life.',
     name: 'Emma Davis',
     role: 'Business Owner',
-    image:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80',
+    image: 'https://picsum.photos/id/1025/256/256',
   },
 ];
 

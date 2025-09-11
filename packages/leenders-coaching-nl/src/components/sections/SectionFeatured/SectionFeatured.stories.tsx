@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionFeatured } from './SectionFeatured';
 
 const meta = {
@@ -7,7 +7,6 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
   },
-  tags: ['autodocs'],
   argTypes: {
     background: {
       control: 'select',
@@ -32,9 +31,7 @@ const defaultArgs = {
   title: 'Featured Section',
   description:
     'This is a featured section with an image and some descriptive text. It can be used to highlight important content or features.',
-  image:
-    'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80',
-  imageAlt: 'People working together',
+  image: 'https://picsum.photos/id/237/1200/800',
   cta: {
     href: '#',
     label: 'Learn More',

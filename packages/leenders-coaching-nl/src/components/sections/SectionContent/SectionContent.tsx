@@ -7,7 +7,10 @@ import { Box } from '@/components/ui/Box';
 import { PortableText } from '@/components/ui/PortableText';
 import type { PortableTextBlock } from '@portabletext/react';
 
-type SectionContentProps = Omit<ComponentPropsWithoutRef<'section'>, 'content'> & {
+type SectionContentProps = Omit<
+  ComponentPropsWithoutRef<'section'>,
+  'content'
+> & {
   /** The title of the section */
   title?: ReactNode;
   /** Optional background color */
@@ -53,7 +56,9 @@ export const SectionContent = ({
         )}
         <Box className="mx-auto">
           <Box className="pt-6 max-w-3xl">
-            {content && <PortableText content={content} />}
+            {content && content.length > 0 && (
+              <PortableText content={content} testid="portable-text" />
+            )}
           </Box>
         </Box>
       </Stack>

@@ -12,7 +12,7 @@ export const Container = ({ className, ...props }: ContainerProps) => {
     <Box
       className={twMerge(
         'container mx-auto px-4 sm:px-8 md:px-12 lg:px-16',
-        className,
+        className
       )}
       {...props}
     />

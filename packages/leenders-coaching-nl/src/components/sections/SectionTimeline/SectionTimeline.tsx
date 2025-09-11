@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 
@@ -42,7 +42,7 @@ export const SectionTimeline = ({
       maxWidth="7xl"
       {...props}
     >
-      <Box className="mx-auto max-w-3xl">
+      <Box className="mx-auto max-w-4xl" data-testid="box">
         <Stack gap={8}>
           {(title || description) && (
             <Stack space={4} className="text-center">
@@ -58,13 +58,17 @@ export const SectionTimeline = ({
                 </Heading>
               )}
               {description && (
-                <Text variant="large" className="max-w-2xl mx-auto">
+                <Text
+                  variant="large"
+                  className="max-w-2xl mx-auto"
+                  testid="text"
+                >
                   {description}
                 </Text>
               )}
             </Stack>
           )}
-          <Timeline steps={steps} />
+          <Timeline steps={steps} testid="timeline" color={background} />
         </Stack>
       </Box>
     </Section>

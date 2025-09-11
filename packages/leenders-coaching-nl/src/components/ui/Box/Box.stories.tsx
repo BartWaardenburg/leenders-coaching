@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
 import { Box } from './Box';
 
 const meta = {
@@ -7,7 +8,6 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
 } satisfies Meta<typeof Box>;
 
 export default meta;
@@ -16,5 +16,8 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     children: 'Box Example',
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByText('Box Example')).toBeVisible();
   },
 };
