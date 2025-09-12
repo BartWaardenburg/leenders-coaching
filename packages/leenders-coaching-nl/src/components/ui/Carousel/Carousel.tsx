@@ -7,7 +7,12 @@ import {
   useRef,
   useEffect,
 } from 'react';
-import { motion, AnimatePresence, useMotionValue } from 'motion/react';
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useReducedMotion,
+} from 'motion/react';
 import { twMerge } from 'tailwind-merge';
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
 
@@ -25,22 +30,21 @@ type CarouselProps = {
 
 const MotionBox = motion.create(Box);
 
-const variants = {
-  enter: (direction: number) => ({
-    x: direction > 0 ? 200 : -200,
-    opacity: 0,
-  }),
+const createVariants = (shouldReduceMotion: boolean) => ({
+  enter: (direction: number) =>
+    shouldReduceMotion
+      ? { x: 0, opacity: 1 }
+      : { x: direction > 0 ? 200 : -200, opacity: 0 },
   center: {
     zIndex: 1,
     x: 0,
     opacity: 1,
   },
-  exit: (direction: number) => ({
-    zIndex: 0,
-    x: direction < 0 ? 200 : -200,
-    opacity: 0,
-  }),
-};
+  exit: (direction: number) =>
+    shouldReduceMotion
+      ? { zIndex: 0, x: 0, opacity: 1 }
+      : { zIndex: 0, x: direction < 0 ? 200 : -200, opacity: 0 },
+});
 
 const swipeConfidenceThreshold = 10000;
 const swipePower = (offset: number, velocity: number) => {
@@ -51,10 +55,12 @@ const swipePower = (offset: number, velocity: number) => {
  * Carousel component with navigation arrows, dot indicators and swipe support
  */
 export const Carousel = ({ slides, className }: CarouselProps) => {
+  const shouldReduceMotion = useReducedMotion();
   const [[page, direction], setPage] = useState([0, 0]);
   const x = useMotionValue(0);
   const [height, setHeight] = useState<number>(0);
   const contentRef = useRef<HTMLDivElement>(null);
+  const variants = createVariants(shouldReduceMotion ?? false);
 
   const updateHeight = useCallback(() => {
     if (contentRef.current) {
@@ -139,10 +145,14 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{
-                  duration: 0.4,
-                  ease: [0.32, 0.72, 0, 1],
-                }}
+                transition={
+                  shouldReduceMotion
+                    ? { duration: 0 }
+                    : {
+                        duration: 0.4,
+                        ease: [0.32, 0.72, 0, 1],
+                      }
+                }
                 className="w-full absolute left-0 right-0"
                 drag="x"
                 dragConstraints={{ left: 0, right: 0 }}
@@ -207,9 +217,9 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
                   ? 'bg-pastel-blue dark:bg-pastel-blue-dark'
                   : 'bg-pastel-blue/30 dark:bg-pastel-blue-dark/30 hover:bg-pastel-blue/50 dark:hover:bg-pastel-blue-dark/50'
               )}
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ duration: 0.2 }}
+              whileHover={shouldReduceMotion ? {} : { scale: 1.2 }}
+              whileTap={shouldReduceMotion ? {} : { scale: 0.9 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
             />
           ))}
         </Stack>

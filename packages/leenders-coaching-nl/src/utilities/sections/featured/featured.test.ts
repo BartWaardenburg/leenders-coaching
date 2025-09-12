@@ -30,8 +30,11 @@ describe('transformFeaturedSection', () => {
     const mockData = createSanityDoc({
       displayTitle: 'Featured Section',
       description: 'Featured section description',
-      image: { _type: 'image', asset: { _ref: 'image-1', _type: 'reference' } },
-      imageAlt: 'Featured image alt text',
+      image: {
+        _type: 'image',
+        asset: { _ref: 'image-1', _type: 'reference' },
+        alt: 'Featured image alt text',
+      },
       background: 'blue',
       border: false,
       reverse: true,
@@ -50,6 +53,7 @@ describe('transformFeaturedSection', () => {
       description: 'Featured section description',
       image: {
         _type: 'image',
+        alt: 'Featured image alt text',
         asset: { _ref: 'image-1', _type: 'reference' },
       },
       cta: {
@@ -150,7 +154,11 @@ describe('transformFeaturedSection', () => {
     const mockData = createSanityDoc({
       displayTitle: '',
       description: '',
-      imageAlt: '',
+      image: {
+        _type: 'image',
+        asset: { _ref: 'image-1', _type: 'reference' },
+        alt: '',
+      },
       cta: {
         _type: 'callToAction',
         href: '',
@@ -163,7 +171,11 @@ describe('transformFeaturedSection', () => {
     expect(result).toEqual({
       title: undefined,
       description: '',
-      image: null,
+      image: {
+        _type: 'image',
+        alt: '',
+        asset: { _ref: 'image-1', _type: 'reference' },
+      },
       cta: {
         href: '',
         label: '',

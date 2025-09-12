@@ -107,3 +107,24 @@ export const waitForMotionAnimations = async ({
     }
   }
 };
+
+/**
+ * Waits for a specified duration, but respects reduced motion preferences.
+ * If reduced motion is active, waits for a minimal time (16ms for one frame).
+ * Otherwise, waits for the specified duration.
+ *
+ * @param {number} duration - Duration to wait in milliseconds.
+ * @returns {Promise<void>} A promise that resolves after the wait period.
+ */
+export const waitForAnimation = async (duration: number): Promise<void> => {
+  if (
+    typeof window !== 'undefined' &&
+    window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  ) {
+    await new Promise((r) => requestAnimationFrame(r));
+    return;
+  }
+
+  await new Promise((resolve) => setTimeout(resolve, duration));
+};

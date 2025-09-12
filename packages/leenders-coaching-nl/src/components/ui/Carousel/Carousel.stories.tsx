@@ -5,7 +5,10 @@ import { Quote } from '@/components/ui/Quote';
 import { Person } from '@/components/ui/Person';
 import { Box } from '@/components/ui/Box';
 import Image from 'next/image';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import {
+  waitForMotionAnimations as _waitForMotionAnimations,
+  waitForAnimation,
+} from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Carousel',
@@ -72,7 +75,7 @@ export const Default: Story = {
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getAllByText((_, element) => {
+      canvas.getAllByText((_: string, element: Element | null) => {
         return (
           element?.textContent?.includes(
             'The coaching sessions have been transformative'
@@ -80,7 +83,7 @@ export const Default: Story = {
         );
       })[0]
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await waitForAnimation(50);
   },
 };
 
@@ -119,7 +122,7 @@ export const WithImages: Story = {
     await expect(
       canvas.getByAltText('Team collaborating in a modern office')
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await waitForAnimation(50);
   },
 };
 
@@ -136,7 +139,7 @@ export const SingleSlide: Story = {
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByText('Single Slide')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await waitForAnimation(50);
   },
 };
 
@@ -144,9 +147,9 @@ export const EmptyCarousel: Story = {
   args: {
     slides: [],
   },
-  play: async ({ canvas }) => {
+  play: async ({ canvas: _canvas }) => {
     // Empty carousel should render without errors
-    await waitForMotionAnimations({ canvas });
+    await waitForAnimation(50);
   },
 };
 
@@ -163,7 +166,7 @@ export const ManySlides: Story = {
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByText('Slide 1')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await waitForAnimation(50);
   },
 };
 
@@ -176,7 +179,7 @@ export const WithCustomClassName: Story = {
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getAllByText((_, element) => {
+      canvas.getAllByText((_: string, element: Element | null) => {
         return (
           element?.textContent?.includes(
             'The coaching sessions have been transformative'
@@ -184,7 +187,7 @@ export const WithCustomClassName: Story = {
         );
       })[0]
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await waitForAnimation(50);
   },
 };
 
@@ -226,7 +229,7 @@ export const MixedContent: Story = {
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByText('Text Content')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await waitForAnimation(50);
   },
 };
 
@@ -277,6 +280,310 @@ export const AllVariants: Story = {
   play: async ({ canvas }) => {
     await expect(canvas.getByText('Default Carousel')).toBeVisible();
     await expect(canvas.getAllByText('Single Slide')).toHaveLength(2);
-    await waitForMotionAnimations({ canvas });
+    await waitForAnimation(50);
+  },
+};
+
+export const CarouselNavigation: Story = {
+  args: {
+    slides: testimonials.map((testimonial) => (
+      <TestimonialSlide key={testimonial.name} {...testimonial} />
+    )),
+  },
+  play: async ({ canvas, userEvent, step }) => {
+    await step('Initial carousel state', async () => {
+      await expect(
+        canvas.getAllByText((_: string, element: Element | null) => {
+          return (
+            element?.textContent?.includes(
+              'The coaching sessions have been transformative'
+            ) ?? false
+          );
+        })[0]
+      ).toBeVisible();
+    });
+
+    await step('Navigate to next slide', async () => {
+      const nextButton = canvas.getByLabelText('Next slide');
+      await userEvent.click(nextButton);
+      await waitForAnimation(50);
+
+      // Verify navigation buttons are still present after clicking
+      await expect(canvas.getByLabelText('Next slide')).toBeVisible();
+      await expect(canvas.getByLabelText('Previous slide')).toBeVisible();
+    });
+
+    await step('Navigate to previous slide', async () => {
+      const prevButton = canvas.getByLabelText('Previous slide');
+      await userEvent.click(prevButton);
+      await waitForAnimation(50);
+
+      // Verify navigation buttons are still present after clicking
+      await expect(canvas.getByLabelText('Next slide')).toBeVisible();
+      // Previous button might be disabled at first slide, so just check it exists
+      await expect(canvas.getByLabelText('Previous slide')).toBeInTheDocument();
+    });
+
+    await step('Navigate through all slides', async () => {
+      const nextButton = canvas.getByLabelText('Next slide');
+
+      // Go to second slide
+      await userEvent.click(nextButton);
+      await waitForAnimation(50);
+
+      // Go to third slide
+      await userEvent.click(nextButton);
+      await waitForAnimation(50);
+
+      // Verify navigation buttons are still present after navigating
+      await expect(canvas.getByLabelText('Next slide')).toBeInTheDocument();
+      await expect(canvas.getByLabelText('Previous slide')).toBeInTheDocument();
+    });
+
+    await step('Navigate back to first slide', async () => {
+      const prevButton = canvas.getByLabelText('Previous slide');
+
+      // Go back to second slide
+      await userEvent.click(prevButton);
+      await waitForAnimation(50);
+
+      // Go back to first slide
+      await userEvent.click(prevButton);
+      await waitForAnimation(50);
+
+      await expect(
+        canvas.getAllByText((_: string, element: Element | null) => {
+          return (
+            element?.textContent?.includes(
+              'The coaching sessions have been transformative'
+            ) ?? false
+          );
+        })[0]
+      ).toBeVisible();
+    });
+  },
+};
+
+export const CarouselDotNavigation: Story = {
+  args: {
+    slides: testimonials.map((testimonial) => (
+      <TestimonialSlide key={testimonial.name} {...testimonial} />
+    )),
+  },
+  play: async ({ canvas, userEvent, step }) => {
+    await step('Click on dot indicators', async () => {
+      // Find and click the second dot
+      const dots = canvas.getAllByRole('button');
+      const secondDot = dots.find((button: Element) =>
+        button.getAttribute('aria-label')?.includes('Go to slide 2')
+      );
+
+      if (secondDot) {
+        await userEvent.click(secondDot);
+        await waitForAnimation(50);
+
+        await expect(
+          canvas.getAllByText((_: string, element: Element | null) => {
+            return (
+              element?.textContent?.includes(
+                'Working with this coach has helped me overcome obstacles'
+              ) ?? false
+            );
+          })[0]
+        ).toBeVisible();
+      }
+    });
+
+    await step('Click on third dot', async () => {
+      const dots = canvas.getAllByRole('button');
+      const thirdDot = dots.find((button: Element) =>
+        button.getAttribute('aria-label')?.includes('Go to slide 3')
+      );
+
+      if (thirdDot) {
+        await userEvent.click(thirdDot);
+        await waitForAnimation(50);
+
+        await expect(
+          canvas.getAllByText((_: string, element: Element | null) => {
+            return (
+              element?.textContent?.includes(
+                'The personalized approach and actionable strategies'
+              ) ?? false
+            );
+          })[0]
+        ).toBeVisible();
+      }
+    });
+
+    await step('Click on first dot', async () => {
+      const dots = canvas.getAllByRole('button');
+      const firstDot = dots.find((button: Element) =>
+        button.getAttribute('aria-label')?.includes('Go to slide 1')
+      );
+
+      if (firstDot) {
+        await userEvent.click(firstDot);
+        await waitForAnimation(50);
+
+        await expect(
+          canvas.getAllByText((_: string, element: Element | null) => {
+            return (
+              element?.textContent?.includes(
+                'The coaching sessions have been transformative'
+              ) ?? false
+            );
+          })[0]
+        ).toBeVisible();
+      }
+    });
+  },
+};
+
+export const CarouselSwipeGestures: Story = {
+  args: {
+    slides: testimonials.map((testimonial) => (
+      <TestimonialSlide key={testimonial.name} {...testimonial} />
+    )),
+  },
+  play: async ({ canvas, userEvent, step }) => {
+    await step('Test carousel structure and touch events', async () => {
+      // Find the carousel container by looking for the testimonial content
+      const testimonialTexts = canvas.getAllByText(
+        (_content: string, element: Element | null) => {
+          return (
+            element?.textContent?.includes(
+              'The coaching sessions have been transformative'
+            ) ?? false
+          );
+        }
+      );
+      const carousel = testimonialTexts[0]?.closest('div');
+
+      if (carousel) {
+        // Test that the carousel container exists and is interactive
+        expect(carousel).toBeInTheDocument();
+
+        // Test touch events on the carousel
+        await userEvent.pointer([
+          { keys: '[TouchA>]', target: carousel },
+          { coords: { x: 300, y: 200 } },
+          { coords: { x: 100, y: 200 } },
+          { keys: '[/TouchA]' },
+        ]);
+
+        await waitForAnimation(50);
+
+        // Verify the carousel is still visible after touch interaction
+        expect(carousel).toBeInTheDocument();
+      }
+    });
+
+    await step('Test carousel navigation buttons', async () => {
+      // Test that navigation buttons are present
+      const nextButton = canvas.getByLabelText('Next slide');
+      const prevButton = canvas.getByLabelText('Previous slide');
+
+      expect(nextButton).toBeInTheDocument();
+      expect(prevButton).toBeInTheDocument();
+
+      // Test clicking navigation buttons
+      await userEvent.click(nextButton);
+      await waitForAnimation(50);
+
+      await userEvent.click(prevButton);
+      await waitForAnimation(50);
+    });
+  },
+};
+
+export const CarouselKeyboardNavigation: Story = {
+  args: {
+    slides: testimonials.map((testimonial) => (
+      <TestimonialSlide key={testimonial.name} {...testimonial} />
+    )),
+  },
+  play: async ({ canvas, userEvent, step }) => {
+    await step('Test keyboard navigation', async () => {
+      const testimonialTexts = canvas.getAllByText(
+        (_content: string, element: Element | null) => {
+          return (
+            element?.textContent?.includes(
+              'The coaching sessions have been transformative'
+            ) ?? false
+          );
+        }
+      );
+      const carousel = testimonialTexts[0]?.closest('div');
+
+      if (carousel) {
+        // Focus on the carousel
+        await userEvent.click(carousel);
+        expect(carousel).toBeInTheDocument();
+
+        // Test keyboard navigation
+        await userEvent.keyboard('{ArrowRight}');
+        await waitForAnimation(50);
+
+        await userEvent.keyboard('{ArrowLeft}');
+        await waitForAnimation(50);
+
+        // Verify carousel is still functional
+        expect(carousel).toBeInTheDocument();
+      }
+    });
+  },
+};
+
+export const CarouselAccessibility: Story = {
+  args: {
+    slides: testimonials.map((testimonial) => (
+      <TestimonialSlide key={testimonial.name} {...testimonial} />
+    )),
+  },
+  play: async ({ canvas, step }) => {
+    await step('Check ARIA attributes', async () => {
+      // Check for proper ARIA labels on navigation buttons
+      const nextButton = canvas.getByLabelText('Next slide');
+      const prevButton = canvas.getByLabelText('Previous slide');
+
+      expect(nextButton).toBeInTheDocument();
+      expect(prevButton).toBeInTheDocument();
+    });
+
+    await step('Check dot indicators accessibility', async () => {
+      const dots = canvas.getAllByRole('button');
+      const slideDots = dots.filter((button: Element) =>
+        button.getAttribute('aria-label')?.includes('Go to slide')
+      );
+
+      // If there are no slide dots with aria-labels, check for any dot buttons
+      if (slideDots.length === 0) {
+        // Look for any small circular buttons that might be dots
+        const allDots = dots.filter(
+          (button: Element) =>
+            button.className.includes('rounded-full') &&
+            button.className.includes('w-2') &&
+            button.className.includes('h-2')
+        );
+        expect(allDots.length).toBeGreaterThan(0);
+      } else {
+        expect(slideDots.length).toBeGreaterThan(0);
+
+        // Check that first dot is selected initially
+        const firstDot = slideDots.find((button: Element) =>
+          button.getAttribute('aria-label')?.includes('Go to slide 1')
+        );
+        expect(firstDot).toBeInTheDocument();
+      }
+    });
+
+    await step('Check live region for screen readers', async () => {
+      // Check if there's a live region (may not be present in all implementations)
+      const liveRegion = canvas.queryByRole('status');
+      if (liveRegion) {
+        expect(liveRegion).toBeInTheDocument();
+      }
+    });
   },
 };

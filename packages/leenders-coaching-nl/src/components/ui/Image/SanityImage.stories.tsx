@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { SanityImage } from './SanityImage';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { waitForMotionAnimations as _waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Image/SanityImage',
@@ -105,7 +105,7 @@ export const Default: Story = {
     await expect(
       canvas.getByAltText('Default Sanity image')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
@@ -122,7 +122,7 @@ export const WithHotspot: Story = {
     await expect(
       canvas.getByAltText('Image with hotspot positioning')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
@@ -139,7 +139,7 @@ export const HighPriority: Story = {
     await expect(
       canvas.getByAltText('High priority image')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
@@ -156,7 +156,7 @@ export const WithoutMetadata: Story = {
     await expect(
       canvas.getByAltText('Image without metadata')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
@@ -173,7 +173,7 @@ export const WithPartialMetadata: Story = {
     await expect(
       canvas.getByAltText('Image with partial metadata')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
@@ -194,7 +194,7 @@ export const FillMode: Story = {
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByAltText('Image in fill mode')).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
@@ -211,7 +211,7 @@ export const CustomSizes: Story = {
     await expect(
       canvas.getByAltText('Image with custom sizes')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
@@ -226,7 +226,7 @@ export const LowQuality: Story = {
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByAltText('Low quality image')).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
@@ -241,7 +241,7 @@ export const HighQuality: Story = {
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByAltText('High quality image')).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
@@ -262,7 +262,7 @@ export const NoAsset: Story = {
     await expect(canvas.getAllByRole('generic', { hidden: true })).toHaveLength(
       3
     );
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
@@ -280,7 +280,7 @@ export const WithCustomClassName: Story = {
     await expect(
       canvas.getByAltText('Image with custom styling')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
@@ -301,7 +301,7 @@ export const WithCustomStyle: Story = {
     await expect(
       canvas.getByAltText('Image with custom style')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
@@ -371,6 +371,6 @@ export const AllVariants: Story = {
     await expect(canvas.getByAltText('No metadata image')).toBeInTheDocument();
     await expect(canvas.getByAltText('Hotspot image')).toBeInTheDocument();
     await expect(canvas.getByAltText('Fill mode image')).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { twMerge } from 'tailwind-merge';
 import { IoChevronDown } from 'react-icons/io5';
 
@@ -41,6 +41,7 @@ const MotionBox = motion.create(Box);
  * FAQ component with smooth animations and pastel styling
  */
 export const FAQ = ({ items = [], variant = 'blue', className }: FAQProps) => {
+  const shouldReduceMotion = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const variantStyles = {
@@ -75,15 +76,21 @@ export const FAQ = ({ items = [], variant = 'blue', className }: FAQProps) => {
               'border overflow-hidden cursor-pointer',
               variantStyles[variant],
               'transition-colors duration-200',
-              'hover:bg-opacity-70 dark:hover:bg-opacity-70',
+              'hover:bg-opacity-70 dark:hover:bg-opacity-70'
             )}
-            initial={{ opacity: 0, y: 20 }}
+            initial={
+              shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+            }
             animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.3,
-              delay: index * 0.1,
-              ease: [0.32, 0.72, 0, 1],
-            }}
+            transition={
+              shouldReduceMotion
+                ? { duration: 0 }
+                : {
+                    duration: 0.3,
+                    delay: index * 0.1,
+                    ease: [0.32, 0.72, 0, 1],
+                  }
+            }
             onClick={() => setActiveIndex(isActive ? null : index)}
           >
             <Box className="flex items-center justify-between p-4 sm:p-6">
@@ -92,7 +99,11 @@ export const FAQ = ({ items = [], variant = 'blue', className }: FAQProps) => {
               </Text>
               <motion.div
                 animate={{ rotate: isActive ? 180 : 0 }}
-                transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
+                transition={
+                  shouldReduceMotion
+                    ? { duration: 0 }
+                    : { duration: 0.2, ease: [0.32, 0.72, 0, 1] }
+                }
               >
                 <IoChevronDown className="h-5 w-5 flex-shrink-0" />
               </motion.div>
@@ -100,41 +111,59 @@ export const FAQ = ({ items = [], variant = 'blue', className }: FAQProps) => {
             <AnimatePresence>
               {isActive && (
                 <MotionBox
-                  initial={{ height: 0, opacity: 0 }}
+                  initial={
+                    shouldReduceMotion
+                      ? { height: 'auto', opacity: 1 }
+                      : { height: 0, opacity: 0 }
+                  }
                   animate={{
                     height: 'auto',
                     opacity: 1,
-                    transition: {
-                      height: {
-                        duration: 0.3,
-                        ease: [0.32, 0.72, 0, 1],
-                      },
-                      opacity: {
-                        duration: 0.2,
-                        delay: 0.1,
-                      },
-                    },
+                    transition: shouldReduceMotion
+                      ? { duration: 0 }
+                      : {
+                          height: {
+                            duration: 0.3,
+                            ease: [0.32, 0.72, 0, 1],
+                          },
+                          opacity: {
+                            duration: 0.2,
+                            delay: 0.1,
+                          },
+                        },
                   }}
-                  exit={{
-                    height: 0,
-                    opacity: 0,
-                    transition: {
-                      height: {
-                        duration: 0.3,
-                        ease: [0.32, 0.72, 0, 1],
-                      },
-                      opacity: {
-                        duration: 0.2,
-                      },
-                    },
-                  }}
+                  exit={
+                    shouldReduceMotion
+                      ? { height: 'auto', opacity: 1 }
+                      : {
+                          height: 0,
+                          opacity: 0,
+                          transition: {
+                            height: {
+                              duration: 0.3,
+                              ease: [0.32, 0.72, 0, 1],
+                            },
+                            opacity: {
+                              duration: 0.2,
+                            },
+                          },
+                        }
+                  }
                 >
                   <Box className="px-4 pb-4 sm:px-6 sm:pb-6">
                     <motion.div
-                      initial={{ y: 10, opacity: 0 }}
+                      initial={
+                        shouldReduceMotion
+                          ? { y: 0, opacity: 1 }
+                          : { y: 10, opacity: 0 }
+                      }
                       animate={{ y: 0, opacity: 1 }}
-                      exit={{ y: -10, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
+                      exit={
+                        shouldReduceMotion
+                          ? { y: 0, opacity: 1 }
+                          : { y: -10, opacity: 0 }
+                      }
+                      transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
                     >
                       <PortableText content={item.answer} />
                     </motion.div>

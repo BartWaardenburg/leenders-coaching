@@ -6,12 +6,14 @@ export const sectionFeatured = defineType({
   name: 'sectionFeatured',
   title: 'Featured Section',
   type: 'document',
+  description: 'A section with image and content in a 50/50 layout',
   fields: [
     ...baseSectionFields,
     {
       name: 'image',
       title: 'Image',
       type: 'image',
+      description: 'The main image for the featured section',
       options: {
         hotspot: true,
       },
@@ -30,6 +32,7 @@ export const sectionFeatured = defineType({
       name: 'cta',
       title: 'Call to Action',
       type: 'callToAction',
+      description: 'Optional call-to-action button',
     },
     {
       name: 'reverse',

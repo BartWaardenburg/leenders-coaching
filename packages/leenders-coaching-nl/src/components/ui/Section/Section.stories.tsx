@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Section } from './Section';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { waitForMotionAnimations as _waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Section',
@@ -20,6 +20,6 @@ export const Default: Story = {
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByText('Section Example')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Alert } from './Alert';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { waitForMotionAnimations as _waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Alert',
@@ -49,7 +49,7 @@ export const Default: Story = {
     await expect(
       canvas.getByText('This is a default alert message.')
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -66,7 +66,7 @@ export const WithCloseButton: Story = {
       canvas.getByText('This is an alert with a close button.')
     ).toBeVisible();
     await expect(canvas.getByLabelText('Close alert')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -81,7 +81,7 @@ export const Small: Story = {
     await expect(
       canvas.getByText('This is a small alert message.')
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -98,7 +98,7 @@ export const SmallWithClose: Story = {
       canvas.getByText('This is a small alert with a close button.')
     ).toBeVisible();
     await expect(canvas.getByLabelText('Close alert')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -113,7 +113,7 @@ export const Medium: Story = {
     await expect(
       canvas.getByText('This is a medium alert message.')
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -130,7 +130,7 @@ export const MediumWithClose: Story = {
       canvas.getByText('This is a medium alert with a close button.')
     ).toBeVisible();
     await expect(canvas.getByLabelText('Close alert')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -145,7 +145,7 @@ export const Large: Story = {
     await expect(
       canvas.getByText('This is a large alert message.')
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -162,7 +162,7 @@ export const LargeWithClose: Story = {
       canvas.getByText('This is a large alert with a close button.')
     ).toBeVisible();
     await expect(canvas.getByLabelText('Close alert')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -192,7 +192,7 @@ export const AllSizes: Story = {
     await expect(canvas.getByText('Small Alert Message')).toBeVisible();
     await expect(canvas.getByText('Medium Alert Message')).toBeVisible();
     await expect(canvas.getByText('Large Alert Message')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -234,7 +234,7 @@ export const AllVariants: Story = {
     await expect(canvas.getByText('Pink Alert Message')).toBeVisible();
     await expect(canvas.getByText('Yellow Alert Message')).toBeVisible();
     await expect(canvas.getByText('Teal Alert Message')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -254,6 +254,6 @@ export const LongContent: Story = {
       )
     ).toBeVisible();
     await expect(canvas.getByLabelText('Close alert')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };

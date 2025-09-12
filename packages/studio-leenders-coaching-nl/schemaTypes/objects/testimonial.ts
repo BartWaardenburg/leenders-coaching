@@ -29,11 +29,11 @@ export const testimonial = defineType({
       name: 'image',
       title: 'Author Image',
       type: 'image',
-      description: 'Profile picture of the person giving the testimonial',
+      description:
+        'Profile picture of the person giving the testimonial (optional)',
       options: {
         hotspot: true,
       },
-      validation: (Rule: any) => Rule.required(),
       fields: [
         {
           name: 'alt',

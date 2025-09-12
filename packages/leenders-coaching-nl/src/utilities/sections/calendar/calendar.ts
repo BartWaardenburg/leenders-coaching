@@ -39,6 +39,25 @@ export const transformCalendarSection = (
     })),
   };
 
+  // Handle before/after date restrictions by adding them as ranges
+  if (settings.disabledDates?.before) {
+    const beforeDate = new Date(settings.disabledDates.before);
+    const startOfTime = new Date('1900-01-01');
+    disabledDates.ranges = [
+      ...(disabledDates.ranges || []),
+      { start: startOfTime, end: beforeDate },
+    ];
+  }
+
+  if (settings.disabledDates?.after) {
+    const afterDate = new Date(settings.disabledDates.after);
+    const endOfTime = new Date('2100-12-31');
+    disabledDates.ranges = [
+      ...(disabledDates.ranges || []),
+      { start: afterDate, end: endOfTime },
+    ];
+  }
+
   return {
     title: data.displayTitle || undefined,
     description: data.description || '',

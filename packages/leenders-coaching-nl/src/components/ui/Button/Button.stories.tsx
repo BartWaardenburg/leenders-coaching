@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { fn } from 'storybook/test';
 import { Button } from './Button';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { waitForMotionAnimations as _waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Button',
@@ -69,7 +69,7 @@ export const Default: Story = {
     await userEvent.click(button);
     await expect(args.onClick).toHaveBeenCalled();
 
-    await waitForMotionAnimations({ canvas });
+    // Simple button interaction - no animation wait needed
   },
 };
 
@@ -89,7 +89,7 @@ export const WithLoading: Story = {
     // Instead, we verify the button is disabled and the onClick hasn't been called
     await expect(args.onClick).not.toHaveBeenCalled();
 
-    await waitForMotionAnimations({ canvas });
+    // Simple button interaction - no animation wait needed
   },
 };
 
@@ -109,7 +109,7 @@ export const Disabled: Story = {
     // Instead, we verify the button is disabled and the onClick hasn't been called
     await expect(args.onClick).not.toHaveBeenCalled();
 
-    await waitForMotionAnimations({ canvas });
+    // Simple button interaction - no animation wait needed
   },
 };
 
@@ -125,7 +125,7 @@ export const AsLink: Story = {
     await expect(
       canvas.getByRole('link', { name: 'Go to Home' })
     ).toHaveAttribute('href', '/');
-    await waitForMotionAnimations({ canvas });
+    // Simple button interaction - no animation wait needed
   },
 };
 
@@ -167,7 +167,7 @@ export const AllVariants: Story = {
     await expect(canvas.getByRole('button', { name: 'Pink' })).toBeVisible();
     await expect(canvas.getByRole('button', { name: 'Yellow' })).toBeVisible();
     await expect(canvas.getByRole('button', { name: 'Teal' })).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // Simple button interaction - no animation wait needed
   },
 };
 
@@ -209,7 +209,7 @@ export const AllSizes: Story = {
     // Verify onClick was called for each click
     await expect(args.onClick).toHaveBeenCalledTimes(3);
 
-    await waitForMotionAnimations({ canvas });
+    // Simple button interaction - no animation wait needed
   },
 };
 
@@ -248,6 +248,6 @@ export const InteractiveDemo: Story = {
       await expect(args.onClick).toHaveBeenCalledTimes(5);
     });
 
-    await waitForMotionAnimations({ canvas });
+    // Simple button interaction - no animation wait needed
   },
 };
