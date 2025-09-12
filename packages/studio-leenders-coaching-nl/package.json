@@ -32,13 +32,20 @@
     "seed:all": "node --loader ts-node/esm scripts/content-seeding/seed-all-pages.ts",
     "seed:all:dry-run": "node --loader ts-node/esm scripts/content-seeding/seed-all-pages.ts --dry-run",
     "seed:test": "node --loader ts-node/esm scripts/content-seeding/test-script.ts",
-    "seed:test:dry-run": "node --loader ts-node/esm scripts/content-seeding/test-script.ts --dry-run"
+    "seed:test:dry-run": "node --loader ts-node/esm scripts/content-seeding/test-script.ts --dry-run",
+    "dataset:list": "node --loader ts-node/esm scripts/dataset-aliases.ts list",
+    "dataset:create": "node --loader ts-node/esm scripts/dataset-aliases.ts create",
+    "dataset:update": "node --loader ts-node/esm scripts/dataset-aliases.ts update",
+    "dataset:delete": "node --loader ts-node/esm scripts/dataset-aliases.ts delete",
+    "dataset:clone": "node --loader ts-node/esm scripts/dataset-aliases.ts clone",
+    "dataset:deploy": "node --loader ts-node/esm scripts/dataset-aliases.ts deploy"
   },
   "keywords": [
     "sanity"
   ],
   "dependencies": {
     "@sanity/client": "7.11.0",
+    "@sanity/presentation": "2.0.0",
     "@sanity/types": "4.6.1",
     "@sanity/vision": "4.6.1",
     "dotenv": "17.2.2",
@@ -57,7 +64,7 @@
     "@sanity/eslint-config-studio": "5.0.2",
     "@types/node": "24.3.1",
     "@types/react": "19.1.12",
-    "eslint": "9.34.0",
+    "eslint": "9.35.0",
     "prettier": "3.6.2",
     "ts-node": "10.9.2",
     "typescript": "5.9.2"

@@ -78,9 +78,11 @@ export const Alert = ({
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2',
         alertStyles[variant],
         sizeStyles[size],
-        className,
+        className
       )}
       role="alert"
+      data-testid="alert-content"
+      data-animation={isVisible ? 'complete' : 'in-progress'}
       {...props}
     >
       <Flex items="start" gap={3}>
@@ -90,7 +92,7 @@ export const Alert = ({
             'text-inherit flex-1',
             size === 'small' && 'leading-snug',
             size === 'medium' && 'leading-normal',
-            size === 'large' && 'leading-relaxed',
+            size === 'large' && 'leading-relaxed'
           )}
         >
           {children}
@@ -102,7 +104,7 @@ export const Alert = ({
             className={twMerge(
               'text-inherit opacity-80 hover:opacity-100 transition-opacity',
               'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-              'focus-visible:ring-current focus-visible:ring-offset-inherit',
+              'focus-visible:ring-current focus-visible:ring-offset-inherit'
             )}
             aria-label="Close alert"
           >

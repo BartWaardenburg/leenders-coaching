@@ -2,9 +2,9 @@ import type { ComponentProps } from 'react';
 import type { SectionBlog } from '@/components/sections/SectionBlog';
 import type {
   SectionBlog as SanitySectionBlog,
+  Category as SanityCategory,
   Post,
 } from '@/types/sanity/schema';
-import { urlForImage } from '@/utilities/sanity';
 
 /* Type guard for blog section */
 const isSanitySectionBlog = (
@@ -26,20 +26,31 @@ export const transformBlogSection = (
   // Get posts and apply sorting/filtering
   const posts =
     data.posts?.map((postRef) => {
-      /* Using any here because Sanity's reference resolution makes it difficult
+      /* Using type assertion here because Sanity's reference resolution makes it difficult
        * to type correctly. The resolved post will have all the fields we need,
        * but the type system can't understand the reference resolution.
        */
       const post = postRef as unknown as Post;
+
+      // Type guard to ensure we have a valid post with required fields
+      if (!post || !post._id) {
+        throw new Error('Invalid post data: missing _id');
+      }
+
       return {
         _key: post._id,
         title: post.title || '',
         description: post.description || '',
         slug: post.slug?.current || '',
         date: post.publishedAt || '',
-        categories: post.categories || [],
+        categories:
+          post.categories?.map((categoryRef) => {
+            // Type cast the category reference to a resolved category
+            const category = categoryRef as unknown as SanityCategory;
+            return category?.title || '';
+          }) || [],
         featured: post.featured || false,
-        image: post.image ? urlForImage(post.image).url() : '',
+        image: post.image || null,
         variant: post.variant,
       };
     }) || [];

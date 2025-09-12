@@ -6,26 +6,33 @@ export const sectionFeatured = defineType({
   name: 'sectionFeatured',
   title: 'Featured Section',
   type: 'document',
+  description: 'A section with image and content in a 50/50 layout',
   fields: [
     ...baseSectionFields,
     {
       name: 'image',
       title: 'Image',
       type: 'image',
+      description: 'The main image for the featured section',
       options: {
         hotspot: true,
       },
-    },
-    {
-      name: 'imageAlt',
-      title: 'Image Alt Text',
-      type: 'string',
-      description: 'Alternative text for accessibility',
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alternative text',
+          description:
+            'Beschrijf de inhoud van de afbeelding (voor toegankelijkheid)',
+          validation: (Rule) => Rule.required().min(3),
+        },
+      ],
     },
     {
       name: 'cta',
       title: 'Call to Action',
       type: 'callToAction',
+      description: 'Optional call-to-action button',
     },
     {
       name: 'reverse',

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionTestimonial } from './SectionTestimonial';
 
 const meta = {
@@ -7,8 +7,15 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
   },
-  tags: ['autodocs'],
   argTypes: {
+    title: {
+      control: 'text',
+      description: 'The title of the section',
+    },
+    description: {
+      control: 'text',
+      description: 'The description text',
+    },
     background: {
       control: 'select',
       options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
@@ -17,6 +24,10 @@ const meta = {
     border: {
       control: 'boolean',
       description: 'Show top and bottom borders',
+    },
+    testimonials: {
+      control: 'object',
+      description: 'Array of testimonial objects',
     },
   },
 } satisfies Meta<typeof SectionTestimonial>;
@@ -30,24 +41,21 @@ const defaultTestimonials = [
       "The coaching sessions have been transformative. I've gained clarity about my goals and the confidence to pursue them.",
     name: 'Sarah Johnson',
     role: 'Marketing Director',
-    image:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80',
+    image: 'https://picsum.photos/id/64/256/256',
   },
   {
     quote:
       "Working with this coach has helped me overcome obstacles I didn't think were possible. The results speak for themselves.",
     name: 'Michael Chen',
     role: 'Software Engineer',
-    image:
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80',
+    image: 'https://picsum.photos/id/1027/256/256',
   },
   {
     quote:
       'The personalized approach and actionable strategies have made a real difference in both my professional and personal life.',
     name: 'Emma Davis',
     role: 'Business Owner',
-    image:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80',
+    image: 'https://picsum.photos/id/1025/256/256',
   },
 ];
 
@@ -74,4 +82,110 @@ export const WithPurpleBackground: Story = {
     background: 'purple',
     border: true,
   },
+};
+
+export const WithoutTitle: Story = {
+  args: {
+    description:
+      'Read about the experiences of people who have worked with us.',
+    testimonials: defaultTestimonials,
+    background: 'green',
+  },
+};
+
+export const WithoutDescription: Story = {
+  args: {
+    title: 'What Our Clients Say',
+    testimonials: defaultTestimonials,
+    background: 'pink',
+    border: true,
+  },
+};
+
+export const MinimalContent: Story = {
+  args: {
+    testimonials: defaultTestimonials,
+    background: 'yellow',
+  },
+};
+
+export const SingleTestimonial: Story = {
+  args: {
+    title: 'Single Testimonial',
+    description: 'Sometimes you only need one powerful testimonial.',
+    testimonials: [defaultTestimonials[0]!],
+    background: 'teal',
+    border: true,
+  },
+};
+
+export const ManyTestimonials: Story = {
+  args: {
+    title: 'Many Testimonials',
+    description:
+      'This section demonstrates how the carousel handles multiple testimonials.',
+    testimonials: [
+      ...defaultTestimonials,
+      {
+        quote:
+          "The personalized approach and actionable strategies have made a real difference in both my professional and personal life. I can't recommend this coaching enough.",
+        name: 'Lisa Wang',
+        role: 'Product Manager',
+        image: 'https://picsum.photos/id/1011/256/256',
+      },
+      {
+        quote:
+          'Working with this coach has been a game-changer. The insights and guidance have helped me navigate complex challenges with confidence.',
+        name: 'David Rodriguez',
+        role: 'Entrepreneur',
+        image: 'https://picsum.photos/id/1012/256/256',
+      },
+      {
+        quote:
+          'The coaching sessions provided clarity when I needed it most. The structured approach and practical tools have been invaluable.',
+        name: 'Jennifer Kim',
+        role: 'Marketing Specialist',
+        image: 'https://picsum.photos/id/1013/256/256',
+      },
+    ],
+    background: 'blue',
+    border: true,
+  },
+};
+
+export const TestimonialsWithoutImages: Story = {
+  args: {
+    title: 'Testimonials Without Images',
+    description: 'Some testimonials may not have profile images.',
+    testimonials: defaultTestimonials.map((testimonial) => ({
+      ...testimonial,
+      image: undefined,
+    })),
+    background: 'purple',
+  },
+};
+
+export const AllBackgroundVariants: Story = {
+  parameters: {
+    controls: { hideNoControlsWarning: true },
+  },
+  args: {
+    testimonials: [],
+  },
+  render: () => (
+    <div className="space-y-0">
+      {(['blue', 'purple', 'green', 'pink', 'yellow', 'teal'] as const).map(
+        (background) => (
+          <SectionTestimonial
+            key={background}
+            title={`${background.charAt(0).toUpperCase() + background.slice(1)} Background`}
+            description={`This section demonstrates the ${background} background variant.`}
+            testimonials={defaultTestimonials}
+            background={background}
+            border={true}
+          />
+        )
+      )}
+    </div>
+  ),
 };

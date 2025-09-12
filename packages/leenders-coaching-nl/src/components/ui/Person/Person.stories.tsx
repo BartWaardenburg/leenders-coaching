@@ -1,10 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
 import { Person } from './Person';
+import { waitForMotionAnimations as _waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Person',
   component: Person,
-  tags: ['autodocs'],
 } satisfies Meta<typeof Person>;
 
 export default meta;
@@ -16,12 +17,23 @@ export const Default: Story = {
     description: 'Software Engineer',
     imageSrc: 'https://i.pravatar.cc/300',
   },
+  play: async ({ canvas }) => {
+    expect(canvas.getByText('John Doe')).toBeInTheDocument();
+    expect(canvas.getByText('Software Engineer')).toBeInTheDocument();
+    expect(canvas.getByRole('img')).toBeInTheDocument();
+    // Simple static test - no animation wait needed
+  },
 };
 
 export const WithoutDescription: Story = {
   args: {
     name: 'Jane Smith',
     imageSrc: 'https://i.pravatar.cc/300?2',
+  },
+  play: async ({ canvas }) => {
+    expect(canvas.getByText('Jane Smith')).toBeInTheDocument();
+    expect(canvas.getByRole('img')).toBeInTheDocument();
+    // Simple static test - no animation wait needed
   },
 };
 
@@ -30,5 +42,13 @@ export const LongDescription: Story = {
     name: 'Alex Johnson',
     description: 'Senior Marketing Director & Brand Strategy Consultant',
     imageSrc: 'https://i.pravatar.cc/300?3',
+  },
+  play: async ({ canvas }) => {
+    expect(canvas.getByText('Alex Johnson')).toBeInTheDocument();
+    expect(
+      canvas.getByText('Senior Marketing Director & Brand Strategy Consultant')
+    ).toBeInTheDocument();
+    expect(canvas.getByRole('img')).toBeInTheDocument();
+    // Simple static test - no animation wait needed
   },
 };

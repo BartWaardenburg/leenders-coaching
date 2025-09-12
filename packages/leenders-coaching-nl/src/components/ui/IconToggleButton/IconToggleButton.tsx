@@ -5,6 +5,7 @@ import {
   motion,
   AnimatePresence,
   easeOut,
+  useReducedMotion,
   type HTMLMotionProps,
 } from 'motion/react';
 import { Icon } from '@/components/ui/Icon';
@@ -41,16 +42,19 @@ export const IconToggleButton = ({
   onClick,
   ...props
 }: IconToggleButtonProps) => {
-  const duration = transitionDurations[speed];
+  const shouldReduceMotion = useReducedMotion();
+  const duration = shouldReduceMotion ? 0 : transitionDurations[speed];
 
   return (
     <motion.button
       type="button"
       className={twMerge(
         'w-10 h-10 p-0 rounded-full relative cursor-pointer',
-        className,
+        className
       )}
-      whileHover={{ backgroundColor: 'hsl(20 30% 96% / 0.1)' }}
+      whileHover={
+        shouldReduceMotion ? {} : { backgroundColor: 'hsl(20 30% 96% / 0.1)' }
+      }
       transition={{ duration: duration }}
       aria-label={label}
       onClick={onClick}
@@ -62,9 +66,17 @@ export const IconToggleButton = ({
             key="default"
             path={defaultIcon}
             className="absolute inset-0 m-auto text-foreground"
-            initial={{ rotate: -90, opacity: 0 }}
+            initial={
+              shouldReduceMotion
+                ? { rotate: 0, opacity: 1 }
+                : { rotate: -90, opacity: 0 }
+            }
             animate={{ rotate: 0, opacity: 1 }}
-            exit={{ rotate: 90, opacity: 0 }}
+            exit={
+              shouldReduceMotion
+                ? { rotate: 0, opacity: 1 }
+                : { rotate: 90, opacity: 0 }
+            }
             transition={{ duration: duration, ease: easeOut }}
           />
         ) : (
@@ -72,9 +84,17 @@ export const IconToggleButton = ({
             key="toggled"
             path={toggledIcon}
             className="absolute inset-0 m-auto text-foreground"
-            initial={{ rotate: -90, opacity: 0 }}
+            initial={
+              shouldReduceMotion
+                ? { rotate: 0, opacity: 1 }
+                : { rotate: -90, opacity: 0 }
+            }
             animate={{ rotate: 0, opacity: 1 }}
-            exit={{ rotate: 90, opacity: 0 }}
+            exit={
+              shouldReduceMotion
+                ? { rotate: 0, opacity: 1 }
+                : { rotate: 90, opacity: 0 }
+            }
             transition={{ duration: duration, ease: easeOut }}
           />
         )}

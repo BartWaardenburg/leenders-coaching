@@ -7,7 +7,12 @@ import {
   useRef,
   useEffect,
 } from 'react';
-import { motion, AnimatePresence, useMotionValue } from 'motion/react';
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useReducedMotion,
+} from 'motion/react';
 import { twMerge } from 'tailwind-merge';
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
 
@@ -25,22 +30,21 @@ type CarouselProps = {
 
 const MotionBox = motion.create(Box);
 
-const variants = {
-  enter: (direction: number) => ({
-    x: direction > 0 ? 200 : -200,
-    opacity: 0,
-  }),
+const createVariants = (shouldReduceMotion: boolean) => ({
+  enter: (direction: number) =>
+    shouldReduceMotion
+      ? { x: 0, opacity: 1 }
+      : { x: direction > 0 ? 200 : -200, opacity: 0 },
   center: {
     zIndex: 1,
     x: 0,
     opacity: 1,
   },
-  exit: (direction: number) => ({
-    zIndex: 0,
-    x: direction < 0 ? 200 : -200,
-    opacity: 0,
-  }),
-};
+  exit: (direction: number) =>
+    shouldReduceMotion
+      ? { zIndex: 0, x: 0, opacity: 1 }
+      : { zIndex: 0, x: direction < 0 ? 200 : -200, opacity: 0 },
+});
 
 const swipeConfidenceThreshold = 10000;
 const swipePower = (offset: number, velocity: number) => {
@@ -51,10 +55,12 @@ const swipePower = (offset: number, velocity: number) => {
  * Carousel component with navigation arrows, dot indicators and swipe support
  */
 export const Carousel = ({ slides, className }: CarouselProps) => {
+  const shouldReduceMotion = useReducedMotion();
   const [[page, direction], setPage] = useState([0, 0]);
   const x = useMotionValue(0);
   const [height, setHeight] = useState<number>(0);
   const contentRef = useRef<HTMLDivElement>(null);
+  const variants = createVariants(shouldReduceMotion ?? false);
 
   const updateHeight = useCallback(() => {
     if (contentRef.current) {
@@ -90,7 +96,7 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
         setPage([newPage, newDirection]);
       }
     },
-    [page, slides.length],
+    [page, slides.length]
   );
 
   const goToSlide = useCallback(
@@ -98,7 +104,7 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
       const newDirection = index > page ? 1 : -1;
       setPage([index, newDirection]);
     },
-    [page],
+    [page]
   );
 
   return (
@@ -118,7 +124,7 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
               className={twMerge(
                 'h-10 w-10 min-w-[2.5rem] p-0',
                 'disabled:opacity-0',
-                page === 0 && 'hidden',
+                page === 0 && 'hidden'
               )}
             >
               <IoChevronBack className="h-4 w-4" />
@@ -139,16 +145,29 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{
-                  duration: 0.4,
-                  ease: [0.32, 0.72, 0, 1],
-                }}
+                transition={
+                  shouldReduceMotion
+                    ? { duration: 0 }
+                    : {
+                        duration: 0.4,
+                        ease: [0.32, 0.72, 0, 1],
+                      }
+                }
                 className="w-full absolute left-0 right-0"
                 drag="x"
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={1}
                 style={{ x }}
-                onDragEnd={(_: MouseEvent | TouchEvent | PointerEvent, { offset, velocity }: { offset: { x: number; y: number }; velocity: { x: number; y: number } }) => {
+                onDragEnd={(
+                  _: MouseEvent | TouchEvent | PointerEvent,
+                  {
+                    offset,
+                    velocity,
+                  }: {
+                    offset: { x: number; y: number };
+                    velocity: { x: number; y: number };
+                  }
+                ) => {
                   const swipe = swipePower(offset.x, velocity.x);
 
                   if (swipe < -swipeConfidenceThreshold) {
@@ -175,7 +194,7 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
               className={twMerge(
                 'h-10 w-10 min-w-[2.5rem] p-0',
                 'disabled:opacity-0',
-                page === slides.length - 1 && 'hidden',
+                page === slides.length - 1 && 'hidden'
               )}
             >
               <IoChevronForward className="h-4 w-4" />
@@ -196,11 +215,11 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
                 'focus-visible:ring-offset-background',
                 index === page
                   ? 'bg-pastel-blue dark:bg-pastel-blue-dark'
-                  : 'bg-pastel-blue/30 dark:bg-pastel-blue-dark/30 hover:bg-pastel-blue/50 dark:hover:bg-pastel-blue-dark/50',
+                  : 'bg-pastel-blue/30 dark:bg-pastel-blue-dark/30 hover:bg-pastel-blue/50 dark:hover:bg-pastel-blue-dark/50'
               )}
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ duration: 0.2 }}
+              whileHover={shouldReduceMotion ? {} : { scale: 1.2 }}
+              whileTap={shouldReduceMotion ? {} : { scale: 0.9 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
             />
           ))}
         </Stack>
@@ -208,3 +227,5 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
     </Box>
   );
 };
+
+export default Carousel;

@@ -10,7 +10,9 @@ const { getMetadata, PageComponent } = createPageComponent<HomePage>(
   'Leenders Coaching'
 );
 
-/* Generate metadata from Sanity data */
+/**
+ * Generate metadata from Sanity data
+ */
 export const generateMetadata = (): Promise<Metadata> => getMetadata();
 
 /* Default export is the page component */

@@ -4,7 +4,12 @@ import type { ReactNode } from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { IoClose } from 'react-icons/io5';
-import { motion, AnimatePresence, type HTMLMotionProps } from 'motion/react';
+import {
+  motion,
+  AnimatePresence,
+  useReducedMotion,
+  type HTMLMotionProps,
+} from 'motion/react';
 import { Flex } from '@/components/ui/Flex';
 import { useConfig } from '@/components/providers/ClientConfigProvider';
 
@@ -64,14 +69,28 @@ export const Modal = ({
 }: ModalProps) => {
   const [isVisible, setIsVisible] = useState(isOpen);
   const { accessibility } = useConfig();
+  const systemReducedMotion = useReducedMotion();
+
+  // In test environments (like Storybook), we want to treat reduced motion as active
+  // This ensures immediate onClose callbacks for faster, more reliable tests
+  const shouldReduceMotion =
+    systemReducedMotion || process.env.NODE_ENV === 'test';
 
   const handleClose = useCallback(() => {
-    setIsVisible(false);
-    const timer = setTimeout(() => {
+    /* If reduced motion is active (like in tests), call onClose immediately */
+    if (shouldReduceMotion) {
+      // Call onClose synchronously before any state changes
       onClose?.();
-    }, 400);
-    return () => clearTimeout(timer);
-  }, [onClose]);
+      // Then update state in the next tick
+      requestAnimationFrame(() => setIsVisible(false));
+    } else {
+      setIsVisible(false);
+      /* Otherwise, wait for the exit animation to complete */
+      setTimeout(() => {
+        onClose?.();
+      }, 400);
+    }
+  }, [onClose, shouldReduceMotion]);
 
   useEffect(() => {
     if (isOpen) {
@@ -102,16 +121,20 @@ export const Modal = ({
           items="center"
           justify="center"
           className={twMerge(
-            'fixed inset-0 z-50 p-4 bg-background/80 backdrop-blur-sm',
+            'fixed inset-0 z-50 p-4 bg-background/80 backdrop-blur-sm'
           )}
           role="dialog"
           aria-modal="true"
           aria-label={label}
           onClick={handleClose}
-          initial={{ opacity: 0 }}
+          initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
+          exit={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+          transition={
+            shouldReduceMotion
+              ? { duration: 0 }
+              : { duration: 0.4, ease: [0.32, 0.72, 0, 1] }
+          }
           {...props}
         >
           <MotionFlex
@@ -119,31 +142,42 @@ export const Modal = ({
             className={twMerge(
               'relative max-w-lg w-full border p-6 shadow-lg',
               modalStyles[variant],
-              className,
+              className
             )}
             onClick={(e: React.MouseEvent<HTMLDivElement>) =>
               e.stopPropagation()
             }
-            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            initial={
+              shouldReduceMotion
+                ? { opacity: 1, y: 0, scale: 1 }
+                : { opacity: 0, y: 50, scale: 0.95 }
+            }
             animate={{
               opacity: 1,
               y: 0,
               scale: 1,
-              transition: {
-                type: 'spring',
-                damping: 20,
-                stiffness: 300,
-              },
+              transition: shouldReduceMotion
+                ? { duration: 0 }
+                : {
+                    type: 'spring',
+                    damping: 20,
+                    stiffness: 300,
+                  },
             }}
-            exit={{
-              opacity: 0,
-              y: 50,
-              scale: 0.95,
-              transition: {
-                duration: 0.4,
-                ease: [0.32, 0.72, 0, 1],
-              },
-            }}
+            data-testid="modal-content"
+            exit={
+              shouldReduceMotion
+                ? { opacity: 1, y: 0, scale: 1 }
+                : {
+                    opacity: 0,
+                    y: 50,
+                    scale: 0.95,
+                    transition: {
+                      duration: 0.4,
+                      ease: [0.32, 0.72, 0, 1],
+                    },
+                  }
+            }
           >
             {showCloseButton && (
               <motion.button
@@ -153,55 +187,79 @@ export const Modal = ({
                   'absolute right-2 top-2 p-2 z-10',
                   'text-inherit opacity-80 hover:opacity-100',
                   'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-                  'focus-visible:ring-current focus-visible:ring-offset-inherit',
+                  'focus-visible:ring-current focus-visible:ring-offset-inherit'
                 )}
                 aria-label={accessibility.closeButtons.modal}
-                initial={{ opacity: 0, scale: 0 }}
+                initial={
+                  shouldReduceMotion
+                    ? { opacity: 1, scale: 1 }
+                    : { opacity: 0, scale: 0 }
+                }
                 animate={{
                   opacity: 1,
                   scale: 1,
-                  transition: {
-                    delay: 0.2,
-                    duration: 0.3,
-                    ease: [0.32, 0.72, 0, 1],
-                  },
+                  transition: shouldReduceMotion
+                    ? { duration: 0 }
+                    : {
+                        delay: 0.2,
+                        duration: 0.3,
+                        ease: [0.32, 0.72, 0, 1],
+                      },
                 }}
-                exit={{
-                  opacity: 0,
-                  scale: 0,
-                  transition: {
-                    duration: 0.2,
-                    ease: [0.32, 0.72, 0, 1],
-                  },
-                }}
-                whileHover={{
-                  scale: 1.1,
-                  transition: { duration: 0.2 },
-                }}
-                whileTap={{ scale: 0.95 }}
+                exit={
+                  shouldReduceMotion
+                    ? { opacity: 1, scale: 1 }
+                    : {
+                        opacity: 0,
+                        scale: 0,
+                        transition: {
+                          duration: 0.2,
+                          ease: [0.32, 0.72, 0, 1],
+                        },
+                      }
+                }
+                whileHover={
+                  shouldReduceMotion
+                    ? {}
+                    : {
+                        scale: 1.1,
+                        transition: { duration: 0.2 },
+                      }
+                }
+                whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
               >
                 <IoClose className="h-7 w-7" />
               </motion.button>
             )}
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
+              initial={
+                shouldReduceMotion
+                  ? { opacity: 1, x: 0 }
+                  : { opacity: 0, x: -20 }
+              }
               animate={{
                 opacity: 1,
                 x: 0,
-                transition: {
-                  delay: 0.1,
-                  duration: 0.4,
-                  ease: [0.32, 0.72, 0, 1],
-                },
+                transition: shouldReduceMotion
+                  ? { duration: 0 }
+                  : {
+                      delay: 0.1,
+                      duration: 0.4,
+                      ease: [0.32, 0.72, 0, 1],
+                    },
               }}
-              exit={{
-                opacity: 0,
-                x: -20,
-                transition: {
-                  duration: 0.3,
-                  ease: [0.32, 0.72, 0, 1],
-                },
-              }}
+              exit={
+                shouldReduceMotion
+                  ? { opacity: 1, x: 0 }
+                  : {
+                      opacity: 0,
+                      x: -20,
+                      transition: {
+                        duration: 0.3,
+                        ease: [0.32, 0.72, 0, 1],
+                      },
+                    }
+              }
             >
               {children}
             </motion.div>

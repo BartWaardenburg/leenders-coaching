@@ -76,3 +76,5 @@ export const Quote = ({ children, cite, className, ...props }: QuoteProps) => {
     </motion.blockquote>
   );
 };
+
+export default Quote;

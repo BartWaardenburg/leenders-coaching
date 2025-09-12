@@ -50,7 +50,7 @@ export const postType = defineType({
       title: 'Categories',
       type: 'array',
       group: 'content',
-      of: [{ type: 'string' }],
+      of: [{ type: 'reference', to: [{ type: 'category' }] }],
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -62,6 +62,16 @@ export const postType = defineType({
         hotspot: true,
       },
       validation: (rule) => rule.required(),
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alternative text',
+          description:
+            'Beschrijf de inhoud van de afbeelding (voor toegankelijkheid)',
+          validation: (Rule) => Rule.required().min(3),
+        },
+      ],
     }),
     defineField({
       name: 'featured',

@@ -39,18 +39,18 @@ export const Link = ({
         lineStyle === 'slide'
           ? { width: 0, backgroundColor: 'hsl(var(--foreground) / 0.8)' }
           : {
-            width: '3rem',
-            x: 0,
-            backgroundColor: 'hsl(var(--foreground) / 0.8)',
-          },
+              width: '3rem',
+              x: 0,
+              backgroundColor: 'hsl(var(--foreground) / 0.8)',
+            },
       hover:
         lineStyle === 'slide'
           ? { width: '3rem', backgroundColor: 'hsl(var(--primary))' }
           : {
-            width: '3rem',
-            x: '0.5rem',
-            backgroundColor: 'hsl(var(--primary))',
-          },
+              width: '3rem',
+              x: '0.5rem',
+              backgroundColor: 'hsl(var(--primary))',
+            },
     };
 
     const textVariants = {
@@ -68,7 +68,7 @@ export const Link = ({
           className={twMerge(
             'absolute h-[2px]',
             linePosition === 'above' ? '-top-1' : '-bottom-1',
-            'left-0',
+            'left-0'
           )}
           variants={lineVariants}
           transition={{
@@ -104,9 +104,9 @@ export const Link = ({
       variant === 'default'
         ? { borderColor: 'transparent', color: 'hsl(var(--primary) / 0.8)' }
         : {
-          color: 'hsl(var(--foreground))',
-          borderBottom: '1px solid hsl(var(--foreground))',
-        },
+            color: 'hsl(var(--foreground))',
+            borderBottom: '1px solid hsl(var(--foreground))',
+          },
   };
 
   return (
@@ -114,7 +114,7 @@ export const Link = ({
       className={twMerge(
         'inline-flex items-center',
         variant === 'default' && 'border-b',
-        className,
+        className
       )}
       initial="initial"
       whileHover="hover"
@@ -133,3 +133,5 @@ export const Link = ({
     </motion.a>
   );
 };
+
+export default Link;

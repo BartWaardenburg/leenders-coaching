@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { transformCalendarSection } from './calendar';
+import { transformCalendarSection } from './';
 import type { SectionCalendar as SanitySectionCalendar } from '@/types/sanity/schema';
 
 // Helper function to create Sanity document properties

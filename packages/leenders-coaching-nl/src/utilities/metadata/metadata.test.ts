@@ -4,7 +4,7 @@ import {
   generateArticleStructuredData,
   generateOrganizationStructuredData,
   generateMetadata,
-} from './metadata';
+} from './';
 
 /**
  * Test suite for metadata utility functions

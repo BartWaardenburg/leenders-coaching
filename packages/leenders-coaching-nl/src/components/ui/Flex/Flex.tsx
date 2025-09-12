@@ -20,6 +20,7 @@ type FlexProps<T extends ElementType = 'div'> = {
   items?: AlignItems;
   gap?: Gap;
   as?: T;
+  testid?: string;
 } & Omit<ComponentPropsWithoutRef<T>, 'as'>;
 
 /**
@@ -34,12 +35,14 @@ const Flex = <T extends ElementType = 'div'>({
   as,
   className,
   children,
+  testid,
   ...props
 }: FlexProps<T>) => {
   const Component = as || 'div';
 
   return (
     <Component
+      data-testid={testid}
       className={twMerge(
         'flex',
         /* Direction classes */
@@ -81,7 +84,7 @@ const Flex = <T extends ElementType = 'div'>({
         gap === 14 && 'gap-14',
         gap === 16 && 'gap-16',
         gap === 20 && 'gap-20',
-        className,
+        className
       )}
       {...props}
     >

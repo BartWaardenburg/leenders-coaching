@@ -1,0 +1,20 @@
+{
+  "onlyChanged": true,
+  "exitZeroOnChanges": true,
+
+  "externals": [
+    "packages/leenders-coaching-nl/package.json",
+    "pnpm-lock.yaml",
+    "packages/leenders-coaching-nl/.storybook/**",
+    "packages/leenders-coaching-nl/tailwind.config.*",
+    "packages/leenders-coaching-nl/postcss.config.*",
+    "packages/leenders-coaching-nl/tsconfig.json",
+    "packages/leenders-coaching-nl/public/**",
+    "packages/leenders-coaching-nl/src/assets/**"
+  ],
+
+  "untraced": [
+    "packages/leenders-coaching-nl/coverage/**",
+    "packages/leenders-coaching-nl/*.log"
+  ]
+}

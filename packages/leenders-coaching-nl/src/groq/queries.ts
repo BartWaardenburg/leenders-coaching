@@ -1,28 +1,63 @@
-import { defineQuery } from '@/utilities/sanity';
+import { sanityFetch, sanityFetchDraft } from '@/lib/api/sanity';
+import { draftMode } from 'next/headers';
+import type { GLOBAL_DATA_QUERYResult } from '@/types/sanity/groq';
 
 /**
- * Query to get a page by type (e.g. "homePage", "aboutPage")
+ * Enhanced query functions with cache tag support for ISR
+ */
+
+/**
+ * Query to get a page by type with cache tags
+ * @param type - The page type (e.g. "homePage", "aboutPage")
  * @returns The page data or null
  */
-export const PAGE_QUERY = (type: string) =>
-  defineQuery(`*[_type == "${type}"][0] {
+export const getPage = async (type: string) => {
+  const { isEnabled } = await draftMode();
+
+  const query = `*[_type == "${type}"][0] {
     ...,
     sections[] {
       ...,
       image {
-        asset->,
+        asset-> {
+          ...,
+          metadata {
+            lqip,
+            dimensions {
+              width,
+              height,
+              aspectRatio
+            },
+            palette {
+              dominant {
+                background
+              }
+            }
+          }
+        },
         hotspot,
         crop,
         alt
       },
       "posts": select(
         _type == "sectionBlog" => posts[]-> {
+          _id,
           title,
           description,
           slug,
           publishedAt,
-          categories,
-          "image": image.asset->url,
+          categories[]-> {
+            _id,
+            title,
+            slug,
+            color
+          },
+          image {
+            asset->,
+            hotspot,
+            crop,
+            alt
+          },
           featured,
           variant
         }
@@ -47,128 +82,246 @@ export const PAGE_QUERY = (type: string) =>
         }
       }
     }
-  }`);
+  }`;
+
+  if (isEnabled) {
+    return sanityFetchDraft(query);
+  }
+
+  return sanityFetch(query, {}, ['pages', type.toLowerCase()]);
+};
 
 /**
- * Query to get the home page
+ * Query to get the home page with cache tags
  * @returns The home page data or null
  */
-export const HOME_PAGE_QUERY = defineQuery(`*[_type == "homePage"][0] {
-  ...,
-  sections[] {
+export const getHomePage = async () => {
+  const { isEnabled } = await draftMode();
+
+  const query = `*[_type == "homePage"][0] {
     ...,
-    image {
-      asset->,
-      hotspot,
-      crop,
-      alt
-    },
-    "posts": select(
-      _type == "sectionBlog" => posts[]-> {
-        title,
-        description,
-        slug,
-        publishedAt,
-        categories,
-        "image": image.asset->url,
-        featured,
-        variant
-      }
-    ),
-    testimonials[] {
+    sections[] {
       ...,
       image {
-        asset->,
+        asset-> {
+          ...,
+          metadata {
+            lqip,
+            dimensions {
+              width,
+              height,
+              aspectRatio
+            },
+            palette {
+              dominant {
+                background
+              }
+            }
+          }
+        },
         hotspot,
         crop,
         alt
-      }
-    },
-    content[] {
-      ...,
-      _type == "image" => {
-        asset->,
-        hotspot,
-        crop,
-        alt,
-        caption
-      }
-    }
-  }
-}`);
-
-/**
- * Query to get the about page
- * @returns The about page data or null
- */
-export const ABOUT_PAGE_QUERY = defineQuery(`*[_type == "aboutPage"][0] {
-  ...,
-  sections[] {
-    ...,
-    image {
-      asset->,
-      hotspot,
-      crop,
-      alt
-    },
-    "posts": select(
-      _type == "sectionBlog" => posts[]-> {
-        title,
-        description,
-        slug,
-        publishedAt,
-        categories,
-        "image": image.asset->url,
-        featured,
-        variant
-      }
-    ),
-    testimonials[] {
-      ...,
-      image {
-        asset->,
-        hotspot,
-        crop,
-        alt
-      }
-    },
-    content[] {
-      ...,
-      _type == "image" => {
-        asset->,
-        hotspot,
-        crop,
-        alt,
-        caption
+      },
+      "posts": select(
+        _type == "sectionBlog" => posts[]-> {
+          _id,
+          title,
+          description,
+          slug,
+          publishedAt,
+          categories[]-> {
+            _id,
+            title,
+            slug,
+            color
+          },
+          image {
+            asset->,
+            hotspot,
+            crop,
+            alt
+          },
+          featured,
+          variant
+        }
+      ),
+      testimonials[] {
+        ...,
+        image {
+          asset->,
+          hotspot,
+          crop,
+          alt
+        }
+      },
+      content[] {
+        ...,
+        _type == "image" => {
+          asset->,
+          hotspot,
+          crop,
+          alt,
+          caption
+        }
       }
     }
+  }`;
+
+  if (isEnabled) {
+    return sanityFetchDraft(query);
   }
-}`);
+
+  return sanityFetch(query, {}, ['pages', 'home']);
+};
 
 /**
- * Query to get global data (navigation, footer, site settings)
+ * Query to get global data with cache tags
  * @returns Global data including navigation, footer and site settings
  */
-export const GLOBAL_DATA_QUERY = defineQuery(`{
-  "navigation": *[_type == "header"][0] {
-    ...
-  },
-  "footer": *[_type == "footer"][0] {
-    ...
-  },
-  "siteSettings": *[_type == "siteSettings"][0] {
-    ...
+export const getGlobalData = async (): Promise<GLOBAL_DATA_QUERYResult> => {
+  const { isEnabled } = await draftMode();
+
+  const query = `{
+    "navigation": *[_type == "header"][0] {
+      navigation[] {
+        _key,
+        label,
+        href
+      },
+      about {
+        title,
+        description
+      },
+      social {
+        title,
+        links[] {
+          _key,
+          platform,
+          url
+        }
+      },
+      contact {
+        title,
+        projectEnquiry {
+          label,
+          href,
+          linkText
+        },
+        generalEnquiry {
+          label,
+          href,
+          linkText
+        }
+      }
+    },
+    "footer": *[_type == "footer"][0] {
+      copyright,
+      contact {
+        email,
+        phone
+      },
+      socialLinks[] {
+        _key,
+        platform,
+        url
+      }
+    },
+    "siteSettings": *[_type == "configuration"][0] {
+      accessibility {
+        closeButtons {
+          toast,
+          modal
+        },
+        calendar {
+          previousMonth,
+          nextMonth
+        }
+      },
+      interface {
+        mobileMenu {
+          toggleButton,
+          menuLabel,
+          closeButton
+        },
+        themeToggle {
+          label
+        },
+        buttons {
+          loadMore,
+          readMore,
+          submit,
+          close
+        }
+      },
+      blog {
+        labels {
+          featured,
+          readArticle
+        },
+        paths {
+          blog
+        }
+      },
+      forms {
+        messages {
+          required,
+          invalid,
+          success,
+          error
+        }
+      }
+    }
+  }`;
+
+  if (isEnabled) {
+    return sanityFetchDraft<GLOBAL_DATA_QUERYResult>(query);
   }
-}`);
+
+  return sanityFetch<GLOBAL_DATA_QUERYResult>(query, {}, [
+    'global',
+    'navigation',
+    'footer',
+    'settings',
+  ]);
+};
 
 /**
- * Query to get all blog posts
+ * Query to get all blog posts with cache tags
  * @returns All blog posts ordered by publishedAt desc
  */
-export const BLOG_POSTS_QUERY =
-  defineQuery(`*[_type == "post"] | order(publishedAt desc) {
+export const getBlogPosts = async () => {
+  const { isEnabled } = await draftMode();
+
+  const query = `*[_type == "post" && defined(title) && defined(slug)] | order(publishedAt desc) {
     ...,
-    "image": image.asset->url,
+    image {
+      asset-> {
+        ...,
+        metadata {
+          lqip,
+          dimensions {
+            width,
+            height,
+            aspectRatio
+          },
+          palette {
+            dominant {
+              background
+            }
+          }
+        }
+      },
+      hotspot,
+      crop,
+      alt
+    },
+    categories[]-> {
+      _id,
+      title,
+      slug,
+      color
+    },
     content[] {
       ...,
       _type == "image" => {
@@ -179,16 +332,52 @@ export const BLOG_POSTS_QUERY =
         caption
       }
     }
-  }`);
+  }`;
+
+  if (isEnabled) {
+    return sanityFetchDraft(query);
+  }
+
+  return sanityFetch(query, {}, ['posts', 'blog']);
+};
 
 /**
- * Query to get a single blog post by slug
+ * Query to get a single blog post by slug with cache tags
+ * @param slug - The blog post slug
  * @returns The blog post or null
  */
-export const BLOG_POST_BY_SLUG_QUERY = (slug: string) =>
-  defineQuery(`*[_type == "post" && slug.current == "${slug}"][0] {
+export const getBlogPostBySlug = async (slug: string) => {
+  const { isEnabled } = await draftMode();
+
+  const query = `*[_type == "post" && slug.current == "${slug}" && defined(title)][0] {
     ...,
-    "image": image.asset->url,
+    image {
+      asset-> {
+        ...,
+        metadata {
+          lqip,
+          dimensions {
+            width,
+            height,
+            aspectRatio
+          },
+          palette {
+            dominant {
+              background
+            }
+          }
+        }
+      },
+      hotspot,
+      crop,
+      alt
+    },
+    categories[]-> {
+      _id,
+      title,
+      slug,
+      color
+    },
     content[] {
       ...,
       _type == "image" => {
@@ -199,25 +388,49 @@ export const BLOG_POST_BY_SLUG_QUERY = (slug: string) =>
         caption
       }
     }
-  }`);
+  }`;
+
+  if (isEnabled) {
+    return sanityFetchDraft(query);
+  }
+
+  return sanityFetch(query, {}, ['posts', 'blog', `post-${slug}`]);
+};
 
 /**
- * Query to get all categories
+ * Query to get all categories with cache tags
  * @returns All categories ordered by title
  */
-export const CATEGORIES_QUERY =
-  defineQuery(`*[_type == "category"] | order(title asc) {
+export const getCategories = async () => {
+  const { isEnabled } = await draftMode();
+
+  const query = `*[_type == "category"] | order(title asc) {
     ...
-  }`);
+  }`;
+
+  if (isEnabled) {
+    return sanityFetchDraft(query);
+  }
+
+  return sanityFetch(query, {}, ['categories']);
+};
 
 /**
- * Query to get posts by category ID
+ * Query to get posts by category ID with cache tags
+ * @param categoryId - The category ID
  * @returns Posts that reference the category, ordered by publishedAt desc
  */
-export const POSTS_BY_CATEGORY_QUERY = (categoryId: string) =>
-  defineQuery(`*[_type == "post" && references("${categoryId}")] | order(publishedAt desc) {
+export const getPostsByCategory = async (categoryId: string) => {
+  const { isEnabled } = await draftMode();
+
+  const query = `*[_type == "post" && references("${categoryId}")] | order(publishedAt desc) {
     ...,
-    "image": image.asset->url,
+    image {
+      asset->,
+      hotspot,
+      crop,
+      alt
+    },
     categories[]-> {
       _id,
       title
@@ -225,21 +438,23 @@ export const POSTS_BY_CATEGORY_QUERY = (categoryId: string) =>
     author-> {
       _id,
       name,
-      image
+      image {
+        asset->,
+        hotspot,
+        crop,
+        alt
+      }
     }
-  }`);
+  }`;
 
-/**
- * Get site settings
- */
-export const getSiteSettings = `*[_type == "siteSettings"][0]`;
+  if (isEnabled) {
+    return sanityFetchDraft(query);
+  }
 
-/**
- * Get navigation
- */
-export const getNavigation = `*[_type == "navigation"][0]`;
-
-/**
- * Get footer
- */
-export const getFooter = `*[_type == "footer"][0]`;
+  return sanityFetch(query, {}, [
+    'posts',
+    'blog',
+    'categories',
+    `category-${categoryId}`,
+  ]);
+};

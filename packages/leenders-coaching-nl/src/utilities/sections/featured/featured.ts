@@ -1,7 +1,6 @@
 import type { ComponentProps } from 'react';
 import type { SectionFeatured } from '@/components/sections/SectionFeatured';
 import type { SectionFeatured as SanitySectionFeatured } from '@/types/sanity/schema';
-import { urlForImage } from '@/utilities/sanity';
 
 /* Type guard for featured section */
 const isSanitySectionFeatured = (
@@ -23,8 +22,7 @@ export const transformFeaturedSection = (
   return {
     title: data.displayTitle || undefined,
     description: data.description || '',
-    image: data.image ? urlForImage(data.image).url() : '',
-    imageAlt: data.imageAlt || '',
+    image: data.image || null,
     cta: data.cta
       ? {
           href: data.cta.href || '',

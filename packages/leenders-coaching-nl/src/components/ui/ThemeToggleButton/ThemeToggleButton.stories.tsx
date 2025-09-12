@@ -1,5 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
 import { ThemeToggleButton } from './ThemeToggleButton';
+import { waitForMotionAnimations as _waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/ThemeToggleButton',
@@ -7,7 +9,6 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
   argTypes: {
     className: {
       control: 'text',
@@ -22,5 +23,9 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     className: 'text-foreground',
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole('button')).toBeVisible();
+    await _waitForMotionAnimations({ canvas });
   },
 };

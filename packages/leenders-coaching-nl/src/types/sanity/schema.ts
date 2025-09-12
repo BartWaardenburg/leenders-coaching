@@ -288,6 +288,7 @@ export type Testimonial = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
+    alt?: string;
     _type: 'image';
   };
 };
@@ -560,9 +561,9 @@ export type SectionFeatured = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
+    alt?: string;
     _type: 'image';
   };
-  imageAlt?: string;
   cta?: CallToAction;
   reverse?: boolean;
 };
@@ -705,6 +706,19 @@ export type CallToAction = {
   isExternal?: boolean;
 };
 
+export type Category = {
+  _id: string;
+  _type: 'category';
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  description?: string;
+  slug?: Slug;
+  color?: ColorVariant;
+  metadata?: Metadata;
+};
+
 export type Post = {
   _id: string;
   _type: 'post';
@@ -715,7 +729,13 @@ export type Post = {
   description?: string;
   slug?: Slug;
   publishedAt?: string;
-  categories?: Array<string>;
+  categories?: Array<{
+    _ref: string;
+    _type: 'reference';
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: 'category';
+  }>;
   image?: {
     asset?: {
       _ref: string;
@@ -726,6 +746,7 @@ export type Post = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
+    alt?: string;
     _type: 'image';
   };
   featured?: boolean;
@@ -875,9 +896,9 @@ export type ContactPage = {
           media?: unknown;
           hotspot?: SanityImageHotspot;
           crop?: SanityImageCrop;
+          alt?: string;
           _type: 'image';
         };
-        imageAlt?: string;
         cta?: CallToAction;
         reverse?: boolean;
         _type: 'sectionFeatured';
@@ -1108,9 +1129,9 @@ export type BlogPage = {
           media?: unknown;
           hotspot?: SanityImageHotspot;
           crop?: SanityImageCrop;
+          alt?: string;
           _type: 'image';
         };
-        imageAlt?: string;
         cta?: CallToAction;
         reverse?: boolean;
         _type: 'sectionFeatured';
@@ -1341,9 +1362,9 @@ export type ApproachPage = {
           media?: unknown;
           hotspot?: SanityImageHotspot;
           crop?: SanityImageCrop;
+          alt?: string;
           _type: 'image';
         };
-        imageAlt?: string;
         cta?: CallToAction;
         reverse?: boolean;
         _type: 'sectionFeatured';
@@ -1574,9 +1595,9 @@ export type CoachingPage = {
           media?: unknown;
           hotspot?: SanityImageHotspot;
           crop?: SanityImageCrop;
+          alt?: string;
           _type: 'image';
         };
-        imageAlt?: string;
         cta?: CallToAction;
         reverse?: boolean;
         _type: 'sectionFeatured';
@@ -1807,9 +1828,9 @@ export type AboutPage = {
           media?: unknown;
           hotspot?: SanityImageHotspot;
           crop?: SanityImageCrop;
+          alt?: string;
           _type: 'image';
         };
-        imageAlt?: string;
         cta?: CallToAction;
         reverse?: boolean;
         _type: 'sectionFeatured';
@@ -2040,9 +2061,9 @@ export type HomePage = {
           media?: unknown;
           hotspot?: SanityImageHotspot;
           crop?: SanityImageCrop;
+          alt?: string;
           _type: 'image';
         };
-        imageAlt?: string;
         cta?: CallToAction;
         reverse?: boolean;
         _type: 'sectionFeatured';
@@ -2350,6 +2371,7 @@ export type AllSanitySchemaTypes =
   | SectionBlog
   | SectionHeader
   | CallToAction
+  | Category
   | Post
   | ContactPage
   | BlogPage

@@ -1,19 +1,29 @@
 {
   "files": [
     {
-      "path": "storybook-static/*.iframe.bundle.js",
-      "maxSize": "1.5 MB",
-      "name": "Storybook iframe bundles"
+      "path": "storybook-static/assets/iframe-*.js",
+      "maxSize": "1.6 MB",
+      "name": "Storybook iframe bundle"
     },
     {
-      "path": "storybook-static/main.*.iframe.bundle.js",
-      "maxSize": "250 kB",
-      "name": "Storybook main bundle"
+      "path": "storybook-static/assets/DocsRenderer-*.js",
+      "maxSize": "700 kB",
+      "name": "Storybook docs renderer"
     },
     {
-      "path": "storybook-static/runtime~main.*.iframe.bundle.js",
-      "maxSize": "50 kB",
-      "name": "Storybook runtime bundle"
+      "path": "storybook-static/assets/axe-*.js",
+      "maxSize": "600 kB",
+      "name": "Storybook accessibility testing"
+    },
+    {
+      "path": "storybook-static/assets/react-18-*.js",
+      "maxSize": "200 kB",
+      "name": "React runtime bundle"
+    },
+    {
+      "path": "storybook-static/assets/server.browser-*.js",
+      "maxSize": "200 kB",
+      "name": "Server browser bundle"
     }
   ]
 }

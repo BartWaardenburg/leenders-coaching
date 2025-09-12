@@ -4,13 +4,15 @@ import { FC, ReactNode } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import type { StaticImageData } from 'next/image';
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import { SanityImage } from '@/components/ui/Image';
 import { Text } from '@/components/ui/Text';
 import { Heading } from '@/components/ui/Heading';
 import { Flex } from '@/components/ui/Flex';
 import { Box } from '@/components/ui/Box';
 import { twMerge } from 'tailwind-merge';
 import { cardConfig } from '@/config/card.config';
-import { motion, easeInOut } from 'motion/react';
+import { motion, easeInOut, useReducedMotion } from 'motion/react';
 
 type CardVariant = 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal';
 
@@ -66,11 +68,12 @@ export type CardProps = {
   categories?: string[];
   children?: ReactNode;
   slug?: string;
-  image?: string | StaticImageData;
+  image?: string | StaticImageData | SanityImageSource;
   variant?: CardVariant;
   border?: boolean;
   reverse?: boolean;
-};
+  testid?: string;
+} & React.ComponentPropsWithoutRef<'div'>;
 
 /**
  * Card component for displaying article previews with fancy animations
@@ -86,7 +89,10 @@ export const Card: FC<CardProps> = ({
   variant = 'blue',
   border = false,
   reverse = false,
+  testid,
+  ...props
 }) => {
+  const shouldReduceMotion = useReducedMotion();
   const hasMetaData = date || categories.length > 0;
   const cardClasses = twMerge(
     'group relative h-full transition-theme block @container border',
@@ -94,7 +100,7 @@ export const Card: FC<CardProps> = ({
     border ? cardBordersDark[variant] : cardBordersLight[variant],
     slug &&
       (border ? cardBordersHoverLight[variant] : cardBordersHoverDark[variant]),
-    slug && 'cursor-pointer',
+    slug && 'cursor-pointer'
   );
 
   /* Get the full path for blog posts */
@@ -102,63 +108,70 @@ export const Card: FC<CardProps> = ({
 
   /* Animation variants */
   const cardVariants = {
-    hidden: {
-      opacity: 0,
-      y: 10,
-    },
+    hidden: shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.4,
-        ease: [0.2, 0.65, 0.3, 0.9] as const,
-        when: 'beforeChildren',
-        staggerChildren: 0.08,
-        delayChildren: 0.1,
-      },
+      transition: shouldReduceMotion
+        ? { duration: 0 }
+        : {
+            duration: 0.4,
+            ease: [0.2, 0.65, 0.3, 0.9] as const,
+            when: 'beforeChildren',
+            staggerChildren: 0.08,
+            delayChildren: 0.1,
+          },
     },
-    ...(slug && {
-      hover: {
-        y: -5,
-        transition: {
-          duration: 0.2,
-          ease: easeInOut,
+    ...(slug &&
+      !shouldReduceMotion && {
+        hover: {
+          y: -5,
+          transition: {
+            duration: 0.2,
+            ease: easeInOut,
+          },
         },
-      },
-    }),
+      }),
   } as const;
 
   const childVariants = {
-    hidden: { opacity: 0, y: 5 },
+    hidden: shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 5 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.3,
-        ease: [0.2, 0.65, 0.3, 0.9] as const,
-      },
+      transition: shouldReduceMotion
+        ? { duration: 0 }
+        : {
+            duration: 0.3,
+            ease: [0.2, 0.65, 0.3, 0.9] as const,
+          },
     },
   } as const;
 
   const imageVariants = {
-    hidden: { scale: 1.1, opacity: 0 },
+    hidden: shouldReduceMotion
+      ? { scale: 1, opacity: 1 }
+      : { scale: 1.1, opacity: 0 },
     visible: {
       scale: 1,
       opacity: 1,
-      transition: {
-        duration: 0.5,
-        ease: [0.2, 0.65, 0.3, 0.9] as const,
-      },
+      transition: shouldReduceMotion
+        ? { duration: 0 }
+        : {
+            duration: 0.5,
+            ease: [0.2, 0.65, 0.3, 0.9] as const,
+          },
     },
-    ...(slug && {
-      hover: {
-        scale: 1.05,
-        transition: {
-          duration: 0.3,
-          ease: easeInOut,
+    ...(slug &&
+      !shouldReduceMotion && {
+        hover: {
+          scale: 1.05,
+          transition: {
+            duration: 0.3,
+            ease: easeInOut,
+          },
         },
-      },
-    }),
+      }),
   } as const;
 
   const content = (
@@ -175,11 +188,28 @@ export const Card: FC<CardProps> = ({
           <Box
             className={twMerge(
               'relative border-b @lg:border-b-0 @lg:border-l-0 @lg:border-r border-foreground/80 h-48 @lg:h-auto w-full @lg:w-1/3 @4xl:w-1/2 shrink-0 overflow-hidden',
-              reverse && '@lg:order-last @lg:border-r-0 @lg:border-l',
+              reverse && '@lg:order-last @lg:border-r-0 @lg:border-l'
             )}
           >
             <motion.div variants={imageVariants} className="h-full w-full">
-              <Image src={image} alt={title} fill className="object-cover" />
+              {/* Check if image is a Sanity image object or static image/URL */}
+              {typeof image === 'object' && 'asset' in image ? (
+                <SanityImage
+                  image={image as SanityImageSource}
+                  alt={title}
+                  fill
+                  className="object-cover"
+                  followHotspot={true}
+                  qualityHint={80}
+                />
+              ) : (
+                <Image
+                  src={image as string | StaticImageData}
+                  alt={title}
+                  fill
+                  className="object-cover"
+                />
+              )}
             </motion.div>
           </Box>
         )}
@@ -270,12 +300,32 @@ export const Card: FC<CardProps> = ({
   const MotionLink = motion.create(Link);
 
   if (slug) {
+    // Create a clean props object with only anchor-compatible props
+    const linkProps = {
+      className: cardClasses,
+      'data-testid': testid,
+      // Only include basic HTML attributes that are valid for both div and anchor
+      id: props.id,
+      style: props.style,
+      role: props.role,
+      'aria-label': props['aria-label'],
+      'aria-labelledby': props['aria-labelledby'],
+      'aria-describedby': props['aria-describedby'],
+      tabIndex: props.tabIndex,
+    };
+
     return (
-      <MotionLink href={href} className={cardClasses}>
+      <MotionLink href={href} {...linkProps}>
         {content}
       </MotionLink>
     );
   }
 
-  return <Box className={cardClasses}>{content}</Box>;
+  return (
+    <Box className={cardClasses} data-testid={testid} {...props}>
+      {content}
+    </Box>
+  );
 };
+
+export default Card;

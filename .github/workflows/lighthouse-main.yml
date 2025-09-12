@@ -311,7 +311,7 @@ jobs:
 
       - name: '🚨 Open regression issue when failed'
         if: ${{ steps.parse.outputs.errc && steps.parse.outputs.errc != '0' && steps.parse.outputs.errc != '' }}
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         env:
           FIRST_REPORT: ${{ steps.parse.outputs.first_report_link }}
           AVERAGES_MD: ${{ steps.parse.outputs.averages_md }}

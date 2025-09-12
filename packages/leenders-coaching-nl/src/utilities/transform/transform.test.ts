@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { transformNullable, transformNullableArray } from './transform';
+import { transformNullable, transformNullableArray } from './';
 
 /**
  * Test suite for transform utility functions

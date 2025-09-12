@@ -1,5 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect } from 'storybook/test';
+import { fn } from 'storybook/test';
 import { IconButton } from './IconButton';
+import {
+  waitForMotionAnimations as _waitForMotionAnimations,
+  waitForAnimation,
+} from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/IconButton',
@@ -7,7 +13,6 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
   argTypes: {
     variant: {
       control: 'select',
@@ -59,6 +64,17 @@ export const Primary: Story = {
     children: <SearchIcon />,
     label: 'Search',
     variant: 'primary',
+    onClick: fn(),
+  },
+  play: async ({ canvas, userEvent, args }) => {
+    const button = canvas.getByRole('button', { name: 'Search' });
+    await expect(button).toBeVisible();
+
+    // Test click interaction
+    await userEvent.click(button);
+    await expect(args.onClick).toHaveBeenCalled();
+
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -68,6 +84,10 @@ export const Ghost: Story = {
     label: 'Search',
     variant: 'ghost',
   },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole('button', { name: 'Search' })).toBeVisible();
+    await _waitForMotionAnimations({ canvas });
+  },
 };
 
 export const Disabled: Story = {
@@ -75,5 +95,59 @@ export const Disabled: Story = {
     children: <SearchIcon />,
     label: 'Search',
     disabled: true,
+    onClick: fn(),
+  },
+  play: async ({ canvas, args }) => {
+    const button = canvas.getByRole('button', { name: 'Search' });
+    await expect(button).toBeVisible();
+    await expect(button).toBeDisabled();
+
+    // Test that clicking disabled button doesn't trigger onClick
+    // Note: Disabled buttons have pointer-events: none, so we can't actually click them
+    // Instead, we verify the button is disabled and the onClick hasn't been called
+    await expect(args.onClick).not.toHaveBeenCalled();
+
+    await _waitForMotionAnimations({ canvas });
+  },
+};
+
+export const InteractiveIconButton: Story = {
+  args: {
+    children: <SearchIcon />,
+    label: 'Interactive Search',
+    variant: 'primary',
+    onClick: fn(),
+  },
+  play: async ({ canvas, userEvent, args, step }) => {
+    const button = canvas.getByRole('button', { name: 'Interactive Search' });
+
+    await step('Initial state', async () => {
+      await expect(button).toBeVisible();
+      await expect(button).toBeEnabled();
+    });
+
+    await step('Click interaction', async () => {
+      await userEvent.click(button);
+      await expect(args.onClick).toHaveBeenCalledTimes(1);
+    });
+
+    await step('Keyboard interaction', async () => {
+      button.focus();
+      await expect(button).toHaveFocus();
+
+      await userEvent.keyboard('{Enter}');
+      await expect(args.onClick).toHaveBeenCalledTimes(2);
+
+      await userEvent.keyboard(' ');
+      await expect(args.onClick).toHaveBeenCalledTimes(3);
+    });
+
+    await step('Hover interaction', async () => {
+      await userEvent.hover(button);
+      // Wait for any hover effects
+      await waitForAnimation(100);
+    });
+
+    await _waitForMotionAnimations({ canvas });
   },
 };
