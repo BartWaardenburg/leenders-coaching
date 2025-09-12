@@ -7,6 +7,16 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
+  argTypes: {
+    children: {
+      control: 'text',
+      description: 'Inhoud van de main sectie',
+    },
+    className: {
+      control: 'text',
+      description: 'CSS klassen voor styling',
+    },
+  },
 } satisfies Meta<typeof Main>;
 
 export default meta;

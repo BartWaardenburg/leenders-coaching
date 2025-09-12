@@ -146,6 +146,7 @@ const components: PortableTextComponents = {
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 768px"
               followHotspot={true}
+              qualityHint={80}
             />
           </Box>
           {value?.caption && (

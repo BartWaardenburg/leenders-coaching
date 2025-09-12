@@ -43,6 +43,11 @@ const itemVariants = {
   },
 };
 
+/**
+ * Navigation items component that renders a list of navigation links.
+ * @param props - The navigation items props.
+ * @returns An animated list of navigation links.
+ */
 export const NavigationItems = ({
   links,
   onItemClick,

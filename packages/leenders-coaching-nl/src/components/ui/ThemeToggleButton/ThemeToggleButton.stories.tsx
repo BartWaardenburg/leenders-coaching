@@ -12,7 +12,7 @@ const meta = {
   argTypes: {
     className: {
       control: 'text',
-      description: 'Additional CSS classes to apply',
+      description: 'Extra CSS klassen om toe te passen',
     },
   },
 } satisfies Meta<typeof ThemeToggleButton>;

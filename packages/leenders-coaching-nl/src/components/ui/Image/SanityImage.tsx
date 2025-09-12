@@ -7,7 +7,7 @@ import {
   getLQIP,
   getImageDimensions,
   getDominantColor,
-} from '@/lib/image';
+} from '@/utilities/image';
 import { twMerge } from 'tailwind-merge';
 
 type SanityImageWithMetadata = SanityImageSource & {

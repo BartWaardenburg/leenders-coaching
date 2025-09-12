@@ -1,6 +1,9 @@
 import { defineType } from 'sanity';
 
-/* Color variant options used across multiple schemas */
+/**
+ * Color variant options used across multiple schemas.
+ * Provides consistent color choices for components and sections.
+ */
 export const colorVariant = defineType({
   name: 'colorVariant',
   title: 'Color Variant',

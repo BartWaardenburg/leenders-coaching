@@ -1,12 +1,34 @@
 import { type Metadata } from 'next';
-import { metadataConfig } from '@/config/metadata.config';
+import { getSiteSettings } from '../groq-queries';
 
+/* Default fallback values */
 const defaultMetadata = {
-  ...metadataConfig.default,
-  openGraph: metadataConfig.openGraph,
-  robots: metadataConfig.robots,
+  title: 'Leenders Coaching',
+  description:
+    'Professionele coaching voor persoonlijke en professionele groei.',
+  openGraph: {
+    type: 'website' as const,
+    locale: 'nl_NL',
+    url: 'https://www.leenders-coaching.nl',
+    siteName: 'Leenders Coaching',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Leenders Coaching',
+      },
+    ],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
+/**
+ * Configuration options for generating page metadata.
+ */
 type GenerateMetadataOptions = {
   title?: string;
   description?: string;
@@ -21,6 +43,9 @@ type GenerateMetadataOptions = {
   structuredData?: object;
 };
 
+/**
+ * Structured data schema for website entities.
+ */
 type WebsiteStructuredData = {
   '@context': 'https://schema.org';
   '@type': 'WebSite';
@@ -29,6 +54,9 @@ type WebsiteStructuredData = {
   url: string;
 };
 
+/**
+ * Structured data schema for article entities.
+ */
 type ArticleStructuredData = {
   '@context': 'https://schema.org';
   '@type': 'Article';
@@ -51,6 +79,9 @@ type ArticleStructuredData = {
   };
 };
 
+/**
+ * Structured data schema for organization entities.
+ */
 type OrganizationStructuredData = {
   '@context': 'https://schema.org';
   '@type': 'Organization';
@@ -62,7 +93,30 @@ type OrganizationStructuredData = {
 };
 
 /**
- * Generates website structured data for SEO
+ * Retrieves site metadata from Sanity or returns default values.
+ * @returns Site metadata including title and description
+ */
+export const getSiteMetadata = async (): Promise<{
+  title: string;
+  description: string;
+}> => {
+  try {
+    const siteSettings = await getSiteSettings();
+    return {
+      title: siteSettings?.title || defaultMetadata.title,
+      description: siteSettings?.description || defaultMetadata.description,
+    };
+  } catch (error) {
+    console.warn('Failed to fetch site settings, using defaults:', error);
+    return {
+      title: defaultMetadata.title,
+      description: defaultMetadata.description,
+    };
+  }
+};
+
+/**
+ * Generates website structured data for search engine optimization.
  * @param title - The website title
  * @param description - Optional website description
  * @param url - Optional website URL
@@ -81,7 +135,7 @@ export const generateWebsiteStructuredData = (
 });
 
 /**
- * Generates article structured data for SEO
+ * Generates article structured data for search engine optimization.
  * @param title - The article title
  * @param description - Optional article description
  * @param image - Optional article image URL
@@ -131,7 +185,7 @@ export const generateArticleStructuredData = ({
 });
 
 /**
- * Generates organization structured data for SEO
+ * Generates organization structured data for search engine optimization.
  * @param name - The organization name
  * @param description - Optional organization description
  * @param url - Optional organization URL
@@ -162,7 +216,7 @@ export const generateOrganizationStructuredData = ({
 });
 
 /**
- * Generates metadata for a page, merging with default metadata
+ * Generates metadata for a page, merging with default metadata from Sanity.
  * @param title - Optional page title
  * @param description - Optional page description
  * @param images - Optional array of images for OpenGraph
@@ -171,29 +225,32 @@ export const generateOrganizationStructuredData = ({
  * @param structuredData - Optional custom structured data
  * @returns Complete metadata object for Next.js
  */
-export const generateMetadata = ({
+export const generateMetadata = async ({
   title,
   description,
   images,
   type = 'website',
   noindex = false,
   structuredData,
-}: GenerateMetadataOptions): Metadata => {
-  const pageTitle = title
-    ? `${title} | ${defaultMetadata.title}`
-    : defaultMetadata.title;
+}: GenerateMetadataOptions): Promise<Metadata> => {
+  /* Get site metadata from Sanity */
+  const siteMetadata = await getSiteMetadata();
 
-  // Generate default structured data if none provided
+  const pageTitle = title
+    ? `${title} | ${siteMetadata.title}`
+    : siteMetadata.title;
+
+  /* Generate default structured data if none provided */
   const defaultStructuredData = !structuredData
     ? type === 'article'
       ? generateArticleStructuredData({
           title: pageTitle,
-          description: description || defaultMetadata.description,
+          description: description || siteMetadata.description,
           image: images?.[0]?.url,
         })
       : generateWebsiteStructuredData(
           pageTitle,
-          description || defaultMetadata.description
+          description || siteMetadata.description
         )
     : structuredData;
 
@@ -203,13 +260,13 @@ export const generateMetadata = ({
 
   return {
     title: pageTitle,
-    description: description || defaultMetadata.description,
+    description: description || siteMetadata.description,
     openGraph: {
       title: pageTitle,
-      description: description || defaultMetadata.description,
+      description: description || siteMetadata.description,
       type,
       images: images || defaultImages,
-      siteName: defaultMetadata.openGraph.siteName,
+      siteName: siteMetadata.title,
     },
     twitter: {
       card: 'summary_large_image',

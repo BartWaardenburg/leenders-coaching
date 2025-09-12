@@ -13,24 +13,24 @@ const meta = {
     variant: {
       control: 'select',
       options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
-      description: 'The visual style variant of the alert',
+      description: 'De visuele stijl variant van de alert',
     },
     size: {
       control: 'select',
       options: ['small', 'medium', 'large'],
-      description: 'The size of the alert',
+      description: 'De grootte van de alert',
     },
     showCloseButton: {
       control: 'boolean',
-      description: 'Whether to show a close button',
+      description: 'Of een sluitknop moet worden getoond',
     },
     onClose: {
       action: 'closed',
-      description: 'Callback function when the alert is closed',
+      description: 'Callback functie wanneer de alert wordt gesloten',
     },
     children: {
       control: 'text',
-      description: 'The content of the alert',
+      description: 'De inhoud van de alert',
     },
   },
 } satisfies Meta<typeof Alert>;
@@ -65,7 +65,7 @@ export const WithCloseButton: Story = {
     await expect(
       canvas.getByText('This is an alert with a close button.')
     ).toBeVisible();
-    await expect(canvas.getByLabelText('Close alert')).toBeVisible();
+    await expect(canvas.getByLabelText('Sluit waarschuwing')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -97,7 +97,7 @@ export const SmallWithClose: Story = {
     await expect(
       canvas.getByText('This is a small alert with a close button.')
     ).toBeVisible();
-    await expect(canvas.getByLabelText('Close alert')).toBeVisible();
+    await expect(canvas.getByLabelText('Sluit waarschuwing')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -129,7 +129,7 @@ export const MediumWithClose: Story = {
     await expect(
       canvas.getByText('This is a medium alert with a close button.')
     ).toBeVisible();
-    await expect(canvas.getByLabelText('Close alert')).toBeVisible();
+    await expect(canvas.getByLabelText('Sluit waarschuwing')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -161,7 +161,7 @@ export const LargeWithClose: Story = {
     await expect(
       canvas.getByText('This is a large alert with a close button.')
     ).toBeVisible();
-    await expect(canvas.getByLabelText('Close alert')).toBeVisible();
+    await expect(canvas.getByLabelText('Sluit waarschuwing')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -253,7 +253,7 @@ export const LongContent: Story = {
         'This is an alert with longer content that might wrap to multiple lines. It demonstrates how the alert handles longer text content while maintaining its layout and readability.'
       )
     ).toBeVisible();
-    await expect(canvas.getByLabelText('Close alert')).toBeVisible();
+    await expect(canvas.getByLabelText('Sluit waarschuwing')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };

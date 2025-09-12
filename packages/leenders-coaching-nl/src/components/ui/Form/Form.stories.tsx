@@ -9,6 +9,20 @@ const meta = {
   parameters: {
     layout: 'padded',
   },
+  argTypes: {
+    children: {
+      control: 'text',
+      description: 'Inhoud van het formulier',
+    },
+    onSubmit: {
+      action: 'submitted',
+      description: 'Callback wanneer het formulier wordt verzonden',
+    },
+    className: {
+      control: 'text',
+      description: 'CSS klassen voor styling',
+    },
+  },
 } satisfies Meta<typeof Form>;
 
 export default meta;

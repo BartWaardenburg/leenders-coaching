@@ -1,0 +1,1 @@
+export { submitContactForm } from './contact';

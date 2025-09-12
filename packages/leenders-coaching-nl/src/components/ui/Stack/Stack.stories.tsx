@@ -9,6 +9,39 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
+  argTypes: {
+    children: {
+      control: 'text',
+      description: 'Inhoud van de stack',
+    },
+    space: {
+      control: 'select',
+      options: [0, 1, 2, 3, 4, 'px', 'x-reverse', 'y-reverse'],
+      description: 'Ruimte tussen elementen (margin)',
+    },
+    gap: {
+      control: 'number',
+      description: 'Gap tussen elementen (grid-like spacing)',
+    },
+    direction: {
+      control: 'select',
+      options: ['col', 'row'],
+      description: 'Richting van de stack',
+    },
+    justify: {
+      control: 'select',
+      options: ['start', 'end', 'center', 'between', 'around', 'evenly'],
+      description: 'Uitlijning van elementen',
+    },
+    as: {
+      control: 'text',
+      description: 'HTML element om als te renderen',
+    },
+    testid: {
+      control: 'text',
+      description: 'Test ID voor testing',
+    },
+  },
 } satisfies Meta<typeof Stack>;
 
 export default meta;

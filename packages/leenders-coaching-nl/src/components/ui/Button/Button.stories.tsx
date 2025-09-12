@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { fn } from 'storybook/test';
 import { Button } from './Button';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Button',
@@ -23,32 +22,32 @@ const meta = {
         'yellow',
         'teal',
       ],
-      description: 'The visual style variant of the button',
+      description: 'De visuele stijl variant van de knop',
     },
     size: {
       control: 'select',
       options: ['sm', 'md', 'lg'],
-      description: 'The size of the button',
+      description: 'De grootte van de knop',
     },
     isLoading: {
       control: 'boolean',
-      description: 'Whether the button is in a loading state',
+      description: 'Of de knop in een laadstatus is',
     },
     disabled: {
       control: 'boolean',
-      description: 'Whether the button is disabled',
+      description: 'Of de knop uitgeschakeld is',
     },
     fullWidthOnContainer: {
       control: 'boolean',
-      description: 'Whether the button should take full width on container',
+      description: 'Of de knop de volledige breedte moet innemen op container',
     },
     children: {
       control: 'text',
-      description: 'The content of the button',
+      description: 'De inhoud van de knop',
     },
     onClick: {
       action: 'clicked',
-      description: 'Callback function when the button is clicked',
+      description: 'Callback functie wanneer de knop wordt geklikt',
     },
   },
 } satisfies Meta<typeof Button>;
@@ -65,11 +64,11 @@ export const Default: Story = {
     const button = canvas.getByRole('button', { name: 'Click me' });
     await expect(button).toBeVisible();
 
-    // Test click interaction
+    /* Test click interaction. */
     await userEvent.click(button);
     await expect(args.onClick).toHaveBeenCalled();
 
-    await waitForMotionAnimations({ canvas });
+    /* Simple button interaction - no animation wait needed. */
   },
 };
 
@@ -84,12 +83,12 @@ export const WithLoading: Story = {
     await expect(button).toBeVisible();
     await expect(button).toBeDisabled();
 
-    // Test that clicking disabled button doesn't trigger onClick
-    // Note: Disabled buttons have pointer-events: none, so we can't actually click them
-    // Instead, we verify the button is disabled and the onClick hasn't been called
+    /* Test that clicking disabled button does not trigger onClick. */
+    /* Note: Disabled buttons have pointer-events: none, so we cannot actually click them. */
+    /* Instead, we verify the button is disabled and the onClick has not been called. */
     await expect(args.onClick).not.toHaveBeenCalled();
 
-    await waitForMotionAnimations({ canvas });
+    /* Simple button interaction - no animation wait needed. */
   },
 };
 
@@ -104,12 +103,12 @@ export const Disabled: Story = {
     await expect(button).toBeVisible();
     await expect(button).toBeDisabled();
 
-    // Test that clicking disabled button doesn't trigger onClick
-    // Note: Disabled buttons have pointer-events: none, so we can't actually click them
-    // Instead, we verify the button is disabled and the onClick hasn't been called
+    /* Test that clicking disabled button does not trigger onClick. */
+    /* Note: Disabled buttons have pointer-events: none, so we cannot actually click them. */
+    /* Instead, we verify the button is disabled and the onClick has not been called. */
     await expect(args.onClick).not.toHaveBeenCalled();
 
-    await waitForMotionAnimations({ canvas });
+    /* Simple button interaction - no animation wait needed. */
   },
 };
 
@@ -125,7 +124,7 @@ export const AsLink: Story = {
     await expect(
       canvas.getByRole('link', { name: 'Go to Home' })
     ).toHaveAttribute('href', '/');
-    await waitForMotionAnimations({ canvas });
+    /* Simple button interaction - no animation wait needed. */
   },
 };
 
@@ -167,7 +166,7 @@ export const AllVariants: Story = {
     await expect(canvas.getByRole('button', { name: 'Pink' })).toBeVisible();
     await expect(canvas.getByRole('button', { name: 'Yellow' })).toBeVisible();
     await expect(canvas.getByRole('button', { name: 'Teal' })).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    /* Simple button interaction - no animation wait needed. */
   },
 };
 
@@ -201,15 +200,15 @@ export const AllSizes: Story = {
     await expect(mediumButton).toBeVisible();
     await expect(largeButton).toBeVisible();
 
-    // Test clicking each button
+    /* Test clicking each button. */
     await userEvent.click(smallButton);
     await userEvent.click(mediumButton);
     await userEvent.click(largeButton);
 
-    // Verify onClick was called for each click
+    /* Verify onClick was called for each click. */
     await expect(args.onClick).toHaveBeenCalledTimes(3);
 
-    await waitForMotionAnimations({ canvas });
+    /* Simple button interaction - no animation wait needed. */
   },
 };
 
@@ -247,7 +246,5 @@ export const InteractiveDemo: Story = {
       await userEvent.keyboard(' ');
       await expect(args.onClick).toHaveBeenCalledTimes(5);
     });
-
-    await waitForMotionAnimations({ canvas });
   },
 };

@@ -93,6 +93,11 @@ type FooterSectionProps = {
   isLast?: boolean;
 };
 
+/**
+ * Footer section component for organizing menu footer content.
+ * @param props - The footer section props.
+ * @returns A styled footer section with title and content.
+ */
 const FooterSection = ({
   title,
   children,
@@ -122,6 +127,11 @@ type SocialLinkProps = {
   label: string;
 };
 
+/**
+ * Social link component for displaying social media links with icons.
+ * @param props - The social link props.
+ * @returns A styled social media link with appropriate icon.
+ */
 const SocialLink = ({ href, label }: SocialLinkProps) => (
   <motion.div variants={linkVariants}>
     <Link
@@ -142,6 +152,11 @@ const SocialLink = ({ href, label }: SocialLinkProps) => (
   </motion.div>
 );
 
+/**
+ * Menu footer component that displays about, social, and contact sections.
+ * @param props - The menu footer props containing section data.
+ * @returns The complete menu footer with animated sections.
+ */
 export const MenuFooter = ({ sections }: MenuFooterProps) => {
   if (!sections.about || !sections.contact) return null;
 
@@ -175,7 +190,7 @@ export const MenuFooter = ({ sections }: MenuFooterProps) => {
                         <Box as="li" key={link._key}>
                           <SocialLink href={link.url} label={link.platform} />
                         </Box>
-                      ),
+                      )
                   )}
                 </Stack>
               </Box>

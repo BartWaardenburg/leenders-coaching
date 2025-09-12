@@ -10,8 +10,8 @@ import { ThemeToggleButton } from '@/components/ui/ThemeToggleButton';
 import { Container } from '@/components/ui/Container';
 import { Box } from '@/components/ui/Box';
 import { Flex } from '@/components/ui/Flex';
-import { uiConfig } from '@/config/ui.config';
-import { iconPaths } from '@/config/icons.config';
+import { useConfig } from '@/components/providers/ClientConfigProvider';
+import { iconPaths } from '@/utilities/icons-config';
 
 import { Logo } from './Logo';
 import { NavigationItems } from './NavigationItems';
@@ -102,6 +102,7 @@ export const Header = ({
   contact,
   ...props
 }: HeaderProps) => {
+  const config = useConfig();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -126,7 +127,7 @@ export const Header = ({
         className={twMerge(
           'fixed top-0 z-50 w-full transition-theme bg-background',
           isMenuOpen && 'bg-menu',
-          className,
+          className
         )}
         {...props}
       >
@@ -139,7 +140,7 @@ export const Header = ({
                 isToggled={isMenuOpen}
                 defaultIcon={iconPaths.menu.hamburger}
                 toggledIcon={iconPaths.menu.close}
-                label={uiConfig.mobileMenu.toggleButton}
+                label={config.interface.mobileMenu.toggleButton}
                 onClick={toggleMenu}
                 speed="quick"
               />
@@ -148,7 +149,7 @@ export const Header = ({
           <Box
             className={twMerge(
               'h-px transition-theme',
-              isMenuOpen ? 'bg-foreground/80' : 'bg-foreground/10',
+              isMenuOpen ? 'bg-foreground/80' : 'bg-foreground/10'
             )}
           />
         </Container>

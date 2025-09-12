@@ -1,1 +1,0 @@
-export { transformFAQSection } from './faq';

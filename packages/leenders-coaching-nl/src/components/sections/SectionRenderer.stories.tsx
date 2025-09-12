@@ -12,11 +12,11 @@ const meta = {
   argTypes: {
     type: {
       control: 'text',
-      description: 'The type of section to render',
+      description: 'Het type sectie om te renderen',
     },
     data: {
       control: 'object',
-      description: 'The data for the section',
+      description: 'De data voor de sectie',
     },
   },
 } satisfies Meta<typeof SectionRenderer>;
@@ -28,7 +28,7 @@ type Story = StoryObj<typeof meta>;
 const mockHeaderSection = {
   _type: 'sectionHeader',
   title: 'Welcome to Our Website',
-  description: 'This is a sample header section with title and description.',
+  description: 'Dit is een voorbeeld header sectie met titel en beschrijving.',
   background: 'white',
   border: false,
 };
@@ -36,7 +36,7 @@ const mockHeaderSection = {
 const mockContentSection = {
   _type: 'sectionContent',
   title: 'About Us',
-  description: 'Learn more about our company and mission.',
+  description: 'Meer informatie over ons bedrijf en missie.',
   content: [
     {
       _type: 'block',
@@ -55,12 +55,12 @@ const mockContentSection = {
 const mockCardsSection = {
   _type: 'sectionCards',
   displayTitle: 'Our Services',
-  description: 'Explore our range of services',
+  description: 'Verken ons assortiment diensten',
   cards: [
     {
       _key: 'card-1',
       title: 'Service 1',
-      description: 'Description for service 1',
+      description: 'Beschrijving voor dienst 1',
       featured: true,
       variant: 'default',
       border: true,
@@ -69,7 +69,7 @@ const mockCardsSection = {
     {
       _key: 'card-2',
       title: 'Service 2',
-      description: 'Description for service 2',
+      description: 'Beschrijving voor dienst 2',
       featured: false,
       variant: 'default',
       border: true,
@@ -83,7 +83,7 @@ const mockCardsSection = {
 const mockFAQSection = {
   _type: 'sectionFAQ',
   title: 'Frequently Asked Questions',
-  description: 'Find answers to common questions',
+  description: 'Vind antwoorden op veelgestelde vragen',
   faqs: [
     {
       _key: 'faq-1',
@@ -103,12 +103,12 @@ const mockFAQSection = {
 const mockFormSection = {
   _type: 'sectionForm',
   title: 'Contact Us',
-  description: 'Get in touch with our team',
+  description: 'Neem contact op met ons team',
   formFields: [
     {
       _key: 'field-1',
       type: 'text',
-      label: 'Name',
+      label: 'Naam',
       required: true,
     },
     {
@@ -152,7 +152,7 @@ export const CardsSection: Story = {
   play: async ({ canvas }) => {
     await expect(canvas.getByText('Our Services')).toBeInTheDocument();
     await expect(
-      canvas.getByText('Explore our range of services')
+      canvas.getByText('Verken ons assortiment diensten')
     ).toBeInTheDocument();
     await expect(canvas.getByText('Service 1')).toBeInTheDocument();
     await expect(canvas.getByText('Service 2')).toBeInTheDocument();

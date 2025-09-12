@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import type { BlogPage, Post } from '@/types/sanity/schema';
 import { createPageComponent } from '@/utilities/page';
-import { getBlogPosts } from '@/groq/queries';
+import { getBlogPosts } from '@/utilities/groq-queries';
 import { client } from '@/utilities/sanity';
 import { SectionBlog, type BlogPost } from '@/components/sections/SectionBlog';
 

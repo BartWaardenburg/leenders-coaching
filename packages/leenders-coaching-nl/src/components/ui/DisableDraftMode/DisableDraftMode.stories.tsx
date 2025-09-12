@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect, userEvent } from 'storybook/test';
 import { DisableDraftMode } from './DisableDraftMode';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/DisableDraftMode',
@@ -13,11 +12,11 @@ const meta = {
     variant: {
       control: 'select',
       options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
-      description: 'The visual style variant of the modal',
+      description: 'De visuele stijl variant van de modal',
     },
     className: {
       control: 'text',
-      description: 'Additional CSS classes',
+      description: 'Extra CSS klassen',
     },
   },
 } satisfies Meta<typeof DisableDraftMode>;
@@ -42,9 +41,9 @@ export const Default: Story = {
   ],
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByLabelText('Disable draft mode')
+      canvas.getByLabelText('Schakel conceptmodus uit')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -65,9 +64,9 @@ export const Purple: Story = {
   decorators: [mockNonIframeDecorator],
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByLabelText('Disable draft mode')
+      canvas.getByLabelText('Schakel conceptmodus uit')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -78,9 +77,9 @@ export const Green: Story = {
   decorators: [mockNonIframeDecorator],
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByLabelText('Disable draft mode')
+      canvas.getByLabelText('Schakel conceptmodus uit')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -91,9 +90,9 @@ export const Pink: Story = {
   decorators: [mockNonIframeDecorator],
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByLabelText('Disable draft mode')
+      canvas.getByLabelText('Schakel conceptmodus uit')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -104,9 +103,9 @@ export const Yellow: Story = {
   decorators: [mockNonIframeDecorator],
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByLabelText('Disable draft mode')
+      canvas.getByLabelText('Schakel conceptmodus uit')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -117,9 +116,9 @@ export const Teal: Story = {
   decorators: [mockNonIframeDecorator],
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByLabelText('Disable draft mode')
+      canvas.getByLabelText('Schakel conceptmodus uit')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -131,9 +130,9 @@ export const WithCustomClassName: Story = {
   decorators: [mockNonIframeDecorator],
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByLabelText('Disable draft mode')
+      canvas.getByLabelText('Schakel conceptmodus uit')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -143,13 +142,13 @@ export const Interactive: Story = {
   },
   decorators: [mockNonIframeDecorator],
   play: async ({ canvas }) => {
-    const button = canvas.getByLabelText('Disable draft mode');
+    const button = canvas.getByLabelText('Schakel conceptmodus uit');
     await expect(button).toBeInTheDocument();
 
     // Click the button to test interaction
     await userEvent.click(button);
 
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -189,9 +188,9 @@ export const AllVariants: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    const buttons = canvas.getAllByLabelText('Disable draft mode');
+    const buttons = canvas.getAllByLabelText('Schakel conceptmodus uit');
     await expect(buttons).toHaveLength(6);
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -221,7 +220,7 @@ export const InIframe: Story = {
     await expect(
       canvas.queryByLabelText('Disable draft mode')
     ).not.toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -232,10 +231,10 @@ export const LoadingState: Story = {
   decorators: [mockNonIframeDecorator],
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByLabelText('Disable draft mode')
+      canvas.getByLabelText('Schakel conceptmodus uit')
     ).toBeInTheDocument();
 
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -251,9 +250,9 @@ export const Responsive: Story = {
   decorators: [mockNonIframeDecorator],
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByLabelText('Disable draft mode')
+      canvas.getByLabelText('Schakel conceptmodus uit')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -269,8 +268,8 @@ export const DarkMode: Story = {
   decorators: [mockNonIframeDecorator],
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByLabelText('Disable draft mode')
+      canvas.getByLabelText('Schakel conceptmodus uit')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };

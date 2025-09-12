@@ -1,1 +1,0 @@
-export { transformFeaturedSection } from './featured';

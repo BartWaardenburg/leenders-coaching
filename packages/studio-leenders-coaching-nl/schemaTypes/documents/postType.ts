@@ -1,5 +1,9 @@
 import { defineField, defineType } from 'sanity';
 
+/**
+ * Blog post document type definition for Sanity Studio.
+ * Includes fields for title, description, content, categories, and SEO metadata.
+ */
 export const postType = defineType({
   name: 'post',
   title: 'Post',

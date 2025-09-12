@@ -59,6 +59,12 @@ const meta = {
       </ToastProvider>
     ),
   ],
+  argTypes: {
+    children: {
+      control: 'text',
+      description: 'Inhoud van de toast demo',
+    },
+  },
 } satisfies Meta;
 
 export default meta;

@@ -25,7 +25,7 @@ const meta = {
   argTypes: {
     border: {
       control: 'boolean',
-      description: 'Of er een rand rond de kaart moet worden weergegeven',
+      description: 'Of er een rand rond de kaart wordt weergegeven',
     },
     variant: {
       control: 'select',
@@ -205,7 +205,7 @@ export const AllVariants: Story = {
     expect(canvas.getByText('Gele Variant')).toBeInTheDocument();
     expect(canvas.getByText('Turquoise Variant')).toBeInTheDocument();
 
-    // Wait for animations on all cards
+    /* Wait for animations on all cards. */
     await waitForMotionAnimations({
       canvas,
       element: canvas.getByTestId('card-blue-variant'),
@@ -348,13 +348,13 @@ export const InteractiveCard: Story = {
     testid: 'card-interactive',
   },
   play: async ({ canvas }) => {
-    // Simple verification without complex user interactions
+    /* Simple verification without complex user interactions. */
     expect(canvas.getByText('Communicatievaardigheden')).toBeInTheDocument();
     expect(canvas.getByRole('img')).toBeInTheDocument();
     expect(canvas.getByText('15 maart 2024')).toBeInTheDocument();
     expect(canvas.getByText('Interactief, Test')).toBeInTheDocument();
 
-    // Verify link exists and has correct href
+    /* Verify link exists and has correct href. */
     const cardLink = canvas.queryByRole('link');
     if (cardLink) {
       expect(cardLink).toHaveAttribute(

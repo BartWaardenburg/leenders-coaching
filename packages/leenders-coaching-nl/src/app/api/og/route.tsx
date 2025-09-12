@@ -1,7 +1,7 @@
 import React from 'react';
 import { ImageResponse } from 'next/og';
 
-import { metadataConfig } from '@/config/metadata.config';
+import { getSiteSettings } from '@/utilities/groq-queries';
 
 export const runtime = 'edge';
 
@@ -56,6 +56,10 @@ export async function GET(request: Request) {
   if (!title) {
     return new Response('Missing title parameter', { status: 400 });
   }
+
+  /* Get site settings from Sanity */
+  const siteSettings = await getSiteSettings();
+  const siteTitle = siteSettings?.title || 'Leenders Coaching';
 
   /**
    * Card background colors matching the Card component.
@@ -144,7 +148,7 @@ export async function GET(request: Request) {
                   letterSpacing: '0.1em',
                 }}
               >
-                {metadataConfig.default.title}
+                {siteTitle}
               </div>
               <div
                 style={{

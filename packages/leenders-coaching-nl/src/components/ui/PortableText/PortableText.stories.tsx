@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { PortableText } from './PortableText';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/PortableText',
@@ -12,11 +11,11 @@ const meta = {
   argTypes: {
     content: {
       control: 'object',
-      description: 'Portable Text content blocks',
+      description: 'Portable Text inhoud blokken',
     },
     className: {
       control: 'text',
-      description: 'Optional className for the wrapper',
+      description: 'Optionele className voor de wrapper',
     },
   },
 } satisfies Meta<typeof PortableText>;
@@ -184,15 +183,15 @@ export const AllFeatures: Story = {
       },
     ],
   },
-  play: async ({ canvas }) => {
-    await expect(canvas.getByText('All PortableText Features')).toBeVisible();
-    await expect(canvas.getByText('Links')).toBeVisible();
-    await expect(canvas.getByText('Lists')).toBeVisible();
-    await expect(canvas.getByText('Blockquote')).toBeVisible();
-    await expect(canvas.getByText('Images')).toBeVisible();
-    await expect(canvas.getByText('Code Block')).toBeVisible();
-    await expect(canvas.getByText('Call to Action')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+  play: async ({ canvas: _canvas }) => {
+    await expect(_canvas.getByText('All PortableText Features')).toBeVisible();
+    await expect(_canvas.getByText('Links')).toBeVisible();
+    await expect(_canvas.getByText('Lists')).toBeVisible();
+    await expect(_canvas.getByText('Blockquote')).toBeVisible();
+    await expect(_canvas.getByText('Images')).toBeVisible();
+    await expect(_canvas.getByText('Code Block')).toBeVisible();
+    await expect(_canvas.getByText('Call to Action')).toBeVisible();
+    // PortableText rendering complete - no animation wait needed
   },
 };
 
@@ -211,11 +210,11 @@ export const SimpleText: Story = {
       },
     ],
   },
-  play: async ({ canvas }) => {
+  play: async ({ canvas: _canvas }) => {
     await expect(
-      canvas.getByText('This is a simple paragraph with plain text.')
+      _canvas.getByText('This is a simple paragraph with plain text.')
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // PortableText rendering complete - no animation wait needed
   },
 };
 
@@ -254,26 +253,26 @@ export const Headings: Story = {
       },
     ],
   },
-  play: async ({ canvas }) => {
+  play: async ({ canvas: _canvas }) => {
     await expect(
-      canvas.getByRole('heading', { name: 'Heading 1' })
+      _canvas.getByRole('heading', { name: 'Heading 1' })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('heading', { name: 'Heading 2' })
+      _canvas.getByRole('heading', { name: 'Heading 2' })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('heading', { name: 'Heading 3' })
+      _canvas.getByRole('heading', { name: 'Heading 3' })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('heading', { name: 'Heading 4' })
+      _canvas.getByRole('heading', { name: 'Heading 4' })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('heading', { name: 'Heading 5' })
+      _canvas.getByRole('heading', { name: 'Heading 5' })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('heading', { name: 'Heading 6' })
+      _canvas.getByRole('heading', { name: 'Heading 6' })
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // PortableText rendering complete - no animation wait needed
   },
 };
 
@@ -340,10 +339,10 @@ export const Lists: Story = {
       },
     ],
   },
-  play: async ({ canvas }) => {
-    await expect(canvas.getByText('Unordered List')).toBeVisible();
-    await expect(canvas.getByText('Ordered List')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+  play: async ({ canvas: _canvas }) => {
+    await expect(_canvas.getByText('Unordered List')).toBeVisible();
+    await expect(_canvas.getByText('Ordered List')).toBeVisible();
+    // PortableText rendering complete - no animation wait needed
   },
 };
 
@@ -351,9 +350,9 @@ export const EmptyContent: Story = {
   args: {
     content: [],
   },
-  play: async ({ canvas }) => {
+  play: async ({ canvas: _canvas }) => {
     // Empty content should render without errors
-    await waitForMotionAnimations({ canvas });
+    // PortableText rendering complete - no animation wait needed
   },
 };
 
@@ -373,12 +372,12 @@ export const InvalidContent: Story = {
       },
     ],
   },
-  play: async ({ canvas }) => {
+  play: async ({ canvas: _canvas }) => {
     // Should render valid content and ignore invalid blocks
     await expect(
-      canvas.getByText('Valid content after invalid block')
+      _canvas.getByText('Valid content after invalid block')
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // PortableText rendering complete - no animation wait needed
   },
 };
 
@@ -422,13 +421,13 @@ export const ComplexNestedContent: Story = {
       },
     ],
   },
-  play: async ({ canvas }) => {
-    await expect(canvas.getByText('Complex Nested Content')).toBeVisible();
-    await expect(canvas.getByText('bold and italic text')).toBeVisible();
+  play: async ({ canvas: _canvas }) => {
+    await expect(_canvas.getByText('Complex Nested Content')).toBeVisible();
+    await expect(_canvas.getByText('bold and italic text')).toBeVisible();
     await expect(
-      canvas.getByText('underlined and highlighted text')
+      _canvas.getByText('underlined and highlighted text')
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // PortableText rendering complete - no animation wait needed
   },
 };
 
@@ -451,12 +450,12 @@ export const WithCustomClassName: Story = {
     className:
       'border-2 border-blue-500 rounded-lg p-4 bg-blue-50 dark:bg-blue-900/20',
   },
-  play: async ({ canvas }) => {
-    await expect(canvas.getByText('Custom Styled Content')).toBeVisible();
+  play: async ({ canvas: _canvas }) => {
+    await expect(_canvas.getByText('Custom Styled Content')).toBeVisible();
     await expect(
-      canvas.getByText('This content has custom styling applied.')
+      _canvas.getByText('This content has custom styling applied.')
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // PortableText rendering complete - no animation wait needed
   },
 };
 
@@ -530,14 +529,14 @@ export const AllVariants: Story = {
       </div>
     </div>
   ),
-  play: async ({ canvas }) => {
+  play: async ({ canvas: _canvas }) => {
     await expect(
-      canvas.getByText('This is simple text content.')
+      _canvas.getByText('This is simple text content.')
     ).toBeVisible();
-    await expect(canvas.getByText('bold')).toBeVisible();
-    await expect(canvas.getByText('italic')).toBeVisible();
-    await expect(canvas.getByText('List item 1')).toBeVisible();
-    await expect(canvas.getByText('List item 2')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await expect(_canvas.getByText('bold')).toBeVisible();
+    await expect(_canvas.getByText('italic')).toBeVisible();
+    await expect(_canvas.getByText('List item 1')).toBeVisible();
+    await expect(_canvas.getByText('List item 2')).toBeVisible();
+    // PortableText rendering complete - no animation wait needed
   },
 };

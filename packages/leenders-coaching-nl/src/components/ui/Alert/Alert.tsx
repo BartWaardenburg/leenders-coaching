@@ -106,7 +106,7 @@ export const Alert = ({
               'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
               'focus-visible:ring-current focus-visible:ring-offset-inherit'
             )}
-            aria-label="Close alert"
+            aria-label="Sluit waarschuwing"
           >
             <IoClose className={closeButtonSizes[size]} />
           </button>

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getBlogPostBySlug } from '@/groq/queries';
+import { getBlogPostBySlug } from '@/utilities/groq-queries';
 import { PortableText } from '@portabletext/react';
 import { format } from 'date-fns';
 import { nl } from 'date-fns/locale';

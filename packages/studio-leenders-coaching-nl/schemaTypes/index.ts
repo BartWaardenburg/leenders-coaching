@@ -74,8 +74,12 @@ import {
   navigationItem,
 } from './header';
 
+/**
+ * Complete collection of all schema types for the Sanity Studio.
+ * Includes pages, documents, sections, objects, and configuration schemas.
+ */
 export const schemaTypes = [
-  // Pages
+  /* Pages. */
   homePage,
   aboutPage,
   coachingPage,
@@ -83,11 +87,11 @@ export const schemaTypes = [
   blogPage,
   contactPage,
 
-  // Documents
+  /* Documents. */
   postType,
   categoryType,
 
-  // Sections
+  /* Sections. */
   sectionHeader,
   sectionBlog,
   sectionPricing,
@@ -100,7 +104,7 @@ export const schemaTypes = [
   sectionCards,
   sectionTestimonial,
 
-  // Objects
+  /* Objects. */
   callToAction,
   block,
   link,
@@ -137,15 +141,15 @@ export const schemaTypes = [
   formMessages,
   colorVariant,
 
-  // Footer
+  /* Footer. */
   footer,
   footerContact,
   socialLink,
 
-  // Configuration
+  /* Configuration. */
   configuration,
 
-  // Header
+  /* Header. */
   header,
   headerAbout,
   headerSocial,

@@ -1,0 +1,1 @@
+export { GlobalDataProvider } from './GlobalDataProvider';

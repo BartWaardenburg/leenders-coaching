@@ -10,7 +10,7 @@ import { Icon } from '@/components/ui/Icon';
 import { Box } from '@/components/ui/Box';
 import { modalStyles, type ModalVariant } from '@/components/ui/Modal/Modal';
 import { disableDraftMode } from './actions';
-import { iconPaths } from '@/config/icons.config';
+import { iconPaths } from '@/utilities/icons-config';
 
 type DisableDraftModeProps = {
   variant?: ModalVariant;
@@ -90,7 +90,7 @@ export const DisableDraftMode = ({
               isToggled={false}
               defaultIcon={iconPaths.draft.edit}
               toggledIcon={iconPaths.draft.edit}
-              label="Disable draft mode"
+              label="Schakel conceptmodus uit"
               onClick={handleDisable}
               speed="quick"
               className={twMerge(

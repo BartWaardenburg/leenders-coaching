@@ -10,11 +10,11 @@ const meta = {
   argTypes: {
     title: {
       control: 'text',
-      description: 'Page title',
+      description: 'Pagina titel',
     },
     description: {
       control: 'text',
-      description: 'Page description',
+      description: 'Pagina beschrijving',
     },
     keywords: {
       control: 'object',

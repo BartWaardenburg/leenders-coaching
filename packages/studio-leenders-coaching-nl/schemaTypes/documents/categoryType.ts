@@ -1,5 +1,9 @@
 import { defineField, defineType } from 'sanity';
 
+/**
+ * Category document type definition for Sanity Studio.
+ * Used for organizing blog posts with color variants and SEO metadata.
+ */
 export const categoryType = defineType({
   name: 'category',
   title: 'Category',

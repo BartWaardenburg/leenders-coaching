@@ -1,5 +1,9 @@
 import { defineType, defineField } from 'sanity';
 
+/**
+ * Open Graph image schema for social media sharing.
+ * Defines image settings with dimensions and accessibility.
+ */
 export const openGraphImage = defineType({
   name: 'openGraphImage',
   title: 'Open Graph Image',
@@ -42,6 +46,10 @@ export const openGraphImage = defineType({
   ],
 });
 
+/**
+ * Open Graph metadata schema for social media sharing.
+ * Configures how content appears when shared on social platforms.
+ */
 export const openGraph = defineType({
   name: 'openGraph',
   title: 'Open Graph',
@@ -97,6 +105,10 @@ export const openGraph = defineType({
   ],
 });
 
+/**
+ * Twitter-specific image schema for Twitter cards.
+ * Handles image display in Twitter sharing previews.
+ */
 export const twitterImage = defineType({
   name: 'twitterImage',
   title: 'Twitter Image',
@@ -120,6 +132,10 @@ export const twitterImage = defineType({
   ],
 });
 
+/**
+ * Twitter card configuration schema.
+ * Defines how content appears when shared on Twitter.
+ */
 export const twitter = defineType({
   name: 'twitter',
   title: 'Twitter Card',
@@ -170,6 +186,10 @@ export const twitter = defineType({
   ],
 });
 
+/**
+ * Google Bot specific settings schema.
+ * Controls Google crawler behavior for indexing and following links.
+ */
 export const googleBot = defineType({
   name: 'googleBot',
   title: 'Google Bot Settings',
@@ -192,6 +212,10 @@ export const googleBot = defineType({
   ],
 });
 
+/**
+ * Search engine robots configuration schema.
+ * Controls how search engines interact with pages and content.
+ */
 export const robots = defineType({
   name: 'robots',
   title: 'Search Engine Settings',
@@ -237,6 +261,10 @@ export const robots = defineType({
   ],
 });
 
+/**
+ * Complete metadata schema for SEO and social sharing.
+ * Combines all metadata fields including OpenGraph, Twitter, and robots settings.
+ */
 export const metadata = defineType({
   name: 'metadata',
   title: 'SEO & Metadata',

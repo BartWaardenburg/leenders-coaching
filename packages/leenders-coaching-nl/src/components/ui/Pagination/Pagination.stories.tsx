@@ -17,6 +17,28 @@ const meta = {
       </div>
     ),
   ],
+  argTypes: {
+    totalPages: {
+      control: 'number',
+      description: "Totaal aantal pagina's",
+    },
+    currentPage: {
+      control: 'number',
+      description: 'Huidige actieve pagina (1-gebaseerd)',
+    },
+    maxVisiblePages: {
+      control: 'number',
+      description: 'Maximaal aantal zichtbare pagina knoppen',
+    },
+    onPageChange: {
+      action: 'pageChanged',
+      description: 'Callback wanneer pagina verandert',
+    },
+    className: {
+      control: 'text',
+      description: 'CSS klassen voor styling',
+    },
+  },
 } satisfies Meta<typeof Pagination>;
 
 export default meta;
@@ -44,10 +66,10 @@ export const Default: Story = {
   play: async ({ canvas }) => {
     await expect(canvas.getByRole('button', { name: '1' })).toBeVisible();
     await expect(
-      canvas.getByRole('button', { name: 'Previous page' })
+      canvas.getByRole('button', { name: 'Vorige pagina' })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('button', { name: 'Next page' })
+      canvas.getByRole('button', { name: 'Volgende pagina' })
     ).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
@@ -65,10 +87,10 @@ export const FewPages: Story = {
     await expect(canvas.getByRole('button', { name: '2' })).toBeVisible();
     await expect(canvas.getByRole('button', { name: '3' })).toBeVisible();
     await expect(
-      canvas.getByRole('button', { name: 'Previous page' })
+      canvas.getByRole('button', { name: 'Vorige pagina' })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('button', { name: 'Next page' })
+      canvas.getByRole('button', { name: 'Volgende pagina' })
     ).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
@@ -84,10 +106,10 @@ export const ManyPages: Story = {
   play: async ({ canvas }) => {
     await expect(canvas.getByRole('button', { name: '1' })).toBeVisible();
     await expect(
-      canvas.getByRole('button', { name: 'Previous page' })
+      canvas.getByRole('button', { name: 'Vorige pagina' })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('button', { name: 'Next page' })
+      canvas.getByRole('button', { name: 'Volgende pagina' })
     ).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },

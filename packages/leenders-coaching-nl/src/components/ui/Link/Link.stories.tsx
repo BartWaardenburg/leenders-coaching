@@ -13,30 +13,32 @@ const meta = {
     variant: {
       control: 'select',
       options: ['default', 'subtle', 'animated'],
-      description: 'The visual style variant of the link',
+      description: 'De visuele stijl variant van de link',
     },
     linePosition: {
       control: 'select',
       options: ['above', 'below'],
-      description: 'Position of the animated line (only for animated variant)',
+      description:
+        'Positie van de geanimeerde lijn (alleen voor geanimeerde variant)',
     },
     lineStyle: {
       control: 'select',
       options: ['slide', 'move'],
-      description: 'Animation style of the line (only for animated variant)',
+      description:
+        'Animaties stijl van de lijn (alleen voor geanimeerde variant)',
     },
     href: {
       control: 'text',
-      description: 'The URL the link points to',
+      description: 'De URL waar de link naar verwijst',
     },
     target: {
       control: 'select',
       options: ['_self', '_blank', '_parent', '_top'],
-      description: 'Where to open the linked document',
+      description: 'Waar het gelinkte document moet worden geopend',
     },
     children: {
       control: 'text',
-      description: 'The content of the link',
+      description: 'De inhoud van de link',
     },
   },
 } satisfies Meta<typeof Link>;

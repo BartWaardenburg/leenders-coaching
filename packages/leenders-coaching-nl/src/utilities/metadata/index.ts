@@ -3,4 +3,5 @@ export {
   generateWebsiteStructuredData,
   generateArticleStructuredData,
   generateOrganizationStructuredData,
+  getSiteMetadata,
 } from './metadata';

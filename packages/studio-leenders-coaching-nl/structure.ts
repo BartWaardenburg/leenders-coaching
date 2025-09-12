@@ -9,7 +9,7 @@ import {
 import { BlogPostsView } from './src/views/BlogPostsView';
 import { DashboardView } from './src/views/DashboardView';
 
-/* Define singleton document types */
+/* Define singleton document types. */
 const singletons = [
   'header',
   'footer',
@@ -35,16 +35,21 @@ const singletons = [
   'configuration',
 ];
 
+/**
+ * Define the studio structure for organizing content.
+ * @param S - The Sanity structure builder instance.
+ * @returns The structured content organization for the studio.
+ */
 export const structure = (S: StructureBuilder) =>
   S.list()
     .title('Content')
     .items([
-      /* Dashboard */
+      /* Dashboard. */
       S.listItem()
         .title('Dashboard')
         .icon(HomeIcon)
         .child(S.component().component(DashboardView).title('Dashboard')),
-      /* Main Pages Section */
+      /* Main Pages Section. */
       S.listItem()
         .title('Pages')
         .child(
@@ -96,7 +101,7 @@ export const structure = (S: StructureBuilder) =>
             ])
         ),
 
-      /* Sections */
+      /* Sections. */
       S.listItem()
         .title('Sections')
         .child(
@@ -139,7 +144,7 @@ export const structure = (S: StructureBuilder) =>
             ])
         ),
 
-      /* Blog & Content Section */
+      /* Blog & Content Section. */
       S.listItem()
         .title('Blog & Content')
         .child(
@@ -171,7 +176,7 @@ export const structure = (S: StructureBuilder) =>
             ])
         ),
 
-      /* Navigation & Layout Section */
+      /* Navigation & Layout Section. */
       S.listItem()
         .title('Navigation & Layout')
         .child(
@@ -189,7 +194,7 @@ export const structure = (S: StructureBuilder) =>
             ])
         ),
 
-      /* Configuration Section */
+      /* Configuration Section. */
       S.listItem()
         .title('Configuration')
         .id('siteConfiguration')
@@ -201,7 +206,7 @@ export const structure = (S: StructureBuilder) =>
             .title('Site Configuration')
         ),
 
-      /* Filter out singletons from remaining types */
+      /* Filter out singletons from remaining types. */
       ...S.documentTypeListItems().filter(
         (listItem) => !singletons.includes(listItem.getId() as string)
       ),

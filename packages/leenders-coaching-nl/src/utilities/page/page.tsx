@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { SectionRenderer } from '@/components/sections/SectionRenderer';
-import { getPage } from '@/groq/queries';
+import { getPage } from '@/utilities/groq-queries';
 import type { BasePage } from '@/types/Page';
 
 /**
@@ -45,18 +45,18 @@ export const generatePageMetadata = (
     keywords: page.metadata.keywords,
   };
 
-  // Add OpenGraph metadata if available
+  /* Add OpenGraph metadata if available. */
   if (page.metadata.openGraph) {
     const og = page.metadata.openGraph;
     metadata.openGraph = {
       title: og.title,
       description: og.description,
-      type: 'website', // Using a fixed valid type
+      type: 'website' /* Using a fixed valid type. */,
       url: og.url,
       siteName: og.siteName,
     };
 
-    // Only add images if we have image data
+    /* Only add images if we have image data. */
     if (og.image) {
       metadata.openGraph.images = [
         {
@@ -88,10 +88,10 @@ export const renderPageSections = (
 
   const sectionElements =
     page.sections?.map((section, index) => {
-      // Skip sections without a type
+      /* Skip sections without a type. */
       if (!section._type) return null;
 
-      // Ensure section._type and section._key are strings
+      /* Ensure section._type and section._key are strings. */
       const sectionType = String(section._type);
       const sectionKey = section._key
         ? String(section._key)

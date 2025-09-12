@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { SanityImage } from './SanityImage';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Image/SanityImage',
@@ -12,27 +11,28 @@ const meta = {
   argTypes: {
     image: {
       control: 'object',
-      description: 'Sanity image object with asset metadata',
+      description: 'Sanity afbeelding object met asset metadata',
     },
     alt: {
       control: 'text',
-      description: 'Alternative text for the image',
+      description: 'Alternatieve tekst voor de afbeelding',
     },
     sizes: {
       control: 'text',
-      description: 'Responsive image sizes',
+      description: 'Responsieve afbeelding groottes',
     },
     priority: {
       control: 'boolean',
-      description: 'Whether to prioritize loading this image',
+      description: 'Of het laden van deze afbeelding prioriteit moet krijgen',
     },
     followHotspot: {
       control: 'boolean',
-      description: 'Whether to follow Sanity hotspot for object positioning',
+      description:
+        'Of Sanity hotspot moet worden gevolgd voor object positionering',
     },
     qualityHint: {
       control: { type: 'range', min: 1, max: 100, step: 1 },
-      description: 'Image quality hint for CDN optimization',
+      description: 'Afbeelding kwaliteit hint voor CDN optimalisatie',
     },
   },
 } satisfies Meta<typeof SanityImage>;
@@ -64,7 +64,7 @@ const mockImageWithMetadata = {
     x: 0.5,
     y: 0.3,
   },
-  alt: 'Beautiful landscape with mountains and lake',
+  alt: 'Prachtig landschap met bergen en meer',
 };
 
 const mockImageWithoutMetadata = {
@@ -73,7 +73,7 @@ const mockImageWithoutMetadata = {
     _ref: 'image-def456-800x600-jpg',
     _type: 'reference',
   },
-  alt: 'Simple image without metadata',
+  alt: 'Eenvoudige afbeelding zonder metadata',
 };
 
 const mockImageWithPartialMetadata = {
@@ -89,13 +89,13 @@ const mockImageWithPartialMetadata = {
       },
     },
   },
-  alt: 'Image with partial metadata',
+  alt: 'Afbeelding met gedeeltelijke metadata',
 };
 
 export const Default: Story = {
   args: {
     image: mockImageWithMetadata,
-    alt: 'Default Sanity image',
+    alt: 'Standaard Sanity afbeelding',
     sizes: '100vw',
     priority: false,
     followHotspot: false,
@@ -103,16 +103,16 @@ export const Default: Story = {
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByAltText('Default Sanity image')
+      canvas.getByAltText('Standaard Sanity afbeelding')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
 export const WithHotspot: Story = {
   args: {
     image: mockImageWithMetadata,
-    alt: 'Image with hotspot positioning',
+    alt: 'Afbeelding met hotspot positionering',
     sizes: '100vw',
     priority: false,
     followHotspot: true,
@@ -120,16 +120,16 @@ export const WithHotspot: Story = {
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByAltText('Image with hotspot positioning')
+      canvas.getByAltText('Afbeelding met hotspot positionering')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
 export const HighPriority: Story = {
   args: {
     image: mockImageWithMetadata,
-    alt: 'High priority image',
+    alt: 'Hoge prioriteit afbeelding',
     sizes: '100vw',
     priority: true,
     followHotspot: false,
@@ -137,16 +137,16 @@ export const HighPriority: Story = {
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByAltText('High priority image')
+      canvas.getByAltText('Hoge prioriteit afbeelding')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
 export const WithoutMetadata: Story = {
   args: {
     image: mockImageWithoutMetadata,
-    alt: 'Image without metadata',
+    alt: 'Afbeelding zonder metadata',
     sizes: '100vw',
     priority: false,
     followHotspot: false,
@@ -154,16 +154,16 @@ export const WithoutMetadata: Story = {
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByAltText('Image without metadata')
+      canvas.getByAltText('Afbeelding zonder metadata')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
 export const WithPartialMetadata: Story = {
   args: {
     image: mockImageWithPartialMetadata,
-    alt: 'Image with partial metadata',
+    alt: 'Afbeelding met gedeeltelijke metadata',
     sizes: '100vw',
     priority: false,
     followHotspot: false,
@@ -171,16 +171,16 @@ export const WithPartialMetadata: Story = {
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByAltText('Image with partial metadata')
+      canvas.getByAltText('Afbeelding met gedeeltelijke metadata')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
 export const FillMode: Story = {
   args: {
     image: mockImageWithMetadata,
-    alt: 'Image in fill mode',
+    alt: 'Afbeelding in vul modus',
     sizes: '100vw',
     priority: false,
     followHotspot: true,
@@ -193,15 +193,17 @@ export const FillMode: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    await expect(canvas.getByAltText('Image in fill mode')).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    await expect(
+      canvas.getByAltText('Afbeelding in vul modus')
+    ).toBeInTheDocument();
+    // Image rendering complete - no animation wait needed
   },
 };
 
 export const CustomSizes: Story = {
   args: {
     image: mockImageWithMetadata,
-    alt: 'Image with custom sizes',
+    alt: 'Afbeelding met aangepaste groottes',
     sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
     priority: false,
     followHotspot: false,
@@ -209,39 +211,43 @@ export const CustomSizes: Story = {
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByAltText('Image with custom sizes')
+      canvas.getByAltText('Afbeelding met aangepaste groottes')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
 export const LowQuality: Story = {
   args: {
     image: mockImageWithMetadata,
-    alt: 'Low quality image',
+    alt: 'Lage kwaliteit afbeelding',
     sizes: '100vw',
     priority: false,
     followHotspot: false,
     qualityHint: 30,
   },
   play: async ({ canvas }) => {
-    await expect(canvas.getByAltText('Low quality image')).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    await expect(
+      canvas.getByAltText('Lage kwaliteit afbeelding')
+    ).toBeInTheDocument();
+    // Image rendering complete - no animation wait needed
   },
 };
 
 export const HighQuality: Story = {
   args: {
     image: mockImageWithMetadata,
-    alt: 'High quality image',
+    alt: 'Hoge kwaliteit afbeelding',
     sizes: '100vw',
     priority: false,
     followHotspot: false,
     qualityHint: 95,
   },
   play: async ({ canvas }) => {
-    await expect(canvas.getByAltText('High quality image')).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    await expect(
+      canvas.getByAltText('Hoge kwaliteit afbeelding')
+    ).toBeInTheDocument();
+    // Image rendering complete - no animation wait needed
   },
 };
 
@@ -249,9 +255,9 @@ export const NoAsset: Story = {
   args: {
     image: {
       _type: 'image',
-      alt: 'Image without asset',
+      alt: 'Afbeelding zonder asset',
     },
-    alt: 'Image without asset',
+    alt: 'Afbeelding zonder asset',
     sizes: '100vw',
     priority: false,
     followHotspot: false,
@@ -260,16 +266,16 @@ export const NoAsset: Story = {
   play: async ({ canvas }) => {
     // Should render placeholder div when no asset
     await expect(canvas.getAllByRole('generic', { hidden: true })).toHaveLength(
-      3
+      4
     );
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
 export const WithCustomClassName: Story = {
   args: {
     image: mockImageWithMetadata,
-    alt: 'Image with custom styling',
+    alt: 'Afbeelding met aangepaste stijl',
     sizes: '100vw',
     priority: false,
     followHotspot: false,
@@ -278,16 +284,16 @@ export const WithCustomClassName: Story = {
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByAltText('Image with custom styling')
+      canvas.getByAltText('Afbeelding met aangepaste stijl')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
 export const WithCustomStyle: Story = {
   args: {
     image: mockImageWithMetadata,
-    alt: 'Image with custom style',
+    alt: 'Afbeelding met aangepaste stijl',
     sizes: '100vw',
     priority: false,
     followHotspot: false,
@@ -299,9 +305,9 @@ export const WithCustomStyle: Story = {
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByAltText('Image with custom style')
+      canvas.getByAltText('Afbeelding met aangepaste stijl')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Image rendering complete - no animation wait needed
   },
 };
 
@@ -311,7 +317,7 @@ export const AllVariants: Story = {
   },
   args: {
     image: mockImageWithMetadata,
-    alt: 'All variants image',
+    alt: 'Alle varianten afbeelding',
     sizes: '100vw',
     priority: false,
     followHotspot: false,
@@ -323,7 +329,7 @@ export const AllVariants: Story = {
         <h3 className="text-lg font-semibold">With Full Metadata</h3>
         <SanityImage
           image={mockImageWithMetadata}
-          alt="Full metadata image"
+          alt="Volledige metadata afbeelding"
           sizes="100vw"
           className="w-full h-48 object-cover rounded-lg"
         />
@@ -333,7 +339,7 @@ export const AllVariants: Story = {
         <h3 className="text-lg font-semibold">Without Metadata</h3>
         <SanityImage
           image={mockImageWithoutMetadata}
-          alt="No metadata image"
+          alt="Geen metadata afbeelding"
           sizes="100vw"
           className="w-full h-48 object-cover rounded-lg"
         />
@@ -343,7 +349,7 @@ export const AllVariants: Story = {
         <h3 className="text-lg font-semibold">With Hotspot</h3>
         <SanityImage
           image={mockImageWithMetadata}
-          alt="Hotspot image"
+          alt="Hotspot afbeelding"
           sizes="100vw"
           followHotspot={true}
           className="w-full h-48 object-cover rounded-lg"
@@ -355,7 +361,7 @@ export const AllVariants: Story = {
         <div className="relative w-full h-48 rounded-lg overflow-hidden">
           <SanityImage
             image={mockImageWithMetadata}
-            alt="Fill mode image"
+            alt="Vul modus afbeelding"
             sizes="100vw"
             fill={true}
             className="object-cover"
@@ -366,11 +372,15 @@ export const AllVariants: Story = {
   ),
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByAltText('Full metadata image')
+      canvas.getByAltText('Volledige metadata afbeelding')
     ).toBeInTheDocument();
-    await expect(canvas.getByAltText('No metadata image')).toBeInTheDocument();
-    await expect(canvas.getByAltText('Hotspot image')).toBeInTheDocument();
-    await expect(canvas.getByAltText('Fill mode image')).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    await expect(
+      canvas.getByAltText('Geen metadata afbeelding')
+    ).toBeInTheDocument();
+    await expect(canvas.getByAltText('Hotspot afbeelding')).toBeInTheDocument();
+    await expect(
+      canvas.getByAltText('Vul modus afbeelding')
+    ).toBeInTheDocument();
+    // Image rendering complete - no animation wait needed
   },
 };

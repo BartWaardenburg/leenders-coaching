@@ -10,7 +10,7 @@ import { Box } from '@/components/ui/Box';
 import { Form } from '@/components/ui/Form';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { submitContactForm } from '@/lib/api/contact';
+import { submitContactForm } from '@/utilities/contact';
 import { useToast } from '@/components/providers/ToastProvider';
 import type { ModalVariant } from '@/components/ui/Modal/Modal';
 

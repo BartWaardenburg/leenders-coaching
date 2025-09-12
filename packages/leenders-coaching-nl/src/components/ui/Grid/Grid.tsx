@@ -22,11 +22,11 @@ type ResponsiveColumns = {
   '@6xl'?: BreakpointValue;
   '@7xl'?: BreakpointValue;
   /* Regular breakpoints */
-  'xs'?: BreakpointValue;
-  'sm'?: BreakpointValue;
-  'md'?: BreakpointValue;
-  'lg'?: BreakpointValue;
-  'xl'?: BreakpointValue;
+  xs?: BreakpointValue;
+  sm?: BreakpointValue;
+  md?: BreakpointValue;
+  lg?: BreakpointValue;
+  xl?: BreakpointValue;
   '2xl'?: BreakpointValue;
 };
 
@@ -36,7 +36,17 @@ type GridProps = {
   columns?: ResponsiveColumns;
   gap?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
   className?: string;
-  maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl';
+  maxWidth?:
+    | 'sm'
+    | 'md'
+    | 'lg'
+    | 'xl'
+    | '2xl'
+    | '3xl'
+    | '4xl'
+    | '5xl'
+    | '6xl'
+    | '7xl';
 };
 
 const countChildren = (children: ReactNode): number => {
@@ -133,31 +143,31 @@ const containerQueryClasses = {
 
 /* Regular media query classes */
 const mediaQueryClasses = {
-  'xs': {
+  xs: {
     1: 'xs:grid-cols-1',
     2: 'xs:grid-cols-2',
     3: 'xs:grid-cols-3',
     4: 'xs:grid-cols-4',
   },
-  'sm': {
+  sm: {
     1: 'sm:grid-cols-1',
     2: 'sm:grid-cols-2',
     3: 'sm:grid-cols-3',
     4: 'sm:grid-cols-4',
   },
-  'md': {
+  md: {
     1: 'md:grid-cols-1',
     2: 'md:grid-cols-2',
     3: 'md:grid-cols-3',
     4: 'md:grid-cols-4',
   },
-  'lg': {
+  lg: {
     1: 'lg:grid-cols-1',
     2: 'lg:grid-cols-2',
     3: 'lg:grid-cols-3',
     4: 'lg:grid-cols-4',
   },
-  'xl': {
+  xl: {
     1: 'xl:grid-cols-1',
     2: 'xl:grid-cols-2',
     3: 'xl:grid-cols-3',
@@ -174,27 +184,39 @@ const mediaQueryClasses = {
 const getGridColumns = (
   childCount: number,
   maxColumns?: number,
-  columns?: ResponsiveColumns,
+  columns?: ResponsiveColumns
 ) => {
   if (columns) {
     const classes = [];
 
-    // Add default columns
+    /* Add default columns. */
     if (columns.default && gridColClasses[columns.default]) {
       classes.push(gridColClasses[columns.default]);
     }
 
-    // Add breakpoint classes
+    /* Add breakpoint classes. */
     Object.entries(columns).forEach(([breakpoint, value]) => {
       if (breakpoint === 'default' || !value) return;
 
-      // Handle container queries (with @)
-      if (breakpoint.startsWith('@') && containerQueryClasses[breakpoint as keyof typeof containerQueryClasses]?.[value]) {
-        classes.push(containerQueryClasses[breakpoint as keyof typeof containerQueryClasses][value]);
-      }
-      // Handle regular media queries
-      else if (mediaQueryClasses[breakpoint as keyof typeof mediaQueryClasses]?.[value]) {
-        classes.push(mediaQueryClasses[breakpoint as keyof typeof mediaQueryClasses][value]);
+      /* Handle container queries (with @). */
+      if (
+        breakpoint.startsWith('@') &&
+        containerQueryClasses[
+          breakpoint as keyof typeof containerQueryClasses
+        ]?.[value]
+      ) {
+        classes.push(
+          containerQueryClasses[
+            breakpoint as keyof typeof containerQueryClasses
+          ][value]
+        );
+      } else if (
+      /* Handle regular media queries. */
+        mediaQueryClasses[breakpoint as keyof typeof mediaQueryClasses]?.[value]
+      ) {
+        classes.push(
+          mediaQueryClasses[breakpoint as keyof typeof mediaQueryClasses][value]
+        );
       }
     });
 
@@ -264,33 +286,28 @@ const getMaxWidthClass = (maxWidth: GridProps['maxWidth']) => {
  *   <Card />
  * </Grid>
  */
-export const Grid = forwardRef<HTMLDivElement, GridProps>(({
-  children,
-  maxColumns,
-  columns,
-  gap = 8,
-  className,
-  maxWidth,
-}, ref) => {
-  const childCount = countChildren(children);
+export const Grid = forwardRef<HTMLDivElement, GridProps>(
+  ({ children, maxColumns, columns, gap = 8, className, maxWidth }, ref) => {
+    const childCount = countChildren(children);
 
-  return (
-    <Box className="@container w-full">
-      <div
-        ref={ref}
-        className={twMerge(
-          'grid w-full',
-          getGridColumns(childCount, maxColumns, columns),
-          getGapClass(gap),
-          getMaxWidthClass(maxWidth),
-          'mx-auto',
-          className
-        )}
-      >
-        {children}
-      </div>
-    </Box>
-  );
-});
+    return (
+      <Box className="@container w-full">
+        <div
+          ref={ref}
+          className={twMerge(
+            'grid w-full',
+            getGridColumns(childCount, maxColumns, columns),
+            getGapClass(gap),
+            getMaxWidthClass(maxWidth),
+            'mx-auto',
+            className
+          )}
+        >
+          {children}
+        </div>
+      </Box>
+    );
+  }
+);
 
 Grid.displayName = 'Grid';

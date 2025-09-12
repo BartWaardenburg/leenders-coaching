@@ -6,6 +6,11 @@ import { schemaTypes } from './schemaTypes';
 import { structure } from './structure';
 import { locations, mainDocuments } from './lib/presentation/resolve';
 
+/**
+ * Sanity Studio configuration for Leenders Coaching.
+ * Includes structure tool, vision tool, and presentation tool for content management.
+ * @returns The Sanity configuration object.
+ */
 export default defineConfig({
   name: 'default',
   title: 'Leenders Coaching',

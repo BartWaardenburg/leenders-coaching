@@ -8,14 +8,26 @@ const meta = {
     layout: 'full',
   },
   argTypes: {
+    title: {
+      control: 'text',
+      description: 'De titel van de sectie',
+    },
+    description: {
+      control: 'text',
+      description: 'De beschrijving tekst',
+    },
     background: {
       control: 'select',
       options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
-      description: 'Background color of the section',
+      description: 'Achtergrondkleur van de sectie',
     },
     border: {
       control: 'boolean',
-      description: 'Show top and bottom borders',
+      description: 'Toon boven- en onderranden',
+    },
+    items: {
+      control: 'object',
+      description: 'Array van FAQ items',
     },
   },
 } satisfies Meta<typeof SectionFAQ>;
@@ -131,4 +143,122 @@ export const WithPurpleBackground: Story = {
     background: 'purple',
     border: true,
   },
+};
+
+export const WithoutTitle: Story = {
+  args: {
+    description:
+      'Find answers to the most common questions about our services.',
+    items: Default.args.items,
+    background: 'green',
+  },
+};
+
+export const WithoutDescription: Story = {
+  args: {
+    title: 'Frequently Asked Questions',
+    items: Default.args.items,
+    background: 'pink',
+    border: true,
+  },
+};
+
+export const MinimalContent: Story = {
+  args: {
+    items: Default.args.items,
+    background: 'yellow',
+  },
+};
+
+export const SingleFAQ: Story = {
+  args: {
+    title: 'Single FAQ Item',
+    description: 'Soms heb je maar één FAQ item nodig.',
+    items: [Default.args.items[0]!],
+    background: 'teal',
+    border: true,
+  },
+};
+
+export const ManyFAQs: Story = {
+  args: {
+    title: 'Comprehensive FAQ',
+    description:
+      'This section demonstrates how the FAQ handles multiple items.',
+    items: [
+      ...Default.args.items,
+      {
+        question: 'Do you offer group coaching sessions?',
+        answer: [
+          {
+            _type: 'block',
+            children: [
+              {
+                _type: 'span',
+                text: 'Yes, we offer both individual and group coaching sessions. Group sessions can be a great way to learn from others and share experiences.',
+              },
+            ],
+            style: 'normal',
+          },
+        ],
+      },
+      {
+        question: 'What is your cancellation policy?',
+        answer: [
+          {
+            _type: 'block',
+            children: [
+              {
+                _type: 'span',
+                text: 'We require 24 hours notice for cancellations. Cancellations made with less than 24 hours notice may be subject to a cancellation fee.',
+              },
+            ],
+            style: 'normal',
+          },
+        ],
+      },
+      {
+        question: 'How do I prepare for my first session?',
+        answer: [
+          {
+            _type: 'block',
+            children: [
+              {
+                _type: 'span',
+                text: 'Before your first session, think about your goals and what you hope to achieve. You may also want to prepare any questions you have about the coaching process.',
+              },
+            ],
+            style: 'normal',
+          },
+        ],
+      },
+    ],
+    background: 'blue',
+    border: true,
+  },
+};
+
+export const AllBackgroundVariants: Story = {
+  parameters: {
+    controls: { hideNoControlsWarning: true },
+  },
+  args: {
+    items: [],
+  },
+  render: () => (
+    <div className="space-y-0">
+      {(['blue', 'purple', 'green', 'pink', 'yellow', 'teal'] as const).map(
+        (background) => (
+          <SectionFAQ
+            key={background}
+            title={`${background.charAt(0).toUpperCase() + background.slice(1)} Background FAQ`}
+            description={`This FAQ section demonstrates the ${background} background variant.`}
+            items={Default.args.items}
+            background={background}
+            border={true}
+          />
+        )
+      )}
+    </div>
+  ),
 };

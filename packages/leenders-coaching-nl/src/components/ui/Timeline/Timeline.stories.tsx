@@ -18,7 +18,7 @@ const meta = {
     color: {
       control: 'select',
       options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
-      description: 'Default color theme of the timeline',
+      description: 'Standaard kleur thema van de tijdlijn',
     },
   },
 } satisfies Meta<typeof Timeline>;

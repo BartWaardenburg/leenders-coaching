@@ -1,11 +1,24 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Quote } from './Quote';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Quote',
   component: Quote,
+  argTypes: {
+    children: {
+      control: 'text',
+      description: 'Inhoud van de quote',
+    },
+    cite: {
+      control: 'text',
+      description: 'Bron van de quote',
+    },
+    className: {
+      control: 'text',
+      description: 'CSS klassen voor styling',
+    },
+  },
 } satisfies Meta<typeof Quote>;
 
 export default meta;
@@ -17,7 +30,7 @@ export const Default: Story = {
   },
   play: async ({ canvas }) => {
     expect(canvas.getByRole('blockquote')).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Simple static test - no animation wait needed
   },
 };
 
@@ -29,7 +42,7 @@ export const WithCitation: Story = {
   play: async ({ canvas }) => {
     expect(canvas.getByRole('blockquote')).toBeInTheDocument();
     expect(canvas.getByText('John Lennon')).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Simple static test - no animation wait needed
   },
 };
 
@@ -44,6 +57,6 @@ export const LongQuote: Story = {
     expect(
       canvas.getByText('Multiple inspirational quotes combined')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Simple static test - no animation wait needed
   },
 };

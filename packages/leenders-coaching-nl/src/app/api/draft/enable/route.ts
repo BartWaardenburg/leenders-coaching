@@ -1,4 +1,4 @@
-import { client } from '@/utilities/sanity/sanity';
+import { client } from '@/utilities/sanity';
 import { defineEnableDraftMode } from 'next-sanity/draft-mode';
 
 /**

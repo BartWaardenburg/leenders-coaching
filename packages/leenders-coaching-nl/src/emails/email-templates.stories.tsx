@@ -4,7 +4,7 @@ import { render } from '@react-email/render';
 import { Box } from '@/components/ui/Box';
 import { Text } from '@/components/ui/Text';
 
-// Email template components
+/* Email template components. */
 import { ContactNotification } from './ContactNotification';
 import { ContactConfirmation } from './ContactConfirmation';
 
@@ -51,7 +51,7 @@ const EmailFrame = ({ title, description, html }: EmailFrameProps) => {
         iframe.contentDocument || iframe.contentWindow?.document;
 
       if (iframeDocument) {
-        // Add default styling to the iframe document
+        /* Add default styling to the iframe document. */
         iframeDocument.open();
         iframeDocument.write(`
           <!DOCTYPE html>
@@ -75,7 +75,7 @@ const EmailFrame = ({ title, description, html }: EmailFrameProps) => {
         `);
         iframeDocument.close();
 
-        // Adjust iframe height to match content
+        /* Adjust iframe height to match content. */
         const setHeight = () => {
           const body = iframeDocument.body;
           const html = iframeDocument.documentElement;
@@ -89,7 +89,7 @@ const EmailFrame = ({ title, description, html }: EmailFrameProps) => {
           iframe.style.height = `${height}px`;
         };
 
-        // Set height after a short delay to ensure content is rendered
+        /* Set height after a short delay to ensure content is rendered. */
         setTimeout(setHeight, 50);
       }
     }

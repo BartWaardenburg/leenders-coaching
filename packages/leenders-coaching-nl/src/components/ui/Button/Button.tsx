@@ -4,14 +4,14 @@ import { twMerge } from 'tailwind-merge';
 
 type ButtonBaseProps = {
   variant?:
-  | 'black'
-  | 'transparent'
-  | 'blue'
-  | 'purple'
-  | 'green'
-  | 'pink'
-  | 'yellow'
-  | 'teal';
+    | 'black'
+    | 'transparent'
+    | 'blue'
+    | 'purple'
+    | 'green'
+    | 'pink'
+    | 'yellow'
+    | 'teal';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
   fullWidthOnContainer?: boolean | string;
@@ -31,8 +31,10 @@ type ButtonAsLinkProps = ButtonBaseProps &
 type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
 
 /**
- * Modern button component with different variants and sizes
- * Can be rendered as a button or a Next.js Link component when href is provided
+ * Modern button component with different variants and sizes.
+ * Can be rendered as a button or a Next.js Link component when href is provided.
+ * @param props - The button component props.
+ * @returns A button or link element with appropriate styling and behavior.
  */
 export const Button = ({
   className,
@@ -115,7 +117,7 @@ export const Button = ({
     sizes[size],
     loadingStyles,
     fullWidthOnContainer && 'w-full @md:w-auto',
-    className,
+    className
   );
 
   const loadingSpinner = isLoading && (
@@ -131,7 +133,7 @@ export const Button = ({
         href={href}
         className={twMerge(
           buttonStyles,
-          (disabled || isLoading) && 'pointer-events-none opacity-50',
+          (disabled || isLoading) && 'pointer-events-none opacity-50'
         )}
         aria-disabled={disabled || isLoading}
         {...linkProps}

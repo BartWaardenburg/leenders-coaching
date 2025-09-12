@@ -29,12 +29,12 @@ const mockContent = {
     title: 'Welcome to Leenders Coaching',
     description: 'Helping you achieve your personal and professional goals',
     primaryCta: {
-      label: 'Book a Session',
+      label: 'Boek een sessie',
       href: '/contact',
       variant: 'blue' as const,
     },
     secondaryCta: {
-      label: 'Learn More',
+      label: 'Meer informatie',
       href: '/about',
       variant: 'transparent' as const,
     },
@@ -241,7 +241,7 @@ export const AllSections: Story = {
         image="https://picsum.photos/id/1015/1200/800"
         cta={{
           href: '/contact',
-          label: 'Start Your Journey',
+          label: 'Begin je reis',
           variant: 'blue',
         }}
         background="yellow"

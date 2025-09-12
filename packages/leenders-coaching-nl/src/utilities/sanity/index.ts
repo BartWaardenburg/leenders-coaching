@@ -1,1 +1,1 @@
-export { groq, client, sanityConfig, defineQuery } from './sanity';
+export { sanityFetch, sanityFetchDraft, client } from './sanity';

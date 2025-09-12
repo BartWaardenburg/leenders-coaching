@@ -8,6 +8,20 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
+  argTypes: {
+    as: {
+      control: 'text',
+      description: 'HTML element om als te renderen',
+    },
+    children: {
+      control: 'text',
+      description: 'Inhoud van de box',
+    },
+    className: {
+      control: 'text',
+      description: 'CSS klassen voor styling',
+    },
+  },
 } satisfies Meta<typeof Box>;
 
 export default meta;

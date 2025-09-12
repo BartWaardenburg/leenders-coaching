@@ -66,6 +66,8 @@ export type GLOBAL_DATA_QUERYResult = {
     }> | null;
   } | null;
   siteSettings: {
+    title?: string;
+    description?: string;
     accessibility?: {
       closeButtons?: {
         toast?: string;

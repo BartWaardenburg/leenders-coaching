@@ -9,6 +9,16 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
+  argTypes: {
+    children: {
+      control: 'text',
+      description: 'Inhoud van de container',
+    },
+    className: {
+      control: 'text',
+      description: 'CSS klassen voor styling',
+    },
+  },
 } satisfies Meta<typeof Container>;
 
 export default meta;

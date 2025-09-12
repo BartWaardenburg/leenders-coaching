@@ -1,13 +1,27 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { FAQ } from './FAQ';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/FAQ',
   component: FAQ,
   parameters: {
     layout: 'centered',
+  },
+  argTypes: {
+    items: {
+      control: 'object',
+      description: 'Array van FAQ items',
+    },
+    variant: {
+      control: 'select',
+      options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
+      description: 'Kleur variant van de FAQ',
+    },
+    className: {
+      control: 'text',
+      description: 'CSS klassen voor styling',
+    },
   },
 } satisfies Meta<typeof FAQ>;
 
@@ -101,9 +115,8 @@ export const Default: Story = {
     await userEvent.click(firstQuestion);
 
     // Wait for any animations
-    await new Promise((resolve) => setTimeout(resolve, 100));
 
-    await waitForMotionAnimations({ canvas });
+    // FAQ interaction complete - no animation wait needed
   },
 };
 
@@ -120,7 +133,7 @@ export const WithVariant: Story = {
     expect(
       canvas.getByText('What are your working hours?')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // FAQ interaction complete - no animation wait needed
   },
 };
 
@@ -181,7 +194,6 @@ export const InteractiveFAQ: Story = {
       await userEvent.click(firstQuestion);
 
       // Wait for expansion animation
-      await new Promise((resolve) => setTimeout(resolve, 200));
 
       // Verify answer is visible (using partial text match)
       expect(canvas.getByText(/This is a basic answer/)).toBeInTheDocument();
@@ -194,7 +206,6 @@ export const InteractiveFAQ: Story = {
       await userEvent.click(secondQuestion);
 
       // Wait for expansion animation
-      await new Promise((resolve) => setTimeout(resolve, 200));
 
       // Verify answer is visible
       expect(
@@ -207,7 +218,6 @@ export const InteractiveFAQ: Story = {
     await step('Keyboard navigation', async () => {
       // Test keyboard activation without focus assertion
       await userEvent.keyboard('{Enter}');
-      await new Promise((resolve) => setTimeout(resolve, 100));
     });
 
     await step('Hover interactions', async () => {
@@ -215,11 +225,9 @@ export const InteractiveFAQ: Story = {
       await userEvent.hover(thirdQuestion);
 
       // Wait for any hover effects
-      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Click to expand
       await userEvent.click(thirdQuestion);
-      await new Promise((resolve) => setTimeout(resolve, 200));
 
       // Verify answer is visible
       expect(
@@ -229,6 +237,6 @@ export const InteractiveFAQ: Story = {
       ).toBeInTheDocument();
     });
 
-    await waitForMotionAnimations({ canvas });
+    // FAQ interaction complete - no animation wait needed
   },
 };

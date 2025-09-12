@@ -14,19 +14,19 @@ const meta = {
     variant: {
       control: 'select',
       options: ['primary', 'ghost'],
-      description: 'The visual style variant of the button',
+      description: 'De visuele stijl variant van de knop',
     },
     label: {
       control: 'text',
-      description: 'Accessible label for the button (used for aria-label)',
+      description: 'Toegankelijk label voor de knop (gebruikt voor aria-label)',
     },
     disabled: {
       control: 'boolean',
-      description: 'Whether the button is disabled',
+      description: 'Of de knop uitgeschakeld is',
     },
     onClick: {
       action: 'clicked',
-      description: 'Click handler for the button',
+      description: 'Klik handler voor de knop',
     },
   },
   decorators: [
@@ -59,12 +59,12 @@ const SearchIcon = () => (
 export const Primary: Story = {
   args: {
     children: <SearchIcon />,
-    label: 'Search',
+    label: 'Zoeken',
     variant: 'primary',
     onClick: fn(),
   },
   play: async ({ canvas, userEvent, args }) => {
-    const button = canvas.getByRole('button', { name: 'Search' });
+    const button = canvas.getByRole('button', { name: 'Zoeken' });
     await expect(button).toBeVisible();
 
     // Test click interaction
@@ -78,11 +78,11 @@ export const Primary: Story = {
 export const Ghost: Story = {
   args: {
     children: <SearchIcon />,
-    label: 'Search',
+    label: 'Zoeken',
     variant: 'ghost',
   },
   play: async ({ canvas }) => {
-    await expect(canvas.getByRole('button', { name: 'Search' })).toBeVisible();
+    await expect(canvas.getByRole('button', { name: 'Zoeken' })).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -90,12 +90,12 @@ export const Ghost: Story = {
 export const Disabled: Story = {
   args: {
     children: <SearchIcon />,
-    label: 'Search',
+    label: 'Zoeken',
     disabled: true,
     onClick: fn(),
   },
   play: async ({ canvas, args }) => {
-    const button = canvas.getByRole('button', { name: 'Search' });
+    const button = canvas.getByRole('button', { name: 'Zoeken' });
     await expect(button).toBeVisible();
     await expect(button).toBeDisabled();
 
@@ -111,12 +111,12 @@ export const Disabled: Story = {
 export const InteractiveIconButton: Story = {
   args: {
     children: <SearchIcon />,
-    label: 'Interactive Search',
+    label: 'Interactief zoeken',
     variant: 'primary',
     onClick: fn(),
   },
   play: async ({ canvas, userEvent, args, step }) => {
-    const button = canvas.getByRole('button', { name: 'Interactive Search' });
+    const button = canvas.getByRole('button', { name: 'Interactief zoeken' });
 
     await step('Initial state', async () => {
       await expect(button).toBeVisible();
@@ -141,8 +141,6 @@ export const InteractiveIconButton: Story = {
 
     await step('Hover interaction', async () => {
       await userEvent.hover(button);
-      // Wait for any hover effects
-      await new Promise((resolve) => setTimeout(resolve, 100));
     });
 
     await waitForMotionAnimations({ canvas });

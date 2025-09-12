@@ -1,49 +1,4 @@
 /**
- * Waits for the next animation frame.
- * Useful for letting Motion schedule WAAPI animations.
- *
- * @returns {Promise<void>} A promise that resolves on the next animation frame.
- */
-export const nextFrame = (): Promise<void> =>
-  new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-
-/**
- * Waits for Motion animations on a specific element and its subtree to complete.
- *
- * @param {Element | null} elem - The element to check for animations.
- * @param {number} [timeout=1000] - Maximum time to wait in milliseconds.
- * @returns {Promise<void>} A promise that resolves when animations are finished or timeout occurs.
- */
-export const waitForMotion = async (
-  elem: Element | null,
-  timeout = 1000
-): Promise<void> => {
-  if (!elem) return;
-
-  /* Collect animations on elem and its children */
-  const all = [...elem.getAnimations({ subtree: true })];
-
-  if (all.length === 0) {
-    /* Give Motion a frame to schedule animations if none are found yet */
-    await nextFrame();
-    return;
-  }
-
-  /* Wait for all animations to finish, but respect the timeout */
-  try {
-    await Promise.race([
-      Promise.allSettled(all.map((a) => a.finished)),
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Animation timeout')), timeout)
-      ),
-    ]);
-  } catch {
-    /* If timeout occurs, just continue - animations might be CSS-only */
-    console.warn('Animation timeout, continuing...');
-  }
-};
-
-/**
  * Waits for Motion animations to complete using the Web Animations API.
  * This is the recommended approach for Motion components.
  * If reduced motion is active, returns immediately for faster tests.
@@ -66,13 +21,13 @@ export const waitForMotionAnimations = async ({
   idle?: number;
   max?: number;
 } = {}): Promise<void> => {
-  // If reduced motion is active, don't wait.
+  /* If reduced motion is active, do not wait. */
   if (
     typeof window !== 'undefined' &&
     window.matchMedia &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
   ) {
-    // One frame so DOM can settle after interactions
+    /* One frame so DOM can settle after interactions. */
     await new Promise((r) => requestAnimationFrame(r));
     return;
   }
@@ -87,7 +42,7 @@ export const waitForMotionAnimations = async ({
     document.body;
 
   if (targetElement) {
-    // Fallback: wait until there are no running WAAPI animations for a brief idle.
+    /* Fallback: wait until there are no running WAAPI animations for a brief idle. */
     const deadline = performance.now() + max;
     let lastActive = performance.now();
 

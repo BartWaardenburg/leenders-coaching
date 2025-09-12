@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import type { FC } from 'react';
 
 import { IconToggleButton } from '@/components/ui/IconToggleButton';
-import { uiConfig } from '@/config/ui.config';
-import { iconPaths } from '@/config/icons.config';
+import { useConfig } from '@/components/providers/ClientConfigProvider';
+import { iconPaths } from '@/utilities/icons-config';
 
 type ThemeToggleButtonProps = {
   className?: string;
@@ -19,6 +19,7 @@ type ThemeToggleButtonProps = {
 export const ThemeToggleButton: FC<ThemeToggleButtonProps> = ({
   className,
 }) => {
+  const config = useConfig();
   const { theme, setTheme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -38,7 +39,7 @@ export const ThemeToggleButton: FC<ThemeToggleButtonProps> = ({
         isToggled={false}
         defaultIcon={iconPaths.theme.sun}
         toggledIcon={iconPaths.theme.moon}
-        label={uiConfig.themeToggle.label}
+        label={config.interface.themeToggle.label}
         onClick={() => {}}
         className={className}
         speed="slow"
@@ -51,7 +52,7 @@ export const ThemeToggleButton: FC<ThemeToggleButtonProps> = ({
       isToggled={isDark}
       defaultIcon={iconPaths.theme.sun}
       toggledIcon={iconPaths.theme.moon}
-      label={uiConfig.themeToggle.label}
+      label={config.interface.themeToggle.label}
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
       className={className}
       speed="slow"

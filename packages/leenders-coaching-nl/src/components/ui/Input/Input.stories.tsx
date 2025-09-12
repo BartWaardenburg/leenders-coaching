@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import * as React from 'react';
 import { expect, fn } from 'storybook/test';
 import { Input } from './Input';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Input',
@@ -24,7 +23,7 @@ const meta = {
     variant: {
       control: 'select',
       options: ['default', 'bordered'],
-      description: 'The visual style variant of the input',
+      description: 'De visuele stijl variant van het invoerveld',
     },
     placeholder: {
       control: 'text',
@@ -40,13 +39,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    placeholder: 'Enter your text here',
+    placeholder: 'Voer hier je tekst in',
     onChange: fn(),
   },
   play: async ({ canvas, userEvent, args }) => {
-    const input = canvas.getByPlaceholderText('Enter your text here');
+    const input = canvas.getByPlaceholderText('Voer hier je tekst in');
     await expect(input).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
 
     // Test typing interaction
     await userEvent.type(input, 'Hello World');
@@ -57,27 +56,27 @@ export const Default: Story = {
 
 export const Bordered: Story = {
   args: {
-    placeholder: 'Enter your text here',
+    placeholder: 'Voer hier je tekst in',
     variant: 'bordered',
   },
   play: async ({ canvas }) => {
-    const input = canvas.getByPlaceholderText('Enter your text here');
+    const input = canvas.getByPlaceholderText('Voer hier je tekst in');
     await expect(input).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
   },
 };
 
 export const WithLabel: Story = {
   args: {
-    label: 'Email Address',
-    placeholder: 'Enter your email',
+    label: 'Email adres',
+    placeholder: 'Voer je email in',
     type: 'email',
     onChange: fn(),
   },
   play: async ({ canvas, userEvent, args }) => {
-    const input = canvas.getByLabelText('Email Address');
+    const input = canvas.getByLabelText('Email adres');
     await expect(input).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
 
     // Test typing email
     await userEvent.type(input, 'test@example.com');
@@ -88,65 +87,65 @@ export const WithLabel: Story = {
 
 export const WithLabelBordered: Story = {
   args: {
-    label: 'Email Address',
-    placeholder: 'Enter your email',
+    label: 'Email adres',
+    placeholder: 'Voer je email in',
     type: 'email',
     variant: 'bordered',
   },
   play: async ({ canvas }) => {
-    const input = canvas.getByLabelText('Email Address');
+    const input = canvas.getByLabelText('Email adres');
     await expect(input).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
   },
 };
 
 export const WithError: Story = {
   args: {
-    label: 'Password',
+    label: 'Wachtwoord',
     type: 'password',
-    error: 'Password must be at least 8 characters long',
-    placeholder: 'Enter your password',
+    error: 'Wachtwoord moet minimaal 8 karakters lang zijn',
+    placeholder: 'Voer je wachtwoord in',
   },
   play: async ({ canvas }) => {
-    const input = canvas.getByLabelText('Password');
+    const input = canvas.getByLabelText('Wachtwoord');
     await expect(input).toBeVisible();
     await expect(
-      canvas.getByText('Password must be at least 8 characters long')
+      canvas.getByText('Wachtwoord moet minimaal 8 karakters lang zijn')
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
   },
 };
 
 export const WithErrorBordered: Story = {
   args: {
-    label: 'Password',
+    label: 'Wachtwoord',
     type: 'password',
-    error: 'Password must be at least 8 characters long',
-    placeholder: 'Enter your password',
+    error: 'Wachtwoord moet minimaal 8 karakters lang zijn',
+    placeholder: 'Voer je wachtwoord in',
     variant: 'bordered',
   },
   play: async ({ canvas }) => {
-    const input = canvas.getByLabelText('Password');
+    const input = canvas.getByLabelText('Wachtwoord');
     await expect(input).toBeVisible();
     await expect(
-      canvas.getByText('Password must be at least 8 characters long')
+      canvas.getByText('Wachtwoord moet minimaal 8 karakters lang zijn')
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
   },
 };
 
 export const Disabled: Story = {
   args: {
-    label: 'Username',
-    placeholder: 'Enter your username',
+    label: 'Gebruikersnaam',
+    placeholder: 'Voer je gebruikersnaam in',
     disabled: true,
     onChange: fn(),
   },
   play: async ({ canvas, userEvent, args }) => {
-    const input = canvas.getByLabelText('Username');
+    const input = canvas.getByLabelText('Gebruikersnaam');
     await expect(input).toBeVisible();
     await expect(input).toBeDisabled();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
 
     // Test that typing doesn't work when disabled
     await userEvent.type(input, 'test');
@@ -157,30 +156,30 @@ export const Disabled: Story = {
 
 export const DisabledBordered: Story = {
   args: {
-    label: 'Username',
-    placeholder: 'Enter your username',
+    label: 'Gebruikersnaam',
+    placeholder: 'Voer je gebruikersnaam in',
     disabled: true,
     variant: 'bordered',
   },
   play: async ({ canvas }) => {
-    const input = canvas.getByLabelText('Username');
+    const input = canvas.getByLabelText('Gebruikersnaam');
     await expect(input).toBeVisible();
     await expect(input).toBeDisabled();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
   },
 };
 
 export const Textarea: Story = {
   args: {
     as: 'textarea',
-    label: 'Message',
-    placeholder: 'Enter your message here',
+    label: 'Bericht',
+    placeholder: 'Voer hier je bericht in',
     onChange: fn(),
   },
   play: async ({ canvas, userEvent, args }) => {
-    const textarea = canvas.getByLabelText('Message');
+    const textarea = canvas.getByLabelText('Bericht');
     await expect(textarea).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
 
     // Test typing in textarea
     await userEvent.type(
@@ -197,45 +196,45 @@ export const Textarea: Story = {
 export const TextareaBordered: Story = {
   args: {
     as: 'textarea',
-    label: 'Message',
-    placeholder: 'Enter your message here',
+    label: 'Bericht',
+    placeholder: 'Voer hier je bericht in',
     variant: 'bordered',
   },
   play: async ({ canvas }) => {
-    const textarea = canvas.getByLabelText('Message');
+    const textarea = canvas.getByLabelText('Bericht');
     await expect(textarea).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
   },
 };
 
 export const TextareaWithError: Story = {
   args: {
     as: 'textarea',
-    label: 'Message',
-    placeholder: 'Enter your message here',
-    error: 'Message is required',
+    label: 'Bericht',
+    placeholder: 'Voer hier je bericht in',
+    error: 'Bericht is verplicht',
   },
   play: async ({ canvas }) => {
-    const textarea = canvas.getByLabelText('Message');
+    const textarea = canvas.getByLabelText('Bericht');
     await expect(textarea).toBeVisible();
-    await expect(canvas.getByText('Message is required')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await expect(canvas.getByText('Bericht is verplicht')).toBeVisible();
+    // Input rendering complete - no animation wait needed
   },
 };
 
 export const TextareaWithErrorBordered: Story = {
   args: {
     as: 'textarea',
-    label: 'Message',
-    placeholder: 'Enter your message here',
-    error: 'Message is required',
+    label: 'Bericht',
+    placeholder: 'Voer hier je bericht in',
+    error: 'Bericht is verplicht',
     variant: 'bordered',
   },
   play: async ({ canvas }) => {
-    const textarea = canvas.getByLabelText('Message');
+    const textarea = canvas.getByLabelText('Bericht');
     await expect(textarea).toBeVisible();
-    await expect(canvas.getByText('Message is required')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await expect(canvas.getByText('Bericht is verplicht')).toBeVisible();
+    // Input rendering complete - no animation wait needed
   },
 };
 
@@ -259,29 +258,29 @@ export const FormInteraction: Story = {
     return (
       <div className="w-full max-w-md space-y-4">
         <Input
-          label="Name"
-          placeholder="Enter your name"
+          label="Naam"
+          placeholder="Voer je naam in"
           value={formData.name}
           onChange={handleChange('name')}
         />
         <Input
           label="Email"
           type="email"
-          placeholder="Enter your email"
+          placeholder="Voer je email in"
           value={formData.email}
           onChange={handleChange('email')}
         />
         <Input
           as="textarea"
-          label="Message"
-          placeholder="Enter your message"
+          label="Bericht"
+          placeholder="Voer je bericht in"
           value={formData.message}
           onChange={handleChange('message')}
         />
         <div className="text-sm text-muted-foreground">
-          <p>Name: {formData.name || 'Not provided'}</p>
-          <p>Email: {formData.email || 'Not provided'}</p>
-          <p>Message: {formData.message || 'Not provided'}</p>
+          <p>Naam: {formData.name || 'Niet opgegeven'}</p>
+          <p>Email: {formData.email || 'Niet opgegeven'}</p>
+          <p>Bericht: {formData.message || 'Niet opgegeven'}</p>
         </div>
       </div>
     );
@@ -289,44 +288,44 @@ export const FormInteraction: Story = {
   play: async ({ canvas, userEvent, step }) => {
     await step('Fill out the form', async () => {
       // Fill name field
-      await userEvent.type(canvas.getByLabelText('Name'), 'John Doe');
-      await expect(canvas.getByDisplayValue('John Doe')).toBeInTheDocument();
+      await userEvent.type(canvas.getByLabelText('Naam'), 'Jan Jansen');
+      await expect(canvas.getByDisplayValue('Jan Jansen')).toBeInTheDocument();
 
       // Fill email field
-      await userEvent.type(canvas.getByLabelText('Email'), 'john@example.com');
+      await userEvent.type(canvas.getByLabelText('Email'), 'jan@voorbeeld.nl');
       await expect(
-        canvas.getByDisplayValue('john@example.com')
+        canvas.getByDisplayValue('jan@voorbeeld.nl')
       ).toBeInTheDocument();
 
       // Fill message field
       await userEvent.type(
-        canvas.getByLabelText('Message'),
-        'This is a test message'
+        canvas.getByLabelText('Bericht'),
+        'Dit is een test bericht'
       );
       await expect(
-        canvas.getByDisplayValue('This is a test message')
+        canvas.getByDisplayValue('Dit is een test bericht')
       ).toBeInTheDocument();
     });
 
     await step('Verify form data display', async () => {
       // Check that the form data is displayed correctly
-      await expect(canvas.getByText('Name: John Doe')).toBeVisible();
-      await expect(canvas.getByText('Email: john@example.com')).toBeVisible();
+      await expect(canvas.getByText('Naam: Jan Jansen')).toBeVisible();
+      await expect(canvas.getByText('Email: jan@voorbeeld.nl')).toBeVisible();
       await expect(
-        canvas.getByText('Message: This is a test message')
+        canvas.getByText('Bericht: Dit is een test bericht')
       ).toBeVisible();
     });
 
     await step('Test keyboard navigation', async () => {
       // Test tab navigation - click on the first input to focus it
-      await userEvent.click(canvas.getByLabelText('Name'));
-      await expect(canvas.getByLabelText('Name')).toHaveFocus();
+      await userEvent.click(canvas.getByLabelText('Naam'));
+      await expect(canvas.getByLabelText('Naam')).toHaveFocus();
 
       await userEvent.tab();
       await expect(canvas.getByLabelText('Email')).toHaveFocus();
 
       await userEvent.tab();
-      await expect(canvas.getByLabelText('Message')).toHaveFocus();
+      await expect(canvas.getByLabelText('Bericht')).toHaveFocus();
     });
   },
 };
