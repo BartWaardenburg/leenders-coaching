@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import * as React from 'react';
 import { expect, fn } from 'storybook/test';
 import { Input } from './Input';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { waitForMotionAnimations as _waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Input',
@@ -46,7 +46,7 @@ export const Default: Story = {
   play: async ({ canvas, userEvent, args }) => {
     const input = canvas.getByPlaceholderText('Enter your text here');
     await expect(input).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
 
     // Test typing interaction
     await userEvent.type(input, 'Hello World');
@@ -63,7 +63,7 @@ export const Bordered: Story = {
   play: async ({ canvas }) => {
     const input = canvas.getByPlaceholderText('Enter your text here');
     await expect(input).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
   },
 };
 
@@ -77,7 +77,7 @@ export const WithLabel: Story = {
   play: async ({ canvas, userEvent, args }) => {
     const input = canvas.getByLabelText('Email Address');
     await expect(input).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
 
     // Test typing email
     await userEvent.type(input, 'test@example.com');
@@ -96,7 +96,7 @@ export const WithLabelBordered: Story = {
   play: async ({ canvas }) => {
     const input = canvas.getByLabelText('Email Address');
     await expect(input).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
   },
 };
 
@@ -113,7 +113,7 @@ export const WithError: Story = {
     await expect(
       canvas.getByText('Password must be at least 8 characters long')
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
   },
 };
 
@@ -131,7 +131,7 @@ export const WithErrorBordered: Story = {
     await expect(
       canvas.getByText('Password must be at least 8 characters long')
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
   },
 };
 
@@ -146,7 +146,7 @@ export const Disabled: Story = {
     const input = canvas.getByLabelText('Username');
     await expect(input).toBeVisible();
     await expect(input).toBeDisabled();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
 
     // Test that typing doesn't work when disabled
     await userEvent.type(input, 'test');
@@ -166,7 +166,7 @@ export const DisabledBordered: Story = {
     const input = canvas.getByLabelText('Username');
     await expect(input).toBeVisible();
     await expect(input).toBeDisabled();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
   },
 };
 
@@ -180,7 +180,7 @@ export const Textarea: Story = {
   play: async ({ canvas, userEvent, args }) => {
     const textarea = canvas.getByLabelText('Message');
     await expect(textarea).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
 
     // Test typing in textarea
     await userEvent.type(
@@ -204,7 +204,7 @@ export const TextareaBordered: Story = {
   play: async ({ canvas }) => {
     const textarea = canvas.getByLabelText('Message');
     await expect(textarea).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
   },
 };
 
@@ -219,7 +219,7 @@ export const TextareaWithError: Story = {
     const textarea = canvas.getByLabelText('Message');
     await expect(textarea).toBeVisible();
     await expect(canvas.getByText('Message is required')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
   },
 };
 
@@ -235,7 +235,7 @@ export const TextareaWithErrorBordered: Story = {
     const textarea = canvas.getByLabelText('Message');
     await expect(textarea).toBeVisible();
     await expect(canvas.getByText('Message is required')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    // Input rendering complete - no animation wait needed
   },
 };
 

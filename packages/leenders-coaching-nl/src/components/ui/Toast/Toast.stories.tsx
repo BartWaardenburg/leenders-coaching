@@ -7,7 +7,7 @@ import { Stack } from '@/components/ui/Stack';
 import { Box } from '@/components/ui/Box';
 import { Heading } from '@/components/ui/Heading';
 import { Button } from '@/components/ui/Button';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { waitForMotionAnimations as _waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 /**
  * Demo component for showing toasts using the ToastProvider context.
@@ -73,7 +73,7 @@ export const Default: Story = {
     /* Wait for toast to be present in the DOM first */
     await expect(canvas.getByText('Default toast message')).toBeInTheDocument();
     /* Wait for animations to complete (handles reduced motion) */
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
     /* Now the toast should be visible regardless of motion preferences */
     expect(canvas.getByText('Default toast message')).toBeVisible();
   },
@@ -144,7 +144,7 @@ export const Interactive: Story = {
       canvas.getByText('This is a blue toast message')
     ).toBeInTheDocument();
     /* Wait for animations to complete (handles reduced motion) */
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
     /* For reduced motion environments, check if element exists and is functional */
     const toastElement = canvas.getByText('This is a blue toast message');
     /* If not visible due to reduced motion, at least verify it exists and is accessible */
@@ -168,7 +168,7 @@ export const Interactive: Story = {
       canvas.getByText("This toast won't auto-dismiss")
     ).toBeInTheDocument();
     /* Wait for animations to complete (handles reduced motion) */
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
     /* For reduced motion environments, check if element exists and is functional */
     const persistentToastElement = canvas.getByText(
       "This toast won't auto-dismiss"

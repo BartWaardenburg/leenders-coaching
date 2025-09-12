@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect, userEvent } from 'storybook/test';
 import { DisableDraftMode } from './DisableDraftMode';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { waitForMotionAnimations as _waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/DisableDraftMode',
@@ -44,7 +44,7 @@ export const Default: Story = {
     await expect(
       canvas.getByLabelText('Disable draft mode')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -67,7 +67,7 @@ export const Purple: Story = {
     await expect(
       canvas.getByLabelText('Disable draft mode')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -80,7 +80,7 @@ export const Green: Story = {
     await expect(
       canvas.getByLabelText('Disable draft mode')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -93,7 +93,7 @@ export const Pink: Story = {
     await expect(
       canvas.getByLabelText('Disable draft mode')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -106,7 +106,7 @@ export const Yellow: Story = {
     await expect(
       canvas.getByLabelText('Disable draft mode')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -119,7 +119,7 @@ export const Teal: Story = {
     await expect(
       canvas.getByLabelText('Disable draft mode')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -133,7 +133,7 @@ export const WithCustomClassName: Story = {
     await expect(
       canvas.getByLabelText('Disable draft mode')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -149,7 +149,7 @@ export const Interactive: Story = {
     // Click the button to test interaction
     await userEvent.click(button);
 
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -191,7 +191,7 @@ export const AllVariants: Story = {
   play: async ({ canvas }) => {
     const buttons = canvas.getAllByLabelText('Disable draft mode');
     await expect(buttons).toHaveLength(6);
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -221,7 +221,7 @@ export const InIframe: Story = {
     await expect(
       canvas.queryByLabelText('Disable draft mode')
     ).not.toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -235,7 +235,7 @@ export const LoadingState: Story = {
       canvas.getByLabelText('Disable draft mode')
     ).toBeInTheDocument();
 
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -253,7 +253,7 @@ export const Responsive: Story = {
     await expect(
       canvas.getByLabelText('Disable draft mode')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };
 
@@ -271,6 +271,6 @@ export const DarkMode: Story = {
     await expect(
       canvas.getByLabelText('Disable draft mode')
     ).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // DisableDraftMode rendering complete - no animation wait needed
   },
 };

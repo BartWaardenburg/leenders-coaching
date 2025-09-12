@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { PricingCard } from './PricingCard';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { waitForMotionAnimations as _waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/PricingCard',
@@ -41,7 +41,7 @@ export const Default: Story = {
     await expect(
       canvas.getByRole('button', { name: 'Plan gesprek' })
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -67,7 +67,7 @@ export const Popular: Story = {
     await expect(
       canvas.getByRole('button', { name: 'Start traject' })
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -94,6 +94,6 @@ export const Extended: Story = {
     await expect(
       canvas.getByRole('button', { name: 'Start traject' })
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };

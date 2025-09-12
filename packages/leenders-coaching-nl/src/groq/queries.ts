@@ -41,6 +41,7 @@ export const getPage = async (type: string) => {
       },
       "posts": select(
         _type == "sectionBlog" => posts[]-> {
+          _id,
           title,
           description,
           slug,
@@ -51,7 +52,12 @@ export const getPage = async (type: string) => {
             slug,
             color
           },
-          "image": image.asset->url,
+          image {
+            asset->,
+            hotspot,
+            crop,
+            alt
+          },
           featured,
           variant
         }
@@ -119,6 +125,7 @@ export const getHomePage = async () => {
       },
       "posts": select(
         _type == "sectionBlog" => posts[]-> {
+          _id,
           title,
           description,
           slug,
@@ -129,7 +136,12 @@ export const getHomePage = async () => {
             slug,
             color
           },
-          "image": image.asset->url,
+          image {
+            asset->,
+            hotspot,
+            crop,
+            alt
+          },
           featured,
           variant
         }
@@ -413,7 +425,12 @@ export const getPostsByCategory = async (categoryId: string) => {
 
   const query = `*[_type == "post" && references("${categoryId}")] | order(publishedAt desc) {
     ...,
-    "image": image.asset->url,
+    image {
+      asset->,
+      hotspot,
+      crop,
+      alt
+    },
     categories[]-> {
       _id,
       title
@@ -421,7 +438,12 @@ export const getPostsByCategory = async (categoryId: string) => {
     author-> {
       _id,
       name,
-      image
+      image {
+        asset->,
+        hotspot,
+        crop,
+        alt
+      }
     }
   }`;
 

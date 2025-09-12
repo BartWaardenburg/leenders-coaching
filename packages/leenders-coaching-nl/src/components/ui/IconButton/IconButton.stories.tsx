@@ -2,7 +2,10 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { fn } from 'storybook/test';
 import { IconButton } from './IconButton';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import {
+  waitForMotionAnimations as _waitForMotionAnimations,
+  waitForAnimation,
+} from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/IconButton',
@@ -71,7 +74,7 @@ export const Primary: Story = {
     await userEvent.click(button);
     await expect(args.onClick).toHaveBeenCalled();
 
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -83,7 +86,7 @@ export const Ghost: Story = {
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByRole('button', { name: 'Search' })).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -104,7 +107,7 @@ export const Disabled: Story = {
     // Instead, we verify the button is disabled and the onClick hasn't been called
     await expect(args.onClick).not.toHaveBeenCalled();
 
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -142,9 +145,9 @@ export const InteractiveIconButton: Story = {
     await step('Hover interaction', async () => {
       await userEvent.hover(button);
       // Wait for any hover effects
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await waitForAnimation(100);
     });
 
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };

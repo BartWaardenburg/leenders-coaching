@@ -55,6 +55,7 @@ export const Avatar = ({
           fill
           className="object-cover"
           followHotspot={true}
+          qualityHint={80}
           sizes={`${sizeMap[size as Exclude<AvatarSize, 'fill'>] || 48}px`}
         />
       ) : src ? (

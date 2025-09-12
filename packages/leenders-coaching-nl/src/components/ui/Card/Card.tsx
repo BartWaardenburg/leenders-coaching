@@ -12,7 +12,7 @@ import { Flex } from '@/components/ui/Flex';
 import { Box } from '@/components/ui/Box';
 import { twMerge } from 'tailwind-merge';
 import { cardConfig } from '@/config/card.config';
-import { motion, easeInOut } from 'motion/react';
+import { motion, easeInOut, useReducedMotion } from 'motion/react';
 
 type CardVariant = 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal';
 
@@ -92,6 +92,7 @@ export const Card: FC<CardProps> = ({
   testid,
   ...props
 }) => {
+  const shouldReduceMotion = useReducedMotion();
   const hasMetaData = date || categories.length > 0;
   const cardClasses = twMerge(
     'group relative h-full transition-theme block @container border',
@@ -107,63 +108,70 @@ export const Card: FC<CardProps> = ({
 
   /* Animation variants */
   const cardVariants = {
-    hidden: {
-      opacity: 0,
-      y: 10,
-    },
+    hidden: shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.4,
-        ease: [0.2, 0.65, 0.3, 0.9] as const,
-        when: 'beforeChildren',
-        staggerChildren: 0.08,
-        delayChildren: 0.1,
-      },
+      transition: shouldReduceMotion
+        ? { duration: 0 }
+        : {
+            duration: 0.4,
+            ease: [0.2, 0.65, 0.3, 0.9] as const,
+            when: 'beforeChildren',
+            staggerChildren: 0.08,
+            delayChildren: 0.1,
+          },
     },
-    ...(slug && {
-      hover: {
-        y: -5,
-        transition: {
-          duration: 0.2,
-          ease: easeInOut,
+    ...(slug &&
+      !shouldReduceMotion && {
+        hover: {
+          y: -5,
+          transition: {
+            duration: 0.2,
+            ease: easeInOut,
+          },
         },
-      },
-    }),
+      }),
   } as const;
 
   const childVariants = {
-    hidden: { opacity: 0, y: 5 },
+    hidden: shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 5 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.3,
-        ease: [0.2, 0.65, 0.3, 0.9] as const,
-      },
+      transition: shouldReduceMotion
+        ? { duration: 0 }
+        : {
+            duration: 0.3,
+            ease: [0.2, 0.65, 0.3, 0.9] as const,
+          },
     },
   } as const;
 
   const imageVariants = {
-    hidden: { scale: 1.1, opacity: 0 },
+    hidden: shouldReduceMotion
+      ? { scale: 1, opacity: 1 }
+      : { scale: 1.1, opacity: 0 },
     visible: {
       scale: 1,
       opacity: 1,
-      transition: {
-        duration: 0.5,
-        ease: [0.2, 0.65, 0.3, 0.9] as const,
-      },
+      transition: shouldReduceMotion
+        ? { duration: 0 }
+        : {
+            duration: 0.5,
+            ease: [0.2, 0.65, 0.3, 0.9] as const,
+          },
     },
-    ...(slug && {
-      hover: {
-        scale: 1.05,
-        transition: {
-          duration: 0.3,
-          ease: easeInOut,
+    ...(slug &&
+      !shouldReduceMotion && {
+        hover: {
+          scale: 1.05,
+          transition: {
+            duration: 0.3,
+            ease: easeInOut,
+          },
         },
-      },
-    }),
+      }),
   } as const;
 
   const content = (
@@ -192,6 +200,7 @@ export const Card: FC<CardProps> = ({
                   fill
                   className="object-cover"
                   followHotspot={true}
+                  qualityHint={80}
                 />
               ) : (
                 <Image

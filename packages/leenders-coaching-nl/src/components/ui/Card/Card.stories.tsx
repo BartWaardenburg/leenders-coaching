@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Card } from './Card';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { waitForMotionAnimations as _waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 import { Section } from '@/components/ui/Section';
 import { Text } from '@/components/ui/Text';
@@ -76,7 +76,7 @@ export const Default: Story = {
     expect(cardTitle).toBeInTheDocument();
     expect(cardContent).toBeInTheDocument();
 
-    await waitForMotionAnimations({
+    await _waitForMotionAnimations({
       canvas,
       element: canvas.getByTestId('card-default'),
     });
@@ -92,7 +92,7 @@ export const WithImage: Story = {
   play: async ({ canvas }) => {
     expect(canvas.getByText('Communicatievaardigheden')).toBeInTheDocument();
     expect(canvas.getByRole('img')).toBeInTheDocument();
-    await waitForMotionAnimations({
+    await _waitForMotionAnimations({
       canvas,
       element: canvas.getByTestId('card-with-image'),
     });
@@ -107,7 +107,7 @@ export const Featured: Story = {
   },
   play: async ({ canvas }) => {
     expect(canvas.getByText('Communicatievaardigheden')).toBeInTheDocument();
-    await waitForMotionAnimations({
+    await _waitForMotionAnimations({
       canvas,
       element: canvas.getByTestId('card-featured'),
     });
@@ -206,7 +206,7 @@ export const AllVariants: Story = {
     expect(canvas.getByText('Turquoise Variant')).toBeInTheDocument();
 
     // Wait for animations on all cards
-    await waitForMotionAnimations({
+    await _waitForMotionAnimations({
       canvas,
       element: canvas.getByTestId('card-blue-variant'),
     });
@@ -363,7 +363,7 @@ export const InteractiveCard: Story = {
       );
     }
 
-    await waitForMotionAnimations({
+    await _waitForMotionAnimations({
       canvas,
       element: canvas.getByTestId('card-interactive'),
     });

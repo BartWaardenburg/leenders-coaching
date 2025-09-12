@@ -3,7 +3,7 @@ import { expect } from 'storybook/test';
 import { Timeline } from './Timeline';
 import { Button } from '@/components/ui/Button';
 import type { ComponentProps } from 'react';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { waitForMotionAnimations as _waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 type TimelineProps = ComponentProps<typeof Timeline>;
 type TimelineStep = TimelineProps['steps'][number];
@@ -79,7 +79,7 @@ export const Default: Story = {
     const finalEvaluation = canvas.getAllByText('Final Evaluation');
     expect(finalEvaluation.length).toBeGreaterThan(0);
 
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -104,7 +104,7 @@ export const WithColor: Story = {
     const finalEvaluation = canvas.getAllByText('Final Evaluation');
     expect(finalEvaluation.length).toBeGreaterThan(0);
 
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -151,7 +151,7 @@ export const WithCustomContent: Story = {
       canvas.getByRole('link', { name: 'Schedule Now' })
     ).toBeInTheDocument();
 
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -184,6 +184,6 @@ export const WithIndividualColors: Story = {
     const finalEvaluation = canvas.getAllByText('Final Evaluation');
     expect(finalEvaluation.length).toBeGreaterThan(0);
 
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };

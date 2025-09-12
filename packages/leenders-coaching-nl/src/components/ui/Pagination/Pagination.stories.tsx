@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Pagination } from './Pagination';
 import { useState } from 'react';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { waitForMotionAnimations as _waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Pagination',
@@ -49,7 +49,7 @@ export const Default: Story = {
     await expect(
       canvas.getByRole('button', { name: 'Next page' })
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -70,7 +70,7 @@ export const FewPages: Story = {
     await expect(
       canvas.getByRole('button', { name: 'Next page' })
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };
 
@@ -89,6 +89,6 @@ export const ManyPages: Story = {
     await expect(
       canvas.getByRole('button', { name: 'Next page' })
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await _waitForMotionAnimations({ canvas });
   },
 };

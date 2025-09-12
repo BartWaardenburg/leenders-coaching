@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Person } from './Person';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { waitForMotionAnimations as _waitForMotionAnimations } from '../../../test/chromatic-utils';
 
 const meta = {
   title: 'UI/Person',
@@ -21,7 +21,7 @@ export const Default: Story = {
     expect(canvas.getByText('John Doe')).toBeInTheDocument();
     expect(canvas.getByText('Software Engineer')).toBeInTheDocument();
     expect(canvas.getByRole('img')).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Simple static test - no animation wait needed
   },
 };
 
@@ -33,7 +33,7 @@ export const WithoutDescription: Story = {
   play: async ({ canvas }) => {
     expect(canvas.getByText('Jane Smith')).toBeInTheDocument();
     expect(canvas.getByRole('img')).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Simple static test - no animation wait needed
   },
 };
 
@@ -49,6 +49,6 @@ export const LongDescription: Story = {
       canvas.getByText('Senior Marketing Director & Brand Strategy Consultant')
     ).toBeInTheDocument();
     expect(canvas.getByRole('img')).toBeInTheDocument();
-    await waitForMotionAnimations({ canvas });
+    // Simple static test - no animation wait needed
   },
 };
