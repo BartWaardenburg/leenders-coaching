@@ -127,6 +127,7 @@ export const Card: FC<CardProps> = ({
       !shouldReduceMotion && {
         hover: {
           y: -5,
+          opacity: 1,
           transition: {
             duration: 0.2,
             ease: easeInOut,
@@ -146,6 +147,14 @@ export const Card: FC<CardProps> = ({
             duration: 0.3,
             ease: [0.2, 0.65, 0.3, 0.9] as const,
           },
+    },
+    hover: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.2,
+        ease: easeInOut,
+      },
     },
   } as const;
 
@@ -167,6 +176,7 @@ export const Card: FC<CardProps> = ({
       !shouldReduceMotion && {
         hover: {
           scale: 1.05,
+          opacity: 1,
           transition: {
             duration: 0.3,
             ease: easeInOut,
