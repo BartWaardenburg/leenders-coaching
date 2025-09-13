@@ -11,6 +11,7 @@ const meta = {
     title: {
       control: 'text',
       description: 'De titel van de sectie',
+      required: true,
     },
     description: {
       control: 'text',

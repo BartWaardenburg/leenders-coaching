@@ -13,6 +13,7 @@ type ResponsiveValue<T> = {
 
 type JustifyValue = 'start' | 'end' | 'center';
 type WidthValue = 'full' | 'auto';
+type AlignValue = 'start' | 'end' | 'center';
 
 type ButtonGroupProps = {
   children: ReactNode;
@@ -22,6 +23,8 @@ type ButtonGroupProps = {
   justify?: JustifyValue | ResponsiveValue<JustifyValue>;
   /** Width control with responsive values */
   width?: WidthValue | ResponsiveValue<WidthValue>;
+  /** Container alignment with responsive values */
+  align?: AlignValue | ResponsiveValue<AlignValue>;
   /** Whether to wrap the buttons in a flex container */
   flex?: boolean;
 } & ComponentPropsWithoutRef<'div'>;
@@ -35,6 +38,7 @@ export const ButtonGroup = ({
   stackOnMobile = true,
   justify = 'center',
   width = 'auto',
+  align = 'center',
   flex = false,
   ...props
 }: ButtonGroupProps) => {
@@ -48,7 +52,7 @@ export const ButtonGroup = ({
       .map(([breakpoint, value]) =>
         breakpoint === 'base'
           ? `justify-${value}`
-          : `${breakpoint}:justify-${value}`,
+          : `${breakpoint}:justify-${value}`
       )
       .join(' ');
   };
@@ -61,7 +65,22 @@ export const ButtonGroup = ({
 
     return Object.entries(width)
       .map(([breakpoint, value]) =>
-        breakpoint === 'base' ? `w-${value}` : `${breakpoint}:w-${value}`,
+        breakpoint === 'base' ? `w-${value}` : `${breakpoint}:w-${value}`
+      )
+      .join(' ');
+  };
+
+  /* Convert align prop to responsive classes */
+  const getAlignClasses = () => {
+    if (typeof align === 'string') {
+      return `items-${align}`;
+    }
+
+    return Object.entries(align)
+      .map(([breakpoint, value]) =>
+        breakpoint === 'base'
+          ? `items-${value}`
+          : `${breakpoint}:items-${value}`
       )
       .join(' ');
   };
@@ -69,14 +88,14 @@ export const ButtonGroup = ({
   return (
     <Flex
       direction={stackOnMobile ? 'column' : 'row'}
-      items="center"
       gap={4}
       className={twMerge(
         getJustifyClasses(),
         getWidthClasses(),
-        stackOnMobile && 'sm:flex-row',
+        getAlignClasses(),
+        stackOnMobile && '@lg:flex-row',
         flex && 'flex',
-        className,
+        className
       )}
       {...props}
     >

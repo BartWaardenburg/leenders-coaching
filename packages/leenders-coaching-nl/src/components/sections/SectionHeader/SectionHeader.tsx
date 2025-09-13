@@ -11,7 +11,15 @@ import { Box } from '@/components/ui/Box';
 type CallToAction = {
   href: string;
   label: string;
-  variant?: 'black' | 'transparent' | 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal';
+  variant?:
+    | 'black'
+    | 'transparent'
+    | 'blue'
+    | 'purple'
+    | 'green'
+    | 'pink'
+    | 'yellow'
+    | 'teal';
   isExternal?: boolean;
 };
 
@@ -45,7 +53,7 @@ export const SectionHeader = ({
       maxWidth="5xl"
       {...props}
     >
-      <Stack gap={8} className="md:items-center">
+      <Stack gap={8} className="md:items-start">
         <Box className="w-full text-center">
           {(title || description) && (
             <>
@@ -67,7 +75,7 @@ export const SectionHeader = ({
           )}
         </Box>
         {(primaryCta || secondaryCta) && (
-          <ButtonGroup flex width="full" justify="end">
+          <ButtonGroup flex width="full" justify="end" align="center">
             {primaryCta && (
               <Button
                 size="lg"
@@ -87,7 +95,9 @@ export const SectionHeader = ({
                 href={secondaryCta.href}
                 variant={secondaryCta.variant}
                 target={secondaryCta.isExternal ? '_blank' : undefined}
-                rel={secondaryCta.isExternal ? 'noopener noreferrer' : undefined}
+                rel={
+                  secondaryCta.isExternal ? 'noopener noreferrer' : undefined
+                }
               >
                 {secondaryCta.label}
               </Button>

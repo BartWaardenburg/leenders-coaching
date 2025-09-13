@@ -3,6 +3,9 @@ import { twMerge } from 'tailwind-merge';
 import { Box } from '../Box';
 import { Container } from '../Container';
 
+/**
+ * Available pastel color options for section backgrounds and borders
+ */
 export type PastelColor =
   | 'blue'
   | 'purple'
@@ -11,6 +14,9 @@ export type PastelColor =
   | 'yellow'
   | 'teal';
 
+/**
+ * Background styles mapping for pastel colors with dark mode support
+ */
 const backgroundStyles: Record<PastelColor, string> = {
   blue: 'bg-pastel-blue dark:bg-pastel-blue-dark',
   purple: 'bg-pastel-purple dark:bg-pastel-purple-dark',
@@ -20,6 +26,9 @@ const backgroundStyles: Record<PastelColor, string> = {
   teal: 'bg-pastel-teal dark:bg-pastel-teal-dark',
 };
 
+/**
+ * Border styles mapping for pastel colors with dark mode support
+ */
 const borderStyles: Record<PastelColor, string> = {
   blue: 'border-pastel-blue-dark dark:border-pastel-blue',
   purple: 'border-pastel-purple-dark dark:border-pastel-purple',
@@ -29,6 +38,9 @@ const borderStyles: Record<PastelColor, string> = {
   teal: 'border-pastel-teal-dark dark:border-pastel-teal',
 };
 
+/**
+ * Available maximum width options for section content
+ */
 type MaxWidth =
   | 'sm'
   | 'md'
@@ -41,6 +53,9 @@ type MaxWidth =
   | '6xl'
   | '7xl';
 
+/**
+ * Maximum width styles mapping for responsive content constraints
+ */
 const maxWidthStyles: Record<MaxWidth, string> = {
   sm: 'max-w-sm',
   md: 'max-w-md',
@@ -54,19 +69,38 @@ const maxWidthStyles: Record<MaxWidth, string> = {
   '7xl': 'max-w-7xl',
 };
 
+/**
+ * Props for the Section component
+ */
 type SectionProps = {
+  /** Child elements to render within the section */
   children: React.ReactNode;
+  /** Pastel color theme for background and borders */
   background?: PastelColor;
+  /** Whether to show colored borders on top and bottom */
   border?: boolean;
   /** Whether to disable the default padding */
   noPadding?: boolean;
-  /** Maximum width constraint of the section */
+  /** Maximum width constraint of the section content */
   maxWidth?: MaxWidth;
+  /** Test identifier for testing purposes */
   testid?: string;
 } & ComponentPropsWithoutRef<'section'>;
 
 /**
  * Generic section component with consistent spacing and container
+ *
+ * Provides a flexible layout container with optional pastel theming,
+ * responsive padding, and configurable content width constraints.
+ *
+ * @param props - The component props
+ * @param props.children - Child elements to render within the section
+ * @param props.background - Pastel color theme for background and borders
+ * @param props.border - Whether to show colored borders on top and bottom
+ * @param props.noPadding - Whether to disable the default responsive padding
+ * @param props.maxWidth - Maximum width constraint for the section content
+ * @param props.testid - Test identifier for testing purposes
+ * @returns A section element with consistent styling and layout
  */
 export const Section = ({
   children,
@@ -86,6 +120,7 @@ export const Section = ({
         'transition-theme bg-background',
         background && backgroundStyles[background],
         border && background && ['border-y', borderStyles[background]],
+        '@container',
         className
       )}
       data-testid={testid || 'section'}

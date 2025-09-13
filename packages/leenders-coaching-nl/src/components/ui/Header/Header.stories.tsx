@@ -6,7 +6,7 @@ const meta = {
   title: 'UI/Header',
   component: Header,
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
   },
 } satisfies Meta<typeof Header>;
 

@@ -26,26 +26,41 @@ export const IconButton = ({
   className,
   ...props
 }: IconButtonProps) => {
+  const baseStyles = `
+    p-2 flex items-center justify-center cursor-pointer
+    transition-colors duration-200
+  `;
+
+  const shapeStyles = {
+    round: 'rounded-full',
+    square: 'rounded-none',
+  };
+
+  const borderStyles = bordered
+    ? 'border border-foreground/80 dark:border-background/80'
+    : '';
+
+  const variants = {
+    primary: `
+      bg-primary/10 hover:bg-primary/20
+      dark:bg-primary/20 dark:hover:bg-primary/30
+    `,
+    ghost: `
+      bg-transparent text-foreground hover:bg-foreground/10 hover:text-foreground
+      dark:bg-transparent dark:text-foreground dark:hover:bg-foreground/10 dark:hover:text-foreground
+    `,
+  };
+
+  const buttonStyles = twMerge(
+    baseStyles,
+    shapeStyles[shape],
+    borderStyles,
+    variants[variant],
+    className
+  );
+
   return (
-    <button
-      className={twMerge(
-        'p-2 transition-colors flex items-center justify-center',
-        /* Shape variants */
-        shape === 'round' && 'rounded-full',
-        shape === 'square' && 'rounded-none',
-        /* Border styles */
-        bordered && 'border border-foreground/80 dark:border-background/80',
-        /* Color variants */
-        variant === 'primary' && 'bg-primary/10 hover:bg-primary/20',
-        variant === 'ghost' && [
-          'hover:bg-foreground hover:text-background',
-          'dark:hover:bg-background dark:hover:text-foreground',
-        ],
-        className,
-      )}
-      aria-label={label}
-      {...props}
-    >
+    <button className={buttonStyles} aria-label={label} {...props}>
       {children}
     </button>
   );

@@ -116,7 +116,7 @@ export const Button = ({
     variants[variant],
     sizes[size],
     loadingStyles,
-    fullWidthOnContainer && 'w-full @md:w-auto',
+    fullWidthOnContainer && 'w-full @lg:w-auto',
     className
   );
 

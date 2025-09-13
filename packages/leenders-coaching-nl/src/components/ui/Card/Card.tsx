@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { StaticImageData } from 'next/image';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
-import { SanityImage } from '@/components/ui/Image';
+import { SanityImage } from '@/components/ui/SanityImage';
 import { Text } from '@/components/ui/Text';
 import { Heading } from '@/components/ui/Heading';
 import { Flex } from '@/components/ui/Flex';

@@ -6,7 +6,7 @@ const meta = {
   title: 'UI/FAQ',
   component: FAQ,
   parameters: {
-    layout: 'centered',
+    layout: 'padded',
   },
   argTypes: {
     items: {

@@ -9,7 +9,7 @@ import { Box } from '@/components/ui/Box';
 import { Heading } from '@/components/ui/Heading';
 import { Text } from '@/components/ui/Text';
 import { Flex } from '@/components/ui/Flex';
-import { SanityImage } from '@/components/ui/Image';
+import { SanityImage } from '@/components/ui/SanityImage';
 import type { Post } from '@/types/sanity/schema';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 

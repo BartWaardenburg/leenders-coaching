@@ -10,7 +10,7 @@ import { Text } from '@/components/ui/Text';
 import { Stack } from '@/components/ui/Stack';
 import { Box } from '@/components/ui/Box';
 import { Button } from '@/components/ui/Button';
-import { SanityImage } from '@/components/ui/Image';
+import { SanityImage } from '@/components/ui/SanityImage';
 
 type CallToAction = {
   href: string;
@@ -123,7 +123,9 @@ export const SectionFeatured = ({
         gap={0}
       >
         <Box
-          className={`${reverse ? 'sm:order-2' : ''} -ml-4 sm:-ml-6 lg:-ml-12`}
+          className={`${reverse ? 'sm:order-2' : ''} ${
+            reverse ? '-mr-4 sm:-mr-6 lg:-mr-12' : '-ml-4 sm:-ml-6 lg:-ml-12'
+          }`}
         >
           {ImageContainer}
         </Box>

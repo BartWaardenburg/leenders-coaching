@@ -5,12 +5,13 @@ const meta = {
   title: 'Sections/SectionFAQ',
   component: SectionFAQ,
   parameters: {
-    layout: 'full',
+    layout: 'fullscreen',
   },
   argTypes: {
     title: {
       control: 'text',
       description: 'De titel van de sectie',
+      required: true,
     },
     description: {
       control: 'text',
@@ -41,16 +42,16 @@ const samplePortableText = [
     children: [
       {
         _type: 'span',
-        text: 'This is a detailed answer that includes ',
+        text: 'Dit is een gedetailleerd antwoord dat ',
       },
       {
         _type: 'span',
         marks: ['strong'],
-        text: 'formatted content',
+        text: 'geformatteerde inhoud',
       },
       {
         _type: 'span',
-        text: ' and ',
+        text: ' en ',
       },
       {
         _type: 'span',
@@ -62,7 +63,7 @@ const samplePortableText = [
       },
       {
         _type: 'span',
-        text: '.',
+        text: ' bevat.',
       },
     ],
     style: 'normal',
@@ -72,7 +73,7 @@ const samplePortableText = [
     children: [
       {
         _type: 'span',
-        text: 'You can even have multiple paragraphs.',
+        text: "Je kunt zelfs meerdere alinea's hebben.",
       },
     ],
     style: 'normal',
@@ -81,23 +82,23 @@ const samplePortableText = [
 
 export const Default: Story = {
   args: {
-    title: 'Frequently Asked Questions',
+    title: 'Veelgestelde Vragen',
     description:
-      'Find answers to the most common questions about our services.',
+      'Vind antwoorden op de meest gestelde vragen over onze diensten.',
     items: [
       {
-        question: 'What services do you offer?',
+        question: 'Welke diensten bieden jullie aan?',
         answer: samplePortableText,
       },
       {
-        question: 'How can I schedule an appointment?',
+        question: 'Hoe kan ik een afspraak inplannen?',
         answer: [
           {
             _type: 'block',
             children: [
               {
                 _type: 'span',
-                text: 'You can schedule an appointment through our online booking system or contact us directly.',
+                text: 'Je kunt een afspraak inplannen via ons online boekingssysteem of ons direct contacteren.',
               },
             ],
             style: 'normal',
@@ -105,14 +106,14 @@ export const Default: Story = {
         ],
       },
       {
-        question: 'What are your working hours?',
+        question: 'Wat zijn jullie openingstijden?',
         answer: [
           {
             _type: 'block',
             children: [
               {
                 _type: 'span',
-                text: 'We are available Monday through Friday, from 9:00 AM to 5:00 PM.',
+                text: 'We zijn beschikbaar van maandag tot en met vrijdag, van 9:00 tot 17:00.',
               },
             ],
             style: 'normal',
@@ -145,34 +146,18 @@ export const WithPurpleBackground: Story = {
   },
 };
 
-export const WithoutTitle: Story = {
-  args: {
-    description:
-      'Find answers to the most common questions about our services.',
-    items: Default.args.items,
-    background: 'green',
-  },
-};
-
 export const WithoutDescription: Story = {
   args: {
-    title: 'Frequently Asked Questions',
+    title: 'Veelgestelde Vragen',
     items: Default.args.items,
     background: 'pink',
     border: true,
   },
 };
 
-export const MinimalContent: Story = {
-  args: {
-    items: Default.args.items,
-    background: 'yellow',
-  },
-};
-
 export const SingleFAQ: Story = {
   args: {
-    title: 'Single FAQ Item',
+    title: 'Enkele FAQ Item',
     description: 'Soms heb je maar één FAQ item nodig.',
     items: [Default.args.items[0]!],
     background: 'teal',
@@ -180,22 +165,21 @@ export const SingleFAQ: Story = {
   },
 };
 
-export const ManyFAQs: Story = {
+export const ManyFAQItems: Story = {
   args: {
-    title: 'Comprehensive FAQ',
-    description:
-      'This section demonstrates how the FAQ handles multiple items.',
+    title: 'Uitgebreide FAQ',
+    description: 'Deze sectie toont hoe de FAQ meerdere items afhandelt.',
     items: [
       ...Default.args.items,
       {
-        question: 'Do you offer group coaching sessions?',
+        question: 'Bieden jullie groepscoaching sessies aan?',
         answer: [
           {
             _type: 'block',
             children: [
               {
                 _type: 'span',
-                text: 'Yes, we offer both individual and group coaching sessions. Group sessions can be a great way to learn from others and share experiences.',
+                text: 'Ja, we bieden zowel individuele als groepscoaching sessies aan. Groepssessies kunnen een geweldige manier zijn om van anderen te leren en ervaringen te delen.',
               },
             ],
             style: 'normal',
@@ -203,14 +187,14 @@ export const ManyFAQs: Story = {
         ],
       },
       {
-        question: 'What is your cancellation policy?',
+        question: 'Wat is jullie annuleringsbeleid?',
         answer: [
           {
             _type: 'block',
             children: [
               {
                 _type: 'span',
-                text: 'We require 24 hours notice for cancellations. Cancellations made with less than 24 hours notice may be subject to a cancellation fee.',
+                text: 'We vragen 24 uur van tevoren om annuleringen. Annuleringen met minder dan 24 uur van tevoren kunnen onderworpen zijn aan een annuleringskosten.',
               },
             ],
             style: 'normal',
@@ -218,14 +202,14 @@ export const ManyFAQs: Story = {
         ],
       },
       {
-        question: 'How do I prepare for my first session?',
+        question: 'Hoe bereid ik me voor op mijn eerste sessie?',
         answer: [
           {
             _type: 'block',
             children: [
               {
                 _type: 'span',
-                text: 'Before your first session, think about your goals and what you hope to achieve. You may also want to prepare any questions you have about the coaching process.',
+                text: 'Voor je eerste sessie, denk na over je doelen en wat je hoopt te bereiken. Je kunt ook eventuele vragen voorbereiden die je hebt over het coachingsproces.',
               },
             ],
             style: 'normal',
@@ -236,29 +220,4 @@ export const ManyFAQs: Story = {
     background: 'blue',
     border: true,
   },
-};
-
-export const AllBackgroundVariants: Story = {
-  parameters: {
-    controls: { hideNoControlsWarning: true },
-  },
-  args: {
-    items: [],
-  },
-  render: () => (
-    <div className="space-y-0">
-      {(['blue', 'purple', 'green', 'pink', 'yellow', 'teal'] as const).map(
-        (background) => (
-          <SectionFAQ
-            key={background}
-            title={`${background.charAt(0).toUpperCase() + background.slice(1)} Background FAQ`}
-            description={`This FAQ section demonstrates the ${background} background variant.`}
-            items={Default.args.items}
-            background={background}
-            border={true}
-          />
-        )
-      )}
-    </div>
-  ),
 };

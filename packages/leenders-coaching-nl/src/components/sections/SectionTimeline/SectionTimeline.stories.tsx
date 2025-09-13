@@ -6,7 +6,31 @@ const meta = {
   title: 'Sections/SectionTimeline',
   component: SectionTimeline,
   parameters: {
-    layout: 'padded',
+    layout: 'fullscreen',
+  },
+  argTypes: {
+    title: {
+      control: 'text',
+      description: 'De titel van de sectie',
+      required: true,
+    },
+    description: {
+      control: 'text',
+      description: 'De beschrijving tekst',
+    },
+    background: {
+      control: 'select',
+      options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
+      description: 'Achtergrondkleur van de sectie',
+    },
+    border: {
+      control: 'boolean',
+      description: 'Toon boven- en onderranden',
+    },
+    steps: {
+      control: 'object',
+      description: 'Array van timeline stap objecten',
+    },
   },
 } satisfies Meta<typeof SectionTimeline>;
 

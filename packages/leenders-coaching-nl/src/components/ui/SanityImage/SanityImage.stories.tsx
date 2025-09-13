@@ -3,7 +3,7 @@ import { expect } from 'storybook/test';
 import { SanityImage } from './SanityImage';
 
 const meta = {
-  title: 'UI/Image/SanityImage',
+  title: 'UI/SanityImage',
   component: SanityImage,
   parameters: {
     layout: 'centered',

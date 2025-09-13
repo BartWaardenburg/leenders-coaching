@@ -16,7 +16,7 @@ A production-ready Sanity image component that leverages Sanity's CDN for optima
 ### Basic Usage
 
 ```tsx
-import { SanityImage } from '@/components/ui/Image';
+import { SanityImage } from '@/components/ui/SanityImage';
 
 <SanityImage
   image={sanityImageObject}

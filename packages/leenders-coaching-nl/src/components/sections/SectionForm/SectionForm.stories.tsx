@@ -8,16 +8,17 @@ const meta = {
   title: 'Sections/SectionForm',
   component: SectionForm,
   parameters: {
-    layout: 'padded',
+    layout: 'fullscreen',
   },
   argTypes: {
     title: {
       control: 'text',
-      description: 'Titel van de sectie',
+      description: 'De titel van de sectie',
+      required: true,
     },
     description: {
       control: 'text',
-      description: 'Beschrijving tekst onder de titel',
+      description: 'De beschrijving tekst',
     },
     submitLabel: {
       control: 'text',
@@ -30,7 +31,7 @@ const meta = {
     },
     border: {
       control: 'boolean',
-      description: 'Of er een rand rond de sectie moet worden getoond',
+      description: 'Toon boven- en onderranden',
     },
   },
 } satisfies Meta<typeof SectionForm>;
@@ -80,20 +81,6 @@ export const WithBackgroundAndBorder: Story = {
     ...Default.args,
     background: 'blue',
     border: true,
-  },
-};
-
-export const NoTitle: Story = {
-  args: {
-    children: <FormContent />,
-  },
-};
-
-export const WithoutTitle: Story = {
-  args: {
-    description:
-      "Fill out the form below and we'll get back to you as soon as possible.",
-    background: 'green',
   },
 };
 

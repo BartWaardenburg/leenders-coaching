@@ -15,9 +15,27 @@ const meta = {
     layout: 'fullscreen',
   },
   argTypes: {
+    title: {
+      control: 'text',
+      description: 'De titel van de sectie',
+      required: true,
+    },
+    description: {
+      control: 'text',
+      description: 'De beschrijving tekst',
+    },
+    background: {
+      control: 'select',
+      options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
+      description: 'Achtergrondkleur van de sectie',
+    },
+    border: {
+      control: 'boolean',
+      description: 'Toon boven- en onderranden',
+    },
     numberOfCards: {
       control: { type: 'range', min: 1, max: 12, step: 1 },
-      description: 'Number of cards to display',
+      description: 'Aantal kaarten om weer te geven',
     },
   },
 } satisfies Meta<StoryArgs>;
@@ -114,17 +132,6 @@ export const WithBorder: Story = {
     ...defaultArgs,
     background: 'blue',
     border: true,
-  },
-  render: ({ numberOfCards, ...args }) => (
-    <SectionCards {...args}>{generateCards(numberOfCards)}</SectionCards>
-  ),
-};
-
-export const NoTitle: Story = {
-  args: {
-    ...defaultArgs,
-    title: undefined,
-    description: undefined,
   },
   render: ({ numberOfCards, ...args }) => (
     <SectionCards {...args}>{generateCards(numberOfCards)}</SectionCards>

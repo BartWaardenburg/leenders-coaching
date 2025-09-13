@@ -3,7 +3,7 @@ import type {
   PortableTextComponents,
   PortableTextBlock,
 } from '@portabletext/react';
-import { SanityImage } from '@/components/ui/Image';
+import { SanityImage } from '@/components/ui/SanityImage';
 
 import { Heading } from '@/components/ui/Heading';
 import { Link } from '@/components/ui/Link';

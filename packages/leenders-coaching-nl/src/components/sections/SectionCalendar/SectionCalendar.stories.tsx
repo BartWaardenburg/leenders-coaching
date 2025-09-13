@@ -8,22 +8,31 @@ const meta = {
     layout: 'fullscreen',
   },
   argTypes: {
+    title: {
+      control: 'text',
+      description: 'De titel van de sectie',
+      required: true,
+    },
+    description: {
+      control: 'text',
+      description: 'De beschrijving tekst',
+    },
     background: {
       control: 'select',
       options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
-      description: 'Background color of the section',
+      description: 'Achtergrondkleur van de sectie',
     },
     border: {
       control: 'boolean',
-      description: 'Show top and bottom borders',
+      description: 'Toon boven- en onderranden',
     },
     initialDate: {
       control: 'date',
-      description: 'The initial date to display in the calendar',
+      description: 'De initiële datum om weer te geven in de kalender',
     },
     renderDay: {
       control: false,
-      description: 'Custom render function for day content',
+      description: 'Aangepaste render functie voor dag inhoud',
     },
   },
 } satisfies Meta<typeof SectionCalendar>;

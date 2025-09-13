@@ -55,6 +55,11 @@ const swipePower = (offset: number, velocity: number) => {
  * Carousel component with navigation arrows, dot indicators and swipe support
  */
 export const Carousel = ({ slides, className }: CarouselProps) => {
+  // Return null if no slides
+  if (!slides || slides.length === 0) {
+    return null;
+  }
+
   const shouldReduceMotion = useReducedMotion();
   const [[page, direction], setPage] = useState([0, 0]);
   const x = useMotionValue(0);
@@ -154,7 +159,7 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
                       }
                 }
                 className="w-full absolute left-0 right-0"
-                drag="x"
+                drag={slides.length > 1 ? 'x' : false}
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={1}
                 style={{ x }}
@@ -168,6 +173,8 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
                     velocity: { x: number; y: number };
                   }
                 ) => {
+                  if (slides.length <= 1) return;
+
                   const swipe = swipePower(offset.x, velocity.x);
 
                   if (swipe < -swipeConfidenceThreshold) {
@@ -203,26 +210,35 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
         </Flex>
 
         {/* Dot indicators */}
-        <Stack direction="row" justify="center" gap={2} className="mt-8">
-          {slides.map((_, index) => (
-            <motion.button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={twMerge(
-                'w-2 h-2 rounded-full transition-colors duration-200',
-                'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-                'focus-visible:ring-pastel-blue dark:focus-visible:ring-pastel-blue-dark',
-                'focus-visible:ring-offset-background',
-                index === page
-                  ? 'bg-pastel-blue dark:bg-pastel-blue-dark'
-                  : 'bg-pastel-blue/30 dark:bg-pastel-blue-dark/30 hover:bg-pastel-blue/50 dark:hover:bg-pastel-blue-dark/50'
-              )}
-              whileHover={shouldReduceMotion ? {} : { scale: 1.2 }}
-              whileTap={shouldReduceMotion ? {} : { scale: 0.9 }}
-              transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
-            />
-          ))}
-        </Stack>
+        {slides.length > 1 && (
+          <Stack direction="row" justify="center" className="mt-8">
+            {slides.map((_, index) => (
+              <motion.button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={twMerge(
+                  'relative p-1.5 rounded-full transition-colors duration-200 cursor-pointer',
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+                  'focus-visible:ring-foreground dark:focus-visible:ring-foreground',
+                  'focus-visible:ring-offset-background'
+                )}
+                whileHover={shouldReduceMotion ? {} : { scale: 1.3 }}
+                whileTap={shouldReduceMotion ? {} : { scale: 0.9 }}
+                transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
+                aria-label={`Ga naar slide ${index + 1}`}
+              >
+                <div
+                  className={twMerge(
+                    'rounded-full transition-all duration-200',
+                    index === page
+                      ? 'w-3 h-3 bg-foreground dark:bg-foreground'
+                      : 'w-2.5 h-2.5 bg-foreground/30 dark:bg-foreground/30'
+                  )}
+                />
+              </motion.button>
+            ))}
+          </Stack>
+        )}
       </Box>
     </Box>
   );

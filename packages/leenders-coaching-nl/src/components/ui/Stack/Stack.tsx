@@ -14,19 +14,17 @@ type StackProps = {
 } & Omit<ComponentPropsWithoutRef<'div'>, 'ref'>;
 
 /**
- * Stack component for managing layout of elements
- * @example
- * // Using space (for margin between elements)
- * <Stack space={4}>
- *   <div>Item 1</div>
- *   <div>Item 2</div>
- * </Stack>
+ * Stack component for managing layout of elements with flexible spacing and alignment options
  *
- * // Using gap (for grid-like spacing)
- * <Stack gap={4}>
- *   <div>Item 1</div>
- *   <div>Item 2</div>
- * </Stack>
+ * @param props - The component props
+ * @param props.children - The child elements to be stacked
+ * @param props.space - Spacing between elements using Tailwind space utilities (0-4, 'px', 'x-reverse', 'y-reverse')
+ * @param props.gap - Gap between elements using CSS gap property
+ * @param props.direction - Stack direction, either 'col' (column) or 'row' (row)
+ * @param props.justify - Justification alignment for elements ('start', 'end', 'center', 'between', 'around', 'evenly')
+ * @param props.as - HTML element to render as (currently only supports 'div')
+ * @param props.testid - Test identifier for testing purposes
+ * @returns A flex container with configurable spacing and alignment
  */
 export const Stack = ({
   children,

@@ -3,7 +3,7 @@ import { twMerge } from 'tailwind-merge';
 import Image from 'next/image';
 import type { StaticImageData } from 'next/image';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
-import { SanityImage } from '@/components/ui/Image';
+import { SanityImage } from '@/components/ui/SanityImage';
 
 type AvatarSize = 'sm' | 'md' | 'lg' | 'fill';
 

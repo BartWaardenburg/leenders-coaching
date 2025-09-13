@@ -7,6 +7,34 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
   },
+  argTypes: {
+    title: {
+      control: 'text',
+      description: 'De titel van de sectie',
+      required: true,
+    },
+    description: {
+      control: 'text',
+      description: 'De beschrijving tekst',
+    },
+    background: {
+      control: 'select',
+      options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
+      description: 'Achtergrondkleur van de sectie',
+    },
+    border: {
+      control: 'boolean',
+      description: 'Toon boven- en onderranden',
+    },
+    packages: {
+      control: 'object',
+      description: 'Array van prijs pakket objecten',
+    },
+    onBooking: {
+      control: false,
+      description: 'Callback functie wanneer boeken wordt geklikt',
+    },
+  },
 } satisfies Meta<typeof SectionPricing>;
 
 export default meta;

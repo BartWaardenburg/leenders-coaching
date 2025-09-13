@@ -11,6 +11,7 @@ const meta = {
     title: {
       control: 'text',
       description: 'De titel van de sectie',
+      required: true,
     },
     description: {
       control: 'text',
@@ -84,28 +85,12 @@ export const WithPurpleBackground: Story = {
   },
 };
 
-export const WithoutTitle: Story = {
-  args: {
-    description:
-      'Read about the experiences of people who have worked with us.',
-    testimonials: defaultTestimonials,
-    background: 'green',
-  },
-};
-
 export const WithoutDescription: Story = {
   args: {
     title: 'What Our Clients Say',
     testimonials: defaultTestimonials,
     background: 'pink',
     border: true,
-  },
-};
-
-export const MinimalContent: Story = {
-  args: {
-    testimonials: defaultTestimonials,
-    background: 'yellow',
   },
 };
 

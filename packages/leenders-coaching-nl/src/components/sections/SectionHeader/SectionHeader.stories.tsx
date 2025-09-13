@@ -11,6 +11,7 @@ const meta = {
     title: {
       control: 'text',
       description: 'De titel van de sectie',
+      required: true,
     },
     description: {
       control: 'text',
@@ -80,18 +81,6 @@ export const WithButtons: Story = {
     secondaryCta: {
       href: '/about',
       label: 'Meer informatie',
-    },
-  },
-};
-
-export const WithoutTitle: Story = {
-  args: {
-    description: 'Deze sectie toont de layout zonder titel.',
-    background: 'green',
-    primaryCta: {
-      href: '/contact',
-      label: 'Neem contact op',
-      variant: 'green',
     },
   },
 };

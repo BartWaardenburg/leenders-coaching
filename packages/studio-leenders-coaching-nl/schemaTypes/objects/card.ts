@@ -75,5 +75,12 @@ export const card = defineType({
       description: 'Whether to reverse the image and content layout',
       initialValue: false,
     },
+    {
+      name: 'border',
+      type: 'boolean',
+      title: 'Show Border',
+      description: 'Whether to show a border around the card',
+      initialValue: false,
+    },
   ],
 });

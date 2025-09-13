@@ -6,25 +6,30 @@ const meta = {
   title: 'Sections/SectionContent',
   component: SectionContent,
   parameters: {
-    layout: 'padded',
+    layout: 'fullscreen',
   },
   argTypes: {
     title: {
       control: 'text',
-      description: 'Title of the section',
+      description: 'De titel van de sectie',
+      required: true,
+    },
+    description: {
+      control: 'text',
+      description: 'De beschrijving tekst',
     },
     content: {
       control: 'object',
-      description: 'Portable Text content blocks',
+      description: 'Portable Text content blokken',
     },
     background: {
       control: 'select',
       options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
-      description: 'Background color of the section',
+      description: 'Achtergrondkleur van de sectie',
     },
     border: {
       control: 'boolean',
-      description: 'Whether to show a border around the section',
+      description: 'Toon boven- en onderranden',
     },
   },
 } satisfies Meta<typeof SectionContent>;
@@ -205,11 +210,5 @@ export const WithBackgroundAndBorder: Story = {
     ...Default.args,
     background: 'blue',
     border: true,
-  },
-};
-
-export const NoTitle: Story = {
-  args: {
-    content: defaultContent,
   },
 };

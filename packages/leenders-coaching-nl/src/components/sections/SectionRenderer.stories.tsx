@@ -7,7 +7,7 @@ const meta = {
   title: 'Sections/SectionRenderer',
   component: SectionRenderer,
   parameters: {
-    layout: 'padded',
+    layout: 'fullscreen',
   },
   argTypes: {
     type: {
@@ -27,7 +27,8 @@ type Story = StoryObj<typeof meta>;
 /* Mock section data */
 const mockHeaderSection = {
   _type: 'sectionHeader',
-  title: 'Welcome to Our Website',
+  title: 'Internal Header Title',
+  displayTitle: 'Welcome to Our Website',
   description: 'Dit is een voorbeeld header sectie met titel en beschrijving.',
   background: 'white',
   border: false,
@@ -35,7 +36,8 @@ const mockHeaderSection = {
 
 const mockContentSection = {
   _type: 'sectionContent',
-  title: 'About Us',
+  title: 'Internal Content Title',
+  displayTitle: 'About Us',
   description: 'Meer informatie over ons bedrijf en missie.',
   content: [
     {
@@ -54,6 +56,7 @@ const mockContentSection = {
 
 const mockCardsSection = {
   _type: 'sectionCards',
+  title: 'Internal Cards Title',
   displayTitle: 'Our Services',
   description: 'Verken ons assortiment diensten',
   cards: [
@@ -82,18 +85,39 @@ const mockCardsSection = {
 
 const mockFAQSection = {
   _type: 'sectionFAQ',
-  title: 'Frequently Asked Questions',
+  title: 'Internal FAQ Title',
+  displayTitle: 'Frequently Asked Questions',
   description: 'Vind antwoorden op veelgestelde vragen',
-  faqs: [
+  items: [
     {
       _key: 'faq-1',
       question: 'What is your return policy?',
-      answer: 'We offer a 30-day return policy for all products.',
+      answer: [
+        {
+          _type: 'block',
+          children: [
+            {
+              _type: 'span',
+              text: 'We offer a 30-day return policy for all products.',
+            },
+          ],
+        },
+      ],
     },
     {
       _key: 'faq-2',
       question: 'How long does shipping take?',
-      answer: 'Standard shipping takes 3-5 business days.',
+      answer: [
+        {
+          _type: 'block',
+          children: [
+            {
+              _type: 'span',
+              text: 'Standard shipping takes 3-5 business days.',
+            },
+          ],
+        },
+      ],
     },
   ],
   background: 'gray',
@@ -102,22 +126,26 @@ const mockFAQSection = {
 
 const mockFormSection = {
   _type: 'sectionForm',
-  title: 'Contact Us',
+  title: 'Internal Form Title',
+  displayTitle: 'Contact Us',
   description: 'Neem contact op met ons team',
-  formFields: [
-    {
-      _key: 'field-1',
-      type: 'text',
-      label: 'Naam',
-      required: true,
-    },
-    {
-      _key: 'field-2',
-      type: 'email',
-      label: 'Email',
-      required: true,
-    },
-  ],
+  form: {
+    submitLabel: 'Send Message',
+    fields: [
+      {
+        _key: 'field-1',
+        type: 'text',
+        label: 'Naam',
+        required: true,
+      },
+      {
+        _key: 'field-2',
+        type: 'email',
+        label: 'Email',
+        required: true,
+      },
+    ],
+  },
   background: 'white',
   border: false,
 };

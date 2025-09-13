@@ -425,6 +425,7 @@ export type Card = {
   };
   variant?: ColorVariant;
   reverse?: boolean;
+  border?: boolean;
 };
 
 export type Link = {
