@@ -5,7 +5,7 @@
 [![Codecov](https://codecov.io/gh/bartwaardenburg/leenders-coaching/branch/main/graph/badge.svg)](https://codecov.io/gh/bartwaardenburg/leenders-coaching)
 [![Next.js](https://img.shields.io/badge/Next.js-15.5.2-black?style=flat&logo=next.js)](https://nextjs.org/)
 [![Sanity](https://img.shields.io/badge/Sanity-4.6.1-FF3E00?style=flat&logo=sanity)](https://sanity.io/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1.12-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1.13-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
 
 _A modern, high-performance coaching website built with cutting-edge web technologies_
@@ -138,7 +138,7 @@ graph TB
 <img src="https://img.shields.io/badge/Next.js-15.5.2-black?style=for-the-badge&logo=next.js" alt="Next.js" />
 <img src="https://img.shields.io/badge/React-19.1.1-61DAFB?style=for-the-badge&logo=react" alt="React" />
 <img src="https://img.shields.io/badge/TypeScript-5.9.2-3178C6?style=for-the-badge&logo=typescript" alt="TypeScript" />
-<img src="https://img.shields.io/badge/Tailwind-4.1.12-38B2AC?style=for-the-badge&logo=tailwind-css" alt="Tailwind CSS" />
+<img src="https://img.shields.io/badge/Tailwind-4.1.13-38B2AC?style=for-the-badge&logo=tailwind-css" alt="Tailwind CSS" />
 </div>
 
 | Technology          | Version  | Purpose                         |
@@ -146,7 +146,7 @@ graph TB
 | **Next.js**         | 15.5.2   | React Framework with App Router |
 | **React**           | 19.1.1   | UI Library                      |
 | **TypeScript**      | 5.9.2    | Type Safety                     |
-| **Tailwind CSS**    | 4.1.12   | Utility-First CSS Framework     |
+| **Tailwind CSS**    | 4.1.13   | Utility-First CSS Framework     |
 | **Motion**          | 12.23.12 | Animation Library               |
 | **React Hook Form** | 7.62.0   | Form Management                 |
 | **Zod**             | 4.1.5    | Schema Validation               |
@@ -229,19 +229,23 @@ graph TB
    NEXT_PUBLIC_SANITY_DATASET=production
    NEXT_PUBLIC_SANITY_API_VERSION=2024-02-14
    SANITY_API_TOKEN=your_sanity_api_token
-   SANITY_REVALIDATE_SECRET=your_random_secret_string
-   SANITY_VIEWER_TOKEN=your_sanity_viewer_token
+   SANITY_REVALIDATE_SECRET=your_revalidate_secret
 
    # Email Configuration (Required for contact form)
    RESEND_API_KEY=your_resend_api_key
 
    # Application Configuration
-   NEXT_PUBLIC_APP_URL=http://localhost:3000
+   NEXT_PUBLIC_APP_URL=https://www.leenders-coaching.nl
+   NEXT_PUBLIC_SITE_URL=https://www.leenders-coaching.nl
 
    # Sanity Studio Configuration (for content seeding)
    SANITY_STUDIO_PROJECT_ID=your_sanity_project_id
    SANITY_STUDIO_DATASET=production
    EDITOR_SANITY_AUTH_TOKEN=your_sanity_editor_token
+   SANITY_STUDIO_URL=https://studio.leenders-coaching.nl
+
+   # Editorial Workflow Configuration
+   REVIEW_EMAIL=review@your-domain.com
    ```
 
 5. **Start development servers:**
@@ -301,12 +305,23 @@ graph TB
 | `pnpm update-types`              | Update TypeScript types from schema    |
 | `pnpm validate:schema`           | Validate Sanity schema                 |
 | `pnpm seed:all`                  | Seed all pages with content            |
+| `pnpm seed:all:dry-run`          | Preview all seeding changes            |
 | `pnpm seed:create-home-page`     | Create home page content               |
+| `pnpm seed:create-home-page:dry-run` | Preview home page changes          |
 | `pnpm seed:create-about-page`    | Create about page content              |
+| `pnpm seed:create-about-page:dry-run` | Preview about page changes         |
 | `pnpm seed:create-coaching-page` | Create coaching page content           |
+| `pnpm seed:create-coaching-page:dry-run` | Preview coaching page changes     |
 | `pnpm seed:create-approach-page` | Create approach page content           |
+| `pnpm seed:create-approach-page:dry-run` | Preview approach page changes     |
 | `pnpm seed:create-contact-page`  | Create contact page content            |
+| `pnpm seed:create-contact-page:dry-run` | Preview contact page changes      |
 | `pnpm seed:create-blog-page`     | Create blog page content               |
+| `pnpm seed:create-blog-page:dry-run` | Preview blog page changes          |
+| `pnpm dataset:list`              | List Sanity datasets                  |
+| `pnpm dataset:create`            | Create new dataset                    |
+| `pnpm dataset:clone`             | Clone existing dataset                |
+| `pnpm dataset:deploy`            | Deploy dataset changes                 |
 
 ---
 
@@ -607,14 +622,26 @@ Automated content seeding scripts for rapid setup:
 ```bash
 # Seed all pages
 pnpm seed:all
+pnpm seed:all:dry-run  # Preview changes without applying
 
 # Seed specific pages
 pnpm seed:create-home-page
+pnpm seed:create-home-page:dry-run  # Preview changes
+
 pnpm seed:create-about-page
+pnpm seed:create-about-page:dry-run
+
 pnpm seed:create-coaching-page
+pnpm seed:create-coaching-page:dry-run
+
 pnpm seed:create-approach-page
+pnpm seed:create-approach-page:dry-run
+
 pnpm seed:create-contact-page
+pnpm seed:create-contact-page:dry-run
+
 pnpm seed:create-blog-page
+pnpm seed:create-blog-page:dry-run
 ```
 
 #### 🔄 Type Generation
