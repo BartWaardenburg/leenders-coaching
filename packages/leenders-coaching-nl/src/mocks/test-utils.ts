@@ -279,12 +279,13 @@ export const mockConsole = {
 export const setupMocks = () => {
   // Mock global objects
   global.fetch = mockFetch;
-  global.window = mockWindow as any;
-  global.document = mockDocument as any;
-  global.localStorage = mockLocalStorage as any;
-  global.sessionStorage = mockSessionStorage as any;
-  global.IntersectionObserver = mockIntersectionObserver as any;
-  global.ResizeObserver = mockResizeObserver as any;
+  global.window = mockWindow as typeof window;
+  global.document = mockDocument as typeof document;
+  global.localStorage = mockLocalStorage as typeof localStorage;
+  global.sessionStorage = mockSessionStorage as typeof sessionStorage;
+  global.IntersectionObserver =
+    mockIntersectionObserver as typeof IntersectionObserver;
+  global.ResizeObserver = mockResizeObserver as typeof ResizeObserver;
   global.matchMedia = mockMatchMedia;
   global.requestAnimationFrame = mockRequestAnimationFrame;
   global.cancelAnimationFrame = mockCancelAnimationFrame;
@@ -292,8 +293,8 @@ export const setupMocks = () => {
   global.clearTimeout = mockClearTimeout;
   global.setInterval = mockSetInterval;
   global.clearInterval = mockClearInterval;
-  global.Date = vi.fn(() => mockDate) as any;
-  global.console = mockConsole as any;
+  global.Date = vi.fn(() => mockDate) as typeof Date;
+  global.console = mockConsole as typeof console;
 
   // Mock environment variables
   Object.assign(process.env, mockEnv);
@@ -311,7 +312,7 @@ export const cleanupMocks = () => {
 /**
  * Wait for animations to complete
  */
-export const waitForAnimationsToComplete = async (testId: string) => {
+export const waitForAnimationsToComplete = async (_testId: string) => {
   // Wait for any pending animations
   await new Promise((resolve) => setTimeout(resolve, 100));
 
@@ -356,7 +357,7 @@ export const mockUserEvents = {
  * Mock API responses
  */
 export const mockApiResponses = {
-  success: (data: any) => ({
+  success: (data: unknown) => ({
     ok: true,
     status: 200,
     json: () => Promise.resolve(data),

@@ -15,7 +15,7 @@ import {
   transformNullable,
   transformNullableArray,
 } from '@/utilities/transform';
-import { mockGlobalData } from '@/mocks';
+// import { mockGlobalData } from '@/mocks';
 
 /* Mock dependencies */
 vi.mock('@/utilities/groq-queries');

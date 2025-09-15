@@ -5,7 +5,7 @@ import { Form } from './Form';
 import { Box } from '../Box/Box';
 import { Input } from '../Input/Input';
 import { Button } from '../Button/Button';
-import { mockFormData, mockFormValidation } from '@/mocks';
+import { mockFormData } from '@/mocks';
 
 const meta = {
   title: 'UI/Form',
