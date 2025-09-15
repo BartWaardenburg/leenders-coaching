@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { waitForMotionAnimations } from '@/test/chromatic-utils';
 import { Header } from './Header';
+import { mockGlobalData } from '@/mocks';
 
 const meta = {
   title: 'UI/Header',
@@ -16,12 +17,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    navigation: [
-      { _key: '1', label: 'Home', href: '/' },
-      { _key: '2', label: 'Over ons', href: '/about' },
-      { _key: '3', label: 'Diensten', href: '/services' },
-      { _key: '4', label: 'Contact', href: '/contact' },
-    ],
+    navigation: mockGlobalData.header.navigation,
     about: {
       title: 'Over ons',
       description: 'Meer informatie over onze diensten',

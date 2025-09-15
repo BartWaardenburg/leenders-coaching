@@ -3,6 +3,7 @@ import { expect } from 'storybook/test';
 import { Heading } from './Heading';
 import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 import { Box } from '../Box/Box';
+import { mockCardData } from '@/mocks';
 
 const meta = {
   title: 'UI/Heading',
@@ -59,12 +60,12 @@ export const LargeHeading: Story = {
   args: {
     level: 'h1',
     variant: 'large',
-    children: 'Large Heading',
+    children: mockCardData.service.title,
     showBorder: true,
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByRole('heading', { name: 'Large Heading' })
+      canvas.getByRole('heading', { name: mockCardData.service.title })
     ).toBeVisible();
   },
 };
@@ -73,11 +74,11 @@ export const MediumHeading: Story = {
   args: {
     level: 'h2',
     variant: 'medium',
-    children: 'Medium Heading',
+    children: mockCardData.blog.title,
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByRole('heading', { name: 'Medium Heading' })
+      canvas.getByRole('heading', { name: mockCardData.blog.title })
     ).toBeVisible();
   },
 };

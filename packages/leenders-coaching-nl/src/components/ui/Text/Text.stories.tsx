@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Text } from './Text';
 import { Box } from '../Box/Box';
+import { mockCardData } from '@/mocks';
 
 const meta = {
   title: 'UI/Text',
@@ -97,10 +98,12 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: 'Text Example',
+    children: mockCardData.service.description,
   },
   play: async ({ canvas }) => {
-    await expect(canvas.getByText('Text Example')).toBeVisible();
+    await expect(
+      canvas.getByText(mockCardData.service.description)
+    ).toBeVisible();
     // Simple static test - no animation wait needed
   },
 };
@@ -203,11 +206,13 @@ export const AsElement: Story = {
 
 export const ItalicText: Story = {
   args: {
-    children: 'This text is italic',
+    children: mockCardData.testimonial.quote,
     italic: true,
   },
   play: async ({ canvas }) => {
-    await expect(canvas.getByText('This text is italic')).toBeVisible();
+    await expect(
+      canvas.getByText(mockCardData.testimonial.quote)
+    ).toBeVisible();
     // Simple static test - no animation wait needed
   },
 };

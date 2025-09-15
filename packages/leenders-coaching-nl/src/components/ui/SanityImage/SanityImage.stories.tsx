@@ -4,6 +4,7 @@ import { SanityImage } from './SanityImage';
 import { Box } from '../Box/Box';
 import { Heading } from '../Heading/Heading';
 import { Grid } from '../Grid/Grid';
+import { mockSanityImage } from '@/mocks';
 
 const meta = {
   title: 'UI/SanityImage',
@@ -43,61 +44,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/* Mock Sanity image data with full metadata */
-const mockImageWithMetadata = {
-  _type: 'image',
-  asset: {
-    _ref: 'image-abc123-1920x1080-jpg',
-    _type: 'reference',
-    metadata: {
-      lqip: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=',
-      dimensions: {
-        width: 1920,
-        height: 1080,
-        aspectRatio: 1.7777777777777777,
-      },
-      palette: {
-        dominant: {
-          background: '#3b82f6',
-        },
-      },
-    },
-  },
-  hotspot: {
-    x: 0.5,
-    y: 0.3,
-  },
-  alt: 'Prachtig landschap met bergen en meer',
-};
-
-const mockImageWithoutMetadata = {
-  _type: 'image',
-  asset: {
-    _ref: 'image-def456-800x600-jpg',
-    _type: 'reference',
-  },
-  alt: 'Eenvoudige afbeelding zonder metadata',
-};
-
-const mockImageWithPartialMetadata = {
-  _type: 'image',
-  asset: {
-    _ref: 'image-ghi789-1200x800-jpg',
-    _type: 'reference',
-    metadata: {
-      dimensions: {
-        width: 1200,
-        height: 800,
-        aspectRatio: 1.5,
-      },
-    },
-  },
-  alt: 'Afbeelding met gedeeltelijke metadata',
-};
+/* Mock Sanity image data is now imported from @/mocks */
 
 export const Default: Story = {
   args: {
-    image: mockImageWithMetadata,
+    image: mockSanityImage.withMetadata,
     alt: 'Standaard Sanity afbeelding',
     sizes: '100vw',
     priority: false,
@@ -114,7 +65,7 @@ export const Default: Story = {
 
 export const WithHotspot: Story = {
   args: {
-    image: mockImageWithMetadata,
+    image: mockSanityImage.withMetadata,
     alt: 'Afbeelding met hotspot positionering',
     sizes: '100vw',
     priority: false,
@@ -131,7 +82,7 @@ export const WithHotspot: Story = {
 
 export const HighPriority: Story = {
   args: {
-    image: mockImageWithMetadata,
+    image: mockSanityImage.withMetadata,
     alt: 'Hoge prioriteit afbeelding',
     sizes: '100vw',
     priority: true,
@@ -148,7 +99,7 @@ export const HighPriority: Story = {
 
 export const WithoutMetadata: Story = {
   args: {
-    image: mockImageWithoutMetadata,
+    image: mockSanityImage.withoutMetadata,
     alt: 'Afbeelding zonder metadata',
     sizes: '100vw',
     priority: false,
@@ -165,7 +116,7 @@ export const WithoutMetadata: Story = {
 
 export const WithPartialMetadata: Story = {
   args: {
-    image: mockImageWithPartialMetadata,
+    image: mockSanityImage.withPartialMetadata,
     alt: 'Afbeelding met gedeeltelijke metadata',
     sizes: '100vw',
     priority: false,
@@ -182,7 +133,7 @@ export const WithPartialMetadata: Story = {
 
 export const FillMode: Story = {
   args: {
-    image: mockImageWithMetadata,
+    image: mockSanityImage.withMetadata,
     alt: 'Afbeelding in vul modus',
     sizes: '100vw',
     priority: false,
@@ -205,7 +156,7 @@ export const FillMode: Story = {
 
 export const CustomSizes: Story = {
   args: {
-    image: mockImageWithMetadata,
+    image: mockSanityImage.withMetadata,
     alt: 'Afbeelding met aangepaste groottes',
     sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
     priority: false,
@@ -222,7 +173,7 @@ export const CustomSizes: Story = {
 
 export const LowQuality: Story = {
   args: {
-    image: mockImageWithMetadata,
+    image: mockSanityImage.withMetadata,
     alt: 'Lage kwaliteit afbeelding',
     sizes: '100vw',
     priority: false,
@@ -239,7 +190,7 @@ export const LowQuality: Story = {
 
 export const HighQuality: Story = {
   args: {
-    image: mockImageWithMetadata,
+    image: mockSanityImage.withMetadata,
     alt: 'Hoge kwaliteit afbeelding',
     sizes: '100vw',
     priority: false,
@@ -277,7 +228,7 @@ export const NoAsset: Story = {
 
 export const WithCustomClassName: Story = {
   args: {
-    image: mockImageWithMetadata,
+    image: mockSanityImage.withMetadata,
     alt: 'Afbeelding met aangepaste stijl',
     sizes: '100vw',
     priority: false,
@@ -295,7 +246,7 @@ export const WithCustomClassName: Story = {
 
 export const WithCustomStyle: Story = {
   args: {
-    image: mockImageWithMetadata,
+    image: mockSanityImage.withMetadata,
     alt: 'Afbeelding met aangepaste stijl',
     sizes: '100vw',
     priority: false,
@@ -319,7 +270,7 @@ export const AllVariants: Story = {
     controls: { hideNoControlsWarning: true },
   },
   args: {
-    image: mockImageWithMetadata,
+    image: mockSanityImage.withMetadata,
     alt: 'Alle varianten afbeelding',
     sizes: '100vw',
     priority: false,
@@ -333,7 +284,7 @@ export const AllVariants: Story = {
           With Full Metadata
         </Heading>
         <SanityImage
-          image={mockImageWithMetadata}
+          image={mockSanityImage.withMetadata}
           alt="Volledige metadata afbeelding"
           sizes="100vw"
           className="w-full h-48 object-cover"
@@ -345,7 +296,7 @@ export const AllVariants: Story = {
           Without Metadata
         </Heading>
         <SanityImage
-          image={mockImageWithoutMetadata}
+          image={mockSanityImage.withoutMetadata}
           alt="Geen metadata afbeelding"
           sizes="100vw"
           className="w-full h-48 object-cover"
@@ -357,7 +308,7 @@ export const AllVariants: Story = {
           With Hotspot
         </Heading>
         <SanityImage
-          image={mockImageWithMetadata}
+          image={mockSanityImage.withMetadata}
           alt="Hotspot afbeelding"
           sizes="100vw"
           followHotspot={true}
@@ -371,7 +322,7 @@ export const AllVariants: Story = {
         </Heading>
         <Box className="relative w-full h-48 overflow-hidden">
           <SanityImage
-            image={mockImageWithMetadata}
+            image={mockSanityImage.withMetadata}
             alt="Vul modus afbeelding"
             sizes="100vw"
             fill={true}

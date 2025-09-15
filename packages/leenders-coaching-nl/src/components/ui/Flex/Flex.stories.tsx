@@ -146,14 +146,19 @@ export const WrappedItems: Story = {
       <>
         {Array.from({ length: 8 }, (_, i) => (
           <Box key={i} className="p-2 bg-primary text-primary-foreground w-20">
-            Item {i + 1}
+            {i % 2 === 0 ? 'Coaching' : 'Ontwikkeling'}
           </Box>
         ))}
       </>
     ),
   },
   play: async ({ canvas }) => {
-    await expect(canvas.getByText('Item 1')).toBeVisible();
-    await expect(canvas.getByText('Item 8')).toBeVisible();
+    const coachingElements = canvas.getAllByText('Coaching');
+    expect(coachingElements.length).toBeGreaterThan(0);
+    await expect(coachingElements[0]).toBeVisible();
+
+    const ontwikkelingElements = canvas.getAllByText('Ontwikkeling');
+    expect(ontwikkelingElements.length).toBeGreaterThan(0);
+    await expect(ontwikkelingElements[0]).toBeVisible();
   },
 };

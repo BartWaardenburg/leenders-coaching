@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionHeader } from './SectionHeader';
+import { mockHeaderSection } from '@/mocks';
 
 const meta = {
   title: 'Sections/SectionHeader',
@@ -42,9 +43,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    title: 'Sectie titel',
-    description:
-      'This is a description text that provides more context about this section.',
+    title: mockHeaderSection.displayTitle,
+    description: mockHeaderSection.description,
   },
 };
 

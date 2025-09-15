@@ -3,6 +3,13 @@ import { expect } from 'storybook/test';
 import { SectionRenderer } from './SectionRenderer';
 import { waitForMotionAnimations } from '../../test/chromatic-utils';
 import { Box } from '@/components/ui/Box';
+import {
+  mockHeaderSection,
+  mockContentSection,
+  mockCardsSection,
+  mockFAQSection,
+  mockFormSection,
+} from '@/mocks';
 
 const meta = {
   title: 'Sections/SectionRenderer',
@@ -25,131 +32,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/* Mock section data */
-const mockHeaderSection = {
-  _type: 'sectionHeader',
-  title: 'Internal Header Title',
-  displayTitle: 'Welcome to Our Website',
-  description: 'Dit is een voorbeeld header sectie met titel en beschrijving.',
-  background: 'white',
-  border: false,
-};
-
-const mockContentSection = {
-  _type: 'sectionContent',
-  title: 'Internal Content Title',
-  displayTitle: 'About Us',
-  description: 'Meer informatie over ons bedrijf en missie.',
-  content: [
-    {
-      _type: 'block',
-      children: [
-        {
-          _type: 'span',
-          text: 'We are a leading company in our industry, dedicated to providing excellent service and innovative solutions.',
-        },
-      ],
-    },
-  ],
-  background: 'gray',
-  border: true,
-};
-
-const mockCardsSection = {
-  _type: 'sectionCards',
-  title: 'Internal Cards Title',
-  displayTitle: 'Our Services',
-  description: 'Verken ons assortiment diensten',
-  cards: [
-    {
-      _key: 'card-1',
-      title: 'Service 1',
-      description: 'Beschrijving voor dienst 1',
-      featured: true,
-      variant: 'default',
-      border: true,
-      reverse: false,
-    },
-    {
-      _key: 'card-2',
-      title: 'Service 2',
-      description: 'Beschrijving voor dienst 2',
-      featured: false,
-      variant: 'default',
-      border: true,
-      reverse: true,
-    },
-  ],
-  background: 'white',
-  border: false,
-};
-
-const mockFAQSection = {
-  _type: 'sectionFAQ',
-  title: 'Internal FAQ Title',
-  displayTitle: 'Frequently Asked Questions',
-  description: 'Vind antwoorden op veelgestelde vragen',
-  items: [
-    {
-      _key: 'faq-1',
-      question: 'What is your return policy?',
-      answer: [
-        {
-          _type: 'block',
-          children: [
-            {
-              _type: 'span',
-              text: 'We offer a 30-day return policy for all products.',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      _key: 'faq-2',
-      question: 'How long does shipping take?',
-      answer: [
-        {
-          _type: 'block',
-          children: [
-            {
-              _type: 'span',
-              text: 'Standard shipping takes 3-5 business days.',
-            },
-          ],
-        },
-      ],
-    },
-  ],
-  background: 'gray',
-  border: true,
-};
-
-const mockFormSection = {
-  _type: 'sectionForm',
-  title: 'Internal Form Title',
-  displayTitle: 'Contact Us',
-  description: 'Neem contact op met ons team',
-  form: {
-    submitLabel: 'Send Message',
-    fields: [
-      {
-        _key: 'field-1',
-        type: 'text',
-        label: 'Naam',
-        required: true,
-      },
-      {
-        _key: 'field-2',
-        type: 'email',
-        label: 'Email',
-        required: true,
-      },
-    ],
-  },
-  background: 'white',
-  border: false,
-};
+/* Mock section data is now imported from @/mocks */
 
 export const HeaderSection: Story = {
   args: {
@@ -179,12 +62,12 @@ export const CardsSection: Story = {
     data: mockCardsSection,
   },
   play: async ({ canvas }) => {
-    await expect(canvas.getByText('Our Services')).toBeInTheDocument();
+    await expect(canvas.getByText('Onze Diensten')).toBeInTheDocument();
     await expect(
-      canvas.getByText('Verken ons assortiment diensten')
+      canvas.getByText('Verken ons uitgebreide aanbod van coaching diensten')
     ).toBeInTheDocument();
-    await expect(canvas.getByText('Service 1')).toBeInTheDocument();
-    await expect(canvas.getByText('Service 2')).toBeInTheDocument();
+    await expect(canvas.getByText('Loopbaancoaching')).toBeInTheDocument();
+    await expect(canvas.getByText('Persoonlijke Coaching')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -203,7 +86,31 @@ export const FAQSection: Story = {
 export const FormSection: Story = {
   args: {
     type: 'sectionForm',
-    data: mockFormSection,
+    data: {
+      _type: 'sectionForm',
+      title: 'Internal Form Title',
+      displayTitle: 'Contact Us',
+      description: 'Neem contact op met ons team',
+      form: {
+        submitLabel: 'Send Message',
+        fields: [
+          {
+            _key: 'field-1',
+            type: 'text',
+            label: 'Naam',
+            required: true,
+          },
+          {
+            _key: 'field-2',
+            type: 'email',
+            label: 'Email',
+            required: true,
+          },
+        ],
+      },
+      background: 'white',
+      border: false,
+    },
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByTestId('section')).toBeInTheDocument();

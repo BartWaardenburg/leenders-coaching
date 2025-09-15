@@ -1,16 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { lockScroll, unlockScroll, getScrollLockCount } from './scrollLock';
-
-/**
- * Mock DOM environment for testing
- */
-const mockDocument = {
-  body: {
-    style: {
-      overflow: '',
-    },
-  },
-};
+import { mockDocument } from '@/mocks';
 
 // Mock document for testing
 Object.defineProperty(global, 'document', {

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionCalendar } from './SectionCalendar';
 import { Text } from '../../ui/Text/Text';
+import { mockCalendarSection } from '@/mocks';
 
 const meta = {
   title: 'Sections/SectionCalendar',
@@ -43,9 +44,9 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    title: 'Calendar',
-    description: 'Select a date to schedule your appointment.',
-    initialDate: new Date('2024-03-15'),
+    title: mockCalendarSection.displayTitle,
+    description: mockCalendarSection.description,
+    initialDate: mockCalendarSection.initialDate,
   },
   render: (args) => {
     const initialDate =

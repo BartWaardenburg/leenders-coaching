@@ -2,54 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
 import { ClientConfigProvider, useConfig } from './ClientConfigProvider';
-import type { ConfigType } from '../ConfigProvider/ConfigProvider';
-
-/* Mock config data */
-const mockConfig: ConfigType = {
-  accessibility: {
-    closeButtons: {
-      toast: 'Sluit melding',
-      modal: 'Sluiten',
-    },
-    calendar: {
-      previousMonth: 'Vorige maand',
-      nextMonth: 'Volgende maand',
-    },
-  },
-  interface: {
-    mobileMenu: {
-      toggleButton: 'Menu openen/sluiten',
-      menuLabel: 'Hoofdmenu',
-      closeButton: 'Menu sluiten',
-    },
-    themeToggle: {
-      label: 'Thema aanpassen',
-    },
-    buttons: {
-      loadMore: 'Meer laden',
-      readMore: 'Lees meer',
-      submit: 'Versturen',
-      close: 'Sluiten',
-    },
-  },
-  blog: {
-    labels: {
-      featured: 'Uitgelicht',
-      readArticle: 'Lees artikel',
-    },
-    paths: {
-      blog: '/blog',
-    },
-  },
-  forms: {
-    messages: {
-      required: 'Dit veld is verplicht',
-      invalid: 'Ongeldig formaat',
-      success: 'Formulier succesvol verzonden',
-      error: 'Er is een fout opgetreden',
-    },
-  },
-};
+import { mockConfig } from '@/mocks';
 
 /* Test component that uses the useConfig hook */
 const TestComponent = () => {

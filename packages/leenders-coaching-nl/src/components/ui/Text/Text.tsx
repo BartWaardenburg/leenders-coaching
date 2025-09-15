@@ -2,6 +2,12 @@ import type { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react';
 import { forwardRef } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/utilities/cn';
+import type {
+  BaseComponentProps,
+  SizeVariant,
+  ColorVariant,
+  MaxWidthVariant,
+} from '@/utilities/types';
 
 const textVariants = cva('leading-relaxed transition-theme', {
   variants: {
@@ -43,34 +49,15 @@ const textVariants = cva('leading-relaxed transition-theme', {
   },
 });
 
-type TextProps<T extends ElementType = 'p'> = {
+type TextProps<T extends ElementType = 'p'> = BaseComponentProps & {
   children: ReactNode;
   as?: T;
-  testid?: string;
   /** Text size - overrides variant size */
-  size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+  size?: SizeVariant;
   /** Text color - overrides variant color */
-  color?:
-    | 'default'
-    | 'muted'
-    | 'foreground'
-    | 'primary'
-    | 'secondary'
-    | 'destructive';
+  color?: ColorVariant;
   /** Maximum width constraint */
-  maxWidth?:
-    | 'xs'
-    | 'sm'
-    | 'md'
-    | 'lg'
-    | 'xl'
-    | '2xl'
-    | '3xl'
-    | '4xl'
-    | '5xl'
-    | '6xl'
-    | '7xl'
-    | 'full';
+  maxWidth?: MaxWidthVariant;
   /** Text opacity (0-100) */
   opacity?: number;
 } & VariantProps<typeof textVariants> &

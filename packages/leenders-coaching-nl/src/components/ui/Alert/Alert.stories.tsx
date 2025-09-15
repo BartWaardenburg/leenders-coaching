@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Alert } from './Alert';
 import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { mockAlertData } from '@/mocks';
 
 const meta = {
   title: 'UI/Alert',
@@ -42,14 +43,12 @@ export const Default: Story = {
   args: {
     variant: 'blue',
     size: 'medium',
-    children: 'This is a default alert message.',
+    children: mockAlertData.info.message,
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
-    await expect(
-      canvas.getByText('This is a default alert message.')
-    ).toBeVisible();
+    await expect(canvas.getByText(mockAlertData.info.message)).toBeVisible();
   },
 };
 
@@ -58,14 +57,12 @@ export const WithCloseButton: Story = {
     variant: 'blue',
     size: 'medium',
     showCloseButton: true,
-    children: 'This is an alert with a close button.',
+    children: mockAlertData.warning.message,
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
-    await expect(
-      canvas.getByText('This is an alert with a close button.')
-    ).toBeVisible();
+    await expect(canvas.getByText(mockAlertData.warning.message)).toBeVisible();
     await expect(canvas.getByLabelText('Sluit waarschuwing')).toBeVisible();
   },
 };
@@ -74,14 +71,12 @@ export const Small: Story = {
   args: {
     variant: 'blue',
     size: 'small',
-    children: 'This is a small alert message.',
+    children: mockAlertData.success.message,
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
-    await expect(
-      canvas.getByText('This is a small alert message.')
-    ).toBeVisible();
+    await expect(canvas.getByText(mockAlertData.success.message)).toBeVisible();
   },
 };
 
@@ -90,14 +85,12 @@ export const SmallWithClose: Story = {
     variant: 'blue',
     size: 'small',
     showCloseButton: true,
-    children: 'This is a small alert with a close button.',
+    children: mockAlertData.error.message,
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
-    await expect(
-      canvas.getByText('This is a small alert with a close button.')
-    ).toBeVisible();
+    await expect(canvas.getByText(mockAlertData.error.message)).toBeVisible();
     await expect(canvas.getByLabelText('Sluit waarschuwing')).toBeVisible();
   },
 };

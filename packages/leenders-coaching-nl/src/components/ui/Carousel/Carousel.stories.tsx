@@ -9,6 +9,7 @@ import { Text } from '@/components/ui/Text';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import Image from 'next/image';
+import { mockTestimonialSection } from '@/mocks';
 
 const meta = {
   title: 'UI/Carousel',
@@ -31,36 +32,20 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const testimonials = [
-  {
-    quote:
-      "The coaching sessions have been transformative. I've gained clarity about my goals and the confidence to pursue them.",
-    name: 'Sarah Johnson',
-    role: 'Marketing Director',
-    image: 'https://picsum.photos/id/64/256/256',
-  },
-  {
-    quote:
-      "Working with this coach has helped me overcome obstacles I didn't think were possible. The results speak for themselves.",
-    name: 'Michael Chen',
-    role: 'Software Engineer',
-    image: 'https://picsum.photos/id/1027/256/256',
-  },
-  {
-    quote:
-      'The personalized approach and actionable strategies have made a real difference in both my professional and personal life.',
-    name: 'Emma Davis',
-    role: 'Business Owner',
-    image: 'https://picsum.photos/id/1025/256/256',
-  },
-];
+// Using centralized mock data
+const testimonials = mockTestimonialSection.testimonials;
 
 const TestimonialSlide = ({
   quote,
   name,
   role,
   image,
-}: (typeof testimonials)[number]) => (
+}: {
+  quote: string;
+  name: string;
+  role: string;
+  image: string;
+}) => (
   <Box className="max-w-2xl mx-auto px-4">
     <Quote
       cite={
@@ -88,7 +73,7 @@ export const Default: Story = {
       canvas.getAllByText((_: string, element: Element | null) => {
         return (
           element?.textContent?.includes(
-            'The coaching sessions have been transformative'
+            'De coaching sessies hebben mijn carrière getransformeerd'
           ) ?? false
         );
       })[0]
@@ -96,6 +81,7 @@ export const Default: Story = {
   },
 };
 
+// Using centralized mock data for images
 const images = [
   {
     src: 'https://picsum.photos/id/237/1200/800',
@@ -276,7 +262,7 @@ export const CarouselNavigation: Story = {
         canvas.getAllByText((_: string, element: Element | null) => {
           return (
             element?.textContent?.includes(
-              'The coaching sessions have been transformative'
+              'De coaching sessies hebben mijn carrière getransformeerd'
             ) ?? false
           );
         })[0]
@@ -329,7 +315,7 @@ export const CarouselNavigation: Story = {
         canvas.getAllByText((_: string, element: Element | null) => {
           return (
             element?.textContent?.includes(
-              'The coaching sessions have been transformative'
+              'De coaching sessies hebben mijn carrière getransformeerd'
             ) ?? false
           );
         })[0]
@@ -398,7 +384,7 @@ export const CarouselSwipeGestures: Story = {
         (_content: string, element: Element | null) => {
           return (
             element?.textContent?.includes(
-              'The coaching sessions have been transformative'
+              'De coaching sessies hebben mijn carrière getransformeerd'
             ) ?? false
           );
         }
@@ -450,7 +436,7 @@ export const CarouselKeyboardNavigation: Story = {
         (_content: string, element: Element | null) => {
           return (
             element?.textContent?.includes(
-              'The coaching sessions have been transformative'
+              'De coaching sessies hebben mijn carrière getransformeerd'
             ) ?? false
           );
         }

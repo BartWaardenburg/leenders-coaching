@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { Section } from '@/components/ui/Section';
 import { Heading } from '@/components/ui/Heading';
 import { Grid } from '@/components/ui/Grid';
+import { mockModalData } from '@/mocks';
 
 const meta = {
   title: 'UI/Modal',
@@ -52,15 +53,13 @@ export const Default: Story = {
   args: {
     isOpen: true,
     label: 'Voorbeeld modal',
-    children: 'This is the content of the modal dialog.',
+    children: mockModalData.contact.content,
     onClose: fn(),
   },
   play: async ({ canvas, userEvent: _userEvent, args: _args }) => {
     const modal = canvas.getByRole('dialog');
     await expect(modal).toBeInTheDocument();
-    expect(
-      canvas.getByText('This is the content of the modal dialog.')
-    ).toBeInTheDocument();
+    expect(canvas.getByText(mockModalData.contact.content)).toBeInTheDocument();
 
     // Test close button exists (may be hidden initially due to animations)
     const closeButton = canvas.getByLabelText('Sluiten');
@@ -76,12 +75,12 @@ export const WithoutCloseButton: Story = {
     isOpen: true,
     label: 'Modal zonder sluitknop',
     showCloseButton: false,
-    children: "This modal doesn't have a close button.",
+    children: mockModalData.confirmation.content,
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByRole('dialog')).toBeInTheDocument();
     expect(
-      canvas.getByText("This modal doesn't have a close button.")
+      canvas.getByText(mockModalData.confirmation.content)
     ).toBeInTheDocument();
     // Verify no close button is present
     await expect(canvas.queryByLabelText('Sluiten')).not.toBeInTheDocument();

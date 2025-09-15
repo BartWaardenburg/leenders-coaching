@@ -1,12 +1,12 @@
-import type {
-  ComponentPropsWithoutRef,
-  ComponentRef,
-  ElementType,
-  ReactElement,
-  ReactNode,
-} from 'react';
+import type { ComponentRef, ElementType, ReactElement, ReactNode } from 'react';
 import { forwardRef } from 'react';
 import { cn } from '@/utilities/cn';
+import type {
+  PolymorphicProps,
+  BaseComponentProps,
+  JustifyContentVariant,
+  SpaceVariant,
+} from '@/utilities/types';
 
 const GAP = {
   0: 'gap-0',
@@ -31,7 +31,7 @@ const JUSTIFY = {
   evenly: 'justify-evenly',
 } as const;
 
-const SPACE_Y: Record<0 | 1 | 2 | 3 | 4 | 'px', string> = {
+const SPACE_Y: Record<SpaceVariant, string> = {
   0: 'space-y-0',
   1: 'space-y-1',
   2: 'space-y-2',
@@ -39,7 +39,7 @@ const SPACE_Y: Record<0 | 1 | 2 | 3 | 4 | 'px', string> = {
   4: 'space-y-4',
   px: 'space-y-px',
 };
-const SPACE_X: Record<0 | 1 | 2 | 3 | 4 | 'px', string> = {
+const SPACE_X: Record<SpaceVariant, string> = {
   0: 'space-x-0',
   1: 'space-x-1',
   2: 'space-x-2',
@@ -48,23 +48,15 @@ const SPACE_X: Record<0 | 1 | 2 | 3 | 4 | 'px', string> = {
   px: 'space-x-px',
 };
 
-type SpaceValue = 0 | 1 | 2 | 3 | 4 | 'px';
-
-type PolymorphicProps<C extends ElementType, P = {}> = P & {
-  as?: C;
-} & Omit<ComponentPropsWithoutRef<C>, 'as' | keyof P>;
-
 type StackProps<C extends ElementType = 'div'> = PolymorphicProps<
   C,
-  {
+  BaseComponentProps & {
     children: ReactNode;
-    space?: SpaceValue;
+    space?: SpaceVariant;
     gap?: GapKey;
     direction?: 'col' | 'row';
     reverse?: boolean;
-    justify?: 'start' | 'end' | 'center' | 'between' | 'around' | 'evenly';
-    testid?: string;
-    className?: string;
+    justify?: JustifyContentVariant;
   }
 >;
 

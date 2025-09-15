@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Quote } from './Quote';
+import { mockCardData } from '@/mocks';
 
 const meta = {
   title: 'UI/Quote',
@@ -26,7 +27,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: "Life is what happens while you're busy making other plans.",
+    children: mockCardData.testimonial.quote,
   },
   play: async ({ canvas }) => {
     expect(canvas.getByRole('blockquote')).toBeInTheDocument();
@@ -36,12 +37,12 @@ export const Default: Story = {
 
 export const WithCitation: Story = {
   args: {
-    children: "Life is what happens while you're busy making other plans.",
-    cite: 'John Lennon',
+    children: mockCardData.testimonial.quote,
+    cite: mockCardData.testimonial.name,
   },
   play: async ({ canvas }) => {
     expect(canvas.getByRole('blockquote')).toBeInTheDocument();
-    expect(canvas.getByText('John Lennon')).toBeInTheDocument();
+    expect(canvas.getByText(mockCardData.testimonial.name)).toBeInTheDocument();
     // Simple static test - no animation wait needed
   },
 };

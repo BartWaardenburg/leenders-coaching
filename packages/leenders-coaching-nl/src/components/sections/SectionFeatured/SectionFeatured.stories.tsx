@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionFeatured } from './SectionFeatured';
+import { mockFeaturedSection } from '@/mocks';
 
 const meta = {
   title: 'Sections/SectionFeatured',
@@ -44,16 +45,12 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// Using centralized mock data
 const defaultArgs = {
-  title: 'Featured Section',
-  description:
-    'This is a featured section with an image and some descriptive text. It can be used to highlight important content or features.',
-  image: 'https://picsum.photos/id/237/1200/800',
-  cta: {
-    href: '#',
-    label: 'Meer informatie',
-    variant: 'blue' as const,
-  },
+  title: mockFeaturedSection.displayTitle,
+  description: mockFeaturedSection.description,
+  image: mockFeaturedSection.image,
+  cta: mockFeaturedSection.cta,
 } as const;
 
 export const Default: Story = {

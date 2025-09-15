@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { FAQ } from './FAQ';
+import { mockFAQSection } from '@/mocks';
 
 const meta = {
   title: 'UI/FAQ',
@@ -28,34 +29,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const samplePortableText = [
+// Using centralized mock data
+const samplePortableText = mockFAQSection.faqs[0]?.answer || [
   {
     _type: 'block',
     children: [
       {
         _type: 'span',
-        text: 'This is a basic answer with ',
-      },
-      {
-        _type: 'span',
-        marks: ['strong'],
-        text: 'formatted text',
-      },
-      {
-        _type: 'span',
-        text: ' and a ',
-      },
-      {
-        _type: 'span',
-        marks: ['link'],
-        text: 'link',
-        value: {
-          href: 'https://example.com',
-        },
-      },
-      {
-        _type: 'span',
-        text: '.',
+        text: 'This is a basic answer with formatted text.',
       },
     ],
     style: 'normal',
@@ -196,7 +177,9 @@ export const InteractiveFAQ: Story = {
       // Wait for expansion animation
 
       // Verify answer is visible (using partial text match)
-      expect(canvas.getByText(/This is a basic answer/)).toBeInTheDocument();
+      expect(
+        canvas.getByText(/Onze coaching sessies duren meestal 60-90 minuten/)
+      ).toBeInTheDocument();
     });
 
     await step('Expand second FAQ item', async () => {

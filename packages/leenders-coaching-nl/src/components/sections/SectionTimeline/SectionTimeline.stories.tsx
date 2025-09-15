@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionTimeline } from './SectionTimeline';
 import { Button } from '@/components/ui/Button';
+import { mockTimelineSection } from '@/mocks';
 
 const meta = {
   title: 'Sections/SectionTimeline',
@@ -37,44 +38,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const defaultSteps = [
-  {
-    title: 'Initial Consultation',
-    description:
-      'A free introductory meeting to discuss your goals and how coaching can help you achieve them.',
-    date: 'Week 1',
-  },
-  {
-    title: 'Goal Setting',
-    description:
-      "Together we'll define clear, achievable goals and create a personalized coaching plan.",
-    date: 'Week 2',
-  },
-  {
-    title: 'Regular Sessions',
-    description:
-      'Weekly or bi-weekly coaching sessions to work on your goals and overcome challenges.',
-    date: 'Weeks 3-8',
-  },
-  {
-    title: 'Progress Review',
-    description:
-      'Regular check-ins to measure progress and adjust the coaching plan as needed.',
-    date: 'Week 9',
-  },
-  {
-    title: 'Final Evaluation',
-    description:
-      'Review achievements, celebrate success, and plan for continued growth.',
-    date: 'Week 12',
-  },
-];
+// Using centralized mock data
+const defaultSteps = mockTimelineSection.steps;
 
 export const Default: Story = {
   args: {
-    title: 'Your Coaching Journey',
-    description:
-      'A step-by-step guide to your personal development and growth with our coaching program.',
+    title: mockTimelineSection.displayTitle,
+    description: mockTimelineSection.description,
     steps: defaultSteps,
   },
 };

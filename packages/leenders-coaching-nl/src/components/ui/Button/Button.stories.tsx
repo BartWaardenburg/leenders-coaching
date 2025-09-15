@@ -3,6 +3,7 @@ import { expect } from 'storybook/test';
 import { fn } from 'storybook/test';
 import { Button } from './Button';
 import { Box } from '../Box/Box';
+import { mockButtonVariants, mockLoadingStates } from '@/mocks';
 
 const meta = {
   title: 'UI/Button',
@@ -54,11 +55,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: 'Click me',
+    children: mockButtonVariants.primary.label,
     onClick: fn(),
   },
   play: async ({ canvas, userEvent, args }) => {
-    const button = canvas.getByRole('button', { name: 'Click me' });
+    const button = canvas.getByRole('button', {
+      name: mockButtonVariants.primary.label,
+    });
     await expect(button).toBeVisible();
 
     /* Test click interaction. */
@@ -71,7 +74,7 @@ export const Default: Story = {
 
 export const WithLoading: Story = {
   args: {
-    children: 'Loading...',
+    children: mockLoadingStates.button.label,
     isLoading: true,
     onClick: fn(),
   },
@@ -91,12 +94,14 @@ export const WithLoading: Story = {
 
 export const Disabled: Story = {
   args: {
-    children: 'Disabled',
+    children: mockButtonVariants.secondary.label,
     disabled: true,
     onClick: fn(),
   },
   play: async ({ canvas, args }) => {
-    const button = canvas.getByRole('button', { name: 'Disabled' });
+    const button = canvas.getByRole('button', {
+      name: mockButtonVariants.secondary.label,
+    });
     await expect(button).toBeVisible();
     await expect(button).toBeDisabled();
 
@@ -111,16 +116,16 @@ export const Disabled: Story = {
 
 export const AsLink: Story = {
   args: {
-    children: 'Go to Home',
-    href: '/',
+    children: mockButtonVariants.primary.label,
+    href: mockButtonVariants.primary.href,
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByRole('link', { name: 'Go to Home' })
+      canvas.getByRole('link', { name: mockButtonVariants.primary.label })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('link', { name: 'Go to Home' })
-    ).toHaveAttribute('href', '/');
+      canvas.getByRole('link', { name: mockButtonVariants.primary.label })
+    ).toHaveAttribute('href', mockButtonVariants.primary.href);
     /* Simple button interaction - no animation wait needed. */
   },
 };

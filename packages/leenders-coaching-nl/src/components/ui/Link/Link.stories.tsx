@@ -3,6 +3,7 @@ import { expect } from 'storybook/test';
 import { Link } from './Link';
 import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 import { Box } from '../Box/Box';
+import { mockNavigationData } from '@/mocks';
 
 const meta = {
   title: 'UI/Link',
@@ -49,33 +50,41 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: 'Default Link',
-    href: '#',
+    children: mockNavigationData.main[0]?.label || 'Home',
+    href: mockNavigationData.main[0]?.href || '/',
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByRole('link', { name: 'Default Link' })
+      canvas.getByRole('link', {
+        name: mockNavigationData.main[0]?.label || 'Home',
+      })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('link', { name: 'Default Link' })
-    ).toHaveAttribute('href', '#');
+      canvas.getByRole('link', {
+        name: mockNavigationData.main[0]?.label || 'Home',
+      })
+    ).toHaveAttribute('href', mockNavigationData.main[0]?.href || '/');
     await waitForMotionAnimations({ canvas });
   },
 };
 
 export const Subtle: Story = {
   args: {
-    children: 'Subtle Link',
-    href: '#',
+    children: mockNavigationData.main[1]?.label || 'Over Mij',
+    href: mockNavigationData.main[1]?.href || '/over-mij',
     variant: 'subtle',
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByRole('link', { name: 'Subtle Link' })
+      canvas.getByRole('link', {
+        name: mockNavigationData.main[1]?.label || 'Over Mij',
+      })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('link', { name: 'Subtle Link' })
-    ).toHaveAttribute('href', '#');
+      canvas.getByRole('link', {
+        name: mockNavigationData.main[1]?.label || 'Over Mij',
+      })
+    ).toHaveAttribute('href', mockNavigationData.main[1]?.href || '/over-mij');
     await waitForMotionAnimations({ canvas });
   },
 };

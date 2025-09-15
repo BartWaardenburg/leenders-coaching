@@ -5,6 +5,7 @@ import { Form } from './Form';
 import { Box } from '../Box/Box';
 import { Input } from '../Input/Input';
 import { Button } from '../Button/Button';
+import { mockFormData, mockFormValidation } from '@/mocks';
 
 const meta = {
   title: 'UI/Form',
@@ -37,29 +38,29 @@ export const Default: Story = {
     children: (
       <Box className="space-y-4">
         <Input
-          label="Name"
+          label="Naam"
           type="text"
           name="name"
-          placeholder="Your name"
+          placeholder={mockFormData.contact.name}
           required
         />
         <Input
-          label="Email"
+          label="E-mail"
           type="email"
           name="email"
-          placeholder="your@email.com"
+          placeholder={mockFormData.contact.email}
           required
         />
         <Input
           as="textarea"
-          label="Message"
+          label="Bericht"
           name="message"
           rows={4}
-          placeholder="Your message"
+          placeholder={mockFormData.contact.message}
           required
         />
         <Button type="submit" variant="blue" className="w-full">
-          Submit
+          Versturen
         </Button>
       </Box>
     ),
@@ -67,18 +68,18 @@ export const Default: Story = {
   play: async ({ canvas, userEvent, args, step }) => {
     await step('Fill out the form', async () => {
       // Fill name field
-      await userEvent.type(canvas.getByLabelText('Name'), 'John Doe');
+      await userEvent.type(canvas.getByLabelText('Naam'), 'John Doe');
       await expect(canvas.getByDisplayValue('John Doe')).toBeInTheDocument();
 
       // Fill email field
-      await userEvent.type(canvas.getByLabelText('Email'), 'john@example.com');
+      await userEvent.type(canvas.getByLabelText('E-mail'), 'john@example.com');
       await expect(
         canvas.getByDisplayValue('john@example.com')
       ).toBeInTheDocument();
 
       // Fill message field
       await userEvent.type(
-        canvas.getByLabelText('Message'),
+        canvas.getByLabelText('Bericht'),
         'This is a test message'
       );
       await expect(
@@ -88,7 +89,7 @@ export const Default: Story = {
 
     await step('Submit the form', async () => {
       // Submit the form
-      await userEvent.click(canvas.getByRole('button', { name: 'Submit' }));
+      await userEvent.click(canvas.getByRole('button', { name: 'Versturen' }));
       await expect(args.onSubmit).toHaveBeenCalled();
     });
   },
@@ -122,7 +123,7 @@ export const FormValidation: Story = {
           required
         />
         <Button type="submit" variant="blue" className="w-full">
-          Submit
+          Versturen
         </Button>
       </Box>
     ),
@@ -130,7 +131,7 @@ export const FormValidation: Story = {
   play: async ({ canvas, userEvent, args, step }) => {
     await step('Try to submit empty form', async () => {
       // Try to submit without filling any fields
-      await userEvent.click(canvas.getByRole('button', { name: 'Submit' }));
+      await userEvent.click(canvas.getByRole('button', { name: 'Versturen' }));
 
       // Form should not be submitted due to validation
       await expect(args.onSubmit).not.toHaveBeenCalled();
@@ -141,7 +142,7 @@ export const FormValidation: Story = {
       await userEvent.type(canvas.getByLabelText('Name *'), 'John Doe');
 
       // Try to submit
-      await userEvent.click(canvas.getByRole('button', { name: 'Submit' }));
+      await userEvent.click(canvas.getByRole('button', { name: 'Versturen' }));
 
       // Form should still not be submitted
       await expect(args.onSubmit).not.toHaveBeenCalled();
@@ -159,7 +160,7 @@ export const FormValidation: Story = {
       );
 
       // Submit the form
-      await userEvent.click(canvas.getByRole('button', { name: 'Submit' }));
+      await userEvent.click(canvas.getByRole('button', { name: 'Versturen' }));
       await expect(args.onSubmit).toHaveBeenCalled();
     });
   },
@@ -185,7 +186,7 @@ export const KeyboardNavigation: Story = {
           placeholder="Your message"
         />
         <Button type="submit" variant="blue" className="w-full">
-          Submit
+          Versturen
         </Button>
       </Box>
     ),
@@ -207,13 +208,13 @@ export const KeyboardNavigation: Story = {
       // Tab to submit button
       await userEvent.tab();
       await expect(
-        canvas.getByRole('button', { name: 'Submit' })
+        canvas.getByRole('button', { name: 'Versturen' })
       ).toHaveFocus();
     });
 
     await step('Test keyboard form submission', async () => {
       // Focus the submit button
-      await userEvent.click(canvas.getByRole('button', { name: 'Submit' }));
+      await userEvent.click(canvas.getByRole('button', { name: 'Versturen' }));
 
       // Fill form using keyboard
       await userEvent.keyboard('{Tab}'); // Go to name field

@@ -1,40 +1,26 @@
-import type {
-  ComponentPropsWithoutRef,
-  ComponentRef,
-  ElementType,
-  ReactElement,
-} from 'react';
+import type { ComponentRef, ElementType, ReactElement } from 'react';
 import { forwardRef } from 'react';
 import { cn } from '@/utilities/cn';
-
-type FlexDirection = 'row' | 'row-reverse' | 'column' | 'column-reverse';
-type FlexWrap = 'nowrap' | 'wrap' | 'wrap-reverse';
-type JustifyContent =
-  | 'start'
-  | 'end'
-  | 'center'
-  | 'between'
-  | 'around'
-  | 'evenly';
-type AlignItems = 'start' | 'end' | 'center' | 'baseline' | 'stretch';
-type Gap = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 14 | 16 | 20;
-
-type PolymorphicProps<C extends ElementType, P = {}> = P & {
-  as?: C;
-} & Omit<ComponentPropsWithoutRef<C>, 'as' | keyof P>;
+import type {
+  PolymorphicProps,
+  BaseComponentProps,
+  FlexDirectionVariant,
+  FlexWrapVariant,
+  JustifyContentVariant,
+  AlignItemsVariant,
+  GapVariant,
+} from '@/utilities/types';
 
 type FlexProps<C extends ElementType = 'div'> = PolymorphicProps<
   C,
-  {
-    direction?: FlexDirection;
-    wrap?: FlexWrap;
-    justify?: JustifyContent;
-    items?: AlignItems;
-    gap?: Gap;
+  BaseComponentProps & {
+    direction?: FlexDirectionVariant;
+    wrap?: FlexWrapVariant;
+    justify?: JustifyContentVariant;
+    items?: AlignItemsVariant;
+    gap?: GapVariant;
     divide?: 'x' | 'y' | 'x-reverse' | 'y-reverse';
     inline?: boolean;
-    testid?: string;
-    className?: string;
   }
 >;
 

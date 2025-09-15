@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Stack } from '@/components/ui/Stack';
 import { Box } from '@/components/ui/Box';
+import { mockFormSection } from '@/mocks';
 
 const meta = {
   title: 'Sections/SectionForm',
@@ -63,9 +64,8 @@ const FormContent = () => (
 
 export const Default: Story = {
   args: {
-    title: 'Contact Us',
-    description:
-      "Fill out the form below and we'll get back to you as soon as possible.",
+    title: mockFormSection.displayTitle,
+    description: mockFormSection.description,
     children: <FormContent />,
   },
 };

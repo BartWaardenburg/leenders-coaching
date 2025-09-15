@@ -8,6 +8,7 @@ import { Box } from '@/components/ui/Box';
 import { Heading } from '@/components/ui/Heading';
 import { Button } from '@/components/ui/Button';
 import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { mockAlertData } from '@/mocks';
 
 /**
  * Demo component for showing toasts using the ToastProvider context.
@@ -20,7 +21,7 @@ const ToastDemo = (): React.ReactNode => {
   useEffect(() => {
     if (!hasShown) {
       setHasShown(true);
-      toast.show('Default toast message', {
+      toast.show(mockAlertData.info.message, {
         variant: 'blue',
         duration: 3000,
       });
@@ -31,13 +32,13 @@ const ToastDemo = (): React.ReactNode => {
     <Box className="p-4">
       <Button
         onClick={() => {
-          toast.show('Clicked toast message', {
+          toast.show(mockAlertData.success.message, {
             variant: 'purple',
             duration: 3000,
           });
         }}
       >
-        Show another toast
+        Toon nog een toast
       </Button>
     </Box>
   );
@@ -77,11 +78,19 @@ export const Default: Story = {
   render: () => <ToastDemo />,
   play: async ({ canvas }) => {
     /* Wait for toast to be present in the DOM first */
-    await expect(canvas.getByText('Default toast message')).toBeInTheDocument();
+    await expect(
+      canvas.getByText(
+        'We zijn momenteel bezig met het verbeteren van onze website. Excuses voor eventuele ongemakken.'
+      )
+    ).toBeInTheDocument();
     /* Wait for animations to complete (handles reduced motion) */
     await waitForMotionAnimations({ canvas });
     /* Now the toast should be visible regardless of motion preferences */
-    expect(canvas.getByText('Default toast message')).toBeVisible();
+    expect(
+      canvas.getByText(
+        'We zijn momenteel bezig met het verbeteren van onze website. Excuses voor eventuele ongemakken.'
+      )
+    ).toBeVisible();
   },
 };
 
@@ -112,24 +121,24 @@ export const Interactive: Story = {
               <Button
                 key={variant}
                 onClick={() =>
-                  toast.show(`This is a ${variant} toast message`, {
+                  toast.show(mockAlertData.info.message, {
                     variant,
                     duration: 3000,
                   })
                 }
               >
-                Show {variant} toast
+                Toon {variant} toast
               </Button>
             ))}
             <Button
               onClick={() =>
-                toast.show("This toast won't auto-dismiss", {
+                toast.show(mockAlertData.warning.message, {
                   variant: 'purple',
                   showCloseButton: true,
                 })
               }
             >
-              Show persistent toast
+              Toon persistente toast
             </Button>
           </Box>
         </Stack>
@@ -142,17 +151,21 @@ export const Interactive: Story = {
 
     /* Test clicking a toast button */
     await userEvent.click(
-      canvas.getByRole('button', { name: 'Show blue toast' })
+      canvas.getByRole('button', { name: 'Toon blue toast' })
     );
 
     /* Wait for the toast to appear in the DOM first */
     await expect(
-      canvas.getByText('This is a blue toast message')
+      canvas.getByText(
+        'We zijn momenteel bezig met het verbeteren van onze website. Excuses voor eventuele ongemakken.'
+      )
     ).toBeInTheDocument();
     /* Wait for animations to complete (handles reduced motion) */
     await waitForMotionAnimations({ canvas });
     /* For reduced motion environments, check if element exists and is functional */
-    const toastElement = canvas.getByText('This is a blue toast message');
+    const toastElement = canvas.getByText(
+      'We zijn momenteel bezig met het verbeteren van onze website. Excuses voor eventuele ongemakken.'
+    );
     /* If not visible due to reduced motion, at least verify it exists and is accessible */
     try {
       expect(toastElement).toBeVisible();
@@ -166,18 +179,20 @@ export const Interactive: Story = {
 
     /* Test clicking another toast button */
     await userEvent.click(
-      canvas.getByRole('button', { name: 'Show persistent toast' })
+      canvas.getByRole('button', { name: 'Toon persistente toast' })
     );
 
     /* Wait for the persistent toast to appear in the DOM first */
     await expect(
-      canvas.getByText("This toast won't auto-dismiss")
+      canvas.getByText(
+        'Controleer je gegevens voordat je het formulier verzendt.'
+      )
     ).toBeInTheDocument();
     /* Wait for animations to complete (handles reduced motion) */
     await waitForMotionAnimations({ canvas });
     /* For reduced motion environments, check if element exists and is functional */
     const persistentToastElement = canvas.getByText(
-      "This toast won't auto-dismiss"
+      'Controleer je gegevens voordat je het formulier verzendt.'
     );
     /* If not visible due to reduced motion, at least verify it exists and is accessible */
     try {
