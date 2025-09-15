@@ -2,6 +2,14 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Main } from './Main';
 import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { Text } from '../Text/Text';
+import { Heading } from '../Heading/Heading';
+import { Box } from '../Box/Box';
+import { Button } from '../Button/Button';
+import { Input } from '../Input/Input';
+import { Stack } from '../Stack/Stack';
+import { Grid } from '../Grid/Grid';
+import { Flex } from '../Flex/Flex';
 
 const meta = {
   title: 'UI/Main',
@@ -45,20 +53,24 @@ export const Default: Story = {
 export const WithContent: Story = {
   args: {
     children: (
-      <div className="p-8">
-        <h1 className="text-3xl font-bold mb-4">Main Content Area</h1>
-        <p className="text-gray-600 mb-6">
+      <Box className="p-8">
+        <Heading level="h1" variant="large" className="mb-4">
+          Main Content Area
+        </Heading>
+        <Text variant="muted" className="mb-6">
           This is the main content area of the page. It has a top margin of
           125px to account for the header and uses flexbox for layout.
-        </p>
-        <div className="bg-blue-100 p-4">
-          <h2 className="text-xl font-semibold mb-2">Content Section</h2>
-          <p className="text-sm">
+        </Text>
+        <Box className="bg-blue-100 p-4">
+          <Heading level="h2" variant="small" className="mb-2">
+            Content Section
+          </Heading>
+          <Text variant="small">
             The Main component wraps content in a flex container with column
             direction and grows to fill available space.
-          </p>
-        </div>
-      </div>
+          </Text>
+        </Box>
+      </Box>
     ),
     testid: 'main-with-content',
   },
@@ -72,26 +84,30 @@ export const WithContent: Story = {
 export const WithCustomStyling: Story = {
   args: {
     children: (
-      <div className="p-8 bg-gradient-to-br from-purple-100 to-blue-100 min-h-screen">
-        <h1 className="text-4xl font-bold text-purple-800 mb-6">
+      <Box className="p-8 bg-gradient-to-br from-purple-100 to-blue-100 min-h-screen">
+        <Heading level="h1" variant="large" className="text-purple-800 mb-6">
           Custom Styled Main
-        </h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white p-6 shadow-lg">
-            <h2 className="text-2xl font-semibold mb-3">Feature 1</h2>
-            <p className="text-gray-600">
+        </Heading>
+        <Grid cols={{ base: 1, md: 2 }} gap={6}>
+          <Box className="bg-white p-6 shadow-lg">
+            <Heading level="h2" variant="medium" className="mb-3">
+              Feature 1
+            </Heading>
+            <Text variant="muted">
               This main component has custom styling applied through the
               className prop.
-            </p>
-          </div>
-          <div className="bg-white p-6 shadow-lg">
-            <h2 className="text-2xl font-semibold mb-3">Feature 2</h2>
-            <p className="text-gray-600">
+            </Text>
+          </Box>
+          <Box className="bg-white p-6 shadow-lg">
+            <Heading level="h2" variant="medium" className="mb-3">
+              Feature 2
+            </Heading>
+            <Text variant="muted">
               The Main component accepts all standard HTML main element props.
-            </p>
-          </div>
-        </div>
-      </div>
+            </Text>
+          </Box>
+        </Grid>
+      </Box>
     ),
     className: 'bg-gradient-to-br from-purple-50 to-blue-50',
   },
@@ -106,80 +122,100 @@ export const WithCustomStyling: Story = {
 export const ComplexLayout: Story = {
   args: {
     children: (
-      <div className="p-8 space-y-8">
+      <Box className="p-8 space-y-8">
         <header className="text-center">
-          <h1 className="text-4xl font-bold mb-4">Complex Layout Example</h1>
-          <p className="text-xl text-gray-600">
+          <Heading level="h1" variant="large" className="mb-4">
+            Complex Layout Example
+          </Heading>
+          <Text variant="muted">
             This demonstrates how the Main component can contain complex layouts
-          </p>
+          </Text>
         </header>
 
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white p-6 shadow-md">
-              <h2 className="text-2xl font-semibold mb-4">Main Content</h2>
-              <p className="text-gray-600 mb-4">
+        <Grid cols={{ base: 1, lg: 3 }} gap={8}>
+          <Box className="lg:col-span-2 space-y-6">
+            <Box className="bg-white p-6 shadow-md">
+              <Heading level="h2" variant="medium" className="mb-4">
+                Main Content
+              </Heading>
+              <Text variant="muted" className="mb-4">
                 The Main component provides a semantic container for the primary
                 content of the page. It automatically handles the top margin for
                 fixed headers and uses flexbox for consistent layout.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <span className="bg-blue-100 text-blue-800 px-3 py-1 text-sm">
+              </Text>
+              <Flex wrap="wrap" gap={2}>
+                <Text
+                  as="span"
+                  variant="small"
+                  className="bg-blue-100 text-blue-800 px-3 py-1"
+                >
                   Semantic HTML
-                </span>
-                <span className="bg-green-100 text-green-800 px-3 py-1 text-sm">
+                </Text>
+                <Text
+                  as="span"
+                  variant="small"
+                  className="bg-green-100 text-green-800 px-3 py-1"
+                >
                   Flexbox Layout
-                </span>
-                <span className="bg-purple-100 text-purple-800 px-3 py-1 text-sm">
+                </Text>
+                <Text
+                  as="span"
+                  variant="small"
+                  className="bg-purple-100 text-purple-800 px-3 py-1"
+                >
                   Header Spacing
-                </span>
-              </div>
-            </div>
+                </Text>
+              </Flex>
+            </Box>
 
-            <div className="bg-gray-50 p-6">
-              <h3 className="text-xl font-semibold mb-3">Usage Notes</h3>
+            <Box className="bg-gray-50 p-6">
+              <Heading level="h3" variant="small" className="mb-3">
+                Usage Notes
+              </Heading>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li>• Uses Flex component internally with column direction</li>
                 <li>• Has a top margin of 125px for header clearance</li>
                 <li>• Grows to fill available vertical space</li>
                 <li>• Accepts all standard main element props</li>
               </ul>
-            </div>
-          </div>
+            </Box>
+          </Box>
 
           <aside className="space-y-6">
-            <div className="bg-white p-6 shadow-md">
-              <h3 className="text-xl font-semibold mb-4">Sidebar</h3>
-              <div className="space-y-3">
-                <div className="bg-blue-50 p-3">
-                  <h4 className="font-medium">Related Content</h4>
-                  <p className="text-sm text-gray-600">
-                    Additional information
-                  </p>
-                </div>
-                <div className="bg-green-50 p-3">
-                  <h4 className="font-medium">Quick Links</h4>
-                  <p className="text-sm text-gray-600">Navigation shortcuts</p>
-                </div>
-              </div>
-            </div>
+            <Box className="bg-white p-6 shadow-md">
+              <Heading level="h3" variant="small" className="mb-4">
+                Sidebar
+              </Heading>
+              <Stack space={3}>
+                <Box className="bg-blue-50 p-3">
+                  <Text weight="medium">Related Content</Text>
+                  <Text variant="muted">Additional information</Text>
+                </Box>
+                <Box className="bg-green-50 p-3">
+                  <Text weight="medium">Quick Links</Text>
+                  <Text variant="muted">Navigation shortcuts</Text>
+                </Box>
+              </Stack>
+            </Box>
 
-            <div className="bg-yellow-50 p-6">
-              <h3 className="text-lg font-semibold mb-2">Info Box</h3>
-              <p className="text-sm text-gray-700">
+            <Box className="bg-yellow-50 p-6">
+              <Heading level="h3" variant="small" className="mb-2">
+                Info Box
+              </Heading>
+              <Text variant="default">
                 The Main component is built on top of the Flex component and
                 provides semantic meaning for screen readers and SEO.
-              </p>
-            </div>
+              </Text>
+            </Box>
           </aside>
-        </section>
+        </Grid>
 
         <footer className="bg-gray-100 p-6 text-center">
-          <p className="text-gray-600">
+          <Text variant="muted">
             This footer demonstrates how content flows within the Main component
-          </p>
+          </Text>
         </footer>
-      </div>
+      </Box>
     ),
     testid: 'main-complex',
   },
@@ -196,47 +232,24 @@ export const ComplexLayout: Story = {
 export const WithForm: Story = {
   args: {
     children: (
-      <div className="p-8 max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Contact Form</h1>
+      <Box className="p-8 max-w-2xl mx-auto">
+        <Heading level="h1" variant="large" className="mb-6">
+          Contact Form
+        </Heading>
         <form className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Name
-            </label>
-            <input
-              type="text"
-              className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your name"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Email
-            </label>
-            <input
-              type="email"
-              className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your email"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Message
-            </label>
-            <textarea
-              rows={4}
-              className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your message"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
+          <Input label="Name" placeholder="Enter your name" type="text" />
+          <Input label="Email" placeholder="Enter your email" type="email" />
+          <Input
+            as="textarea"
+            label="Message"
+            placeholder="Enter your message"
+            rows={4}
+          />
+          <Button type="submit" variant="blue" size="lg" className="w-full">
             Send Message
-          </button>
+          </Button>
         </form>
-      </div>
+      </Box>
     ),
     testid: 'main-with-form',
   },
@@ -253,14 +266,14 @@ export const WithForm: Story = {
 export const MinimalContent: Story = {
   args: {
     children: (
-      <div className="p-8 text-center">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">
+      <Box className="p-8 text-center">
+        <Heading level="h1" variant="medium" className="text-gray-800 mb-4">
           Minimal Content
-        </h1>
-        <p className="text-gray-600">
+        </Heading>
+        <Text variant="muted">
           Sometimes the main content area only needs simple text content.
-        </p>
-      </div>
+        </Text>
+      </Box>
     ),
   },
   play: async ({ canvas }) => {

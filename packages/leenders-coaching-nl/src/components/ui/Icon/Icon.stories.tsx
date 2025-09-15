@@ -192,7 +192,7 @@ export const InteractiveDemo: Story = {
               <button
                 key={icon.name}
                 onClick={() => setCurrentIcon(icon.path)}
-                className="px-3 py-1 text-sm border rounded hover:bg-gray-100"
+                className="px-3 py-1 text-sm border hover:bg-gray-100"
               >
                 {icon.name}
               </button>
@@ -207,7 +207,7 @@ export const InteractiveDemo: Story = {
               <button
                 key={size.name}
                 onClick={() => setIconSize(size.className)}
-                className="px-3 py-1 text-sm border rounded hover:bg-gray-100"
+                className="px-3 py-1 text-sm border hover:bg-gray-100"
               >
                 {size.name}
               </button>
@@ -222,7 +222,7 @@ export const InteractiveDemo: Story = {
               <button
                 key={color.name}
                 onClick={() => setIconColor(color.className)}
-                className="px-3 py-1 text-sm border rounded hover:bg-gray-100"
+                className="px-3 py-1 text-sm border hover:bg-gray-100"
               >
                 {color.name}
               </button>
@@ -232,7 +232,7 @@ export const InteractiveDemo: Story = {
 
         <div className="flex flex-col gap-4">
           <h3 className="text-lg font-semibold">Preview</h3>
-          <div className="p-8 border rounded-lg bg-gray-50 flex items-center justify-center">
+          <div className="p-8 border bg-gray-50 flex items-center justify-center">
             <Icon path={currentIcon} className={`${iconSize} ${iconColor}`} />
           </div>
         </div>

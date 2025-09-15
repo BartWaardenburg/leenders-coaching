@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { SanityImage } from './SanityImage';
+import { Box } from '../Box/Box';
+import { Heading } from '../Heading/Heading';
+import { Grid } from '../Grid/Grid';
 
 const meta = {
   title: 'UI/SanityImage',
@@ -188,9 +191,9 @@ export const FillMode: Story = {
     fill: true,
   },
   render: (args) => (
-    <div className="relative w-96 h-64">
+    <Box className="relative w-96 h-32">
       <SanityImage {...args} />
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(
@@ -280,7 +283,7 @@ export const WithCustomClassName: Story = {
     priority: false,
     followHotspot: false,
     qualityHint: 75,
-    className: 'rounded-lg shadow-lg border-2 border-blue-500',
+    className: 'shadow-lg border-2 border-blue-500',
   },
   play: async ({ canvas }) => {
     await expect(
@@ -324,41 +327,49 @@ export const AllVariants: Story = {
     qualityHint: 75,
   },
   render: () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">With Full Metadata</h3>
+    <Grid cols={{ base: 1, md: 2 }} gap={6} className="max-w-4xl">
+      <Box className="space-y-4">
+        <Heading level="h3" variant="small">
+          With Full Metadata
+        </Heading>
         <SanityImage
           image={mockImageWithMetadata}
           alt="Volledige metadata afbeelding"
           sizes="100vw"
-          className="w-full h-48 object-cover rounded-lg"
+          className="w-full h-48 object-cover"
         />
-      </div>
+      </Box>
 
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Without Metadata</h3>
+      <Box className="space-y-4">
+        <Heading level="h3" variant="small">
+          Without Metadata
+        </Heading>
         <SanityImage
           image={mockImageWithoutMetadata}
           alt="Geen metadata afbeelding"
           sizes="100vw"
-          className="w-full h-48 object-cover rounded-lg"
+          className="w-full h-48 object-cover"
         />
-      </div>
+      </Box>
 
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">With Hotspot</h3>
+      <Box className="space-y-4">
+        <Heading level="h3" variant="small">
+          With Hotspot
+        </Heading>
         <SanityImage
           image={mockImageWithMetadata}
           alt="Hotspot afbeelding"
           sizes="100vw"
           followHotspot={true}
-          className="w-full h-48 object-cover rounded-lg"
+          className="w-full h-48 object-cover"
         />
-      </div>
+      </Box>
 
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Fill Mode</h3>
-        <div className="relative w-full h-48 rounded-lg overflow-hidden">
+      <Box className="space-y-4">
+        <Heading level="h3" variant="small">
+          Fill Mode
+        </Heading>
+        <Box className="relative w-full h-48 overflow-hidden">
           <SanityImage
             image={mockImageWithMetadata}
             alt="Vul modus afbeelding"
@@ -366,9 +377,9 @@ export const AllVariants: Story = {
             fill={true}
             className="object-cover"
           />
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Grid>
   ),
   play: async ({ canvas }) => {
     await expect(

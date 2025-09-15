@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import * as React from 'react';
 import { expect, fn } from 'storybook/test';
 import { Input } from './Input';
+import { Box } from '../Box/Box';
+import { Text } from '../Text/Text';
 
 const meta = {
   title: 'UI/Input',
@@ -256,7 +258,7 @@ export const FormInteraction: Story = {
       };
 
     return (
-      <div className="w-full max-w-md space-y-4">
+      <Box className="w-full max-w-md space-y-4">
         <Input
           label="Naam"
           placeholder="Voer je naam in"
@@ -277,12 +279,16 @@ export const FormInteraction: Story = {
           value={formData.message}
           onChange={handleChange('message')}
         />
-        <div className="text-sm text-muted-foreground">
-          <p>Naam: {formData.name || 'Niet opgegeven'}</p>
-          <p>Email: {formData.email || 'Niet opgegeven'}</p>
-          <p>Bericht: {formData.message || 'Niet opgegeven'}</p>
-        </div>
-      </div>
+        <Box className="text-sm text-muted-foreground">
+          <Text variant="small">Naam: {formData.name || 'Niet opgegeven'}</Text>
+          <Text variant="small">
+            Email: {formData.email || 'Niet opgegeven'}
+          </Text>
+          <Text variant="small">
+            Bericht: {formData.message || 'Niet opgegeven'}
+          </Text>
+        </Box>
+      </Box>
     );
   },
   play: async ({ canvas, userEvent, step }) => {

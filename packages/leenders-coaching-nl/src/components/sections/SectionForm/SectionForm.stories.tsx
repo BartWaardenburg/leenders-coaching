@@ -3,6 +3,7 @@ import { SectionForm } from './SectionForm';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Stack } from '@/components/ui/Stack';
+import { Box } from '@/components/ui/Box';
 
 const meta = {
   title: 'Sections/SectionForm',
@@ -54,7 +55,7 @@ const FormContent = () => (
       name="message"
       placeholder="Je bericht"
     />
-    <Button type="submit" variant="blue" fullWidthOnContainer>
+    <Button type="submit" variant="blue" className="w-full">
       Submit
     </Button>
   </Stack>
@@ -108,7 +109,7 @@ export const AllBackgroundVariants: Story = {
   },
   args: {},
   render: () => (
-    <div className="space-y-0">
+    <Box className="space-y-0">
       {(['blue', 'purple', 'green', 'pink', 'yellow', 'teal'] as const).map(
         (background) => (
           <SectionForm
@@ -121,7 +122,7 @@ export const AllBackgroundVariants: Story = {
           />
         )
       )}
-    </div>
+    </Box>
   ),
 };
 

@@ -1,41 +1,36 @@
 import type { ComponentPropsWithoutRef } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/utilities/cn';
 import { Box } from '../Box';
 import { Container } from '../Container';
+import { pastelVariant, type PastelVariant } from '@/utilities/tokens';
 
 /**
  * Available pastel color options for section backgrounds and borders
  */
-export type PastelColor =
-  | 'blue'
-  | 'purple'
-  | 'green'
-  | 'pink'
-  | 'yellow'
-  | 'teal';
+export type PastelColor = PastelVariant;
 
 /**
  * Background styles mapping for pastel colors with dark mode support
  */
 const backgroundStyles: Record<PastelColor, string> = {
-  blue: 'bg-pastel-blue dark:bg-pastel-blue-dark',
-  purple: 'bg-pastel-purple dark:bg-pastel-purple-dark',
-  green: 'bg-pastel-green dark:bg-pastel-green-dark',
-  pink: 'bg-pastel-pink dark:bg-pastel-pink-dark',
-  yellow: 'bg-pastel-yellow dark:bg-pastel-yellow-dark',
-  teal: 'bg-pastel-teal dark:bg-pastel-teal-dark',
+  blue: pastelVariant.blue.bg,
+  purple: pastelVariant.purple.bg,
+  green: pastelVariant.green.bg,
+  pink: pastelVariant.pink.bg,
+  yellow: pastelVariant.yellow.bg,
+  teal: pastelVariant.teal.bg,
 };
 
 /**
  * Border styles mapping for pastel colors with dark mode support
  */
 const borderStyles: Record<PastelColor, string> = {
-  blue: 'border-pastel-blue-dark dark:border-pastel-blue',
-  purple: 'border-pastel-purple-dark dark:border-pastel-purple',
-  green: 'border-pastel-green-dark dark:border-pastel-green',
-  pink: 'border-pastel-pink-dark dark:border-pastel-pink',
-  yellow: 'border-pastel-yellow-dark dark:border-pastel-yellow',
-  teal: 'border-pastel-teal-dark dark:border-pastel-teal',
+  blue: pastelVariant.blue.borderDark,
+  purple: pastelVariant.purple.borderDark,
+  green: pastelVariant.green.borderDark,
+  pink: pastelVariant.pink.borderDark,
+  yellow: pastelVariant.yellow.borderDark,
+  teal: pastelVariant.teal.borderDark,
 };
 
 /**
@@ -115,7 +110,7 @@ export const Section = ({
   return (
     <Box
       as="section"
-      className={twMerge(
+      className={cn(
         !noPadding && 'py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24',
         'transition-theme bg-background',
         background && backgroundStyles[background],

@@ -30,11 +30,6 @@ const meta = {
       options: ['start', 'end', 'center'],
       description: 'Verticale uitlijning van de knoppen',
     },
-    flex: {
-      control: 'boolean',
-      description:
-        'Of de knoppen in een flex container moeten worden gewrapped',
-    },
   },
 } satisfies Meta<typeof ButtonGroup>;
 
@@ -59,16 +54,15 @@ export const Default: Story = {
 
 export const HeaderStyle: Story = {
   args: {
-    flex: true,
     width: 'full',
     justify: 'end',
     align: 'center',
     children: (
       <>
-        <Button size="lg" variant="black" fullWidthOnContainer>
+        <Button size="lg" variant="black" fullWidthUntil="sm">
           Aan de slag
         </Button>
-        <Button size="lg" variant="transparent" fullWidthOnContainer>
+        <Button size="lg" variant="transparent" fullWidthUntil="sm">
           Meer informatie
         </Button>
       </>
@@ -177,10 +171,10 @@ export const ResponsiveWidth: Story = {
     justify: 'end',
     children: (
       <>
-        <Button variant="teal" fullWidthOnContainer>
+        <Button variant="teal" fullWidthUntil="sm">
           Actie 1
         </Button>
-        <Button variant="transparent" fullWidthOnContainer>
+        <Button variant="transparent" fullWidthUntil="sm">
           Actie 2
         </Button>
       </>
@@ -207,10 +201,10 @@ export const ResponsiveJustify: Story = {
     width: 'full',
     children: (
       <>
-        <Button variant="pink" fullWidthOnContainer>
+        <Button variant="pink" fullWidthUntil="sm">
           Mobiel Centrum
         </Button>
-        <Button variant="transparent" fullWidthOnContainer>
+        <Button variant="transparent" fullWidthUntil="sm">
           Desktop Rechts
         </Button>
       </>

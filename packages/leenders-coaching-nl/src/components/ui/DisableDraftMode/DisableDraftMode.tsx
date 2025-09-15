@@ -2,18 +2,18 @@
 
 import { useTransition, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/utilities/cn';
 import { motion, AnimatePresence } from 'motion/react';
 
 import { IconToggleButton } from '@/components/ui/IconToggleButton';
 import { Icon } from '@/components/ui/Icon';
 import { Box } from '@/components/ui/Box';
-import { modalStyles, type ModalVariant } from '@/components/ui/Modal/Modal';
+import { pastelVariant, type PastelVariant } from '@/utilities/tokens';
 import { disableDraftMode } from './actions';
 import { iconPaths } from '@/utilities/icons-config';
 
 type DisableDraftModeProps = {
-  variant?: ModalVariant;
+  variant?: PastelVariant;
   className?: string;
 };
 
@@ -60,12 +60,14 @@ export const DisableDraftMode = ({
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.8, y: 20 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
-        className={twMerge('fixed bottom-6 right-6 z-50', className)}
+        className={cn('fixed bottom-6 right-6 z-50', className)}
       >
         <Box
-          className={twMerge(
+          className={cn(
             'relative border p-2 shadow-lg overflow-hidden',
-            modalStyles[variant],
+            pastelVariant[variant].bg,
+            pastelVariant[variant].borderDark,
+            pastelVariant[variant].textLight,
             'transition-all duration-300',
             'hover:shadow-xl',
             'hover:scale-105',
@@ -93,7 +95,7 @@ export const DisableDraftMode = ({
               label="Schakel conceptmodus uit"
               onClick={handleDisable}
               speed="quick"
-              className={twMerge(
+              className={cn(
                 'w-10 h-10',
                 'bg-transparent hover:bg-current/10',
                 'border-0',

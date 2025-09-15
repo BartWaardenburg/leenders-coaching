@@ -39,7 +39,13 @@ export const SectionCards = ({
         {(title || description) && (
           <Stack space={4} className="text-center">
             {title && (
-              <Heading level="h2" variant="large" showBorder borderColor={background} textAlign="center">
+              <Heading
+                level="h2"
+                variant="large"
+                showBorder
+                borderColor={background}
+                textAlign="center"
+              >
                 {title}
               </Heading>
             )}
@@ -51,11 +57,7 @@ export const SectionCards = ({
           </Stack>
         )}
         <Box className="flex justify-center w-full">
-          <Grid
-            columns={{ default: 1, '@md': 2, '@lg': 3 }}
-            gap={6}
-            className="w-full"
-          >
+          <Grid cols={{ base: 1, md: 2, lg: 3 }} gap={6} className="w-full">
             {children}
           </Grid>
         </Box>

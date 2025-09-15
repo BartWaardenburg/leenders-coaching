@@ -69,17 +69,19 @@ export const SectionHeader = ({
                 </Heading>
               )}
               {description && (
-                <Text className="mt-6 text-lg md:text-xl">{description}</Text>
+                <Text variant="large" className="mt-6 md:text-xl">
+                  {description}
+                </Text>
               )}
             </>
           )}
         </Box>
         {(primaryCta || secondaryCta) && (
-          <ButtonGroup flex width="full" justify="end" align="center">
+          <ButtonGroup width="full" justify="end" align="center">
             {primaryCta && (
               <Button
                 size="lg"
-                fullWidthOnContainer
+                fullWidthUntil="sm"
                 href={primaryCta.href}
                 variant={primaryCta.variant}
                 target={primaryCta.isExternal ? '_blank' : undefined}
@@ -91,7 +93,7 @@ export const SectionHeader = ({
             {secondaryCta && (
               <Button
                 size="lg"
-                fullWidthOnContainer
+                fullWidthUntil="sm"
                 href={secondaryCta.href}
                 variant={secondaryCta.variant}
                 target={secondaryCta.isExternal ? '_blank' : undefined}

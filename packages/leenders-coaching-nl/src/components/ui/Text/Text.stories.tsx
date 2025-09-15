@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Text } from './Text';
+import { Box } from '../Box/Box';
 
 const meta = {
   title: 'UI/Text',
@@ -49,6 +50,45 @@ const meta = {
       control: 'text',
       description: 'De inhoud van de tekst',
     },
+    size: {
+      control: 'select',
+      options: ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl'],
+      description: 'Tekst grootte (overschrijft variant grootte)',
+    },
+    color: {
+      control: 'select',
+      options: [
+        'default',
+        'muted',
+        'foreground',
+        'primary',
+        'secondary',
+        'destructive',
+      ],
+      description: 'Tekst kleur (overschrijft variant kleur)',
+    },
+    maxWidth: {
+      control: 'select',
+      options: [
+        'xs',
+        'sm',
+        'md',
+        'lg',
+        'xl',
+        '2xl',
+        '3xl',
+        '4xl',
+        '5xl',
+        '6xl',
+        '7xl',
+        'full',
+      ],
+      description: 'Maximum breedte van de tekst',
+    },
+    opacity: {
+      control: { type: 'range', min: 0, max: 100, step: 5 },
+      description: 'Tekst transparantie (0-100)',
+    },
   },
 } satisfies Meta<typeof Text>;
 
@@ -70,7 +110,7 @@ export const AllVariants: Story = {
     controls: { hideNoControlsWarning: true },
   },
   render: () => (
-    <div className="flex flex-col gap-4 max-w-2xl">
+    <Box className="flex flex-col gap-4 max-w-2xl">
       <Text variant="default">Default text variant</Text>
       <Text variant="muted">Muted text variant</Text>
       <Text variant="large">Large text variant</Text>
@@ -82,7 +122,7 @@ export const AllVariants: Story = {
       <Text variant="card-meta">Card meta text variant</Text>
       <Text variant="card-excerpt">Card excerpt text variant</Text>
       <Text variant="quote">Quote text variant</Text>
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByText('Default text variant')).toBeVisible();
@@ -105,11 +145,11 @@ export const AllWeights: Story = {
     controls: { hideNoControlsWarning: true },
   },
   render: () => (
-    <div className="flex flex-col gap-4">
+    <Box className="flex flex-col gap-4">
       <Text weight="normal">Normal weight text</Text>
       <Text weight="medium">Medium weight text</Text>
       <Text weight="bold">Bold weight text</Text>
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByText('Normal weight text')).toBeVisible();
@@ -124,11 +164,11 @@ export const TextAlignment: Story = {
     controls: { hideNoControlsWarning: true },
   },
   render: () => (
-    <div className="flex flex-col gap-4 w-full">
+    <Box className="flex flex-col gap-4 w-full">
       <Text textAlign="left">Left aligned text</Text>
       <Text textAlign="center">Center aligned text</Text>
       <Text textAlign="right">Right aligned text</Text>
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByText('Left aligned text')).toBeVisible();
@@ -143,13 +183,13 @@ export const AsElement: Story = {
     controls: { hideNoControlsWarning: true },
   },
   render: () => (
-    <div className="flex flex-col gap-4">
+    <Box className="flex flex-col gap-4">
       <Text as="p">Text as paragraph</Text>
       <Text as="span">Text as span</Text>
       <Text as="div">Text as div</Text>
       <Text as="strong">Text as strong</Text>
       <Text as="em">Text as emphasis</Text>
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByText('Text as paragraph')).toBeVisible();
@@ -183,5 +223,59 @@ export const CombinedProps: Story = {
   play: async ({ canvas }) => {
     await expect(canvas.getByText('Combined properties example')).toBeVisible();
     // Simple static test - no animation wait needed
+  },
+};
+
+export const WithSemanticProps: Story = {
+  args: {
+    children: 'Text with semantic props',
+    size: 'xl',
+    color: 'primary',
+    maxWidth: '2xl',
+    opacity: 90,
+    weight: 'bold',
+    textAlign: 'center',
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByText('Text with semantic props')).toBeVisible();
+  },
+};
+
+export const SizeOverride: Story = {
+  args: {
+    children: 'Size override example',
+    variant: 'small',
+    size: '2xl',
+    color: 'secondary',
+    weight: 'bold',
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByText('Size override example')).toBeVisible();
+  },
+};
+
+export const ColorOverride: Story = {
+  args: {
+    children: 'Color override example',
+    variant: 'default',
+    color: 'destructive',
+    size: 'lg',
+    weight: 'medium',
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByText('Color override example')).toBeVisible();
+  },
+};
+
+export const ConstrainedWidth: Story = {
+  args: {
+    children:
+      'This is a longer text that demonstrates how the maxWidth prop constrains the text width, making it more readable and preventing it from stretching too wide on larger screens.',
+    maxWidth: 'md',
+    textAlign: 'justify',
+    size: 'base',
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByText(/This is a longer text/)).toBeVisible();
   },
 };

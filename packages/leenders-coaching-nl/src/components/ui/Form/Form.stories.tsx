@@ -2,6 +2,9 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import * as React from 'react';
 import { expect, fn } from 'storybook/test';
 import { Form } from './Form';
+import { Box } from '../Box/Box';
+import { Input } from '../Input/Input';
+import { Button } from '../Button/Button';
 
 const meta = {
   title: 'UI/Form',
@@ -32,53 +35,33 @@ export const Default: Story = {
   args: {
     onSubmit: fn(),
     children: (
-      <div className="space-y-4">
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium mb-1">
-            Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            className="w-full px-4 py-2 border rounded-lg"
-            placeholder="Your name"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium mb-1">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            className="w-full px-4 py-2 border rounded-lg"
-            placeholder="your@email.com"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="message" className="block text-sm font-medium mb-1">
-            Message
-          </label>
-          <textarea
-            id="message"
-            name="message"
-            rows={4}
-            className="w-full px-4 py-2 border rounded-lg"
-            placeholder="Your message"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
-        >
+      <Box className="space-y-4">
+        <Input
+          label="Name"
+          type="text"
+          name="name"
+          placeholder="Your name"
+          required
+        />
+        <Input
+          label="Email"
+          type="email"
+          name="email"
+          placeholder="your@email.com"
+          required
+        />
+        <Input
+          as="textarea"
+          label="Message"
+          name="message"
+          rows={4}
+          placeholder="Your message"
+          required
+        />
+        <Button type="submit" variant="blue" className="w-full">
           Submit
-        </button>
-      </div>
+        </Button>
+      </Box>
     ),
   },
   play: async ({ canvas, userEvent, args, step }) => {
@@ -115,53 +98,33 @@ export const FormValidation: Story = {
   args: {
     onSubmit: fn(),
     children: (
-      <div className="space-y-4">
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium mb-1">
-            Name *
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            className="w-full px-4 py-2 border rounded-lg"
-            placeholder="Your name"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium mb-1">
-            Email *
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            className="w-full px-4 py-2 border rounded-lg"
-            placeholder="your@email.com"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="message" className="block text-sm font-medium mb-1">
-            Message *
-          </label>
-          <textarea
-            id="message"
-            name="message"
-            rows={4}
-            className="w-full px-4 py-2 border rounded-lg"
-            placeholder="Your message"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
-        >
+      <Box className="space-y-4">
+        <Input
+          label="Name *"
+          type="text"
+          name="name"
+          placeholder="Your name"
+          required
+        />
+        <Input
+          label="Email *"
+          type="email"
+          name="email"
+          placeholder="your@email.com"
+          required
+        />
+        <Input
+          as="textarea"
+          label="Message *"
+          name="message"
+          rows={4}
+          placeholder="Your message"
+          required
+        />
+        <Button type="submit" variant="blue" className="w-full">
           Submit
-        </button>
-      </div>
+        </Button>
+      </Box>
     ),
   },
   play: async ({ canvas, userEvent, args, step }) => {
@@ -206,50 +169,25 @@ export const KeyboardNavigation: Story = {
   args: {
     onSubmit: fn(),
     children: (
-      <div className="space-y-4">
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium mb-1">
-            Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            className="w-full px-4 py-2 border rounded-lg"
-            placeholder="Your name"
-          />
-        </div>
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium mb-1">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            className="w-full px-4 py-2 border rounded-lg"
-            placeholder="your@email.com"
-          />
-        </div>
-        <div>
-          <label htmlFor="message" className="block text-sm font-medium mb-1">
-            Message
-          </label>
-          <textarea
-            id="message"
-            name="message"
-            rows={4}
-            className="w-full px-4 py-2 border rounded-lg"
-            placeholder="Your message"
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
-        >
+      <Box className="space-y-4">
+        <Input label="Name" type="text" name="name" placeholder="Your name" />
+        <Input
+          label="Email"
+          type="email"
+          name="email"
+          placeholder="your@email.com"
+        />
+        <Input
+          as="textarea"
+          label="Message"
+          name="message"
+          rows={4}
+          placeholder="Your message"
+        />
+        <Button type="submit" variant="blue" className="w-full">
           Submit
-        </button>
-      </div>
+        </Button>
+      </Box>
     ),
   },
   play: async ({ canvas, userEvent, args, step }) => {

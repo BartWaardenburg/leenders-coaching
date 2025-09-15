@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Heading } from './Heading';
 import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { Box } from '../Box/Box';
 
 const meta = {
   title: 'UI/Heading',
@@ -117,7 +118,7 @@ export const WithColoredBorder: Story = {
     level: 'h2',
   },
   render: (args) => (
-    <div className="flex flex-col gap-8">
+    <Box className="flex flex-col gap-8">
       <Heading {...args} showBorder borderColor="blue">
         Blue Border
       </Heading>
@@ -136,7 +137,7 @@ export const WithColoredBorder: Story = {
       <Heading {...args} showBorder borderColor="teal">
         Teal Border
       </Heading>
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(
@@ -197,7 +198,7 @@ export const AllHeadingLevels: Story = {
     children: 'Heading levels demo',
   },
   render: () => (
-    <div className="flex flex-col gap-4">
+    <Box className="flex flex-col gap-4">
       <Heading level="h1" variant="large">
         Heading Level 1
       </Heading>
@@ -216,7 +217,7 @@ export const AllHeadingLevels: Story = {
       <Heading level="h6" variant="small">
         Heading Level 6
       </Heading>
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(
@@ -249,7 +250,7 @@ export const AllVariants: Story = {
     children: 'Heading variants demo',
   },
   render: () => (
-    <div className="flex flex-col gap-4">
+    <Box className="flex flex-col gap-4">
       <Heading level="h2" variant="default">
         Default Variant
       </Heading>
@@ -262,7 +263,7 @@ export const AllVariants: Story = {
       <Heading level="h2" variant="small">
         Small Variant
       </Heading>
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(
@@ -289,14 +290,14 @@ export const AllWeights: Story = {
     children: 'Heading weights demo',
   },
   render: () => (
-    <div className="flex flex-col gap-4">
+    <Box className="flex flex-col gap-4">
       <Heading level="h2" weight="normal">
         Normal Weight Heading
       </Heading>
       <Heading level="h2" weight="bold">
         Bold Weight Heading
       </Heading>
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(
@@ -317,7 +318,7 @@ export const TextAlignment: Story = {
     children: 'Text alignment demo',
   },
   render: () => (
-    <div className="flex flex-col gap-4 w-full">
+    <Box className="flex flex-col gap-4 w-full">
       <Heading level="h2" textAlign="left">
         Left Aligned Heading
       </Heading>
@@ -327,7 +328,7 @@ export const TextAlignment: Story = {
       <Heading level="h2" textAlign="right">
         Right Aligned Heading
       </Heading>
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(

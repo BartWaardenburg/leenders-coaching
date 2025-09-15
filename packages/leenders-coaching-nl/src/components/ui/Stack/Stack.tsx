@@ -1,17 +1,72 @@
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
-import { twMerge } from 'tailwind-merge';
+import type {
+  ComponentPropsWithoutRef,
+  ComponentRef,
+  ElementType,
+  ReactElement,
+  ReactNode,
+} from 'react';
+import { forwardRef } from 'react';
+import { cn } from '@/utilities/cn';
 
-type SpaceValue = 0 | 1 | 2 | 3 | 4 | 'px' | 'x-reverse' | 'y-reverse';
+const GAP = {
+  0: 'gap-0',
+  1: 'gap-1',
+  2: 'gap-2',
+  3: 'gap-3',
+  4: 'gap-4',
+  5: 'gap-5',
+  6: 'gap-6',
+  8: 'gap-8',
+  10: 'gap-10',
+  12: 'gap-12',
+} as const;
+type GapKey = keyof typeof GAP;
 
-type StackProps = {
-  children: ReactNode;
-  space?: SpaceValue;
-  gap?: number;
-  direction?: 'col' | 'row';
-  justify?: 'start' | 'end' | 'center' | 'between' | 'around' | 'evenly';
-  as?: 'div';
-  testid?: string;
-} & Omit<ComponentPropsWithoutRef<'div'>, 'ref'>;
+const JUSTIFY = {
+  start: 'justify-start',
+  end: 'justify-end',
+  center: 'justify-center',
+  between: 'justify-between',
+  around: 'justify-around',
+  evenly: 'justify-evenly',
+} as const;
+
+const SPACE_Y: Record<0 | 1 | 2 | 3 | 4 | 'px', string> = {
+  0: 'space-y-0',
+  1: 'space-y-1',
+  2: 'space-y-2',
+  3: 'space-y-3',
+  4: 'space-y-4',
+  px: 'space-y-px',
+};
+const SPACE_X: Record<0 | 1 | 2 | 3 | 4 | 'px', string> = {
+  0: 'space-x-0',
+  1: 'space-x-1',
+  2: 'space-x-2',
+  3: 'space-x-3',
+  4: 'space-x-4',
+  px: 'space-x-px',
+};
+
+type SpaceValue = 0 | 1 | 2 | 3 | 4 | 'px';
+
+type PolymorphicProps<C extends ElementType, P = {}> = P & {
+  as?: C;
+} & Omit<ComponentPropsWithoutRef<C>, 'as' | keyof P>;
+
+type StackProps<C extends ElementType = 'div'> = PolymorphicProps<
+  C,
+  {
+    children: ReactNode;
+    space?: SpaceValue;
+    gap?: GapKey;
+    direction?: 'col' | 'row';
+    reverse?: boolean;
+    justify?: 'start' | 'end' | 'center' | 'between' | 'around' | 'evenly';
+    testid?: string;
+    className?: string;
+  }
+>;
 
 /**
  * Stack component for managing layout of elements with flexible spacing and alignment options
@@ -22,35 +77,55 @@ type StackProps = {
  * @param props.gap - Gap between elements using CSS gap property
  * @param props.direction - Stack direction, either 'col' (column) or 'row' (row)
  * @param props.justify - Justification alignment for elements ('start', 'end', 'center', 'between', 'around', 'evenly')
- * @param props.as - HTML element to render as (currently only supports 'div')
+ * @param props.as - HTML element to render as
  * @param props.testid - Test identifier for testing purposes
  * @returns A flex container with configurable spacing and alignment
  */
-export const Stack = ({
-  children,
-  space,
-  gap,
-  direction = 'col',
-  justify = 'start',
-  as: Component = 'div',
-  className,
-  testid,
-  ...props
-}: StackProps) => {
-  return (
-    <Component
-      data-testid={testid}
-      className={twMerge(
-        direction === 'col' ? 'flex-col' : 'flex-row',
-        'flex w-full',
-        gap && `gap-${gap}`,
-        space && `space-${direction === 'col' ? 'y' : 'x'}-${space}`,
-        justify && `justify-${justify}`,
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </Component>
-  );
-};
+const StackComponent = forwardRef<Element, StackProps<ElementType>>(
+  (
+    {
+      children,
+      space,
+      gap,
+      direction = 'col',
+      reverse = false,
+      justify = 'start',
+      as,
+      className,
+      testid,
+      ...props
+    },
+    ref
+  ) => {
+    const Component = (as || 'div') as ElementType;
+
+    return (
+      <Component
+        ref={ref}
+        data-testid={testid}
+        className={cn(
+          direction === 'col' ? 'flex-col' : 'flex-row',
+          'flex w-full',
+          gap !== undefined && GAP[gap as keyof typeof GAP],
+          space !== undefined &&
+            (direction === 'col'
+              ? SPACE_Y[space as keyof typeof SPACE_Y]
+              : SPACE_X[space as keyof typeof SPACE_X]),
+          reverse &&
+            (direction === 'col' ? 'space-y-reverse' : 'space-x-reverse'),
+          JUSTIFY[justify as keyof typeof JUSTIFY],
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </Component>
+    );
+  }
+);
+
+StackComponent.displayName = 'Stack';
+
+export const Stack = StackComponent as <C extends ElementType = 'div'>(
+  props: StackProps<C> & { ref?: React.Ref<ComponentRef<C>> }
+) => ReactElement;

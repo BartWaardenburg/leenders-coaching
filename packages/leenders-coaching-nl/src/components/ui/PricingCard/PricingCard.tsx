@@ -5,41 +5,36 @@ import { Heading } from '@/components/ui/Heading';
 import { Box } from '@/components/ui/Box';
 import { Flex } from '@/components/ui/Flex';
 import { IoCheckmark } from 'react-icons/io5';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/utilities/cn';
+import { pastelVariant, type PastelVariant } from '@/utilities/tokens';
 
-type PricingCardVariant =
-  | 'blue'
-  | 'purple'
-  | 'green'
-  | 'pink'
-  | 'yellow'
-  | 'teal';
+type PricingCardVariant = PastelVariant;
 
 const cardBackgrounds: Record<PricingCardVariant, string> = {
-  blue: 'bg-pastel-blue dark:bg-pastel-blue-dark',
-  purple: 'bg-pastel-purple dark:bg-pastel-purple-dark',
-  green: 'bg-pastel-green dark:bg-pastel-green-dark',
-  pink: 'bg-pastel-pink dark:bg-pastel-pink-dark',
-  yellow: 'bg-pastel-yellow dark:bg-pastel-yellow-dark',
-  teal: 'bg-pastel-teal dark:bg-pastel-teal-dark',
+  blue: pastelVariant.blue.bg,
+  purple: pastelVariant.purple.bg,
+  green: pastelVariant.green.bg,
+  pink: pastelVariant.pink.bg,
+  yellow: pastelVariant.yellow.bg,
+  teal: pastelVariant.teal.bg,
 };
 
 const cardBordersLight: Record<PricingCardVariant, string> = {
-  blue: 'border-pastel-blue dark:border-pastel-blue-dark',
-  purple: 'border-pastel-purple dark:border-pastel-purple-dark',
-  green: 'border-pastel-green dark:border-pastel-green-dark',
-  pink: 'border-pastel-pink dark:border-pastel-pink-dark',
-  yellow: 'border-pastel-yellow dark:border-pastel-yellow-dark',
-  teal: 'border-pastel-teal dark:border-pastel-teal-dark',
+  blue: pastelVariant.blue.borderLight,
+  purple: pastelVariant.purple.borderLight,
+  green: pastelVariant.green.borderLight,
+  pink: pastelVariant.pink.borderLight,
+  yellow: pastelVariant.yellow.borderLight,
+  teal: pastelVariant.teal.borderLight,
 };
 
 const cardBordersDark: Record<PricingCardVariant, string> = {
-  blue: 'border-pastel-blue-dark dark:border-pastel-blue',
-  purple: 'border-pastel-purple-dark dark:border-pastel-purple',
-  green: 'border-pastel-green-dark dark:border-pastel-green',
-  pink: 'border-pastel-pink-dark dark:border-pastel-pink',
-  yellow: 'border-pastel-yellow-dark dark:border-pastel-yellow',
-  teal: 'border-pastel-teal-dark dark:border-pastel-teal',
+  blue: pastelVariant.blue.borderDark,
+  purple: pastelVariant.purple.borderDark,
+  green: pastelVariant.green.borderDark,
+  pink: pastelVariant.pink.borderDark,
+  yellow: pastelVariant.yellow.borderDark,
+  teal: pastelVariant.teal.borderDark,
 };
 
 interface PricingFeature {
@@ -72,7 +67,7 @@ export const PricingCard = ({
   variant = 'blue',
   testid,
 }: PricingCardProps) => {
-  const cardClasses = twMerge(
+  const cardClasses = cn(
     'group relative h-full transition-theme border @container',
     isPopular
       ? `${cardBackgrounds[variant]} ${cardBordersDark[variant]}`
@@ -81,7 +76,7 @@ export const PricingCard = ({
 
   return (
     <Box className={cardClasses} data-testid={testid}>
-      <Flex className="h-full flex-col @lg:flex-row">
+      <Flex direction="column" className="h-full @lg:flex-row">
         <Box className="flex-1 p-4 @md:p-8">
           <Flex direction="column" className="h-full">
             <Box>
@@ -103,9 +98,7 @@ export const PricingCard = ({
                 >
                   {title}
                 </Heading>
-                <Text className="mt-2 text-muted-foreground">
-                  {description}
-                </Text>
+                <Text variant="muted">{description}</Text>
               </Box>
 
               <Box className="border-b border-t border-foreground/80">
@@ -147,7 +140,9 @@ export const PricingCard = ({
                                 <Box>
                                   <IoCheckmark className="h-4 w-4 shrink-0 text-foreground/80" />
                                 </Box>
-                                <Text className="ml-3">{feature.text}</Text>
+                                <Text variant="default" className="ml-3">
+                                  {feature.text}
+                                </Text>
                               </Flex>
                             ))}
                         </Stack>
@@ -177,7 +172,7 @@ export const PricingCard = ({
                   onClick={onCtaClick}
                   variant={variant}
                   className="transition-theme"
-                  fullWidthOnContainer
+                  fullWidthUntil="lg"
                 >
                   {ctaLabel}
                 </Button>

@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Footer } from './Footer';
+import { Box } from '../Box/Box';
+import { Heading } from '../Heading/Heading';
 
 const meta = {
   title: 'UI/Footer',
@@ -290,34 +292,40 @@ export const AllVariants: Story = {
     socialLinks: mockSocialLinks,
   },
   render: () => (
-    <div className="space-y-8">
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Default Footer</h3>
+    <Box className="space-y-8">
+      <Box>
+        <Heading level="h3" variant="small" className="mb-4">
+          Default Footer
+        </Heading>
         <Footer
           copyright="© 2024 Leenders Coaching. Alle rechten voorbehouden."
           contact={mockContact}
           socialLinks={mockSocialLinks}
         />
-      </div>
+      </Box>
 
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Minimal Footer</h3>
+      <Box>
+        <Heading level="h3" variant="small" className="mb-4">
+          Minimal Footer
+        </Heading>
         <Footer
           copyright="© 2024 Leenders Coaching."
           contact={{ email: null, phone: null }}
           socialLinks={[]}
         />
-      </div>
+      </Box>
 
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Email Only</h3>
+      <Box>
+        <Heading level="h3" variant="small" className="mb-4">
+          Email Only
+        </Heading>
         <Footer
           copyright="© 2024 Leenders Coaching. Alle rechten voorbehouden."
           contact={{ email: 'info@leenders-coaching.nl', phone: null }}
           socialLinks={[]}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(

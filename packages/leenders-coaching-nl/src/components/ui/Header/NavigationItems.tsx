@@ -61,7 +61,9 @@ export const NavigationItems = ({
     <Stack space={4}>
       {links?.map((link) => {
         if (!link.href || !link.label) {
-          console.warn('Invalid navigation link:', link);
+          if (process.env.NODE_ENV !== 'production') {
+            console.warn('Invalid navigation link:', link);
+          }
           return null;
         }
         return (

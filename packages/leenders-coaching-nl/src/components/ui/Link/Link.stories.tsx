@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Link } from './Link';
 import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { Box } from '../Box/Box';
 
 const meta = {
   title: 'UI/Link',
@@ -163,7 +164,9 @@ export const ExternalLink: Story = {
     rel: 'noopener noreferrer',
   },
   play: async ({ canvas }) => {
-    const link = canvas.getByRole('link', { name: 'External Link' });
+    const link = canvas.getByRole('link', {
+      name: 'External Link (opent in nieuw tabblad)',
+    });
     await expect(link).toBeVisible();
     await expect(link).toHaveAttribute('href', 'https://example.com');
     await expect(link).toHaveAttribute('target', '_blank');
@@ -183,7 +186,7 @@ export const ExternalLinkVariants: Story = {
     rel: 'noopener noreferrer',
   },
   render: (args) => (
-    <div className="flex flex-col gap-4">
+    <Box className="flex flex-col gap-4">
       <Link {...args}>Default External Link</Link>
       <Link {...args} variant="subtle">
         Subtle External Link
@@ -200,26 +203,38 @@ export const ExternalLinkVariants: Story = {
       <Link {...args} variant="animated" linePosition="above" lineStyle="move">
         Animated External Link (Move Above)
       </Link>
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByRole('link', { name: 'Default External Link' })
+      canvas.getByRole('link', {
+        name: 'Default External Link (opent in nieuw tabblad)',
+      })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('link', { name: 'Subtle External Link' })
+      canvas.getByRole('link', {
+        name: 'Subtle External Link (opent in nieuw tabblad)',
+      })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('link', { name: 'Animated External Link (Slide Below)' })
+      canvas.getByRole('link', {
+        name: 'Animated External Link (Slide Below) (opent in nieuw tabblad)',
+      })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('link', { name: 'Animated External Link (Slide Above)' })
+      canvas.getByRole('link', {
+        name: 'Animated External Link (Slide Above) (opent in nieuw tabblad)',
+      })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('link', { name: 'Animated External Link (Move Below)' })
+      canvas.getByRole('link', {
+        name: 'Animated External Link (Move Below) (opent in nieuw tabblad)',
+      })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('link', { name: 'Animated External Link (Move Above)' })
+      canvas.getByRole('link', {
+        name: 'Animated External Link (Move Above) (opent in nieuw tabblad)',
+      })
     ).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },

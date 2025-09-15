@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { SectionRenderer } from './SectionRenderer';
 import { waitForMotionAnimations } from '../../test/chromatic-utils';
+import { Box } from '@/components/ui/Box';
 
 const meta = {
   title: 'Sections/SectionRenderer',
@@ -259,13 +260,13 @@ export const AllSectionTypes: Story = {
     data: mockHeaderSection,
   },
   render: () => (
-    <div className="space-y-8">
+    <Box className="space-y-8">
       <SectionRenderer type="sectionHeader" data={mockHeaderSection} />
       <SectionRenderer type="sectionContent" data={mockContentSection} />
       <SectionRenderer type="sectionCards" data={mockCardsSection} />
       <SectionRenderer type="sectionFAQ" data={mockFAQSection} />
       <SectionRenderer type="sectionForm" data={mockFormSection} />
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getAllByTestId('section')).toHaveLength(5);
@@ -282,25 +283,25 @@ export const ErrorHandling: Story = {
     data: mockHeaderSection,
   },
   render: () => (
-    <div className="space-y-8">
-      <div>
+    <Box className="space-y-8">
+      <Box>
         <h3 className="text-lg font-semibold mb-4">Invalid Section Type</h3>
         <SectionRenderer
           type="invalidSection"
           data={{ title: 'Should not render' }}
         />
-      </div>
+      </Box>
 
-      <div>
+      <Box>
         <h3 className="text-lg font-semibold mb-4">Empty Data</h3>
         <SectionRenderer type="sectionHeader" data={{}} />
-      </div>
+      </Box>
 
-      <div>
+      <Box>
         <h3 className="text-lg font-semibold mb-4">Valid Section</h3>
         <SectionRenderer type="sectionHeader" data={mockHeaderSection} />
-      </div>
-    </div>
+      </Box>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByTestId('section')).toBeInTheDocument();

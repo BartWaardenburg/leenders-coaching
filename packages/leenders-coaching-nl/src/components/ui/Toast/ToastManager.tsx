@@ -8,14 +8,14 @@ import {
   type ReactNode,
 } from 'react';
 import { Toast } from './Toast';
-import type { ModalVariant } from '../Modal/Modal';
+import type { PastelVariant } from '@/utilities/tokens';
 import { Flex } from '@/components/ui/Flex';
 
 /**
  * Options for configuring a toast notification
  */
 type ToastOptions = {
-  variant?: ModalVariant;
+  variant?: PastelVariant;
   duration?: number;
   showCloseButton?: boolean;
 };

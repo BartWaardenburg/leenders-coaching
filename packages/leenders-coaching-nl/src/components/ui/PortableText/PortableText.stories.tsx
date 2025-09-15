@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { PortableText } from './PortableText';
+import { Heading } from '../Heading/Heading';
+import { Box } from '../Box/Box';
 
 const meta = {
   title: 'UI/PortableText',
@@ -447,8 +449,7 @@ export const WithCustomClassName: Story = {
         ],
       },
     ],
-    className:
-      'border-2 border-blue-500 rounded-lg p-4 bg-blue-50 dark:bg-blue-900/20',
+    className: 'border-2 border-blue-500 p-4 bg-blue-50 dark:bg-blue-900/20',
   },
   play: async ({ canvas: _canvas }) => {
     await expect(_canvas.getByText('Custom Styled Content')).toBeVisible();
@@ -473,9 +474,11 @@ export const AllVariants: Story = {
     ],
   },
   render: () => (
-    <div className="space-y-8">
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Simple Text</h3>
+    <Box className="space-y-6">
+      <Box>
+        <Heading level="h3" variant="small" className="mb-4">
+          Simple Text
+        </Heading>
         <PortableText
           content={[
             {
@@ -487,10 +490,12 @@ export const AllVariants: Story = {
             },
           ]}
         />
-      </div>
+      </Box>
 
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Rich Text</h3>
+      <Box>
+        <Heading level="h3" variant="small" className="mb-4">
+          Rich Text
+        </Heading>
         <PortableText
           content={[
             {
@@ -506,10 +511,12 @@ export const AllVariants: Story = {
             },
           ]}
         />
-      </div>
+      </Box>
 
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Lists</h3>
+      <Box>
+        <Heading level="h3" variant="small" className="mb-4">
+          Lists
+        </Heading>
         <PortableText
           content={[
             {
@@ -526,8 +533,8 @@ export const AllVariants: Story = {
             },
           ]}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   ),
   play: async ({ canvas: _canvas }) => {
     await expect(

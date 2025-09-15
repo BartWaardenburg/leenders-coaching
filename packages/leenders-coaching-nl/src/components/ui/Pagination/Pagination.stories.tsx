@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Pagination } from './Pagination';
+import { Box } from '../Box/Box';
 import { useState } from 'react';
 import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 
@@ -12,9 +13,9 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <div className="w-[600px]">
+      <Box className="w-[600px]">
         <Story />
-      </div>
+      </Box>
     ),
   ],
   argTypes: {
@@ -64,7 +65,9 @@ export const Default: Story = {
   },
   render: () => <PaginationWithState totalPages={10} />,
   play: async ({ canvas }) => {
-    await expect(canvas.getByRole('button', { name: '1' })).toBeVisible();
+    await expect(
+      canvas.getByRole('button', { name: 'Ga naar pagina 1' })
+    ).toBeVisible();
     await expect(
       canvas.getByRole('button', { name: 'Vorige pagina' })
     ).toBeVisible();
@@ -83,9 +86,15 @@ export const FewPages: Story = {
   },
   render: () => <PaginationWithState totalPages={3} />,
   play: async ({ canvas }) => {
-    await expect(canvas.getByRole('button', { name: '1' })).toBeVisible();
-    await expect(canvas.getByRole('button', { name: '2' })).toBeVisible();
-    await expect(canvas.getByRole('button', { name: '3' })).toBeVisible();
+    await expect(
+      canvas.getByRole('button', { name: 'Ga naar pagina 1' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('button', { name: 'Ga naar pagina 2' })
+    ).toBeVisible();
+    await expect(
+      canvas.getByRole('button', { name: 'Ga naar pagina 3' })
+    ).toBeVisible();
     await expect(
       canvas.getByRole('button', { name: 'Vorige pagina' })
     ).toBeVisible();
@@ -104,7 +113,9 @@ export const ManyPages: Story = {
   },
   render: () => <PaginationWithState totalPages={20} />,
   play: async ({ canvas }) => {
-    await expect(canvas.getByRole('button', { name: '1' })).toBeVisible();
+    await expect(
+      canvas.getByRole('button', { name: 'Ga naar pagina 1' })
+    ).toBeVisible();
     await expect(
       canvas.getByRole('button', { name: 'Vorige pagina' })
     ).toBeVisible();

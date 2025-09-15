@@ -46,10 +46,10 @@ export const Default: Story = {
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
     await expect(
       canvas.getByText('This is a default alert message.')
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -62,11 +62,11 @@ export const WithCloseButton: Story = {
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
     await expect(
       canvas.getByText('This is an alert with a close button.')
     ).toBeVisible();
     await expect(canvas.getByLabelText('Sluit waarschuwing')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -78,10 +78,10 @@ export const Small: Story = {
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
     await expect(
       canvas.getByText('This is a small alert message.')
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -94,11 +94,11 @@ export const SmallWithClose: Story = {
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
     await expect(
       canvas.getByText('This is a small alert with a close button.')
     ).toBeVisible();
     await expect(canvas.getByLabelText('Sluit waarschuwing')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -110,10 +110,10 @@ export const Medium: Story = {
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
     await expect(
       canvas.getByText('This is a medium alert message.')
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -126,11 +126,11 @@ export const MediumWithClose: Story = {
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
     await expect(
       canvas.getByText('This is a medium alert with a close button.')
     ).toBeVisible();
     await expect(canvas.getByLabelText('Sluit waarschuwing')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -142,10 +142,10 @@ export const Large: Story = {
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
     await expect(
       canvas.getByText('This is a large alert message.')
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -158,11 +158,11 @@ export const LargeWithClose: Story = {
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
     await expect(
       canvas.getByText('This is a large alert with a close button.')
     ).toBeVisible();
     await expect(canvas.getByLabelText('Sluit waarschuwing')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -189,10 +189,10 @@ export const AllSizes: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
+    await waitForMotionAnimations({ canvas });
     await expect(canvas.getByText('Small Alert Message')).toBeVisible();
     await expect(canvas.getByText('Medium Alert Message')).toBeVisible();
     await expect(canvas.getByText('Large Alert Message')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -228,13 +228,13 @@ export const AllVariants: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
+    await waitForMotionAnimations({ canvas });
     await expect(canvas.getByText('Blue Alert Message')).toBeVisible();
     await expect(canvas.getByText('Purple Alert Message')).toBeVisible();
     await expect(canvas.getByText('Green Alert Message')).toBeVisible();
     await expect(canvas.getByText('Pink Alert Message')).toBeVisible();
     await expect(canvas.getByText('Yellow Alert Message')).toBeVisible();
     await expect(canvas.getByText('Teal Alert Message')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
   },
 };
 
@@ -248,12 +248,12 @@ export const LongContent: Story = {
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
+    await waitForMotionAnimations({ canvas });
     await expect(
       canvas.getByText(
         'This is an alert with longer content that might wrap to multiple lines. It demonstrates how the alert handles longer text content while maintaining its layout and readability.'
       )
     ).toBeVisible();
     await expect(canvas.getByLabelText('Sluit waarschuwing')).toBeVisible();
-    await waitForMotionAnimations({ canvas });
   },
 };

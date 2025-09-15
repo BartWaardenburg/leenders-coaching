@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import React, { useEffect, useState } from 'react';
 import { expect } from 'storybook/test';
 import { ToastProvider, useToast } from './ToastManager';
-import type { ModalVariant } from '../Modal/Modal';
+import type { PastelVariant } from '@/utilities/tokens';
 import { Stack } from '@/components/ui/Stack';
 import { Box } from '@/components/ui/Box';
 import { Heading } from '@/components/ui/Heading';
@@ -107,7 +107,7 @@ export const Interactive: Story = {
                 'pink',
                 'yellow',
                 'teal',
-              ] as ModalVariant[]
+              ] as PastelVariant[]
             ).map((variant) => (
               <Button
                 key={variant}

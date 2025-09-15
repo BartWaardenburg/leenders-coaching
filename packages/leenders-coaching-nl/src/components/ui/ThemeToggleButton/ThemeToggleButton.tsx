@@ -43,6 +43,8 @@ export const ThemeToggleButton: FC<ThemeToggleButtonProps> = ({
         onClick={() => {}}
         className={className}
         speed="slow"
+        disabled
+        aria-disabled="true"
       />
     );
   }

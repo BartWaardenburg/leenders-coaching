@@ -4,6 +4,10 @@ import { Carousel } from './Carousel';
 import { Quote } from '@/components/ui/Quote';
 import { Person } from '@/components/ui/Person';
 import { Box } from '@/components/ui/Box';
+import { Heading } from '@/components/ui/Heading';
+import { Text } from '@/components/ui/Text';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
 import Image from 'next/image';
 
 const meta = {
@@ -113,7 +117,7 @@ const ImageSlide = ({ src, alt }: (typeof images)[number]) => (
       src={src}
       alt={alt}
       fill
-      className="object-cover rounded-lg"
+      className="object-cover"
       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
     />
   </Box>
@@ -134,10 +138,12 @@ export const SingleSlide: Story = {
   args: {
     slides: [
       <Box key="single" className="p-8 text-center">
-        <h2 className="text-2xl font-bold mb-4">Single Slide</h2>
-        <p className="text-gray-600 dark:text-gray-400">
+        <Heading level="h2" variant="medium" className="mb-4">
+          Single Slide
+        </Heading>
+        <Text variant="muted">
           This carousel has only one slide, so navigation should be hidden.
-        </p>
+        </Text>
       </Box>,
     ],
   },
@@ -159,10 +165,10 @@ export const ManySlides: Story = {
   args: {
     slides: Array.from({ length: 10 }, (_, i) => (
       <Box key={i} className="p-8 text-center">
-        <h2 className="text-2xl font-bold mb-4">Slide {i + 1}</h2>
-        <p className="text-gray-600 dark:text-gray-400">
-          This is slide number {i + 1} of 10 slides.
-        </p>
+        <Heading level="h2" variant="medium" className="mb-4">
+          Slide {i + 1}
+        </Heading>
+        <Text variant="muted">This is slide number {i + 1} of 10 slides.</Text>
       </Box>
     )),
   },
@@ -175,10 +181,10 @@ export const MixedContent: Story = {
   args: {
     slides: [
       <Box key="text" className="p-8 text-center">
-        <h2 className="text-2xl font-bold mb-4">Text Content</h2>
-        <p className="text-gray-600 dark:text-gray-400">
-          This slide contains only text content.
-        </p>
+        <Heading level="h2" variant="medium" className="mb-4">
+          Text Content
+        </Heading>
+        <Text variant="muted">This slide contains only text content.</Text>
       </Box>,
       <ImageSlide
         key="image"
@@ -193,17 +199,13 @@ export const MixedContent: Story = {
         image={testimonials[0]?.image || ''}
       />,
       <Box key="form" className="p-8">
-        <h2 className="text-2xl font-bold mb-4">Form Content</h2>
-        <div className="space-y-4">
-          <input
-            type="text"
-            placeholder="Voer je naam in"
-            className="w-full p-2 border rounded"
-          />
-          <button className="px-4 py-2 bg-blue-500 text-white rounded">
-            Submit
-          </button>
-        </div>
+        <Heading level="h2" variant="medium" className="mb-4">
+          Form Content
+        </Heading>
+        <Box className="space-y-4">
+          <Input type="text" placeholder="Voer je naam in" />
+          <Button variant="blue">Submit</Button>
+        </Box>
       </Box>,
     ],
   },
@@ -222,26 +224,26 @@ export const AllVariants: Story = {
     )),
   },
   render: () => (
-    <div className="space-y-8">
-      <div>
+    <Box className="space-y-6">
+      <Box>
         <h3 className="text-lg font-semibold mb-4">Default Carousel</h3>
         <Carousel
           slides={testimonials.map((testimonial) => (
             <TestimonialSlide key={testimonial.name} {...testimonial} />
           ))}
         />
-      </div>
+      </Box>
 
-      <div>
+      <Box>
         <h3 className="text-lg font-semibold mb-4">Image Carousel</h3>
         <Carousel
           slides={images.map((image) => (
             <ImageSlide key={image.src} {...image} />
           ))}
         />
-      </div>
+      </Box>
 
-      <div>
+      <Box>
         <h3 className="text-lg font-semibold mb-4">Single Slide</h3>
         <Carousel
           slides={[
@@ -253,8 +255,8 @@ export const AllVariants: Story = {
             </Box>,
           ]}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByText('Default Carousel')).toBeVisible();

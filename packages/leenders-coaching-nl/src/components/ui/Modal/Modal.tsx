@@ -1,8 +1,8 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { useState, useEffect, useCallback } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { useState, useEffect, useCallback, useId, useRef } from 'react';
+import { cn } from '@/utilities/cn';
 import { IoClose } from 'react-icons/io5';
 import {
   motion,
@@ -12,26 +12,11 @@ import {
 } from 'motion/react';
 import { Flex } from '@/components/ui/Flex';
 import { useConfig } from '@/components/providers/ClientConfigProvider';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
+import { lockScroll, unlockScroll } from '@/utilities/scroll-lock';
+import { pastelVariant, type PastelVariant } from '@/utilities/tokens';
 
-export type ModalVariant =
-  | 'blue'
-  | 'purple'
-  | 'green'
-  | 'pink'
-  | 'yellow'
-  | 'teal';
-
-export const modalStyles: Record<ModalVariant, string> = {
-  blue: 'bg-pastel-blue dark:bg-pastel-blue-dark border-pastel-blue-dark dark:border-pastel-blue text-pastel-blue-dark dark:text-pastel-blue',
-  purple:
-    'bg-pastel-purple dark:bg-pastel-purple-dark border-pastel-purple-dark dark:border-pastel-purple text-pastel-purple-dark dark:text-pastel-purple',
-  green:
-    'bg-pastel-green dark:bg-pastel-green-dark border-pastel-green-dark dark:border-pastel-green text-pastel-green-dark dark:text-pastel-green',
-  pink: 'bg-pastel-pink dark:bg-pastel-pink-dark border-pastel-pink-dark dark:border-pastel-pink text-pastel-pink-dark dark:text-pastel-pink',
-  yellow:
-    'bg-pastel-yellow dark:bg-pastel-yellow-dark border-pastel-yellow-dark dark:border-pastel-yellow text-pastel-yellow-dark dark:text-pastel-yellow',
-  teal: 'bg-pastel-teal dark:bg-pastel-teal-dark border-pastel-teal-dark dark:border-pastel-teal text-pastel-teal-dark dark:text-pastel-teal',
-};
+export type ModalVariant = PastelVariant;
 
 type ModalProps = {
   isOpen: boolean;
@@ -40,6 +25,10 @@ type ModalProps = {
   variant?: ModalVariant;
   showCloseButton?: boolean;
   onClose?: () => void;
+  ariaDescribedBy?: string;
+  onOpenAutoFocus?: (element: HTMLElement) => void;
+  onCloseAutoFocus?: (element: HTMLElement) => void;
+  testid?: string;
 } & Omit<
   HTMLMotionProps<'div'>,
   | 'onAnimationStart'
@@ -56,6 +45,10 @@ const MotionFlex = motion.create(Flex);
 
 /**
  * Generic full-screen modal component with proper accessibility and pastel styling
+ *
+ * @param onClose - Callback function called when modal should close. Note: In normal mode,
+ *   this callback is delayed by 400ms to sync with the exit animation. In test environments
+ *   or when reduced motion is enabled, the callback is called immediately for faster testing.
  */
 export const Modal = ({
   isOpen,
@@ -64,19 +57,40 @@ export const Modal = ({
   variant = 'blue',
   showCloseButton = true,
   onClose,
+  ariaDescribedBy,
+  onOpenAutoFocus: _onOpenAutoFocus,
+  onCloseAutoFocus: _onCloseAutoFocus,
   className,
+  testid,
   ...props
 }: ModalProps) => {
   const [isVisible, setIsVisible] = useState(isOpen);
   const { accessibility } = useConfig();
   const systemReducedMotion = useReducedMotion();
+  const titleId = useId();
+  const modalRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
 
   // In test environments (like Storybook), we want to treat reduced motion as active
   // This ensures immediate onClose callbacks for faster, more reliable tests
   const shouldReduceMotion =
     systemReducedMotion || process.env.NODE_ENV === 'test';
 
+  // Store the element that opened the modal for focus restoration
+  useEffect(() => {
+    if (isOpen) {
+      triggerRef.current = (document.activeElement as HTMLElement) || null;
+    }
+  }, [isOpen]);
+
+  // Focus trap functionality
+  useFocusTrap(isVisible, modalRef, triggerRef.current);
+
   const handleClose = useCallback(() => {
+    /* Call onCloseAutoFocus before closing */
+    const element = triggerRef.current ?? document.body;
+    _onCloseAutoFocus?.(element);
+
     /* If reduced motion is active (like in tests), call onClose immediately */
     if (shouldReduceMotion) {
       // Call onClose synchronously before any state changes
@@ -90,7 +104,7 @@ export const Modal = ({
         onClose?.();
       }, 400);
     }
-  }, [onClose, shouldReduceMotion]);
+  }, [onClose, shouldReduceMotion, _onCloseAutoFocus]);
 
   useEffect(() => {
     if (isOpen) {
@@ -99,6 +113,16 @@ export const Modal = ({
       setIsVisible(false);
     }
   }, [isOpen]);
+
+  // Handle onOpenAutoFocus when modal becomes visible
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const firstFocusable =
+      modalRef.current?.querySelector<HTMLElement>('[data-autofocus]') ??
+      modalRef.current!;
+    _onOpenAutoFocus?.(firstFocusable);
+  }, [isVisible, _onOpenAutoFocus]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -113,6 +137,25 @@ export const Modal = ({
     }
   }, [isOpen, onClose, handleClose]);
 
+  useEffect(() => {
+    if (!isVisible) return;
+
+    lockScroll();
+
+    // Make the main content inert for screen readers
+    const mainContent = document.querySelector('main');
+    if (mainContent) {
+      mainContent.setAttribute('inert', 'true');
+    }
+
+    return () => {
+      unlockScroll();
+      if (mainContent) {
+        mainContent.removeAttribute('inert');
+      }
+    };
+  }, [isVisible]);
+
   return (
     <AnimatePresence mode="wait">
       {isVisible && (
@@ -120,12 +163,13 @@ export const Modal = ({
           as="div"
           items="center"
           justify="center"
-          className={twMerge(
+          className={cn(
             'fixed inset-0 z-50 p-4 bg-background/80 backdrop-blur-sm'
           )}
           role="dialog"
           aria-modal="true"
-          aria-label={label}
+          aria-labelledby={titleId}
+          aria-describedby={ariaDescribedBy}
           onClick={handleClose}
           initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -138,10 +182,14 @@ export const Modal = ({
           {...props}
         >
           <MotionFlex
+            ref={modalRef}
             direction="column"
-            className={twMerge(
+            role="document"
+            className={cn(
               'relative max-w-lg w-full border p-6 shadow-lg',
-              modalStyles[variant],
+              pastelVariant[variant].bg,
+              pastelVariant[variant].borderDark,
+              pastelVariant[variant].textLight,
               className
             )}
             onClick={(e: React.MouseEvent<HTMLDivElement>) =>
@@ -164,7 +212,7 @@ export const Modal = ({
                     stiffness: 300,
                   },
             }}
-            data-testid="modal-content"
+            data-testid={testid || 'modal-content'}
             exit={
               shouldReduceMotion
                 ? { opacity: 1, y: 0, scale: 1 }
@@ -179,15 +227,20 @@ export const Modal = ({
                   }
             }
           >
+            {/* Hidden title for screen readers */}
+            <h2 id={titleId} className="sr-only">
+              {label}
+            </h2>
+
             {showCloseButton && (
               <motion.button
                 type="button"
                 onClick={handleClose}
-                className={twMerge(
-                  'absolute right-2 top-2 p-2 z-10',
+                className={cn(
+                  'absolute right-2 top-2 p-2 z-10 cursor-pointer',
                   'text-inherit opacity-80 hover:opacity-100',
                   'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-                  'focus-visible:ring-current focus-visible:ring-offset-inherit'
+                  'focus-visible:ring-current focus-visible:ring-offset-background'
                 )}
                 aria-label={accessibility.closeButtons.modal}
                 initial={

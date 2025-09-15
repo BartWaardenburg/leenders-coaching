@@ -13,7 +13,7 @@ import {
   useMotionValue,
   useReducedMotion,
 } from 'motion/react';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/utilities/cn';
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
 
 import { Box } from '@/components/ui/Box';
@@ -113,27 +113,45 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
   );
 
   return (
-    <Box className={twMerge('relative group px-4 sm:px-8', className)}>
+    <Box className={cn('group px-4 sm:px-8 relative', className)}>
       {/* Main carousel area */}
       <Box className="relative">
-        <Flex className="relative items-center">
+        <Flex className="relative" items="center">
           {/* Previous button */}
           <Box className="w-12 shrink-0 flex justify-start z-10">
-            <IconButton
-              label="Vorige slide"
-              onClick={() => paginate(-1)}
-              disabled={page === 0}
-              variant="ghost"
-              shape="square"
-              bordered
-              className={twMerge(
-                'h-10 w-10 min-w-[2.5rem] p-0',
-                'disabled:opacity-0',
-                page === 0 && 'hidden'
-              )}
+            <motion.div
+              whileHover={
+                page === 0
+                  ? undefined
+                  : shouldReduceMotion
+                    ? {}
+                    : { scale: 1.05 }
+              }
+              whileTap={
+                page === 0
+                  ? undefined
+                  : shouldReduceMotion
+                    ? {}
+                    : { scale: 0.95 }
+              }
+              transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
             >
-              <IoChevronBack className="h-4 w-4" />
-            </IconButton>
+              <IconButton
+                label="Vorige slide"
+                onClick={() => paginate(-1)}
+                disabled={page === 0}
+                variant="ghost"
+                shape="square"
+                bordered
+                className={cn(
+                  'h-10 w-10 min-w-[2.5rem] p-0',
+                  'disabled:opacity-0',
+                  page === 0 && 'hidden'
+                )}
+              >
+                <IoChevronBack className="h-4 w-4" />
+              </IconButton>
+            </motion.div>
           </Box>
 
           {/* Slide content */}
@@ -191,21 +209,39 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
 
           {/* Next button */}
           <Box className="w-12 shrink-0 flex justify-end z-10">
-            <IconButton
-              label="Volgende slide"
-              onClick={() => paginate(1)}
-              disabled={page === slides.length - 1}
-              variant="ghost"
-              shape="square"
-              bordered
-              className={twMerge(
-                'h-10 w-10 min-w-[2.5rem] p-0',
-                'disabled:opacity-0',
-                page === slides.length - 1 && 'hidden'
-              )}
+            <motion.div
+              whileHover={
+                page === slides.length - 1
+                  ? undefined
+                  : shouldReduceMotion
+                    ? {}
+                    : { scale: 1.05 }
+              }
+              whileTap={
+                page === slides.length - 1
+                  ? undefined
+                  : shouldReduceMotion
+                    ? {}
+                    : { scale: 0.95 }
+              }
+              transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
             >
-              <IoChevronForward className="h-4 w-4" />
-            </IconButton>
+              <IconButton
+                label="Volgende slide"
+                onClick={() => paginate(1)}
+                disabled={page === slides.length - 1}
+                variant="ghost"
+                shape="square"
+                bordered
+                className={cn(
+                  'h-10 w-10 min-w-[2.5rem] p-0',
+                  'disabled:opacity-0',
+                  page === slides.length - 1 && 'hidden'
+                )}
+              >
+                <IoChevronForward className="h-4 w-4" />
+              </IconButton>
+            </motion.div>
           </Box>
         </Flex>
 
@@ -216,7 +252,7 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
               <motion.button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={twMerge(
+                className={cn(
                   'relative p-1.5 rounded-full transition-colors duration-200 cursor-pointer',
                   'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
                   'focus-visible:ring-foreground dark:focus-visible:ring-foreground',
@@ -228,7 +264,7 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
                 aria-label={`Ga naar slide ${index + 1}`}
               >
                 <div
-                  className={twMerge(
+                  className={cn(
                     'rounded-full transition-all duration-200',
                     index === page
                       ? 'w-3 h-3 bg-foreground dark:bg-foreground'

@@ -47,7 +47,7 @@ import { SanityImage } from '@/components/ui/SanityImage';
   image={post.cover}
   alt={post.cover?.alt}
   sizes="(max-width: 768px) 100vw, 768px"
-  className="rounded-xl shadow-sm"
+  className="shadow-sm"
 />
 ```
 

@@ -8,6 +8,7 @@ import { Text } from '@/components/ui/Text';
 import { Button } from '@/components/ui/Button';
 import { Section } from '@/components/ui/Section';
 import { Heading } from '@/components/ui/Heading';
+import { Grid } from '@/components/ui/Grid';
 
 const meta = {
   title: 'UI/Modal',
@@ -155,7 +156,7 @@ export const WithBackgroundContent: Story = {
         <Heading level="h1" variant="large">
           Main Page Content
         </Heading>
-        <Box className="grid grid-cols-3 gap-4">
+        <Grid cols={{ base: 3 }} gap={4}>
           {[1, 2, 3].map((i) => (
             <Box key={i}>
               <Heading level="h3" variant="small">
@@ -167,7 +168,7 @@ export const WithBackgroundContent: Story = {
               </Text>
             </Box>
           ))}
-        </Box>
+        </Grid>
         <Modal {...args} />
       </Stack>
     </Section>

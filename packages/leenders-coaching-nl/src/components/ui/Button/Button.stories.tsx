@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { fn } from 'storybook/test';
 import { Button } from './Button';
+import { Box } from '../Box/Box';
 
 const meta = {
   title: 'UI/Button',
@@ -36,10 +37,6 @@ const meta = {
     disabled: {
       control: 'boolean',
       description: 'Of de knop uitgeschakeld is',
-    },
-    fullWidthOnContainer: {
-      control: 'boolean',
-      description: 'Of de knop de volledige breedte moet innemen op container',
     },
     children: {
       control: 'text',
@@ -79,7 +76,7 @@ export const WithLoading: Story = {
     onClick: fn(),
   },
   play: async ({ canvas, args }) => {
-    const button = canvas.getByRole('button', { name: 'Loading...' });
+    const button = canvas.getByRole('button', { busy: true });
     await expect(button).toBeVisible();
     await expect(button).toBeDisabled();
 
@@ -136,7 +133,7 @@ export const AllVariants: Story = {
     children: 'Button',
   },
   render: (args) => (
-    <div className="flex flex-wrap gap-4">
+    <Box className="flex flex-wrap gap-4">
       {(
         [
           'black',
@@ -153,7 +150,7 @@ export const AllVariants: Story = {
           {variant.charAt(0).toUpperCase() + variant.slice(1)}
         </Button>
       ))}
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByRole('button', { name: 'Black' })).toBeVisible();
@@ -179,7 +176,7 @@ export const AllSizes: Story = {
     onClick: fn(),
   },
   render: (args) => (
-    <div className="flex items-center gap-4">
+    <Box className="flex items-center gap-4">
       <Button {...args} size="sm">
         Small
       </Button>
@@ -189,7 +186,7 @@ export const AllSizes: Story = {
       <Button {...args} size="lg">
         Large
       </Button>
-    </div>
+    </Box>
   ),
   play: async ({ canvas, userEvent, args }) => {
     const smallButton = canvas.getByRole('button', { name: 'Small' });

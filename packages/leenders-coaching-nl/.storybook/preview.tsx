@@ -78,11 +78,6 @@ const tailwindViewports = {
 const preview: Preview = {
   parameters: {
     /**
-     * Automatically match action handlers for props starting with "on".
-     */
-    actions: { argTypesRegex: '^on[A-Z].*' },
-
-    /**
      * Chromatic visual regression testing configuration.
      * - pauseAnimationAtEnd: Pauses CSS animations for snapshot stability.
      * - modes: Custom theme/viewport modes for Chromatic.

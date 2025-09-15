@@ -1,8 +1,8 @@
 'use client';
 
 import type { ComponentPropsWithoutRef } from 'react';
-import { useState, useEffect } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { useState, useEffect, useRef } from 'react';
+import { cn } from '@/utilities/cn';
 import { motion, AnimatePresence } from 'motion/react';
 
 import { IconToggleButton } from '@/components/ui/IconToggleButton';
@@ -12,6 +12,8 @@ import { Box } from '@/components/ui/Box';
 import { Flex } from '@/components/ui/Flex';
 import { useConfig } from '@/components/providers/ClientConfigProvider';
 import { iconPaths } from '@/utilities/icons-config';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
+import { lockScroll, unlockScroll } from '@/utilities/scroll-lock';
 
 import { Logo } from './Logo';
 import { NavigationItems } from './NavigationItems';
@@ -104,12 +106,74 @@ export const Header = ({
 }: HeaderProps) => {
   const config = useConfig();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    document.body.style.overflow = isMenuOpen ? 'hidden' : 'unset';
+    if (isMenuOpen) {
+      lockScroll();
+    } else {
+      unlockScroll();
+    }
+
+    // Make the main content inert for screen readers when menu is open
+    const mainContent = document.querySelector('main');
+    if (mainContent) {
+      if (isMenuOpen) {
+        mainContent.setAttribute('inert', 'true');
+      } else {
+        mainContent.removeAttribute('inert');
+      }
+    }
+
     return () => {
-      document.body.style.overflow = 'unset';
+      unlockScroll();
+      if (mainContent) {
+        mainContent.removeAttribute('inert');
+      }
     };
+  }, [isMenuOpen]);
+
+  // Focus trap functionality
+  useFocusTrap(isMenuOpen, menuRef, hamburgerRef.current);
+
+  // Set CSS variable for header height using ResizeObserver
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+
+    const updateHeaderHeight = () => {
+      const height = header.offsetHeight;
+      document.documentElement.style.setProperty('--header-h', `${height}px`);
+    };
+
+    // Set initial height
+    updateHeaderHeight();
+
+    // Use ResizeObserver to watch for header size changes
+    const resizeObserver = new ResizeObserver(() => {
+      updateHeaderHeight();
+    });
+
+    resizeObserver.observe(header);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener('keydown', handleEscape);
+      return () => document.removeEventListener('keydown', handleEscape);
+    }
   }, [isMenuOpen]);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -123,10 +187,12 @@ export const Header = ({
   return (
     <>
       <Box
+        ref={headerRef}
         as="header"
-        className={twMerge(
+        className={cn(
           'fixed top-0 z-50 w-full transition-theme bg-background',
-          isMenuOpen && 'bg-menu',
+          isMenuOpen &&
+            '[background-color:var(--color-menu-background)] dark:[background-color:var(--color-menu-background-dark)]',
           className
         )}
         {...props}
@@ -137,17 +203,20 @@ export const Header = ({
             <Flex items="center" gap={4}>
               <ThemeToggleButton />
               <IconToggleButton
+                ref={hamburgerRef}
                 isToggled={isMenuOpen}
                 defaultIcon={iconPaths.menu.hamburger}
                 toggledIcon={iconPaths.menu.close}
                 label={config.interface.mobileMenu.toggleButton}
                 onClick={toggleMenu}
                 speed="quick"
+                aria-expanded={isMenuOpen}
+                aria-controls="header-menu"
               />
             </Flex>
           </Flex>
           <Box
-            className={twMerge(
+            className={cn(
               'h-px transition-theme',
               isMenuOpen ? 'bg-foreground/80' : 'bg-foreground/10'
             )}
@@ -158,11 +227,16 @@ export const Header = ({
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
+            ref={menuRef}
+            id="header-menu"
             initial="hidden"
             animate="visible"
             exit="hidden"
             variants={menuVariants}
-            className="fixed inset-0 z-40 bg-menu"
+            className="fixed inset-0 z-40 [background-color:var(--color-menu-background)] dark:[background-color:var(--color-menu-background-dark)] transition-theme"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="header-menu-title"
           >
             <Box className="h-screen overflow-y-auto">
               <Container className="min-h-screen pt-36">
@@ -174,6 +248,9 @@ export const Header = ({
                 >
                   <Flex direction="column" className="h-full">
                     <Box as="nav" className="mb-16 text-left md:text-right">
+                      <h2 id="header-menu-title" className="sr-only">
+                        Navigatiemenu
+                      </h2>
                       <NavigationItems
                         links={navigation}
                         onItemClick={() => setIsMenuOpen(false)}

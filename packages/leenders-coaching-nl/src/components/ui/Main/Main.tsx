@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/utilities/cn';
 import { Flex } from '@/components/ui/Flex';
 
 type MainProps = {
@@ -20,7 +20,7 @@ export const Main = ({ children, className, testid, ...props }: MainProps) => {
     <Flex
       as="main"
       direction="column"
-      className={twMerge('flex-grow mt-[125px]', className)}
+      className={cn('flex-grow pt-[var(--header-h,125px)]', className)}
       data-testid={testid}
       {...props}
     >

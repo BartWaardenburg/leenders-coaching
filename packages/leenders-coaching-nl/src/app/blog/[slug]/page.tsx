@@ -99,7 +99,7 @@ const BlogPostPage = async ({ params }: BlogPostPageProps) => {
               image={post.image as SanityImageSource}
               alt={post.title || 'Blog post image'}
               fill
-              className="object-cover rounded-lg"
+              className="object-cover"
               priority
               followHotspot={true}
             />

@@ -103,7 +103,7 @@ const EmailFrame = ({ title, description, html }: EmailFrameProps) => {
       <Text variant="default" className="mb-6">
         {description}
       </Text>
-      <Box className="border rounded-lg overflow-hidden shadow-md">
+      <Box className="border overflow-hidden shadow-md">
         <iframe
           ref={iframeRef}
           title={title}

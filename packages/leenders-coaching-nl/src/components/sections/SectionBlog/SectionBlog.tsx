@@ -114,7 +114,9 @@ export const SectionBlog = ({
           {description && (
             <Text
               testid="section-description"
-              className="text-muted-foreground text-center max-w-2xl"
+              variant="muted"
+              textAlign="center"
+              maxWidth="2xl"
             >
               {description}
             </Text>
@@ -127,9 +129,9 @@ export const SectionBlog = ({
           <>
             <Grid
               ref={gridRef}
-              columns={{
-                default: 1,
-                '@2xl': 2,
+              cols={{
+                base: 1,
+                lg: 2,
               }}
               gap={6}
               className="mb-12"
@@ -148,10 +150,7 @@ export const SectionBlog = ({
                   reverse={index % 2 === 1}
                   testid="card"
                 >
-                  <Text
-                    testid="post-description"
-                    className="text-muted-foreground"
-                  >
+                  <Text testid="post-description" variant="muted">
                     {post.description}
                   </Text>
                 </Card>
@@ -168,10 +167,7 @@ export const SectionBlog = ({
             )}
           </>
         ) : (
-          <Text
-            testid="no-posts-message"
-            className="text-muted-foreground text-center"
-          >
+          <Text testid="no-posts-message" variant="muted" textAlign="center">
             Er zijn momenteel geen blog artikelen beschikbaar.
           </Text>
         )}

@@ -17,7 +17,7 @@ type LinkAnnotation = {
   blank?: boolean;
 };
 
-type SanityImage = {
+type SanityImageBlock = {
   _type: 'image';
   asset: {
     _ref: string;
@@ -133,7 +133,7 @@ const components: PortableTextComponents = {
     },
   },
   types: {
-    image: ({ value }: { value: SanityImage }) => {
+    image: ({ value }: { value: SanityImageBlock }) => {
       if (!value?.asset) return null;
 
       return (
@@ -163,16 +163,17 @@ const components: PortableTextComponents = {
       );
     },
     callToAction: ({ value }) => (
-      <div className="my-4">
+      <Box className="m-4">
         <Button
           href={value?.url}
           variant="blue"
           size="md"
           target={value?.isExternal ? '_blank' : undefined}
+          rel={value?.isExternal ? 'noopener noreferrer' : undefined}
         >
           {value?.text}
         </Button>
-      </div>
+      </Box>
     ),
     code: ({ value }) => (
       <pre className="bg-pastel-blue/20 dark:bg-pastel-blue-dark/20 border border-foreground/80 p-4 my-4 overflow-x-auto">

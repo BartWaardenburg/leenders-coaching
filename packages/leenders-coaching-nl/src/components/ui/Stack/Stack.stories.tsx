@@ -2,6 +2,9 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Stack } from './Stack';
 import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { Box } from '../Box/Box';
+import { Text } from '../Text/Text';
+import { Heading } from '../Heading/Heading';
 
 const meta = {
   title: 'UI/Stack',
@@ -61,9 +64,15 @@ export const WithSpace: Story = {
   args: {
     children: (
       <>
-        <div className="bg-blue-100 p-4">Item 1</div>
-        <div className="bg-green-100 p-4">Item 2</div>
-        <div className="bg-purple-100 p-4">Item 3</div>
+        <Box className="bg-blue-100 p-4">
+          <Text>Item 1</Text>
+        </Box>
+        <Box className="bg-green-100 p-4">
+          <Text>Item 2</Text>
+        </Box>
+        <Box className="bg-purple-100 p-4">
+          <Text>Item 3</Text>
+        </Box>
       </>
     ),
     space: 4,
@@ -80,9 +89,15 @@ export const WithGap: Story = {
   args: {
     children: (
       <>
-        <div className="bg-red-100 p-4">Gap Item 1</div>
-        <div className="bg-yellow-100 p-4">Gap Item 2</div>
-        <div className="bg-pink-100 p-4">Gap Item 3</div>
+        <Box className="bg-red-100 p-4">
+          <Text>Gap Item 1</Text>
+        </Box>
+        <Box className="bg-yellow-100 p-4">
+          <Text>Gap Item 2</Text>
+        </Box>
+        <Box className="bg-pink-100 p-4">
+          <Text>Gap Item 3</Text>
+        </Box>
       </>
     ),
     gap: 6,
@@ -99,9 +114,15 @@ export const RowDirection: Story = {
   args: {
     children: (
       <>
-        <div className="bg-teal-100 p-4">Row 1</div>
-        <div className="bg-orange-100 p-4">Row 2</div>
-        <div className="bg-indigo-100 p-4">Row 3</div>
+        <Box className="bg-teal-100 p-4">
+          <Text>Row 1</Text>
+        </Box>
+        <Box className="bg-orange-100 p-4">
+          <Text>Row 2</Text>
+        </Box>
+        <Box className="bg-indigo-100 p-4">
+          <Text>Row 3</Text>
+        </Box>
       </>
     ),
     direction: 'row',
@@ -120,20 +141,26 @@ export const AllSpaceValues: Story = {
     children: null,
   },
   render: () => (
-    <div className="space-y-8">
-      {([0, 1, 2, 3, 4, 'px', 'x-reverse', 'y-reverse'] as const).map(
-        (space) => (
-          <div key={space} className="border p-4">
-            <h3 className="text-lg font-semibold mb-4">Space: {space}</h3>
-            <Stack space={space} testid={`stack-space-${space}`}>
-              <div className="bg-blue-100 p-2 text-sm">Item A</div>
-              <div className="bg-green-100 p-2 text-sm">Item B</div>
-              <div className="bg-purple-100 p-2 text-sm">Item C</div>
-            </Stack>
-          </div>
-        )
-      )}
-    </div>
+    <Box className="space-y-8">
+      {([0, 1, 2, 3, 4, 'px'] as const).map((space) => (
+        <Box key={space} className="border p-4">
+          <Heading level="h3" variant="small" className="mb-4">
+            Space: {space}
+          </Heading>
+          <Stack space={space} testid={`stack-space-${space}`}>
+            <Box className="bg-blue-100 p-2">
+              <Text variant="small">Item A</Text>
+            </Box>
+            <Box className="bg-green-100 p-2">
+              <Text variant="small">Item B</Text>
+            </Box>
+            <Box className="bg-purple-100 p-2">
+              <Text variant="small">Item C</Text>
+            </Box>
+          </Stack>
+        </Box>
+      ))}
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByTestId('stack-space-0')).toBeVisible();
@@ -142,8 +169,6 @@ export const AllSpaceValues: Story = {
     await expect(canvas.getByTestId('stack-space-3')).toBeVisible();
     await expect(canvas.getByTestId('stack-space-4')).toBeVisible();
     await expect(canvas.getByTestId('stack-space-px')).toBeVisible();
-    await expect(canvas.getByTestId('stack-space-x-reverse')).toBeVisible();
-    await expect(canvas.getByTestId('stack-space-y-reverse')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -153,25 +178,33 @@ export const AllJustifyOptions: Story = {
     children: null,
   },
   render: () => (
-    <div className="space-y-8">
+    <Box className="space-y-8">
       {(['start', 'end', 'center', 'between', 'around', 'evenly'] as const).map(
         (justify) => (
-          <div key={justify} className="border p-4">
-            <h3 className="text-lg font-semibold mb-4">Justify: {justify}</h3>
+          <Box key={justify} className="border p-4">
+            <Heading level="h3" variant="small" className="mb-4">
+              Justify: {justify}
+            </Heading>
             <Stack
               direction="row"
               justify={justify}
               gap={2}
               testid={`stack-justify-${justify}`}
             >
-              <div className="bg-red-100 p-2 text-sm">A</div>
-              <div className="bg-yellow-100 p-2 text-sm">B</div>
-              <div className="bg-green-100 p-2 text-sm">C</div>
+              <Box className="bg-red-100 p-2">
+                <Text variant="small">A</Text>
+              </Box>
+              <Box className="bg-yellow-100 p-2">
+                <Text variant="small">B</Text>
+              </Box>
+              <Box className="bg-green-100 p-2">
+                <Text variant="small">C</Text>
+              </Box>
             </Stack>
-          </div>
+          </Box>
         )
       )}
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByTestId('stack-justify-start')).toBeVisible();
@@ -189,44 +222,64 @@ export const ComplexLayout: Story = {
     children: null,
   },
   render: () => (
-    <div className="max-w-4xl mx-auto p-4">
+    <Box className="max-w-4xl mx-auto p-4">
       <Stack space={4} testid="stack-complex">
-        <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6-lg">
-          <h2 className="text-2xl font-bold mb-2">Header Section</h2>
-          <p className="text-blue-100">
+        <Box className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6-lg">
+          <Heading level="h2" variant="medium" className="mb-2">
+            Header Section
+          </Heading>
+          <Text className="text-blue-100">
             This is a complex layout using Stack components.
-          </p>
-        </div>
+          </Text>
+        </Box>
 
         <Stack direction="row" gap={4} justify="between">
-          <div className="bg-white border p-4-lg flex-1">
-            <h3 className="font-semibold mb-2">Left Column</h3>
+          <Box className="bg-white border p-4-lg flex-1">
+            <Heading level="h3" variant="small" className="mb-2">
+              Left Column
+            </Heading>
             <Stack space={2}>
-              <div className="bg-gray-100 p-2 text-sm">Feature 1</div>
-              <div className="bg-gray-100 p-2 text-sm">Feature 2</div>
-              <div className="bg-gray-100 p-2 text-sm">Feature 3</div>
+              <Box className="bg-gray-100 p-2">
+                <Text variant="small">Feature 1</Text>
+              </Box>
+              <Box className="bg-gray-100 p-2">
+                <Text variant="small">Feature 2</Text>
+              </Box>
+              <Box className="bg-gray-100 p-2">
+                <Text variant="small">Feature 3</Text>
+              </Box>
             </Stack>
-          </div>
+          </Box>
 
-          <div className="bg-white border p-4-lg flex-1">
-            <h3 className="font-semibold mb-2">Right Column</h3>
+          <Box className="bg-white border p-4-lg flex-1">
+            <Heading level="h3" variant="small" className="mb-2">
+              Right Column
+            </Heading>
             <Stack space={2}>
-              <div className="bg-gray-100 p-2 text-sm">Item A</div>
-              <div className="bg-gray-100 p-2 text-sm">Item B</div>
-              <div className="bg-gray-100 p-2 text-sm">Item C</div>
+              <Box className="bg-gray-100 p-2">
+                <Text variant="small">Item A</Text>
+              </Box>
+              <Box className="bg-gray-100 p-2">
+                <Text variant="small">Item B</Text>
+              </Box>
+              <Box className="bg-gray-100 p-2">
+                <Text variant="small">Item C</Text>
+              </Box>
             </Stack>
-          </div>
+          </Box>
         </Stack>
 
-        <div className="bg-green-100 p-4-lg">
-          <h3 className="font-semibold mb-2">Footer Section</h3>
-          <p className="text-sm text-green-800">
+        <Box className="bg-green-100 p-4-lg">
+          <Heading level="h3" variant="small" className="mb-2">
+            Footer Section
+          </Heading>
+          <Text variant="small" className="text-green-800">
             This demonstrates how Stack can be used to create complex, nested
             layouts with consistent spacing and alignment.
-          </p>
-        </div>
+          </Text>
+        </Box>
       </Stack>
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByTestId('stack-complex')).toBeVisible();
@@ -243,30 +296,48 @@ export const NestedStacks: Story = {
     children: null,
   },
   render: () => (
-    <div className="max-w-2xl mx-auto p-4">
+    <Box className="max-w-2xl mx-auto p-4">
       <Stack space={4} testid="stack-nested">
-        <div className="bg-blue-100 p-4">
-          <h3 className="font-semibold mb-2">Main Container</h3>
+        <Box className="bg-blue-100 p-4">
+          <Heading level="h3" variant="small" className="mb-2">
+            Main Container
+          </Heading>
           <Stack direction="row" gap={3} justify="center">
-            <div className="bg-white p-3 text-sm">Nested 1</div>
-            <div className="bg-white p-3 text-sm">Nested 2</div>
-            <div className="bg-white p-3 text-sm">Nested 3</div>
+            <Box className="bg-white p-3">
+              <Text variant="small">Nested 1</Text>
+            </Box>
+            <Box className="bg-white p-3">
+              <Text variant="small">Nested 2</Text>
+            </Box>
+            <Box className="bg-white p-3">
+              <Text variant="small">Nested 3</Text>
+            </Box>
           </Stack>
-        </div>
+        </Box>
 
-        <div className="bg-green-100 p-4">
-          <h3 className="font-semibold mb-2">Another Container</h3>
+        <Box className="bg-green-100 p-4">
+          <Heading level="h3" variant="small" className="mb-2">
+            Another Container
+          </Heading>
           <Stack space={1}>
-            <div className="bg-white p-2 text-sm">Sub-item A</div>
-            <div className="bg-white p-2 text-sm">Sub-item B</div>
+            <Box className="bg-white p-2">
+              <Text variant="small">Sub-item A</Text>
+            </Box>
+            <Box className="bg-white p-2">
+              <Text variant="small">Sub-item B</Text>
+            </Box>
             <Stack direction="row" gap={2} justify="between">
-              <div className="bg-gray-100 p-1 text-xs">Deep 1</div>
-              <div className="bg-gray-100 p-1 text-xs">Deep 2</div>
+              <Box className="bg-gray-100 p-1">
+                <Text variant="small">Deep 1</Text>
+              </Box>
+              <Box className="bg-gray-100 p-1">
+                <Text variant="small">Deep 2</Text>
+              </Box>
             </Stack>
           </Stack>
-        </div>
+        </Box>
       </Stack>
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByTestId('stack-nested')).toBeVisible();

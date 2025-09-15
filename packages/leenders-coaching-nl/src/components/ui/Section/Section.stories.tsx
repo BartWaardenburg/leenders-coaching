@@ -2,6 +2,10 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Section } from './Section';
 import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { Text } from '../Text/Text';
+import { Heading } from '../Heading/Heading';
+import { Box } from '../Box/Box';
+import { Grid } from '../Grid/Grid';
 
 const meta = {
   title: 'UI/Section',
@@ -130,20 +134,20 @@ export const AllBackgroundColors: Story = {
     children: null,
   },
   render: () => (
-    <div className="space-y-4">
+    <Box className="space-y-4">
       {(['blue', 'purple', 'green', 'pink', 'yellow', 'teal'] as const).map(
         (color) => (
           <Section key={color} background={color} testid={`section-${color}`}>
-            <h3 className="text-lg font-semibold capitalize">
+            <Heading level="h3" variant="small" className="capitalize">
               {color} Background
-            </h3>
-            <p className="text-sm text-muted-foreground">
+            </Heading>
+            <Text variant="small" className="text-muted-foreground">
               This section demonstrates the {color} pastel background color.
-            </p>
+            </Text>
           </Section>
         )
       )}
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByTestId('section-blue')).toBeVisible();
@@ -161,7 +165,7 @@ export const AllMaxWidths: Story = {
     children: null,
   },
   render: () => (
-    <div className="space-y-4">
+    <Box className="space-y-4">
       {(
         [
           'sm',
@@ -182,16 +186,18 @@ export const AllMaxWidths: Story = {
           background="green"
           testid={`section-width-${width}`}
         >
-          <div className="bg-white/20 p-4 rounded">
-            <h3 className="text-lg font-semibold">Max Width: {width}</h3>
-            <p className="text-sm">
+          <Box className="bg-white/20 p-4">
+            <Heading level="h3" variant="small">
+              Max Width: {width}
+            </Heading>
+            <Text variant="small">
               This section has a maximum width of {width}. The content is
               constrained to this width while maintaining responsive behavior.
-            </p>
-          </div>
+            </Text>
+          </Box>
         </Section>
       ))}
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByTestId('section-width-sm')).toBeVisible();
@@ -213,7 +219,7 @@ export const WithBorders: Story = {
     children: null,
   },
   render: () => (
-    <div className="space-y-4">
+    <Box className="space-y-4">
       {(['blue', 'purple', 'green', 'pink', 'yellow', 'teal'] as const).map(
         (color) => (
           <Section
@@ -222,17 +228,17 @@ export const WithBorders: Story = {
             border
             testid={`section-border-${color}`}
           >
-            <h3 className="text-lg font-semibold capitalize">
+            <Heading level="h3" variant="small" className="capitalize">
               {color} with Border
-            </h3>
-            <p className="text-sm text-muted-foreground">
+            </Heading>
+            <Text variant="small" className="text-muted-foreground">
               This section has a {color} background with colored borders on top
               and bottom.
-            </p>
+            </Text>
           </Section>
         )
       )}
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByTestId('section-border-blue')).toBeVisible();
@@ -255,35 +261,43 @@ export const ComplexContent: Story = {
   },
   render: (args) => (
     <Section {...args}>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
-          <h2 className="text-2xl font-bold mb-4">Complex Section Content</h2>
-          <p className="text-muted-foreground mb-6">
+      <Grid cols={{ base: 1, md: 2 }} gap={8}>
+        <Box>
+          <Heading level="h2" variant="medium" className="mb-4">
+            Complex Section Content
+          </Heading>
+          <Text variant="muted" className="mb-6">
             This section demonstrates how the Section component can contain
             complex layouts with multiple elements, responsive grids, and rich
             content.
-          </p>
-          <div className="space-y-4">
-            <div className="bg-white/20 p-4 rounded-lg">
-              <h3 className="font-semibold mb-2">Feature 1</h3>
-              <p className="text-sm">Description of the first feature.</p>
-            </div>
-            <div className="bg-white/20 p-4 rounded-lg">
-              <h3 className="font-semibold mb-2">Feature 2</h3>
-              <p className="text-sm">Description of the second feature.</p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white/20 p-6 rounded-lg">
-          <h3 className="text-xl font-semibold mb-4">Additional Information</h3>
+          </Text>
+          <Box className="space-y-4">
+            <Box className="bg-white/20 p-4">
+              <Heading level="h3" variant="small" className="mb-2">
+                Feature 1
+              </Heading>
+              <Text variant="small">Description of the first feature.</Text>
+            </Box>
+            <Box className="bg-white/20 p-4">
+              <Heading level="h3" variant="small" className="mb-2">
+                Feature 2
+              </Heading>
+              <Text variant="small">Description of the second feature.</Text>
+            </Box>
+          </Box>
+        </Box>
+        <Box className="bg-white/20 p-6">
+          <Heading level="h3" variant="small" className="mb-4">
+            Additional Information
+          </Heading>
           <ul className="space-y-2 text-sm">
             <li>• Responsive design</li>
             <li>• Dark mode support</li>
             <li>• Container queries</li>
             <li>• Flexible layouts</li>
           </ul>
-        </div>
-      </div>
+        </Box>
+      </Grid>
     </Section>
   ),
   play: async ({ canvas }) => {
@@ -299,14 +313,16 @@ export const ComplexContent: Story = {
 export const NoPaddingWithBackground: Story = {
   args: {
     children: (
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-8">
-        <h2 className="text-2xl font-bold mb-4">Full Width Background</h2>
-        <p className="text-blue-100">
+      <Box className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-8">
+        <Heading level="h2" variant="medium" className="mb-4">
+          Full Width Background
+        </Heading>
+        <Text className="text-blue-100">
           This section has no padding, allowing the background to extend to the
           full width of the viewport while the content maintains its own
           padding.
-        </p>
-      </div>
+        </Text>
+      </Box>
     ),
     noPadding: true,
     testid: 'section-no-padding-bg',

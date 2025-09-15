@@ -1,18 +1,35 @@
-import type { ComponentProps, ElementType } from 'react';
+import type {
+  ComponentPropsWithoutRef,
+  ComponentRef,
+  ElementType,
+  ReactElement,
+} from 'react';
 import { forwardRef } from 'react';
+import { cn } from '@/utilities/cn';
 
-type BoxProps<T extends ElementType> = {
-  as?: T;
-} & ComponentProps<T>;
+type PolymorphicProps<C extends ElementType, P = {}> = P & {
+  as?: C;
+} & Omit<ComponentPropsWithoutRef<C>, 'as' | keyof P>;
 
 /**
- * Basic layout component that can render as any HTML element
+ * Minimal polymorphic wrapper component that provides semantic element switching
+ * and className merging without re-implementing Tailwind utilities.
+ *
+ * Use this for semantic HTML elements and className composition.
+ * For layout, use Flex or Grid components instead.
  */
-export const Box = forwardRef<HTMLElement, BoxProps<ElementType>>(
-  ({ as, ...props }, ref) => {
-    const Component = as || 'div';
-    return <Component ref={ref} {...props} />;
-  }
-);
+const BoxComponent = forwardRef<
+  Element,
+  PolymorphicProps<ElementType, { className?: string }>
+>(({ as, className, ...rest }, ref) => {
+  const Comp = (as || 'div') as ElementType;
+  return <Comp ref={ref} className={cn(className)} {...rest} />;
+});
 
-Box.displayName = 'Box';
+BoxComponent.displayName = 'Box';
+
+export const Box = BoxComponent as <C extends ElementType = 'div'>(
+  props: PolymorphicProps<C, { className?: string }> & {
+    ref?: React.Ref<ComponentRef<C>>;
+  }
+) => ReactElement;

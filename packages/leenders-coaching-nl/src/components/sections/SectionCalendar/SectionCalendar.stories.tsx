@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionCalendar } from './SectionCalendar';
+import { Text } from '../../ui/Text/Text';
 
 const meta = {
   title: 'Sections/SectionCalendar',
@@ -97,9 +98,9 @@ export const WithCustomDayContent: Story = {
       const day = date.getDay();
       if (day === 0 || day === 6) return null;
       return (
-        <div className="text-xs text-foreground/70">
+        <Text variant="small" className="text-foreground/70">
           {day % 2 === 0 ? '2 slots available' : '1 slot available'}
-        </div>
+        </Text>
       );
     },
   },

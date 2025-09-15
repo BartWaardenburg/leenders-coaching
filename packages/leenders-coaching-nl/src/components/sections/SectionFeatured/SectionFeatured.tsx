@@ -59,15 +59,15 @@ export const SectionFeatured = ({
   ...props
 }: SectionFeaturedProps) => {
   const Content = (
-    <Stack gap={6} className="justify-center max-w-lg" testid="content-stack">
+    <Stack gap={6} className="max-w-lg" testid="content-stack" justify="center">
       {title && (
         <Heading level="h2" variant="medium">
           {title}
         </Heading>
       )}
-      {description && <Text className="text-lg">{description}</Text>}
+      {description && <Text variant="large">{description}</Text>}
       {cta && (
-        <Box className="mt-2 flex justify-end">
+        <Box className="m-2 flex justify-end">
           <Button href={cta.href} variant={cta.variant} size="lg">
             {cta.label}
           </Button>
@@ -77,7 +77,7 @@ export const SectionFeatured = ({
   );
 
   const ImageContainer = image ? (
-    <Box className="relative aspect-[4/3] sm:aspect-[16/9] w-full h-full">
+    <Box className="relative aspect-[4/3] w-full h-full sm:aspect-[16/9]">
       {/* Check if image is a Sanity image object (has asset property) */}
       {typeof image === 'object' && 'asset' in image ? (
         <SanityImage
@@ -103,7 +103,7 @@ export const SectionFeatured = ({
       )}
     </Box>
   ) : (
-    <Box className="relative aspect-[4/3] sm:aspect-[16/9] w-full h-full bg-muted" />
+    <Box className="relative aspect-[4/3] w-full h-full sm:aspect-[16/9] bg-muted" />
   );
 
   return (
@@ -115,8 +115,8 @@ export const SectionFeatured = ({
       {...props}
     >
       <Grid
-        columns={{
-          default: 1,
+        cols={{
+          base: 1,
           sm: 2,
         }}
         className="overflow-hidden"
