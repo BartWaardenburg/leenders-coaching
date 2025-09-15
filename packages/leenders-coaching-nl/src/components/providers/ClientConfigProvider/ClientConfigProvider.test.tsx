@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
 import { ClientConfigProvider, useConfig } from './ClientConfigProvider';
+import type { ConfigType } from '../ConfigProvider/ConfigProvider';
 import { mockConfig } from '@/mocks';
 
 /* Test component that uses the useConfig hook */

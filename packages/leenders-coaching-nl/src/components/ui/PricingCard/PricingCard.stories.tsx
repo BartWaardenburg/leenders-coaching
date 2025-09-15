@@ -23,13 +23,14 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    title: mockPricingSection.packages[0].title,
-    description: mockPricingSection.packages[0].description,
-    price: mockPricingSection.packages[0].price,
-    features: mockPricingSection.packages[0].features,
-    ctaLabel: mockPricingSection.packages[0].ctaLabel,
+    title: mockPricingSection.packages[0]?.title || 'Default Title',
+    description:
+      mockPricingSection.packages[0]?.description || 'Default Description',
+    price: mockPricingSection.packages[0]?.price || '€0',
+    features: mockPricingSection.packages[0]?.features || [],
+    ctaLabel: mockPricingSection.packages[0]?.ctaLabel || 'Click Me',
     onCtaClick: () => console.log('CTA clicked'),
-    variant: mockPricingSection.packages[0].variant,
+    variant: mockPricingSection.packages[0]?.variant || 'blue',
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByText('Starter Pakket')).toBeVisible();
@@ -41,14 +42,15 @@ export const Default: Story = {
 
 export const Popular: Story = {
   args: {
-    title: mockPricingSection.packages[1].title,
-    description: mockPricingSection.packages[1].description,
-    price: mockPricingSection.packages[1].price,
-    features: mockPricingSection.packages[1].features,
-    isPopular: mockPricingSection.packages[1].isPopular,
-    ctaLabel: mockPricingSection.packages[1].ctaLabel,
+    title: mockPricingSection.packages[1]?.title || 'Popular Title',
+    description:
+      mockPricingSection.packages[1]?.description || 'Popular Description',
+    price: mockPricingSection.packages[1]?.price || '€0',
+    features: mockPricingSection.packages[1]?.features || [],
+    isPopular: mockPricingSection.packages[1]?.isPopular || false,
+    ctaLabel: mockPricingSection.packages[1]?.ctaLabel || 'Click Me',
     onCtaClick: () => console.log('CTA clicked'),
-    variant: mockPricingSection.packages[1].variant,
+    variant: mockPricingSection.packages[1]?.variant || 'blue',
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByText('Professional Pakket')).toBeVisible();

@@ -279,22 +279,24 @@ export const mockConsole = {
 export const setupMocks = () => {
   // Mock global objects
   global.fetch = mockFetch;
-  global.window = mockWindow as typeof window;
-  global.document = mockDocument as typeof document;
-  global.localStorage = mockLocalStorage as typeof localStorage;
-  global.sessionStorage = mockSessionStorage as typeof sessionStorage;
+  global.window = mockWindow as unknown as typeof window;
+  global.document = mockDocument as unknown as typeof document;
+  global.localStorage = mockLocalStorage as unknown as typeof localStorage;
+  global.sessionStorage =
+    mockSessionStorage as unknown as typeof sessionStorage;
   global.IntersectionObserver =
-    mockIntersectionObserver as typeof IntersectionObserver;
-  global.ResizeObserver = mockResizeObserver as typeof ResizeObserver;
+    mockIntersectionObserver as unknown as typeof IntersectionObserver;
+  global.ResizeObserver =
+    mockResizeObserver as unknown as typeof ResizeObserver;
   global.matchMedia = mockMatchMedia;
   global.requestAnimationFrame = mockRequestAnimationFrame;
   global.cancelAnimationFrame = mockCancelAnimationFrame;
-  global.setTimeout = mockSetTimeout;
-  global.clearTimeout = mockClearTimeout;
-  global.setInterval = mockSetInterval;
-  global.clearInterval = mockClearInterval;
-  global.Date = vi.fn(() => mockDate) as typeof Date;
-  global.console = mockConsole as typeof console;
+  global.setTimeout = mockSetTimeout as unknown as typeof setTimeout;
+  global.clearTimeout = mockClearTimeout as unknown as typeof clearTimeout;
+  global.setInterval = mockSetInterval as unknown as typeof setInterval;
+  global.clearInterval = mockClearInterval as unknown as typeof clearInterval;
+  global.Date = vi.fn(() => mockDate) as unknown as typeof Date;
+  global.console = mockConsole as unknown as typeof console;
 
   // Mock environment variables
   Object.assign(process.env, mockEnv);
