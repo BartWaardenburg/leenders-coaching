@@ -66,7 +66,7 @@ export const WithPurpleBackground: Story = {
 
 export const WithoutDescription: Story = {
   args: {
-    title: 'What Our Clients Say',
+    title: 'Wat Onze Klanten Zeggen',
     testimonials: defaultTestimonials,
     background: 'pink',
     border: true,
@@ -75,7 +75,7 @@ export const WithoutDescription: Story = {
 
 export const SingleTestimonial: Story = {
   args: {
-    title: 'Single Testimonial',
+    title: 'Enkele Testimonial',
     description: 'Soms heb je maar één krachtige testimonial nodig.',
     testimonials: [defaultTestimonials[0]!],
     background: 'teal',
@@ -85,28 +85,28 @@ export const SingleTestimonial: Story = {
 
 export const ManyTestimonials: Story = {
   args: {
-    title: 'Many Testimonials',
+    title: 'Veel Testimonials',
     description:
-      'This section demonstrates how the carousel handles multiple testimonials.',
+      'Deze sectie demonstreert hoe de carousel meerdere testimonials afhandelt.',
     testimonials: [
       ...defaultTestimonials,
       {
         quote:
-          "The personalized approach and actionable strategies have made a real difference in both my professional and personal life. I can't recommend this coaching enough.",
+          'De gepersonaliseerde aanpak en uitvoerbare strategieën hebben een echt verschil gemaakt in zowel mijn professionele als persoonlijke leven. Ik kan deze coaching niet genoeg aanbevelen.',
         name: 'Lisa Wang',
         role: 'Product Manager',
         image: 'https://picsum.photos/id/1011/256/256',
       },
       {
         quote:
-          'Working with this coach has been a game-changer. The insights and guidance have helped me navigate complex challenges with confidence.',
+          'Werken met deze coach is een game-changer geweest. De inzichten en begeleiding hebben me geholpen complexe uitdagingen met vertrouwen aan te pakken.',
         name: 'David Rodriguez',
-        role: 'Entrepreneur',
+        role: 'Ondernemer',
         image: 'https://picsum.photos/id/1012/256/256',
       },
       {
         quote:
-          'The coaching sessions provided clarity when I needed it most. The structured approach and practical tools have been invaluable.',
+          'De coachingsessies gaven duidelijkheid toen ik het het meest nodig had. De gestructureerde aanpak en praktische tools zijn van onschatbare waarde geweest.',
         name: 'Jennifer Kim',
         role: 'Marketing Specialist',
         image: 'https://picsum.photos/id/1013/256/256',
@@ -119,7 +119,7 @@ export const ManyTestimonials: Story = {
 
 export const TestimonialsWithoutImages: Story = {
   args: {
-    title: 'Testimonials Without Images',
+    title: 'Testimonials Zonder Afbeeldingen',
     description: "Sommige testimonials hebben mogelijk geen profielfoto's.",
     testimonials: defaultTestimonials.map((testimonial) => ({
       ...testimonial,
@@ -142,8 +142,8 @@ export const AllBackgroundVariants: Story = {
         (background) => (
           <SectionTestimonial
             key={background}
-            title={`${background.charAt(0).toUpperCase() + background.slice(1)} Background`}
-            description={`This section demonstrates the ${background} background variant.`}
+            title={`${background.charAt(0).toUpperCase() + background.slice(1)} Achtergrond`}
+            description={`Deze sectie demonstreert de ${background} achtergrond variant.`}
             testimonials={defaultTestimonials}
             background={background}
             border={true}

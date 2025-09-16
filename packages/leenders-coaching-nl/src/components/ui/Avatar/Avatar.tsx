@@ -4,6 +4,7 @@ import Image from 'next/image';
 import type { StaticImageData } from 'next/image';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 import { SanityImage } from '@/components/ui/SanityImage';
+import { Text } from '@/components/ui/Text';
 import { cn } from '@/utilities/cn';
 
 type AvatarSize = 'sm' | 'md' | 'lg' | 'fill';
@@ -18,6 +19,13 @@ const sizeMap: Record<Exclude<AvatarSize, 'fill'>, number> = {
   sm: 32,
   md: 48,
   lg: 84,
+};
+
+const textSizeMap: Record<AvatarSize, string> = {
+  sm: 'text-xs',
+  md: 'text-sm',
+  lg: 'text-2xl',
+  fill: 'text-4xl',
 };
 
 /**
@@ -63,10 +71,18 @@ export const Avatar = memo<AvatarProps>(
             {...props}
           />
         ) : (
-          <div className="flex items-center justify-center w-full h-full bg-muted text-muted-foreground">
-            <span className="text-xs font-medium">
-              {alt.charAt(0).toUpperCase()}
-            </span>
+          <div className="flex items-center justify-center w-full h-full bg-muted">
+            <Text
+              variant="label"
+              weight="bold"
+              className={cn('text-muted-foreground', textSizeMap[size])}
+            >
+              {alt
+                .split(' ')
+                .filter((word) => word.length > 0)
+                .map((word) => word[0]?.toUpperCase() || '')
+                .join('')}
+            </Text>
           </div>
         )}
       </div>

@@ -188,12 +188,12 @@ export const ComplexLayout: Story = {
               </Heading>
               <Stack space={3}>
                 <Box className="bg-blue-50 p-3">
-                  <Text weight="medium">Related Content</Text>
-                  <Text variant="muted">Additional information</Text>
+                  <Text weight="medium">Gerelateerde Inhoud</Text>
+                  <Text variant="muted">Aanvullende informatie</Text>
                 </Box>
                 <Box className="bg-green-50 p-3">
-                  <Text weight="medium">Quick Links</Text>
-                  <Text variant="muted">Navigation shortcuts</Text>
+                  <Text weight="medium">Snelle Links</Text>
+                  <Text variant="muted">Navigatie snelkoppelingen</Text>
                 </Box>
               </Stack>
             </Box>
@@ -203,8 +203,8 @@ export const ComplexLayout: Story = {
                 Info Box
               </Heading>
               <Text variant="default">
-                The Main component is built on top of the Flex component and
-                provides semantic meaning for screen readers and SEO.
+                De Main component is gebouwd bovenop de Flex component en biedt
+                semantische betekenis voor schermlezers en SEO.
               </Text>
             </Box>
           </aside>

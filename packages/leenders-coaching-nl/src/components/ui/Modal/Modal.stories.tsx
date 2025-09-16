@@ -95,11 +95,11 @@ export const WithLongContent: Story = {
     children: (
       <Stack gap={4}>
         <Text>
-          This modal contains longer content to demonstrate scrolling behavior.
+          Deze modal bevat langere inhoud om scrollgedrag te demonstreren.
         </Text>
-        <Text>You can add multiple paragraphs and other content here.</Text>
-        <Text>The modal will automatically handle overflow and scrolling.</Text>
-        <Text>Click outside the modal or press ESC to close it.</Text>
+        <Text>U kunt meerdere paragrafen en andere inhoud hier toevoegen.</Text>
+        <Text>De modal zal automatisch overflow en scrollen afhandelen.</Text>
+        <Text>Klik buiten de modal of druk op ESC om deze te sluiten.</Text>
       </Stack>
     ),
   },
@@ -107,21 +107,23 @@ export const WithLongContent: Story = {
     await expect(canvas.getByRole('dialog')).toBeInTheDocument();
     expect(
       canvas.getByText(
-        'This modal contains longer content to demonstrate scrolling behavior.'
+        'Deze modal bevat langere inhoud om scrollgedrag te demonstreren.'
       )
     ).toBeInTheDocument();
     expect(
       canvas.getByText(
-        'You can add multiple paragraphs and other content here.'
+        'U kunt meerdere paragrafen en andere inhoud hier toevoegen.'
       )
     ).toBeInTheDocument();
     expect(
       canvas.getByText(
-        'The modal will automatically handle overflow and scrolling.'
+        'De modal zal automatisch overflow en scrollen afhandelen.'
       )
     ).toBeInTheDocument();
     expect(
-      canvas.getByText('Click outside the modal or press ESC to close it.')
+      canvas.getByText(
+        'Klik buiten de modal of druk op ESC om deze te sluiten.'
+      )
     ).toBeInTheDocument();
     // Modal interaction complete - no animation wait needed
   },
@@ -138,13 +140,13 @@ export const WithBackgroundContent: Story = {
     children: (
       <Stack gap={4}>
         <Heading level="h2" variant="medium">
-          Welcome Back!
+          Welkom Terug!
         </Heading>
         <Text>
-          This modal appears on top of the main content with a nice blur effect.
+          Deze modal verschijnt bovenop de hoofdinhoud met een mooi blur effect.
         </Text>
         <Button variant="purple" onClick={() => console.log('Button clicked')}>
-          Click me
+          Klik op mij
         </Button>
       </Stack>
     ),
@@ -153,17 +155,17 @@ export const WithBackgroundContent: Story = {
     <Section className="min-h-screen">
       <Stack gap={6} className="max-w-4xl mx-auto">
         <Heading level="h1" variant="large">
-          Main Page Content
+          Hoofdpagina Inhoud
         </Heading>
         <Grid cols={{ base: 3 }} gap={4}>
           {[1, 2, 3].map((i) => (
             <Box key={i}>
               <Heading level="h3" variant="small">
-                Card {i}
+                Kaart {i}
               </Heading>
               <Text>
-                This is some example content that sits behind the modal. The
-                modal will appear on top with a nice backdrop blur effect.
+                Dit is wat voorbeeldinhoud die achter de modal staat. De modal
+                zal bovenaan verschijnen met een mooi achtergrond blur effect.
               </Text>
             </Box>
           ))}
@@ -176,21 +178,21 @@ export const WithBackgroundContent: Story = {
     await expect(canvas.getByRole('dialog')).toBeInTheDocument();
 
     // Check modal content
-    expect(canvas.getByText('Welcome Back!')).toBeInTheDocument();
+    expect(canvas.getByText('Welkom Terug!')).toBeInTheDocument();
     expect(
       canvas.getByText(
-        'This modal appears on top of the main content with a nice blur effect.'
+        'Deze modal verschijnt bovenop de hoofdinhoud met een mooi blur effect.'
       )
     ).toBeInTheDocument();
     expect(
-      canvas.getByRole('button', { name: 'Click me' })
+      canvas.getByRole('button', { name: 'Klik op mij' })
     ).toBeInTheDocument();
 
     // Check background content is still present
-    expect(canvas.getByText('Main Page Content')).toBeInTheDocument();
-    expect(canvas.getByText('Card 1')).toBeInTheDocument();
-    expect(canvas.getByText('Card 2')).toBeInTheDocument();
-    expect(canvas.getByText('Card 3')).toBeInTheDocument();
+    expect(canvas.getByText('Hoofdpagina Inhoud')).toBeInTheDocument();
+    expect(canvas.getByText('Kaart 1')).toBeInTheDocument();
+    expect(canvas.getByText('Kaart 2')).toBeInTheDocument();
+    expect(canvas.getByText('Kaart 3')).toBeInTheDocument();
     // Modal interaction complete - no animation wait needed
   },
 };
@@ -204,17 +206,17 @@ export const InteractiveModal: Story = {
     children: (
       <Stack gap={4}>
         <Heading level="h2" variant="medium">
-          Interactive Modal
+          Interactieve Modal
         </Heading>
         <Text>
-          This modal demonstrates various interaction patterns including close
-          button, escape key, and backdrop clicks.
+          Deze modal demonstreert verschillende interactiepatronen inclusief
+          sluitknop, escape toets, en achtergrond klikken.
         </Text>
         <Button
           variant="blue"
           onClick={() => console.log('Action button clicked')}
         >
-          Action Button
+          Actie Knop
         </Button>
       </Stack>
     ),
@@ -223,9 +225,9 @@ export const InteractiveModal: Story = {
     await step('Modal is open and accessible', async () => {
       const modal = canvas.getByRole('dialog');
       await expect(modal).toBeInTheDocument();
-      expect(canvas.getByText('Interactive Modal')).toBeInTheDocument();
+      expect(canvas.getByText('Interactieve Modal')).toBeInTheDocument();
       expect(
-        canvas.getByRole('button', { name: 'Action Button' })
+        canvas.getByRole('button', { name: 'Actie Knop' })
       ).toBeInTheDocument();
     });
 

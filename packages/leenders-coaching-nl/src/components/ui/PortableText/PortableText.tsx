@@ -120,10 +120,11 @@ const components: PortableTextComponents = {
     }) => {
       const target = value?.blank ? '_blank' : undefined;
       const rel = value?.blank ? 'noopener noreferrer' : undefined;
+
       return (
         <Link
           href={value?.href ?? '#'}
-          variant="subtle"
+          variant="default"
           target={target}
           rel={rel}
         >
@@ -163,17 +164,15 @@ const components: PortableTextComponents = {
       );
     },
     callToAction: ({ value }) => (
-      <Box className="m-4">
-        <Button
-          href={value?.url}
-          variant="blue"
-          size="md"
-          target={value?.isExternal ? '_blank' : undefined}
-          rel={value?.isExternal ? 'noopener noreferrer' : undefined}
-        >
-          {value?.text}
-        </Button>
-      </Box>
+      <Button
+        href={value?.url}
+        variant="blue"
+        size="md"
+        target={value?.isExternal ? '_blank' : undefined}
+        rel={value?.isExternal ? 'noopener noreferrer' : undefined}
+      >
+        {value?.text}
+      </Button>
     ),
     code: ({ value }) => (
       <pre className="bg-pastel-blue/20 dark:bg-pastel-blue-dark/20 border border-foreground/80 p-4 my-4 overflow-x-auto">

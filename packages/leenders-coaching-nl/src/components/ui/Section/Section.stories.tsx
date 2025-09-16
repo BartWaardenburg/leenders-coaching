@@ -70,22 +70,22 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: 'Section Example',
+    children: 'Sectie Voorbeeld',
   },
   play: async ({ canvas }) => {
-    await expect(canvas.getByText('Section Example')).toBeVisible();
+    await expect(canvas.getByText('Sectie Voorbeeld')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
 
 export const WithBackground: Story = {
   args: {
-    children: 'Section with blue background',
+    children: 'Sectie met blauwe achtergrond',
     background: 'blue',
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByText('Section with blue background')
+      canvas.getByText('Sectie met blauwe achtergrond')
     ).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
@@ -93,13 +93,13 @@ export const WithBackground: Story = {
 
 export const WithBorder: Story = {
   args: {
-    children: 'Section with purple background and border',
+    children: 'Sectie met paarse achtergrond en rand',
     background: 'purple',
     border: true,
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByText('Section with purple background and border')
+      canvas.getByText('Sectie met paarse achtergrond en rand')
     ).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
@@ -107,23 +107,23 @@ export const WithBorder: Story = {
 
 export const NoPadding: Story = {
   args: {
-    children: 'Section without padding',
+    children: 'Sectie zonder padding',
     noPadding: true,
   },
   play: async ({ canvas }) => {
-    await expect(canvas.getByText('Section without padding')).toBeVisible();
+    await expect(canvas.getByText('Sectie zonder padding')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
 
 export const WithMaxWidth: Story = {
   args: {
-    children: 'Section with limited max width (2xl)',
+    children: 'Sectie met beperkte maximale breedte (2xl)',
     maxWidth: '2xl',
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByText('Section with limited max width (2xl)')
+      canvas.getByText('Sectie met beperkte maximale breedte (2xl)')
     ).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
@@ -139,10 +139,10 @@ export const AllBackgroundColors: Story = {
         (color) => (
           <Section key={color} background={color} testid={`section-${color}`}>
             <Heading level="h3" variant="small" className="capitalize">
-              {color} Background
+              {color} Achtergrond
             </Heading>
             <Text variant="small" className="text-muted-foreground">
-              This section demonstrates the {color} pastel background color.
+              Deze sectie demonstreert de {color} pastel achtergrondkleur.
             </Text>
           </Section>
         )
@@ -188,11 +188,12 @@ export const AllMaxWidths: Story = {
         >
           <Box className="bg-white/20 p-4">
             <Heading level="h3" variant="small">
-              Max Width: {width}
+              Maximale Breedte: {width}
             </Heading>
             <Text variant="small">
-              This section has a maximum width of {width}. The content is
-              constrained to this width while maintaining responsive behavior.
+              Deze sectie heeft een maximale breedte van {width}. De inhoud is
+              beperkt tot deze breedte terwijl responsief gedrag behouden
+              blijft.
             </Text>
           </Box>
         </Section>
@@ -229,11 +230,11 @@ export const WithBorders: Story = {
             testid={`section-border-${color}`}
           >
             <Heading level="h3" variant="small" className="capitalize">
-              {color} with Border
+              {color} met Rand
             </Heading>
             <Text variant="small" className="text-muted-foreground">
-              This section has a {color} background with colored borders on top
-              and bottom.
+              Deze sectie heeft een {color} achtergrond met gekleurde randen
+              boven en onder.
             </Text>
           </Section>
         )
@@ -264,37 +265,37 @@ export const ComplexContent: Story = {
       <Grid cols={{ base: 1, md: 2 }} gap={8}>
         <Box>
           <Heading level="h2" variant="medium" className="mb-4">
-            Complex Section Content
+            Complexe Sectie Inhoud
           </Heading>
           <Text variant="muted" className="mb-6">
-            This section demonstrates how the Section component can contain
-            complex layouts with multiple elements, responsive grids, and rich
-            content.
+            Deze sectie demonstreert hoe de Section component complexe lay-outs
+            kan bevatten met meerdere elementen, responsieve grids, en rijke
+            inhoud.
           </Text>
           <Box className="space-y-4">
             <Box className="bg-white/20 p-4">
               <Heading level="h3" variant="small" className="mb-2">
-                Feature 1
+                Functie 1
               </Heading>
-              <Text variant="small">Description of the first feature.</Text>
+              <Text variant="small">Beschrijving van de eerste functie.</Text>
             </Box>
             <Box className="bg-white/20 p-4">
               <Heading level="h3" variant="small" className="mb-2">
-                Feature 2
+                Functie 2
               </Heading>
-              <Text variant="small">Description of the second feature.</Text>
+              <Text variant="small">Beschrijving van de tweede functie.</Text>
             </Box>
           </Box>
         </Box>
         <Box className="bg-white/20 p-6">
           <Heading level="h3" variant="small" className="mb-4">
-            Additional Information
+            Aanvullende Informatie
           </Heading>
           <ul className="space-y-2 text-sm">
-            <li>• Responsive design</li>
-            <li>• Dark mode support</li>
+            <li>• Responsief ontwerp</li>
+            <li>• Donkere modus ondersteuning</li>
             <li>• Container queries</li>
-            <li>• Flexible layouts</li>
+            <li>• Flexibele lay-outs</li>
           </ul>
         </Box>
       </Grid>
@@ -302,10 +303,10 @@ export const ComplexContent: Story = {
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByTestId('section-complex')).toBeVisible();
-    await expect(canvas.getByText('Complex Section Content')).toBeVisible();
-    await expect(canvas.getByText('Feature 1')).toBeVisible();
-    await expect(canvas.getByText('Feature 2')).toBeVisible();
-    await expect(canvas.getByText('Additional Information')).toBeVisible();
+    await expect(canvas.getByText('Complexe Sectie Inhoud')).toBeVisible();
+    await expect(canvas.getByText('Functie 1')).toBeVisible();
+    await expect(canvas.getByText('Functie 2')).toBeVisible();
+    await expect(canvas.getByText('Aanvullende Informatie')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -315,12 +316,12 @@ export const NoPaddingWithBackground: Story = {
     children: (
       <Box className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-8">
         <Heading level="h2" variant="medium" className="mb-4">
-          Full Width Background
+          Volledige Breedte Achtergrond
         </Heading>
         <Text className="text-blue-100">
-          This section has no padding, allowing the background to extend to the
-          full width of the viewport while the content maintains its own
-          padding.
+          Deze sectie heeft geen padding, waardoor de achtergrond zich kan
+          uitstrekken tot de volledige breedte van de viewport terwijl de inhoud
+          zijn eigen padding behoudt.
         </Text>
       </Box>
     ),
@@ -329,7 +330,9 @@ export const NoPaddingWithBackground: Story = {
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByTestId('section-no-padding-bg')).toBeVisible();
-    await expect(canvas.getByText('Full Width Background')).toBeVisible();
+    await expect(
+      canvas.getByText('Volledige Breedte Achtergrond')
+    ).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };

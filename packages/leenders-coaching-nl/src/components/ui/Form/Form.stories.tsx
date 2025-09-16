@@ -68,22 +68,22 @@ export const Default: Story = {
   play: async ({ canvas, userEvent, args, step }) => {
     await step('Fill out the form', async () => {
       // Fill name field
-      await userEvent.type(canvas.getByLabelText('Naam'), 'John Doe');
-      await expect(canvas.getByDisplayValue('John Doe')).toBeInTheDocument();
+      await userEvent.type(canvas.getByLabelText('Naam'), 'Jan Jansen');
+      await expect(canvas.getByDisplayValue('Jan Jansen')).toBeInTheDocument();
 
       // Fill email field
-      await userEvent.type(canvas.getByLabelText('E-mail'), 'john@example.com');
+      await userEvent.type(canvas.getByLabelText('E-mail'), 'jan@voorbeeld.nl');
       await expect(
-        canvas.getByDisplayValue('john@example.com')
+        canvas.getByDisplayValue('jan@voorbeeld.nl')
       ).toBeInTheDocument();
 
       // Fill message field
       await userEvent.type(
         canvas.getByLabelText('Bericht'),
-        'This is a test message'
+        'Dit is een test bericht'
       );
       await expect(
-        canvas.getByDisplayValue('This is a test message')
+        canvas.getByDisplayValue('Dit is een test bericht')
       ).toBeInTheDocument();
     });
 
@@ -101,25 +101,25 @@ export const FormValidation: Story = {
     children: (
       <Box className="space-y-4">
         <Input
-          label="Name *"
+          label="Naam *"
           type="text"
           name="name"
-          placeholder="Your name"
+          placeholder="Uw naam"
           required
         />
         <Input
-          label="Email *"
+          label="E-mail *"
           type="email"
           name="email"
-          placeholder="your@email.com"
+          placeholder="uw@email.com"
           required
         />
         <Input
           as="textarea"
-          label="Message *"
+          label="Bericht *"
           name="message"
           rows={4}
-          placeholder="Your message"
+          placeholder="Uw bericht"
           required
         />
         <Button type="submit" variant="blue" className="w-full">
@@ -139,7 +139,7 @@ export const FormValidation: Story = {
 
     await step('Fill form partially and test validation', async () => {
       // Fill only name field
-      await userEvent.type(canvas.getByLabelText('Name *'), 'John Doe');
+      await userEvent.type(canvas.getByLabelText('Naam *'), 'Jan Jansen');
 
       // Try to submit
       await userEvent.click(canvas.getByRole('button', { name: 'Versturen' }));
@@ -151,12 +151,12 @@ export const FormValidation: Story = {
     await step('Complete the form and submit', async () => {
       // Fill remaining required fields
       await userEvent.type(
-        canvas.getByLabelText('Email *'),
-        'john@example.com'
+        canvas.getByLabelText('E-mail *'),
+        'jan@voorbeeld.nl'
       );
       await userEvent.type(
-        canvas.getByLabelText('Message *'),
-        'This is a test message'
+        canvas.getByLabelText('Bericht *'),
+        'Dit is een test bericht'
       );
 
       // Submit the form
@@ -171,19 +171,19 @@ export const KeyboardNavigation: Story = {
     onSubmit: fn(),
     children: (
       <Box className="space-y-4">
-        <Input label="Name" type="text" name="name" placeholder="Your name" />
+        <Input label="Naam" type="text" name="name" placeholder="Uw naam" />
         <Input
-          label="Email"
+          label="E-mail"
           type="email"
           name="email"
-          placeholder="your@email.com"
+          placeholder="uw@email.com"
         />
         <Input
           as="textarea"
-          label="Message"
+          label="Bericht"
           name="message"
           rows={4}
-          placeholder="Your message"
+          placeholder="Uw bericht"
         />
         <Button type="submit" variant="blue" className="w-full">
           Versturen
@@ -195,15 +195,15 @@ export const KeyboardNavigation: Story = {
     await step('Test tab navigation', async () => {
       // Start with first field focused
       await userEvent.tab();
-      await expect(canvas.getByLabelText('Name')).toHaveFocus();
+      await expect(canvas.getByLabelText('Naam')).toHaveFocus();
 
       // Tab to next field
       await userEvent.tab();
-      await expect(canvas.getByLabelText('Email')).toHaveFocus();
+      await expect(canvas.getByLabelText('E-mail')).toHaveFocus();
 
       // Tab to textarea
       await userEvent.tab();
-      await expect(canvas.getByLabelText('Message')).toHaveFocus();
+      await expect(canvas.getByLabelText('Bericht')).toHaveFocus();
 
       // Tab to submit button
       await userEvent.tab();
@@ -218,13 +218,13 @@ export const KeyboardNavigation: Story = {
 
       // Fill form using keyboard
       await userEvent.keyboard('{Tab}'); // Go to name field
-      await userEvent.keyboard('John Doe');
+      await userEvent.keyboard('Jan Jansen');
 
       await userEvent.keyboard('{Tab}'); // Go to email field
-      await userEvent.keyboard('john@example.com');
+      await userEvent.keyboard('jan@voorbeeld.nl');
 
       await userEvent.keyboard('{Tab}'); // Go to message field
-      await userEvent.keyboard('This is a test message');
+      await userEvent.keyboard('Dit is een test bericht');
 
       await userEvent.keyboard('{Tab}'); // Go to submit button
       await userEvent.keyboard('{Enter}'); // Submit with Enter key

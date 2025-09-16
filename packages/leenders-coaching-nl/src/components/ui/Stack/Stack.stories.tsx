@@ -52,10 +52,10 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: 'Stack Example',
+    children: 'Stack Voorbeeld',
   },
   play: async ({ canvas }) => {
-    await expect(canvas.getByText('Stack Example')).toBeVisible();
+    await expect(canvas.getByText('Stack Voorbeeld')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -226,17 +226,17 @@ export const ComplexLayout: Story = {
       <Stack space={4} testid="stack-complex">
         <Box className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6-lg">
           <Heading level="h2" variant="medium" className="mb-2">
-            Header Section
+            Header Sectie
           </Heading>
           <Text className="text-blue-100">
-            This is a complex layout using Stack components.
+            Dit is een complexe lay-out met Stack componenten.
           </Text>
         </Box>
 
         <Stack direction="row" gap={4} justify="between">
           <Box className="bg-white border p-4-lg flex-1">
             <Heading level="h3" variant="small" className="mb-2">
-              Left Column
+              Linker Kolom
             </Heading>
             <Stack space={2}>
               <Box className="bg-gray-100 p-2">
@@ -253,7 +253,7 @@ export const ComplexLayout: Story = {
 
           <Box className="bg-white border p-4-lg flex-1">
             <Heading level="h3" variant="small" className="mb-2">
-              Right Column
+              Rechter Kolom
             </Heading>
             <Stack space={2}>
               <Box className="bg-gray-100 p-2">
@@ -271,11 +271,11 @@ export const ComplexLayout: Story = {
 
         <Box className="bg-green-100 p-4-lg">
           <Heading level="h3" variant="small" className="mb-2">
-            Footer Section
+            Footer Sectie
           </Heading>
           <Text variant="small" className="text-green-800">
-            This demonstrates how Stack can be used to create complex, nested
-            layouts with consistent spacing and alignment.
+            Dit demonstreert hoe Stack kan worden gebruikt om complexe, geneste
+            lay-outs te maken met consistente spatiëring en uitlijning.
           </Text>
         </Box>
       </Stack>
@@ -283,10 +283,10 @@ export const ComplexLayout: Story = {
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByTestId('stack-complex')).toBeVisible();
-    await expect(canvas.getByText('Header Section')).toBeVisible();
-    await expect(canvas.getByText('Left Column')).toBeVisible();
-    await expect(canvas.getByText('Right Column')).toBeVisible();
-    await expect(canvas.getByText('Footer Section')).toBeVisible();
+    await expect(canvas.getByText('Header Sectie')).toBeVisible();
+    await expect(canvas.getByText('Linker Kolom')).toBeVisible();
+    await expect(canvas.getByText('Rechter Kolom')).toBeVisible();
+    await expect(canvas.getByText('Footer Sectie')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -300,7 +300,7 @@ export const NestedStacks: Story = {
       <Stack space={4} testid="stack-nested">
         <Box className="bg-blue-100 p-4">
           <Heading level="h3" variant="small" className="mb-2">
-            Main Container
+            Hoofd Container
           </Heading>
           <Stack direction="row" gap={3} justify="center">
             <Box className="bg-white p-3">
@@ -317,7 +317,7 @@ export const NestedStacks: Story = {
 
         <Box className="bg-green-100 p-4">
           <Heading level="h3" variant="small" className="mb-2">
-            Another Container
+            Nog Een Container
           </Heading>
           <Stack space={1}>
             <Box className="bg-white p-2">
@@ -341,8 +341,8 @@ export const NestedStacks: Story = {
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByTestId('stack-nested')).toBeVisible();
-    await expect(canvas.getByText('Main Container')).toBeVisible();
-    await expect(canvas.getByText('Another Container')).toBeVisible();
+    await expect(canvas.getByText('Hoofd Container')).toBeVisible();
+    await expect(canvas.getByText('Nog Een Container')).toBeVisible();
     await expect(canvas.getByText('Nested 1')).toBeVisible();
     await expect(canvas.getByText('Sub-item A')).toBeVisible();
     await waitForMotionAnimations({ canvas });

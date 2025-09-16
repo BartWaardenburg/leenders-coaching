@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { lockScroll, unlockScroll, getScrollLockCount } from './scrollLock';
-import { mockDocument } from '@/mocks';
+import { mockDocument } from '@/mocks/test-utils';
 
 // Mock document for testing
 Object.defineProperty(global, 'document', {

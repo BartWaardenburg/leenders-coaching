@@ -135,7 +135,7 @@ export const AllVariants: Story = {
     controls: { hideNoControlsWarning: true },
   },
   args: {
-    children: 'Button',
+    children: 'Knop',
   },
   render: (args) => (
     <Box className="flex flex-wrap gap-4">
@@ -177,26 +177,26 @@ export const AllSizes: Story = {
     controls: { hideNoControlsWarning: true },
   },
   args: {
-    children: 'Button',
+    children: 'Knop',
     onClick: fn(),
   },
   render: (args) => (
     <Box className="flex items-center gap-4">
       <Button {...args} size="sm">
-        Small
+        Klein
       </Button>
       <Button {...args} size="md">
-        Medium
+        Middel
       </Button>
       <Button {...args} size="lg">
-        Large
+        Groot
       </Button>
     </Box>
   ),
   play: async ({ canvas, userEvent, args }) => {
-    const smallButton = canvas.getByRole('button', { name: 'Small' });
-    const mediumButton = canvas.getByRole('button', { name: 'Medium' });
-    const largeButton = canvas.getByRole('button', { name: 'Large' });
+    const smallButton = canvas.getByRole('button', { name: 'Klein' });
+    const mediumButton = canvas.getByRole('button', { name: 'Middel' });
+    const largeButton = canvas.getByRole('button', { name: 'Groot' });
 
     await expect(smallButton).toBeVisible();
     await expect(mediumButton).toBeVisible();
@@ -216,11 +216,11 @@ export const AllSizes: Story = {
 
 export const InteractiveDemo: Story = {
   args: {
-    children: 'Interactive Button',
+    children: 'Interactieve Knop',
     onClick: fn(),
   },
   play: async ({ canvas, userEvent, args, step }) => {
-    const button = canvas.getByRole('button', { name: 'Interactive Button' });
+    const button = canvas.getByRole('button', { name: 'Interactieve Knop' });
 
     await step('Initial state', async () => {
       await expect(button).toBeVisible();

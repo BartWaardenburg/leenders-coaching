@@ -67,19 +67,19 @@ export const WithCustomContent: Story = {
     },
   },
   args: {
-    title: 'Start Your Journey Today',
+    title: 'Begin Vandaag Uw Reis',
     description:
-      'Take the first step towards achieving your goals with our personalized coaching program.',
+      'Zet de eerste stap naar het bereiken van uw doelen met ons gepersonaliseerde coaching programma.',
     steps: [
       ...defaultSteps.slice(0, 3),
       {
-        title: 'Book Your Session',
+        title: 'Boek Uw Sessie',
         description:
-          'Ready to start your coaching journey? Schedule your first session now.',
-        date: 'Today',
+          'Klaar om uw coaching reis te beginnen? Plan nu uw eerste sessie in.',
+        date: 'Vandaag',
         content: (
           <Button variant="blue" size="sm" href="/contact" className="mt-2">
-            Schedule Now
+            Plan Nu In
           </Button>
         ),
       },

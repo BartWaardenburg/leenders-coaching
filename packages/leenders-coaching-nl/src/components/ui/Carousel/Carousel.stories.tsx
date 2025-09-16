@@ -125,16 +125,17 @@ export const SingleSlide: Story = {
     slides: [
       <Box key="single" className="p-8 text-center">
         <Heading level="h2" variant="medium" className="mb-4">
-          Single Slide
+          Enkele Slide
         </Heading>
         <Text variant="muted">
-          This carousel has only one slide, so navigation should be hidden.
+          Deze carousel heeft slechts één slide, dus navigatie zou verborgen
+          moeten zijn.
         </Text>
       </Box>,
     ],
   },
   play: async ({ canvas }) => {
-    await expect(canvas.getByText('Single Slide')).toBeVisible();
+    await expect(canvas.getByText('Enkele Slide')).toBeVisible();
   },
 };
 
@@ -154,7 +155,7 @@ export const ManySlides: Story = {
         <Heading level="h2" variant="medium" className="mb-4">
           Slide {i + 1}
         </Heading>
-        <Text variant="muted">This is slide number {i + 1} of 10 slides.</Text>
+        <Text variant="muted">Dit is slide nummer {i + 1} van 10 slides.</Text>
       </Box>
     )),
   },
@@ -168,9 +169,9 @@ export const MixedContent: Story = {
     slides: [
       <Box key="text" className="p-8 text-center">
         <Heading level="h2" variant="medium" className="mb-4">
-          Text Content
+          Tekst Inhoud
         </Heading>
-        <Text variant="muted">This slide contains only text content.</Text>
+        <Text variant="muted">Deze slide bevat alleen tekst inhoud.</Text>
       </Box>,
       <ImageSlide
         key="image"
@@ -186,17 +187,17 @@ export const MixedContent: Story = {
       />,
       <Box key="form" className="p-8">
         <Heading level="h2" variant="medium" className="mb-4">
-          Form Content
+          Formulier Inhoud
         </Heading>
         <Box className="space-y-4">
           <Input type="text" placeholder="Voer je naam in" />
-          <Button variant="blue">Submit</Button>
+          <Button variant="blue">Versturen</Button>
         </Box>
       </Box>,
     ],
   },
   play: async ({ canvas }) => {
-    await expect(canvas.getByText('Text Content')).toBeVisible();
+    await expect(canvas.getByText('Tekst Inhoud')).toBeVisible();
   },
 };
 
@@ -212,7 +213,7 @@ export const AllVariants: Story = {
   render: () => (
     <Box className="space-y-6">
       <Box>
-        <h3 className="text-lg font-semibold mb-4">Default Carousel</h3>
+        <h3 className="text-lg font-semibold mb-4">Standaard Carousel</h3>
         <Carousel
           slides={testimonials.map((testimonial) => (
             <TestimonialSlide key={testimonial.name} {...testimonial} />
@@ -221,7 +222,7 @@ export const AllVariants: Story = {
       </Box>
 
       <Box>
-        <h3 className="text-lg font-semibold mb-4">Image Carousel</h3>
+        <h3 className="text-lg font-semibold mb-4">Afbeelding Carousel</h3>
         <Carousel
           slides={images.map((image) => (
             <ImageSlide key={image.src} {...image} />
@@ -230,13 +231,13 @@ export const AllVariants: Story = {
       </Box>
 
       <Box>
-        <h3 className="text-lg font-semibold mb-4">Single Slide</h3>
+        <h3 className="text-lg font-semibold mb-4">Enkele Slide</h3>
         <Carousel
           slides={[
             <Box key="single" className="p-8 text-center">
-              <h2 className="text-2xl font-bold mb-4">Single Slide</h2>
+              <h2 className="text-2xl font-bold mb-4">Enkele Slide</h2>
               <p className="text-gray-600 dark:text-gray-400">
-                This carousel has only one slide.
+                Deze carousel heeft slechts één slide.
               </p>
             </Box>,
           ]}
@@ -245,8 +246,8 @@ export const AllVariants: Story = {
     </Box>
   ),
   play: async ({ canvas }) => {
-    await expect(canvas.getByText('Default Carousel')).toBeVisible();
-    await expect(canvas.getAllByText('Single Slide')).toHaveLength(2);
+    await expect(canvas.getByText('Standaard Carousel')).toBeVisible();
+    await expect(canvas.getAllByText('Enkele Slide')).toHaveLength(2);
   },
 };
 

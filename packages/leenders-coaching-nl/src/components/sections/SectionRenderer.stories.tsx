@@ -88,11 +88,11 @@ export const FormSection: Story = {
     type: 'sectionForm',
     data: {
       _type: 'sectionForm',
-      title: 'Internal Form Title',
-      displayTitle: 'Contact Us',
+      title: 'Interne Formulier Titel',
+      displayTitle: 'Neem Contact Op',
       description: 'Neem contact op met ons team',
       form: {
-        submitLabel: 'Send Message',
+        submitLabel: 'Verstuur Bericht',
         fields: [
           {
             _key: 'field-1',
@@ -103,7 +103,7 @@ export const FormSection: Story = {
           {
             _key: 'field-2',
             type: 'email',
-            label: 'Email',
+            label: 'E-mail',
             required: true,
           },
         ],
@@ -121,12 +121,12 @@ export const FormSection: Story = {
 export const InvalidSectionType: Story = {
   args: {
     type: 'invalidSection',
-    data: { _type: 'invalidSection', title: 'This should not render' },
+    data: { _type: 'invalidSection', title: 'Dit zou niet moeten renderen' },
   },
   play: async ({ canvas }) => {
     // Invalid section type should not render anything
     await expect(
-      canvas.queryByText('This should not render')
+      canvas.queryByText('Dit zou niet moeten renderen')
     ).not.toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
@@ -149,7 +149,7 @@ export const MalformedData: Story = {
     data: {
       _type: 'sectionCards',
       // Missing required cards array
-      displayTitle: 'Malformed Section',
+      displayTitle: 'Ongeldige Sectie',
     },
   },
   play: async ({ canvas }) => {
@@ -192,20 +192,20 @@ export const ErrorHandling: Story = {
   render: () => (
     <Box className="space-y-8">
       <Box>
-        <h3 className="text-lg font-semibold mb-4">Invalid Section Type</h3>
+        <h3 className="text-lg font-semibold mb-4">Ongeldig Sectie Type</h3>
         <SectionRenderer
           type="invalidSection"
-          data={{ title: 'Should not render' }}
+          data={{ title: 'Zou niet moeten renderen' }}
         />
       </Box>
 
       <Box>
-        <h3 className="text-lg font-semibold mb-4">Empty Data</h3>
+        <h3 className="text-lg font-semibold mb-4">Lege Data</h3>
         <SectionRenderer type="sectionHeader" data={{}} />
       </Box>
 
       <Box>
-        <h3 className="text-lg font-semibold mb-4">Valid Section</h3>
+        <h3 className="text-lg font-semibold mb-4">Geldige Sectie</h3>
         <SectionRenderer type="sectionHeader" data={mockHeaderSection} />
       </Box>
     </Box>

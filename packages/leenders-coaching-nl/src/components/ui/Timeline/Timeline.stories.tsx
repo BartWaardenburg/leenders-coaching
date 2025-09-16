@@ -98,13 +98,13 @@ export const WithCustomContent: Story = {
     steps: [
       ...defaultSteps.slice(0, 3),
       {
-        title: 'Book Your Session',
+        title: 'Boek Uw Sessie',
         description:
-          'Ready to start your coaching journey? Schedule your first session now.',
-        date: 'Today',
+          'Klaar om uw coaching reis te beginnen? Plan nu uw eerste sessie in.',
+        date: 'Vandaag',
         content: (
           <Button variant="blue" size="sm" href="/contact" className="mt-2">
-            Schedule Now
+            Plan Nu In
           </Button>
         ),
       },
@@ -122,10 +122,10 @@ export const WithCustomContent: Story = {
     expect(regularSessions.length).toBeGreaterThan(0);
 
     // Check for custom content (use getAllByText to handle multiple instances)
-    const bookYourSession = canvas.getAllByText('Book Your Session');
+    const bookYourSession = canvas.getAllByText('Boek Uw Sessie');
     expect(bookYourSession.length).toBeGreaterThan(0);
     expect(
-      canvas.getByRole('link', { name: 'Schedule Now' })
+      canvas.getByRole('link', { name: 'Plan Nu In' })
     ).toBeInTheDocument();
 
     await waitForMotionAnimations({ canvas });

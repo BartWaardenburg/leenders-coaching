@@ -1,7 +1,6 @@
 import * as a11yAddonAnnotations from '@storybook/addon-a11y/preview';
 import { setProjectAnnotations } from '@storybook/nextjs-vite';
 import * as projectAnnotations from './preview';
-import { vi } from 'vitest';
 
 /**
  * Set up environment variables for Storybook tests.
@@ -26,19 +25,9 @@ if (!process.env.NEXT_PUBLIC_SANITY_API_VERSION) {
 /**
  * Mock Next.js router for Storybook tests.
  * This prevents the "expected app router to be mounted" error when components use useRouter.
+ * Note: This mock is handled by the Storybook framework itself when running in Storybook mode.
+ * The actual mocking is done through Storybook's built-in mocking capabilities.
  */
-vi.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: vi.fn(),
-    replace: vi.fn(),
-    refresh: vi.fn(),
-    back: vi.fn(),
-    forward: vi.fn(),
-    prefetch: vi.fn(),
-  }),
-  usePathname: () => '/blog/sample-post',
-  useSearchParams: () => new URLSearchParams(),
-}));
 
 /**
  * Apply the correct configuration when testing stories with Vitest.

@@ -25,11 +25,11 @@ export default meta;
 type Story = StoryObj;
 
 const sampleData = {
-  name: 'John Doe',
-  email: 'john.doe@example.com',
+  name: 'Jan Jansen',
+  email: 'jan.jansen@voorbeeld.nl',
   subject: 'Vraag over coaching',
   message:
-    'Beste Leenders Coaching,\n\nIk zou graag meer informatie willen over jullie coaching diensten en hoe deze mij kunnen helpen. Kunnen jullie wat meer informatie verstrekken?\n\nBij voorbaat dank,\nJohn',
+    'Beste Leenders Coaching,\n\nIk zou graag meer informatie willen over jullie coaching diensten en hoe deze mij kunnen helpen. Kunnen jullie wat meer informatie verstrekken?\n\nBij voorbaat dank,\nJan',
 };
 
 /**

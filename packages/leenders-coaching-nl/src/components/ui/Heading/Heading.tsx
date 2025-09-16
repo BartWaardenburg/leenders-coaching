@@ -17,12 +17,12 @@ type BorderColor =
 
 const borderColors: Record<BorderColor, string> = {
   default: 'bg-foreground dark:bg-foreground',
-  blue: pastelVariant.blue.bg,
-  purple: pastelVariant.purple.bg,
-  green: pastelVariant.green.bg,
-  pink: pastelVariant.pink.bg,
-  yellow: pastelVariant.yellow.bg,
-  teal: pastelVariant.teal.bg,
+  blue: pastelVariant.blue.borderDark,
+  purple: pastelVariant.purple.borderDark,
+  green: pastelVariant.green.borderDark,
+  pink: pastelVariant.pink.borderDark,
+  yellow: pastelVariant.yellow.borderDark,
+  teal: pastelVariant.teal.borderDark,
 };
 
 type HeadingProps = {
@@ -91,8 +91,10 @@ export const Heading = memo<HeadingProps>(
         {showBorder && (
           <Box
             className={cn(
-              'absolute bottom-[1px] left-1/2 -translate-x-1/2 h-[2px] w-24',
-              borderColors[borderColor]
+              'absolute bottom-[1px] left-1/2 -translate-x-1/2 h-[2px] w-24 transition-theme',
+              borderColor === 'default'
+                ? borderColors[borderColor]
+                : `border-t-2 ${borderColors[borderColor]}`
             )}
             aria-hidden="true"
           />

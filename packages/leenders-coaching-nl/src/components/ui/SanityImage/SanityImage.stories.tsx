@@ -281,7 +281,7 @@ export const AllVariants: Story = {
     <Grid cols={{ base: 1, md: 2 }} gap={6} className="max-w-4xl">
       <Box className="space-y-4">
         <Heading level="h3" variant="small">
-          With Full Metadata
+          Met Volledige Metadata
         </Heading>
         <SanityImage
           image={mockSanityImage.withMetadata}
@@ -293,7 +293,7 @@ export const AllVariants: Story = {
 
       <Box className="space-y-4">
         <Heading level="h3" variant="small">
-          Without Metadata
+          Zonder Metadata
         </Heading>
         <SanityImage
           image={mockSanityImage.withoutMetadata}
@@ -305,7 +305,7 @@ export const AllVariants: Story = {
 
       <Box className="space-y-4">
         <Heading level="h3" variant="small">
-          With Hotspot
+          Met Hotspot
         </Heading>
         <SanityImage
           image={mockSanityImage.withMetadata}
@@ -318,7 +318,7 @@ export const AllVariants: Story = {
 
       <Box className="space-y-4">
         <Heading level="h3" variant="small">
-          Fill Mode
+          Vul Modus
         </Heading>
         <Box className="relative w-full h-48 overflow-hidden">
           <SanityImage

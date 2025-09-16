@@ -45,10 +45,10 @@ const FormContent = () => (
   <Stack gap={6}>
     <Input label="Naam" type="text" name="name" placeholder="Je naam" />
     <Input
-      label="Email"
+      label="E-mail"
       type="email"
       name="email"
-      placeholder="your@email.com"
+      placeholder="uw@email.com"
     />
     <Input
       label="Bericht"
@@ -57,7 +57,7 @@ const FormContent = () => (
       placeholder="Je bericht"
     />
     <Button type="submit" variant="blue" className="w-full">
-      Submit
+      Versturen
     </Button>
   </Stack>
 );
@@ -87,7 +87,7 @@ export const WithBackgroundAndBorder: Story = {
 
 export const WithoutDescription: Story = {
   args: {
-    title: 'Contact Us',
+    title: 'Neem Contact Op',
     background: 'pink',
     border: true,
   },
@@ -95,9 +95,9 @@ export const WithoutDescription: Story = {
 
 export const CustomSubmitLabel: Story = {
   args: {
-    title: 'Custom Submit Button',
+    title: 'Aangepaste Verzendknop',
     description: 'Dit formulier heeft een aangepast verzendknop label.',
-    submitLabel: 'Send Message Now',
+    submitLabel: 'Verstuur Bericht Nu',
     background: 'yellow',
     border: true,
   },
@@ -114,9 +114,9 @@ export const AllBackgroundVariants: Story = {
         (background) => (
           <SectionForm
             key={background}
-            title={`${background.charAt(0).toUpperCase() + background.slice(1)} Background`}
-            description={`This form demonstrates the ${background} background variant.`}
-            submitLabel={`Submit ${background.charAt(0).toUpperCase() + background.slice(1)} Form`}
+            title={`${background.charAt(0).toUpperCase() + background.slice(1)} Achtergrond`}
+            description={`Dit formulier demonstreert de ${background} achtergrond variant.`}
+            submitLabel={`Verstuur ${background.charAt(0).toUpperCase() + background.slice(1)} Formulier`}
             background={background}
             border={true}
           />
@@ -128,10 +128,10 @@ export const AllBackgroundVariants: Story = {
 
 export const LongContent: Story = {
   args: {
-    title: 'Contact Form with Long Content',
+    title: 'Contactformulier Met Lange Inhoud',
     description:
-      'This is a longer description that demonstrates how the form section handles more extensive text content. It shows how the layout adapts to different amounts of content while maintaining good readability and visual hierarchy. The text can span multiple lines and the section will handle it gracefully.',
-    submitLabel: 'Send Your Message',
+      'Dit is een langere beschrijving die demonstreert hoe de formulier sectie uitgebreidere tekstinhoud afhandelt. Het toont hoe de lay-out zich aanpast aan verschillende hoeveelheden inhoud terwijl het goede leesbaarheid en visuele hiërarchie behoudt. De tekst kan over meerdere regels lopen en de sectie zal het elegant afhandelen.',
+    submitLabel: 'Verstuur Uw Bericht',
     background: 'teal',
     border: true,
   },

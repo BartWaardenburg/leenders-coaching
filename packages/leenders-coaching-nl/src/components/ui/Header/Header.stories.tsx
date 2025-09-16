@@ -37,12 +37,12 @@ export const Default: Story = {
       projectEnquiry: {
         label: 'Project aanvraag',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
         label: 'Algemene vragen',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
     },
   },
@@ -88,12 +88,12 @@ export const HeaderMobileMenu: Story = {
       projectEnquiry: {
         label: 'Project aanvraag',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
         label: 'Algemene vragen',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
     },
   },
@@ -159,12 +159,12 @@ export const HeaderNavigation: Story = {
       projectEnquiry: {
         label: 'Project aanvraag',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
         label: 'Algemene vragen',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
     },
   },
@@ -199,7 +199,7 @@ export const HeaderSocialLinks: Story = {
   args: {
     navigation: [
       { _key: '1', label: 'Home', href: '/' },
-      { _key: '2', label: 'About', href: '/about' },
+      { _key: '2', label: 'Over Ons', href: '/about' },
     ],
     about: {
       title: 'Over ons',
@@ -230,12 +230,12 @@ export const HeaderSocialLinks: Story = {
       projectEnquiry: {
         label: 'Project aanvraag',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
         label: 'Algemene vragen',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
     },
   },
@@ -270,7 +270,7 @@ export const HeaderContactLinks: Story = {
   args: {
     navigation: [
       { _key: '1', label: 'Home', href: '/' },
-      { _key: '2', label: 'About', href: '/about' },
+      { _key: '2', label: 'Over Ons', href: '/about' },
     ],
     about: {
       title: 'Over ons',
@@ -291,12 +291,12 @@ export const HeaderContactLinks: Story = {
       projectEnquiry: {
         label: 'Project aanvraag',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
         label: 'Algemene vragen',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
     },
   },
@@ -316,7 +316,7 @@ export const HeaderContactLinks: Story = {
 
     await step('Verify contact links are present', async () => {
       /* Check that contact links are visible - use getAllByText since there are multiple */
-      const contactLinks = canvas.getAllByText('Contact Us');
+      const contactLinks = canvas.getAllByText('Neem Contact Op');
       expect(contactLinks.length).toBeGreaterThan(0);
 
       /* Verify that at least one contact link is visible */
@@ -333,7 +333,7 @@ export const HeaderThemeToggle: Story = {
   args: {
     navigation: [
       { _key: '1', label: 'Home', href: '/' },
-      { _key: '2', label: 'About', href: '/about' },
+      { _key: '2', label: 'Over Ons', href: '/about' },
     ],
     about: {
       title: 'Over ons',
@@ -354,12 +354,12 @@ export const HeaderThemeToggle: Story = {
       projectEnquiry: {
         label: 'Project aanvraag',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
         label: 'Algemene vragen',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
     },
   },
@@ -417,12 +417,12 @@ export const HeaderAccessibility: Story = {
       projectEnquiry: {
         label: 'Project aanvraag',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
         label: 'Algemene vragen',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
     },
   },

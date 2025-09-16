@@ -36,7 +36,7 @@ const samplePortableText = mockFAQSection.faqs[0]?.answer || [
     children: [
       {
         _type: 'span',
-        text: 'This is a basic answer with formatted text.',
+        text: 'Dit is een basis antwoord met opgemaakte tekst.',
       },
     ],
     style: 'normal',
@@ -47,18 +47,18 @@ export const Default: Story = {
   args: {
     items: [
       {
-        question: 'What services do you offer?',
+        question: 'Welke diensten biedt u aan?',
         answer: samplePortableText,
       },
       {
-        question: 'How can I schedule an appointment?',
+        question: 'Hoe kan ik een afspraak inplannen?',
         answer: [
           {
             _type: 'block',
             children: [
               {
                 _type: 'span',
-                text: 'You can schedule an appointment through our online booking system or contact us directly.',
+                text: 'U kunt een afspraak inplannen via ons online boekingssysteem of ons direct contacteren.',
               },
             ],
             style: 'normal',
@@ -66,14 +66,14 @@ export const Default: Story = {
         ],
       },
       {
-        question: 'What are your working hours?',
+        question: 'Wat zijn uw werkuren?',
         answer: [
           {
             _type: 'block',
             children: [
               {
                 _type: 'span',
-                text: 'We are available Monday through Friday, from 9:00 AM to 5:00 PM.',
+                text: 'Wij zijn beschikbaar van maandag tot vrijdag, van 9:00 tot 17:00.',
               },
             ],
             style: 'normal',
@@ -83,16 +83,14 @@ export const Default: Story = {
     ],
   },
   play: async ({ canvas, userEvent }) => {
-    expect(canvas.getByText('What services do you offer?')).toBeInTheDocument();
+    expect(canvas.getByText('Welke diensten biedt u aan?')).toBeInTheDocument();
     expect(
-      canvas.getByText('How can I schedule an appointment?')
+      canvas.getByText('Hoe kan ik een afspraak inplannen?')
     ).toBeInTheDocument();
-    expect(
-      canvas.getByText('What are your working hours?')
-    ).toBeInTheDocument();
+    expect(canvas.getByText('Wat zijn uw werkuren?')).toBeInTheDocument();
 
     // Test FAQ interaction - clicking on questions to expand/collapse
-    const firstQuestion = canvas.getByText('What services do you offer?');
+    const firstQuestion = canvas.getByText('Welke diensten biedt u aan?');
     await userEvent.click(firstQuestion);
 
     // Wait for any animations
@@ -107,13 +105,11 @@ export const WithVariant: Story = {
     variant: 'purple',
   },
   play: async ({ canvas }) => {
-    expect(canvas.getByText('What services do you offer?')).toBeInTheDocument();
+    expect(canvas.getByText('Welke diensten biedt u aan?')).toBeInTheDocument();
     expect(
-      canvas.getByText('How can I schedule an appointment?')
+      canvas.getByText('Hoe kan ik een afspraak inplannen?')
     ).toBeInTheDocument();
-    expect(
-      canvas.getByText('What are your working hours?')
-    ).toBeInTheDocument();
+    expect(canvas.getByText('Wat zijn uw werkuren?')).toBeInTheDocument();
     // FAQ interaction complete - no animation wait needed
   },
 };
@@ -122,18 +118,18 @@ export const InteractiveFAQ: Story = {
   args: {
     items: [
       {
-        question: 'What services do you offer?',
+        question: 'Welke diensten biedt u aan?',
         answer: samplePortableText,
       },
       {
-        question: 'How can I schedule an appointment?',
+        question: 'Hoe kan ik een afspraak inplannen?',
         answer: [
           {
             _type: 'block',
             children: [
               {
                 _type: 'span',
-                text: 'You can schedule an appointment through our online booking system or contact us directly.',
+                text: 'U kunt een afspraak inplannen via ons online boekingssysteem of ons direct contacteren.',
               },
             ],
             style: 'normal',
@@ -141,14 +137,14 @@ export const InteractiveFAQ: Story = {
         ],
       },
       {
-        question: 'What are your working hours?',
+        question: 'Wat zijn uw werkuren?',
         answer: [
           {
             _type: 'block',
             children: [
               {
                 _type: 'span',
-                text: 'We are available Monday through Friday, from 9:00 AM to 5:00 PM.',
+                text: 'Wij zijn beschikbaar van maandag tot vrijdag, van 9:00 tot 17:00.',
               },
             ],
             style: 'normal',
@@ -160,18 +156,16 @@ export const InteractiveFAQ: Story = {
   play: async ({ canvas, userEvent, step }) => {
     await step('Initial state verification', async () => {
       expect(
-        canvas.getByText('What services do you offer?')
+        canvas.getByText('Welke diensten biedt u aan?')
       ).toBeInTheDocument();
       expect(
-        canvas.getByText('How can I schedule an appointment?')
+        canvas.getByText('Hoe kan ik een afspraak inplannen?')
       ).toBeInTheDocument();
-      expect(
-        canvas.getByText('What are your working hours?')
-      ).toBeInTheDocument();
+      expect(canvas.getByText('Wat zijn uw werkuren?')).toBeInTheDocument();
     });
 
     await step('Expand first FAQ item', async () => {
-      const firstQuestion = canvas.getByText('What services do you offer?');
+      const firstQuestion = canvas.getByText('Welke diensten biedt u aan?');
       await userEvent.click(firstQuestion);
 
       // Wait for expansion animation
@@ -184,7 +178,7 @@ export const InteractiveFAQ: Story = {
 
     await step('Expand second FAQ item', async () => {
       const secondQuestion = canvas.getByText(
-        'How can I schedule an appointment?'
+        'Hoe kan ik een afspraak inplannen?'
       );
       await userEvent.click(secondQuestion);
 
@@ -193,7 +187,7 @@ export const InteractiveFAQ: Story = {
       // Verify answer is visible
       expect(
         canvas.getByText(
-          'You can schedule an appointment through our online booking system or contact us directly.'
+          'U kunt een afspraak inplannen via ons online boekingssysteem of ons direct contacteren.'
         )
       ).toBeInTheDocument();
     });
@@ -204,7 +198,7 @@ export const InteractiveFAQ: Story = {
     });
 
     await step('Hover interactions', async () => {
-      const thirdQuestion = canvas.getByText('What are your working hours?');
+      const thirdQuestion = canvas.getByText('Wat zijn uw werkuren?');
       await userEvent.hover(thirdQuestion);
 
       // Wait for any hover effects
@@ -215,7 +209,7 @@ export const InteractiveFAQ: Story = {
       // Verify answer is visible
       expect(
         canvas.getByText(
-          'We are available Monday through Friday, from 9:00 AM to 5:00 PM.'
+          'Wij zijn beschikbaar van maandag tot vrijdag, van 9:00 tot 17:00.'
         )
       ).toBeInTheDocument();
     });

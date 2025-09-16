@@ -3,6 +3,7 @@ import { expect } from 'storybook/test';
 import { PortableText } from './PortableText';
 import { Heading } from '../Heading/Heading';
 import { Box } from '../Box/Box';
+import { mockSanityBlock } from '../../../mocks/sanity-mocks';
 
 const meta = {
   title: 'UI/PortableText',
@@ -27,171 +28,14 @@ type Story = StoryObj<typeof meta>;
 
 export const AllFeatures: Story = {
   args: {
-    content: [
-      {
-        _type: 'block',
-        style: 'h1',
-        children: [{ _type: 'span', text: 'All PortableText Features' }],
-      },
-      {
-        _type: 'block',
-        style: 'normal',
-        children: [
-          {
-            _type: 'span',
-            text: 'This story showcases all available features of the PortableText component. ',
-          },
-          { _type: 'span', marks: ['strong'], text: 'Bold text, ' },
-          { _type: 'span', marks: ['em'], text: 'italic text, ' },
-          { _type: 'span', marks: ['underline'], text: 'underlined text, ' },
-          { _type: 'span', marks: ['strike'], text: 'strikethrough text, ' },
-          { _type: 'span', marks: ['highlight'], text: 'highlighted text, ' },
-          { _type: 'span', marks: ['code'], text: 'inline code' },
-          { _type: 'span', text: '.' },
-        ],
-      },
-      {
-        _type: 'block',
-        style: 'h2',
-        children: [{ _type: 'span', text: 'Links' }],
-      },
-      {
-        _type: 'block',
-        style: 'normal',
-        children: [
-          { _type: 'span', text: 'We support ' },
-          {
-            _type: 'span',
-            marks: ['link-1'],
-            text: 'internal links',
-          },
-          { _type: 'span', text: ' and ' },
-          {
-            _type: 'span',
-            marks: ['link-2'],
-            text: 'external links',
-          },
-          { _type: 'span', text: '.' },
-        ],
-        markDefs: [
-          {
-            _key: 'link-1',
-            _type: 'link',
-            href: '#',
-          },
-          {
-            _key: 'link-2',
-            _type: 'link',
-            href: 'https://example.com',
-            blank: true,
-          },
-        ],
-      },
-      {
-        _type: 'block',
-        style: 'h2',
-        children: [{ _type: 'span', text: 'Lists' }],
-      },
-      {
-        _type: 'block',
-        style: 'normal',
-        listItem: 'bullet',
-        children: [{ _type: 'span', text: 'Unordered list item 1' }],
-      },
-      {
-        _type: 'block',
-        style: 'normal',
-        listItem: 'bullet',
-        children: [{ _type: 'span', text: 'Unordered list item 2' }],
-      },
-      {
-        _type: 'block',
-        style: 'normal',
-        listItem: 'number',
-        children: [{ _type: 'span', text: 'Ordered list item 1' }],
-      },
-      {
-        _type: 'block',
-        style: 'normal',
-        listItem: 'number',
-        children: [{ _type: 'span', text: 'Ordered list item 2' }],
-      },
-      {
-        _type: 'block',
-        style: 'h2',
-        children: [{ _type: 'span', text: 'Blockquote' }],
-      },
-      {
-        _type: 'block',
-        style: 'blockquote',
-        children: [
-          { _type: 'span', text: 'This is a blockquote with styled content. ' },
-          {
-            _type: 'span',
-            marks: ['em'],
-            text: 'It can also contain formatted text.',
-          },
-        ],
-      },
-      {
-        _type: 'block',
-        style: 'h2',
-        children: [{ _type: 'span', text: 'Images' }],
-      },
-      {
-        _type: 'block',
-        style: 'normal',
-        children: [
-          {
-            _type: 'span',
-            text: 'Images in PortableText are handled by the SanityImage component and require real Sanity assets. In Storybook, we demonstrate other features instead.',
-          },
-        ],
-      },
-      {
-        _type: 'block',
-        style: 'h2',
-        children: [{ _type: 'span', text: 'Code Block' }],
-      },
-      {
-        _type: 'block',
-        style: 'normal',
-        children: [
-          {
-            _type: 'code',
-            code: `function hello() {
-  console.log('Hello, world!');
-}`,
-            language: 'javascript',
-          },
-        ],
-      },
-      {
-        _type: 'block',
-        style: 'h2',
-        children: [{ _type: 'span', text: 'Call to Action' }],
-      },
-      {
-        _type: 'block',
-        style: 'normal',
-        children: [
-          {
-            _type: 'callToAction',
-            text: 'Click me!',
-            url: '#',
-            isExternal: false,
-          },
-        ],
-      },
-    ],
+    content: mockSanityBlock.allFeatures,
   },
   play: async ({ canvas: _canvas }) => {
-    await expect(_canvas.getByText('All PortableText Features')).toBeVisible();
+    await expect(_canvas.getByText('Alle PortableText Functies')).toBeVisible();
     await expect(_canvas.getByText('Links')).toBeVisible();
-    await expect(_canvas.getByText('Lists')).toBeVisible();
-    await expect(_canvas.getByText('Blockquote')).toBeVisible();
-    await expect(_canvas.getByText('Images')).toBeVisible();
-    await expect(_canvas.getByText('Code Block')).toBeVisible();
+    await expect(_canvas.getByText('Lijsten')).toBeVisible();
+    await expect(_canvas.getByText('Citaat')).toBeVisible();
+    await expect(_canvas.getByText('Code Blok')).toBeVisible();
     await expect(_canvas.getByText('Call to Action')).toBeVisible();
     // PortableText rendering complete - no animation wait needed
   },
@@ -199,22 +43,13 @@ export const AllFeatures: Story = {
 
 export const SimpleText: Story = {
   args: {
-    content: [
-      {
-        _type: 'block',
-        style: 'normal',
-        children: [
-          {
-            _type: 'span',
-            text: 'This is a simple paragraph with plain text.',
-          },
-        ],
-      },
-    ],
+    content: mockSanityBlock.simple,
   },
   play: async ({ canvas: _canvas }) => {
     await expect(
-      _canvas.getByText('This is a simple paragraph with plain text.')
+      _canvas.getByText(
+        'Dit is een eenvoudige tekstblok voor testing doeleinden.'
+      )
     ).toBeVisible();
     // PortableText rendering complete - no animation wait needed
   },
@@ -222,128 +57,32 @@ export const SimpleText: Story = {
 
 export const Headings: Story = {
   args: {
-    content: [
-      {
-        _type: 'block',
-        style: 'h1',
-        children: [{ _type: 'span', text: 'Heading 1' }],
-      },
-      {
-        _type: 'block',
-        style: 'h2',
-        children: [{ _type: 'span', text: 'Heading 2' }],
-      },
-      {
-        _type: 'block',
-        style: 'h3',
-        children: [{ _type: 'span', text: 'Heading 3' }],
-      },
-      {
-        _type: 'block',
-        style: 'h4',
-        children: [{ _type: 'span', text: 'Heading 4' }],
-      },
-      {
-        _type: 'block',
-        style: 'h5',
-        children: [{ _type: 'span', text: 'Heading 5' }],
-      },
-      {
-        _type: 'block',
-        style: 'h6',
-        children: [{ _type: 'span', text: 'Heading 6' }],
-      },
-    ],
+    content: mockSanityBlock.headings,
   },
   play: async ({ canvas: _canvas }) => {
-    await expect(
-      _canvas.getByRole('heading', { name: 'Heading 1' })
-    ).toBeVisible();
-    await expect(
-      _canvas.getByRole('heading', { name: 'Heading 2' })
-    ).toBeVisible();
-    await expect(
-      _canvas.getByRole('heading', { name: 'Heading 3' })
-    ).toBeVisible();
-    await expect(
-      _canvas.getByRole('heading', { name: 'Heading 4' })
-    ).toBeVisible();
-    await expect(
-      _canvas.getByRole('heading', { name: 'Heading 5' })
-    ).toBeVisible();
-    await expect(
-      _canvas.getByRole('heading', { name: 'Heading 6' })
-    ).toBeVisible();
+    await expect(_canvas.getByRole('heading', { name: 'Kop 1' })).toBeVisible();
+    await expect(_canvas.getByRole('heading', { name: 'Kop 2' })).toBeVisible();
+    await expect(_canvas.getByRole('heading', { name: 'Kop 3' })).toBeVisible();
+    await expect(_canvas.getByRole('heading', { name: 'Kop 4' })).toBeVisible();
+    await expect(_canvas.getByRole('heading', { name: 'Kop 5' })).toBeVisible();
+    await expect(_canvas.getByRole('heading', { name: 'Kop 6' })).toBeVisible();
     // PortableText rendering complete - no animation wait needed
   },
 };
 
 export const RichText: Story = {
   args: {
-    content: [
-      {
-        _type: 'block',
-        style: 'normal',
-        children: [
-          { _type: 'span', text: 'This text contains ' },
-          { _type: 'span', marks: ['strong'], text: 'bold' },
-          { _type: 'span', text: ', ' },
-          { _type: 'span', marks: ['em'], text: 'italic' },
-          { _type: 'span', text: ', ' },
-          { _type: 'span', marks: ['underline'], text: 'underline' },
-          { _type: 'span', text: ', ' },
-          { _type: 'span', marks: ['strike'], text: 'strikethrough' },
-          { _type: 'span', text: ', and ' },
-          { _type: 'span', marks: ['highlight'], text: 'highlighted' },
-          { _type: 'span', text: ' text.' },
-        ],
-      },
-    ],
+    content: mockSanityBlock.richText,
   },
 };
 
 export const Lists: Story = {
   args: {
-    content: [
-      {
-        _type: 'block',
-        style: 'h3',
-        children: [{ _type: 'span', text: 'Unordered List' }],
-      },
-      {
-        _type: 'block',
-        style: 'normal',
-        listItem: 'bullet',
-        children: [{ _type: 'span', text: 'First item' }],
-      },
-      {
-        _type: 'block',
-        style: 'normal',
-        listItem: 'bullet',
-        children: [{ _type: 'span', text: 'Second item' }],
-      },
-      {
-        _type: 'block',
-        style: 'h3',
-        children: [{ _type: 'span', text: 'Ordered List' }],
-      },
-      {
-        _type: 'block',
-        style: 'normal',
-        listItem: 'number',
-        children: [{ _type: 'span', text: 'First item' }],
-      },
-      {
-        _type: 'block',
-        style: 'normal',
-        listItem: 'number',
-        children: [{ _type: 'span', text: 'Second item' }],
-      },
-    ],
+    content: mockSanityBlock.lists,
   },
   play: async ({ canvas: _canvas }) => {
-    await expect(_canvas.getByText('Unordered List')).toBeVisible();
-    await expect(_canvas.getByText('Ordered List')).toBeVisible();
+    await expect(_canvas.getByText('Ongeordende Lijst')).toBeVisible();
+    await expect(_canvas.getByText('Geordende Lijst')).toBeVisible();
     // PortableText rendering complete - no animation wait needed
   },
 };
@@ -363,21 +102,19 @@ export const InvalidContent: Story = {
     content: [
       {
         _type: 'invalidBlock',
-        children: [{ _type: 'span', text: 'This should be ignored' }],
+        children: [{ _type: 'span', text: 'Dit zou genegeerd moeten worden' }],
       },
       {
         _type: 'block',
         style: 'normal',
-        children: [
-          { _type: 'span', text: 'Valid content after invalid block' },
-        ],
+        children: [{ _type: 'span', text: 'Geldige inhoud na ongeldig blok' }],
       },
     ],
   },
   play: async ({ canvas: _canvas }) => {
     // Should render valid content and ignore invalid blocks
     await expect(
-      _canvas.getByText('Valid content after invalid block')
+      _canvas.getByText('Geldige inhoud na ongeldig blok')
     ).toBeVisible();
     // PortableText rendering complete - no animation wait needed
   },
@@ -385,49 +122,15 @@ export const InvalidContent: Story = {
 
 export const ComplexNestedContent: Story = {
   args: {
-    content: [
-      {
-        _type: 'block',
-        style: 'h2',
-        children: [{ _type: 'span', text: 'Complex Nested Content' }],
-      },
-      {
-        _type: 'block',
-        style: 'normal',
-        children: [
-          { _type: 'span', text: 'This paragraph has ' },
-          {
-            _type: 'span',
-            marks: ['strong', 'em'],
-            text: 'bold and italic text',
-          },
-          { _type: 'span', text: ' and ' },
-          {
-            _type: 'span',
-            marks: ['underline', 'highlight'],
-            text: 'underlined and highlighted text',
-          },
-          { _type: 'span', text: '.' },
-        ],
-      },
-      {
-        _type: 'block',
-        style: 'blockquote',
-        children: [
-          { _type: 'span', text: 'A blockquote with ' },
-          { _type: 'span', marks: ['strong'], text: 'bold text' },
-          { _type: 'span', text: ' and ' },
-          { _type: 'span', marks: ['em'], text: 'italic text' },
-          { _type: 'span', text: '.' },
-        ],
-      },
-    ],
+    content: mockSanityBlock.complexNested,
   },
   play: async ({ canvas: _canvas }) => {
-    await expect(_canvas.getByText('Complex Nested Content')).toBeVisible();
-    await expect(_canvas.getByText('bold and italic text')).toBeVisible();
+    await expect(_canvas.getByText('Complexe Geneste Inhoud')).toBeVisible();
     await expect(
-      _canvas.getByText('underlined and highlighted text')
+      _canvas.getByText('vetgedrukte en cursieve tekst')
+    ).toBeVisible();
+    await expect(
+      _canvas.getByText('onderstreepte en gemarkeerde tekst')
     ).toBeVisible();
     // PortableText rendering complete - no animation wait needed
   },
@@ -439,23 +142,90 @@ export const WithCustomClassName: Story = {
       {
         _type: 'block',
         style: 'h2',
-        children: [{ _type: 'span', text: 'Custom Styled Content' }],
+        children: [{ _type: 'span', text: 'Aangepaste Stijling Inhoud' }],
       },
       {
         _type: 'block',
         style: 'normal',
         children: [
-          { _type: 'span', text: 'This content has custom styling applied.' },
+          {
+            _type: 'span',
+            text: 'Deze inhoud heeft aangepaste stijling toegepast.',
+          },
         ],
       },
     ],
     className: 'border-2 border-blue-500 p-4 bg-blue-50 dark:bg-blue-900/20',
   },
   play: async ({ canvas: _canvas }) => {
-    await expect(_canvas.getByText('Custom Styled Content')).toBeVisible();
+    await expect(_canvas.getByText('Aangepaste Stijling Inhoud')).toBeVisible();
     await expect(
-      _canvas.getByText('This content has custom styling applied.')
+      _canvas.getByText('Deze inhoud heeft aangepaste stijling toegepast.')
     ).toBeVisible();
+    // PortableText rendering complete - no animation wait needed
+  },
+};
+
+export const LongFormContent: Story = {
+  args: {
+    content: mockSanityBlock.longForm,
+  },
+  play: async ({ canvas: _canvas }) => {
+    await expect(
+      _canvas.getByText('Uitgebreid Inhoud Voorbeeld')
+    ).toBeVisible();
+    await expect(
+      _canvas.getByText('Geavanceerde Opmaak en Links')
+    ).toBeVisible();
+    await expect(
+      _canvas.getByText('Lijsten en Gestructureerde Inhoud')
+    ).toBeVisible();
+    await expect(
+      _canvas.getByText('Citaten en Speciale Elementen')
+    ).toBeVisible();
+    await expect(
+      _canvas.getByText('Code Blokken en Technische Inhoud')
+    ).toBeVisible();
+    await expect(_canvas.getByText('vetgedrukte tekst')).toBeVisible();
+    await expect(_canvas.getByText('cursieve tekst')).toBeVisible();
+    await expect(_canvas.getByText('onderstreepte tekst')).toBeVisible();
+    await expect(_canvas.getByText('gemarkeerde inhoud')).toBeVisible();
+    await expect(_canvas.getByText('inline code fragmenten')).toBeVisible();
+    await expect(_canvas.getByText('interne links')).toBeVisible();
+    await expect(_canvas.getByText('externe links')).toBeVisible();
+    await expect(_canvas.getByText('doorgestreepte tekst')).toBeVisible();
+    await expect(
+      _canvas.getByText('vetgedrukt en cursief samen')
+    ).toBeVisible();
+    await expect(
+      _canvas.getByText('onderstreepte en gemarkeerde tekst')
+    ).toBeVisible();
+    await expect(
+      _canvas.getByText(
+        'Eerste ongeordende lijst item met gedetailleerde informatie'
+      )
+    ).toBeVisible();
+    await expect(
+      _canvas.getByText((_content, element) => {
+        return (
+          element?.textContent ===
+          'Tweede item met opgemaakte tekst binnen de lijst'
+        );
+      })
+    ).toBeVisible();
+    await expect(
+      _canvas.getByText(
+        'Eerste geordende lijst item voor stap-voor-stap inhoud'
+      )
+    ).toBeVisible();
+    await expect(
+      _canvas.getByText((_content, element) => {
+        return (
+          element?.textContent === 'Tweede geordende item met nadruk en code'
+        );
+      })
+    ).toBeVisible();
+    await expect(_canvas.getByText('Verken Meer Functies')).toBeVisible();
     // PortableText rendering complete - no animation wait needed
   },
 };
@@ -465,85 +235,42 @@ export const AllVariants: Story = {
     controls: { hideNoControlsWarning: true },
   },
   args: {
-    content: [
-      {
-        _type: 'block',
-        style: 'normal',
-        children: [{ _type: 'span', text: 'This is simple text content.' }],
-      },
-    ],
+    content: mockSanityBlock.simple,
   },
   render: () => (
     <Box className="space-y-6">
       <Box>
         <Heading level="h3" variant="small" className="mb-4">
-          Simple Text
+          Eenvoudige Tekst
         </Heading>
-        <PortableText
-          content={[
-            {
-              _type: 'block',
-              style: 'normal',
-              children: [
-                { _type: 'span', text: 'This is simple text content.' },
-              ],
-            },
-          ]}
-        />
+        <PortableText content={mockSanityBlock.simple} />
       </Box>
 
       <Box>
         <Heading level="h3" variant="small" className="mb-4">
-          Rich Text
+          Rijke Tekst
         </Heading>
-        <PortableText
-          content={[
-            {
-              _type: 'block',
-              style: 'normal',
-              children: [
-                { _type: 'span', text: 'This has ' },
-                { _type: 'span', marks: ['strong'], text: 'bold' },
-                { _type: 'span', text: ' and ' },
-                { _type: 'span', marks: ['em'], text: 'italic' },
-                { _type: 'span', text: ' text.' },
-              ],
-            },
-          ]}
-        />
+        <PortableText content={mockSanityBlock.richText} />
       </Box>
 
       <Box>
         <Heading level="h3" variant="small" className="mb-4">
-          Lists
+          Lijsten
         </Heading>
-        <PortableText
-          content={[
-            {
-              _type: 'block',
-              style: 'normal',
-              listItem: 'bullet',
-              children: [{ _type: 'span', text: 'List item 1' }],
-            },
-            {
-              _type: 'block',
-              style: 'normal',
-              listItem: 'bullet',
-              children: [{ _type: 'span', text: 'List item 2' }],
-            },
-          ]}
-        />
+        <PortableText content={mockSanityBlock.lists} />
       </Box>
     </Box>
   ),
   play: async ({ canvas: _canvas }) => {
     await expect(
-      _canvas.getByText('This is simple text content.')
+      _canvas.getByText(
+        'Dit is een eenvoudige tekstblok voor testing doeleinden.'
+      )
     ).toBeVisible();
-    await expect(_canvas.getByText('bold')).toBeVisible();
-    await expect(_canvas.getByText('italic')).toBeVisible();
-    await expect(_canvas.getByText('List item 1')).toBeVisible();
-    await expect(_canvas.getByText('List item 2')).toBeVisible();
+    await expect(_canvas.getByText('vetgedrukte tekst')).toBeVisible();
+    await expect(_canvas.getByText('cursieve tekst')).toBeVisible();
+    await expect(_canvas.getAllByText('Eerste item')).toHaveLength(2);
+    await expect(_canvas.getAllByText('Tweede item')).toHaveLength(2);
     // PortableText rendering complete - no animation wait needed
   },
 };

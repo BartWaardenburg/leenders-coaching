@@ -83,9 +83,9 @@ export const ReversedWithBackground: Story = {
 
 export const WithoutImage: Story = {
   args: {
-    title: 'Section Without Image',
+    title: 'Sectie Zonder Afbeelding',
     description:
-      'This section demonstrates the layout without an image, showing only the content area.',
+      'Deze sectie demonstreert de lay-out zonder afbeelding, toont alleen het inhoudsgebied.',
     image: null,
     background: 'green',
     border: true,
@@ -94,9 +94,8 @@ export const WithoutImage: Story = {
 
 export const WithoutCTA: Story = {
   args: {
-    title: 'Section Without CTA',
-    description:
-      'This section shows the layout without a call-to-action button.',
+    title: 'Sectie Zonder CTA',
+    description: 'Deze sectie toont de lay-out zonder call-to-action knop.',
     image: 'https://picsum.photos/id/1015/1200/800',
     background: 'pink',
   },
@@ -104,7 +103,7 @@ export const WithoutCTA: Story = {
 
 export const MinimalContent: Story = {
   args: {
-    title: 'Minimal Section',
+    title: 'Minimale Sectie',
     image: null,
     background: 'yellow',
   },
@@ -123,8 +122,8 @@ export const AllBackgroundVariants: Story = {
         (background) => (
           <SectionFeatured
             key={background}
-            title={`${background.charAt(0).toUpperCase() + background.slice(1)} Background`}
-            description={`This section demonstrates the ${background} background variant.`}
+            title={`${background.charAt(0).toUpperCase() + background.slice(1)} Achtergrond`}
+            description={`Deze sectie demonstreert de ${background} achtergrond variant.`}
             image="https://picsum.photos/id/1018/1200/800"
             background={background}
             border={true}
@@ -163,13 +162,13 @@ export const AllCTAVariants: Story = {
       ).map((variant) => (
         <SectionFeatured
           key={variant}
-          title={`${variant.charAt(0).toUpperCase() + variant.slice(1)} CTA Button`}
-          description={`This section demonstrates the ${variant} button variant.`}
+          title={`${variant.charAt(0).toUpperCase() + variant.slice(1)} CTA Knop`}
+          description={`Deze sectie demonstreert de ${variant} knop variant.`}
           image="https://picsum.photos/id/1025/1200/800"
           background="blue"
           cta={{
             href: '#',
-            label: `${variant.charAt(0).toUpperCase() + variant.slice(1)} Button`,
+            label: `${variant.charAt(0).toUpperCase() + variant.slice(1)} Knop`,
             variant,
           }}
         />
@@ -180,9 +179,9 @@ export const AllCTAVariants: Story = {
 
 export const LongContent: Story = {
   args: {
-    title: 'Section with Long Content',
+    title: 'Sectie Met Lange Inhoud',
     description:
-      'This is a longer description that demonstrates how the section handles more extensive text content. It shows how the layout adapts to different amounts of content while maintaining good readability and visual hierarchy. The text can span multiple lines and the section will handle it gracefully.',
+      'Dit is een langere beschrijving die demonstreert hoe de sectie uitgebreidere tekstinhoud afhandelt. Het toont hoe de lay-out zich aanpast aan verschillende hoeveelheden inhoud terwijl het goede leesbaarheid en visuele hiërarchie behoudt. De tekst kan over meerdere regels lopen en de sectie zal het elegant afhandelen.',
     image: 'https://picsum.photos/id/1031/1200/800',
     background: 'teal',
     border: true,

@@ -100,7 +100,9 @@ export const WithCustomDayContent: Story = {
       if (day === 0 || day === 6) return null;
       return (
         <Text variant="small" className="text-foreground/70">
-          {day % 2 === 0 ? '2 slots available' : '1 slot available'}
+          {day % 2 === 0
+            ? '2 tijdsloten beschikbaar'
+            : '1 tijdslot beschikbaar'}
         </Text>
       );
     },

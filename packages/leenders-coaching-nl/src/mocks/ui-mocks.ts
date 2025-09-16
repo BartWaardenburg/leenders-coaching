@@ -158,7 +158,7 @@ export const mockCardData = {
     title: 'Loopbaancoaching',
     description:
       'Ontdek nieuwe carrièremogelijkheden en ontwikkel je professionele vaardigheden met onze ervaren coaches.',
-    image: 'https://picsum.photos/id/1027/400/250',
+    image: 'https://picsum.photos/id/1027/800/500',
     featured: true,
     variant: 'default' as const,
     border: true,
@@ -168,7 +168,7 @@ export const mockCardData = {
     title: 'Persoonlijke Coaching',
     description:
       'Bereik persoonlijke groei en vervulling door zelfkennis en ontwikkeling.',
-    image: 'https://picsum.photos/id/64/400/250',
+    image: 'https://picsum.photos/id/64/800/500',
     featured: false,
     variant: 'purple' as const,
     border: true,
@@ -178,7 +178,7 @@ export const mockCardData = {
     title: 'Ondernemerscoaching',
     description:
       'Ontwikkel leiderschapsvaardigheden en zakelijk inzicht voor succes.',
-    image: 'https://picsum.photos/id/1015/400/250',
+    image: 'https://picsum.photos/id/237/800/500',
     featured: false,
     variant: 'teal' as const,
     border: true,
@@ -188,7 +188,7 @@ export const mockCardData = {
     title: 'Teamcoaching',
     description:
       'Versterk je team en verbeter samenwerking voor betere resultaten.',
-    image: 'https://picsum.photos/id/870/400/250',
+    image: 'https://picsum.photos/id/870/800/500',
     featured: false,
     variant: 'green' as const,
     border: true,
@@ -199,7 +199,7 @@ export const mockCardData = {
       'De coaching sessies hebben mijn carrière getransformeerd. Ik heb duidelijkheid en zelfvertrouwen gekregen.',
     name: 'Marieke van Dijk',
     role: 'Marketing Manager',
-    image: 'https://picsum.photos/id/1027/150/150',
+    image: 'https://picsum.photos/id/1027/300/300',
   },
   blog: {
     title: '5 Tips voor Effectieve Doelstellingen',
@@ -209,9 +209,9 @@ export const mockCardData = {
     publishedAt: '2024-01-15',
     author: {
       name: 'Jan Leenders',
-      image: 'https://picsum.photos/id/1027/40/40',
+      image: 'https://picsum.photos/id/237/80/80',
     },
-    image: 'https://picsum.photos/id/1027/400/250',
+    image: 'https://picsum.photos/id/1027/800/500',
     category: 'Persoonlijke Ontwikkeling',
   },
 };

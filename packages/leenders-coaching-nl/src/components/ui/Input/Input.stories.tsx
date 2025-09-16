@@ -50,8 +50,8 @@ export const Default: Story = {
     // Input rendering complete - no animation wait needed
 
     // Test typing interaction
-    await userEvent.type(input, 'Hello World');
-    await expect(input).toHaveValue('Hello World');
+    await userEvent.type(input, 'Hallo Wereld');
+    await expect(input).toHaveValue('Hallo Wereld');
     await expect(args.onChange).toHaveBeenCalled();
   },
 };
@@ -81,8 +81,8 @@ export const WithLabel: Story = {
     // Input rendering complete - no animation wait needed
 
     // Test typing email
-    await userEvent.type(input, 'test@example.com');
-    await expect(input).toHaveValue('test@example.com');
+    await userEvent.type(input, 'test@voorbeeld.nl');
+    await expect(input).toHaveValue('test@voorbeeld.nl');
     await expect(args.onChange).toHaveBeenCalled();
   },
 };
@@ -186,10 +186,10 @@ export const Textarea: Story = {
     // Test typing in textarea
     await userEvent.type(
       textarea,
-      'This is a long message that spans multiple lines.'
+      'Dit is een lang bericht dat over meerdere regels loopt.'
     );
     await expect(textarea).toHaveValue(
-      'This is a long message that spans multiple lines.'
+      'Dit is een lang bericht dat over meerdere regels loopt.'
     );
     await expect(args.onChange).toHaveBeenCalled();
   },
