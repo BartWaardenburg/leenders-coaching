@@ -1,9 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { SanityImage } from './SanityImage';
+import { Box } from '../Box/Box';
+import { Heading } from '../Heading/Heading';
+import { Grid } from '../Grid/Grid';
+import { mockSanityImage } from '@/mocks';
 
 const meta = {
-  title: 'UI/Image/SanityImage',
+  title: 'UI/SanityImage',
   component: SanityImage,
   parameters: {
     layout: 'centered',
@@ -40,61 +44,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/* Mock Sanity image data with full metadata */
-const mockImageWithMetadata = {
-  _type: 'image',
-  asset: {
-    _ref: 'image-abc123-1920x1080-jpg',
-    _type: 'reference',
-    metadata: {
-      lqip: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=',
-      dimensions: {
-        width: 1920,
-        height: 1080,
-        aspectRatio: 1.7777777777777777,
-      },
-      palette: {
-        dominant: {
-          background: '#3b82f6',
-        },
-      },
-    },
-  },
-  hotspot: {
-    x: 0.5,
-    y: 0.3,
-  },
-  alt: 'Prachtig landschap met bergen en meer',
-};
-
-const mockImageWithoutMetadata = {
-  _type: 'image',
-  asset: {
-    _ref: 'image-def456-800x600-jpg',
-    _type: 'reference',
-  },
-  alt: 'Eenvoudige afbeelding zonder metadata',
-};
-
-const mockImageWithPartialMetadata = {
-  _type: 'image',
-  asset: {
-    _ref: 'image-ghi789-1200x800-jpg',
-    _type: 'reference',
-    metadata: {
-      dimensions: {
-        width: 1200,
-        height: 800,
-        aspectRatio: 1.5,
-      },
-    },
-  },
-  alt: 'Afbeelding met gedeeltelijke metadata',
-};
+/* Mock Sanity image data is now imported from @/mocks */
 
 export const Default: Story = {
   args: {
-    image: mockImageWithMetadata,
+    image: mockSanityImage.withMetadata,
     alt: 'Standaard Sanity afbeelding',
     sizes: '100vw',
     priority: false,
@@ -111,7 +65,7 @@ export const Default: Story = {
 
 export const WithHotspot: Story = {
   args: {
-    image: mockImageWithMetadata,
+    image: mockSanityImage.withMetadata,
     alt: 'Afbeelding met hotspot positionering',
     sizes: '100vw',
     priority: false,
@@ -128,7 +82,7 @@ export const WithHotspot: Story = {
 
 export const HighPriority: Story = {
   args: {
-    image: mockImageWithMetadata,
+    image: mockSanityImage.withMetadata,
     alt: 'Hoge prioriteit afbeelding',
     sizes: '100vw',
     priority: true,
@@ -145,7 +99,7 @@ export const HighPriority: Story = {
 
 export const WithoutMetadata: Story = {
   args: {
-    image: mockImageWithoutMetadata,
+    image: mockSanityImage.withoutMetadata,
     alt: 'Afbeelding zonder metadata',
     sizes: '100vw',
     priority: false,
@@ -162,7 +116,7 @@ export const WithoutMetadata: Story = {
 
 export const WithPartialMetadata: Story = {
   args: {
-    image: mockImageWithPartialMetadata,
+    image: mockSanityImage.withPartialMetadata,
     alt: 'Afbeelding met gedeeltelijke metadata',
     sizes: '100vw',
     priority: false,
@@ -179,7 +133,7 @@ export const WithPartialMetadata: Story = {
 
 export const FillMode: Story = {
   args: {
-    image: mockImageWithMetadata,
+    image: mockSanityImage.withMetadata,
     alt: 'Afbeelding in vul modus',
     sizes: '100vw',
     priority: false,
@@ -188,9 +142,9 @@ export const FillMode: Story = {
     fill: true,
   },
   render: (args) => (
-    <div className="relative w-96 h-64">
+    <Box className="relative w-96 h-32">
       <SanityImage {...args} />
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(
@@ -202,7 +156,7 @@ export const FillMode: Story = {
 
 export const CustomSizes: Story = {
   args: {
-    image: mockImageWithMetadata,
+    image: mockSanityImage.withMetadata,
     alt: 'Afbeelding met aangepaste groottes',
     sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
     priority: false,
@@ -219,7 +173,7 @@ export const CustomSizes: Story = {
 
 export const LowQuality: Story = {
   args: {
-    image: mockImageWithMetadata,
+    image: mockSanityImage.withMetadata,
     alt: 'Lage kwaliteit afbeelding',
     sizes: '100vw',
     priority: false,
@@ -236,7 +190,7 @@ export const LowQuality: Story = {
 
 export const HighQuality: Story = {
   args: {
-    image: mockImageWithMetadata,
+    image: mockSanityImage.withMetadata,
     alt: 'Hoge kwaliteit afbeelding',
     sizes: '100vw',
     priority: false,
@@ -274,13 +228,13 @@ export const NoAsset: Story = {
 
 export const WithCustomClassName: Story = {
   args: {
-    image: mockImageWithMetadata,
+    image: mockSanityImage.withMetadata,
     alt: 'Afbeelding met aangepaste stijl',
     sizes: '100vw',
     priority: false,
     followHotspot: false,
     qualityHint: 75,
-    className: 'rounded-lg shadow-lg border-2 border-blue-500',
+    className: 'shadow-lg border-2 border-blue-500',
   },
   play: async ({ canvas }) => {
     await expect(
@@ -292,7 +246,7 @@ export const WithCustomClassName: Story = {
 
 export const WithCustomStyle: Story = {
   args: {
-    image: mockImageWithMetadata,
+    image: mockSanityImage.withMetadata,
     alt: 'Afbeelding met aangepaste stijl',
     sizes: '100vw',
     priority: false,
@@ -316,7 +270,7 @@ export const AllVariants: Story = {
     controls: { hideNoControlsWarning: true },
   },
   args: {
-    image: mockImageWithMetadata,
+    image: mockSanityImage.withMetadata,
     alt: 'Alle varianten afbeelding',
     sizes: '100vw',
     priority: false,
@@ -324,51 +278,59 @@ export const AllVariants: Story = {
     qualityHint: 75,
   },
   render: () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">With Full Metadata</h3>
+    <Grid cols={{ base: 1, md: 2 }} gap={6} className="max-w-4xl">
+      <Box className="space-y-4">
+        <Heading level="h3" variant="small">
+          Met Volledige Metadata
+        </Heading>
         <SanityImage
-          image={mockImageWithMetadata}
+          image={mockSanityImage.withMetadata}
           alt="Volledige metadata afbeelding"
           sizes="100vw"
-          className="w-full h-48 object-cover rounded-lg"
+          className="w-full h-48 object-cover"
         />
-      </div>
+      </Box>
 
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Without Metadata</h3>
+      <Box className="space-y-4">
+        <Heading level="h3" variant="small">
+          Zonder Metadata
+        </Heading>
         <SanityImage
-          image={mockImageWithoutMetadata}
+          image={mockSanityImage.withoutMetadata}
           alt="Geen metadata afbeelding"
           sizes="100vw"
-          className="w-full h-48 object-cover rounded-lg"
+          className="w-full h-48 object-cover"
         />
-      </div>
+      </Box>
 
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">With Hotspot</h3>
+      <Box className="space-y-4">
+        <Heading level="h3" variant="small">
+          Met Hotspot
+        </Heading>
         <SanityImage
-          image={mockImageWithMetadata}
+          image={mockSanityImage.withMetadata}
           alt="Hotspot afbeelding"
           sizes="100vw"
           followHotspot={true}
-          className="w-full h-48 object-cover rounded-lg"
+          className="w-full h-48 object-cover"
         />
-      </div>
+      </Box>
 
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Fill Mode</h3>
-        <div className="relative w-full h-48 rounded-lg overflow-hidden">
+      <Box className="space-y-4">
+        <Heading level="h3" variant="small">
+          Vul Modus
+        </Heading>
+        <Box className="relative w-full h-48 overflow-hidden">
           <SanityImage
-            image={mockImageWithMetadata}
+            image={mockSanityImage.withMetadata}
             alt="Vul modus afbeelding"
             sizes="100vw"
             fill={true}
             className="object-cover"
           />
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Grid>
   ),
   play: async ({ canvas }) => {
     await expect(

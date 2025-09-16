@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Heading } from './Heading';
 import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { Box } from '../Box/Box';
+import { mockCardData } from '@/mocks';
 
 const meta = {
   title: 'UI/Heading',
@@ -58,12 +60,12 @@ export const LargeHeading: Story = {
   args: {
     level: 'h1',
     variant: 'large',
-    children: 'Large Heading',
+    children: mockCardData.service.title,
     showBorder: true,
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByRole('heading', { name: 'Large Heading' })
+      canvas.getByRole('heading', { name: mockCardData.service.title })
     ).toBeVisible();
   },
 };
@@ -72,11 +74,11 @@ export const MediumHeading: Story = {
   args: {
     level: 'h2',
     variant: 'medium',
-    children: 'Medium Heading',
+    children: mockCardData.blog.title,
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByRole('heading', { name: 'Medium Heading' })
+      canvas.getByRole('heading', { name: mockCardData.blog.title })
     ).toBeVisible();
   },
 };
@@ -85,11 +87,11 @@ export const SmallHeading: Story = {
   args: {
     level: 'h2',
     variant: 'small',
-    children: 'Small Heading',
+    children: 'Kleine Kop',
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByRole('heading', { name: 'Small Heading' })
+      canvas.getByRole('heading', { name: 'Kleine Kop' })
     ).toBeVisible();
   },
 };
@@ -97,12 +99,12 @@ export const SmallHeading: Story = {
 export const WithBorder: Story = {
   args: {
     level: 'h2',
-    children: 'Heading With Border',
+    children: 'Kop Met Rand',
     showBorder: true,
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByRole('heading', { name: 'Heading With Border' })
+      canvas.getByRole('heading', { name: 'Kop Met Rand' })
     ).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
@@ -113,49 +115,49 @@ export const WithColoredBorder: Story = {
     controls: { hideNoControlsWarning: true },
   },
   args: {
-    children: 'Colored Border Example',
+    children: 'Gekleurde Rand Voorbeeld',
     level: 'h2',
   },
   render: (args) => (
-    <div className="flex flex-col gap-8">
+    <Box className="flex flex-col gap-8">
       <Heading {...args} showBorder borderColor="blue">
-        Blue Border
+        Blauwe Rand
       </Heading>
       <Heading {...args} showBorder borderColor="purple">
-        Purple Border
+        Paarse Rand
       </Heading>
       <Heading {...args} showBorder borderColor="green">
-        Green Border
+        Groene Rand
       </Heading>
       <Heading {...args} showBorder borderColor="pink">
-        Pink Border
+        Roze Rand
       </Heading>
       <Heading {...args} showBorder borderColor="yellow">
-        Yellow Border
+        Gele Rand
       </Heading>
       <Heading {...args} showBorder borderColor="teal">
-        Teal Border
+        Teal Rand
       </Heading>
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByRole('heading', { name: 'Blue Border' })
+      canvas.getByRole('heading', { name: 'Blauwe Rand' })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('heading', { name: 'Purple Border' })
+      canvas.getByRole('heading', { name: 'Paarse Rand' })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('heading', { name: 'Green Border' })
+      canvas.getByRole('heading', { name: 'Groene Rand' })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('heading', { name: 'Pink Border' })
+      canvas.getByRole('heading', { name: 'Roze Rand' })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('heading', { name: 'Yellow Border' })
+      canvas.getByRole('heading', { name: 'Gele Rand' })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('heading', { name: 'Teal Border' })
+      canvas.getByRole('heading', { name: 'Teal Rand' })
     ).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
@@ -164,12 +166,12 @@ export const WithColoredBorder: Story = {
 export const MutedHeading: Story = {
   args: {
     level: 'h2',
-    children: 'Muted Heading',
+    children: 'Gedempte Kop',
     color: 'muted',
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByRole('heading', { name: 'Muted Heading' })
+      canvas.getByRole('heading', { name: 'Gedempte Kop' })
     ).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
@@ -179,11 +181,11 @@ export const NoSpacing: Story = {
   args: {
     level: 'h2',
     spacing: 'none',
-    children: 'Heading Without Bottom Margin',
+    children: 'Kop Zonder Onderste Marge',
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByRole('heading', { name: 'Heading Without Bottom Margin' })
+      canvas.getByRole('heading', { name: 'Kop Zonder Onderste Marge' })
     ).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
@@ -197,7 +199,7 @@ export const AllHeadingLevels: Story = {
     children: 'Heading levels demo',
   },
   render: () => (
-    <div className="flex flex-col gap-4">
+    <Box className="flex flex-col gap-4">
       <Heading level="h1" variant="large">
         Heading Level 1
       </Heading>
@@ -216,7 +218,7 @@ export const AllHeadingLevels: Story = {
       <Heading level="h6" variant="small">
         Heading Level 6
       </Heading>
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(
@@ -249,7 +251,7 @@ export const AllVariants: Story = {
     children: 'Heading variants demo',
   },
   render: () => (
-    <div className="flex flex-col gap-4">
+    <Box className="flex flex-col gap-4">
       <Heading level="h2" variant="default">
         Default Variant
       </Heading>
@@ -262,7 +264,7 @@ export const AllVariants: Story = {
       <Heading level="h2" variant="small">
         Small Variant
       </Heading>
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(
@@ -289,14 +291,14 @@ export const AllWeights: Story = {
     children: 'Heading weights demo',
   },
   render: () => (
-    <div className="flex flex-col gap-4">
+    <Box className="flex flex-col gap-4">
       <Heading level="h2" weight="normal">
         Normal Weight Heading
       </Heading>
       <Heading level="h2" weight="bold">
         Bold Weight Heading
       </Heading>
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(
@@ -317,7 +319,7 @@ export const TextAlignment: Story = {
     children: 'Text alignment demo',
   },
   render: () => (
-    <div className="flex flex-col gap-4 w-full">
+    <Box className="flex flex-col gap-4 w-full">
       <Heading level="h2" textAlign="left">
         Left Aligned Heading
       </Heading>
@@ -327,7 +329,7 @@ export const TextAlignment: Story = {
       <Heading level="h2" textAlign="right">
         Right Aligned Heading
       </Heading>
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(

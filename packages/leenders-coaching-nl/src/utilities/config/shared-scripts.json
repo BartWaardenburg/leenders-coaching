@@ -1,0 +1,21 @@
+{
+  "scripts": {
+    "clean": "rm -rf .next && rm -rf node_modules/.cache",
+    "lint": "eslint .",
+    "lint:format": "eslint . --format json",
+    "type-check": "tsc --noEmit",
+    "verify:build": "test -d .next && test -f .next/BUILD_ID && echo '✅ Build verified'",
+    "package:build": "tar -czf build.tar.gz -C . .next 2>/dev/null || echo 'No build artifacts to package'"
+  },
+  "commitlint": {
+    "extends": ["@commitlint/config-conventional"]
+  },
+  "browserslist": {
+    "production": [">0.2%", "not dead", "not op_mini all"],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

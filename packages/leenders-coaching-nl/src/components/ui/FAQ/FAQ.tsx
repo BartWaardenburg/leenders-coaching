@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/utilities/cn';
 import { IoChevronDown } from 'react-icons/io5';
+import { pastelVariant, type PastelVariant } from '@/utilities/tokens';
 
 import { Stack } from '@/components/ui/Stack';
 import { Box } from '@/components/ui/Box';
@@ -18,19 +19,11 @@ export type FAQItem = {
   answer: PortableTextBlock[];
 };
 
-export type FAQVariant =
-  | 'blue'
-  | 'purple'
-  | 'green'
-  | 'pink'
-  | 'yellow'
-  | 'teal';
-
 type FAQProps = {
   /** Array of FAQ items */
   items?: FAQItem[];
   /** Optional color variant */
-  variant?: FAQVariant;
+  variant?: PastelVariant;
   /** Optional className for styling */
   className?: string;
 };
@@ -44,16 +37,13 @@ export const FAQ = ({ items = [], variant = 'blue', className }: FAQProps) => {
   const shouldReduceMotion = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
-  const variantStyles = {
-    blue: 'bg-pastel-blue/50 dark:bg-pastel-blue-dark/50 border-pastel-blue-dark dark:border-pastel-blue',
-    purple:
-      'bg-pastel-purple/50 dark:bg-pastel-purple-dark/50 border-pastel-purple-dark dark:border-pastel-purple',
-    green:
-      'bg-pastel-green/50 dark:bg-pastel-green-dark/50 border-pastel-green-dark dark:border-pastel-green',
-    pink: 'bg-pastel-pink/50 dark:bg-pastel-pink-dark/50 border-pastel-pink-dark dark:border-pastel-pink',
-    yellow:
-      'bg-pastel-yellow/50 dark:bg-pastel-yellow-dark/50 border-pastel-yellow-dark dark:border-pastel-yellow',
-    teal: 'bg-pastel-teal/50 dark:bg-pastel-teal-dark/50 border-pastel-teal-dark dark:border-pastel-teal',
+  const variantStyles: Record<PastelVariant, string> = {
+    blue: `${pastelVariant.blue.bgSoft} ${pastelVariant.blue.borderDark}`,
+    purple: `${pastelVariant.purple.bgSoft} ${pastelVariant.purple.borderDark}`,
+    green: `${pastelVariant.green.bgSoft} ${pastelVariant.green.borderDark}`,
+    pink: `${pastelVariant.pink.bgSoft} ${pastelVariant.pink.borderDark}`,
+    yellow: `${pastelVariant.yellow.bgSoft} ${pastelVariant.yellow.borderDark}`,
+    teal: `${pastelVariant.teal.bgSoft} ${pastelVariant.teal.borderDark}`,
   };
 
   if (!items.length) {
@@ -72,11 +62,10 @@ export const FAQ = ({ items = [], variant = 'blue', className }: FAQProps) => {
         return (
           <MotionBox
             key={index}
-            className={twMerge(
-              'border overflow-hidden cursor-pointer',
+            className={cn(
+              'border overflow-hidden',
               variantStyles[variant],
-              'transition-colors duration-200',
-              'hover:bg-opacity-70 dark:hover:bg-opacity-70'
+              'transition-colors duration-200'
             )}
             initial={
               shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
@@ -91,26 +80,35 @@ export const FAQ = ({ items = [], variant = 'blue', className }: FAQProps) => {
                     ease: [0.32, 0.72, 0, 1],
                   }
             }
-            onClick={() => setActiveIndex(isActive ? null : index)}
           >
-            <Box className="flex items-center justify-between p-4 sm:p-6">
-              <Text weight="medium" className="flex-1 pr-4">
+            <button
+              type="button"
+              id={`faq-button-${index}`}
+              aria-expanded={isActive}
+              aria-controls={`faq-panel-${index}`}
+              onClick={() => setActiveIndex(isActive ? null : index)}
+              className="w-full flex items-center justify-between p-4 sm:p-6 text-left cursor-pointer hover:bg-opacity-70 dark:hover:bg-opacity-70 transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              <Text weight="medium" className="pr-4">
                 {item.question}
               </Text>
-              <motion.div
+              <motion.span
+                aria-hidden="true"
                 animate={{ rotate: isActive ? 180 : 0 }}
-                transition={
-                  shouldReduceMotion
-                    ? { duration: 0 }
-                    : { duration: 0.2, ease: [0.32, 0.72, 0, 1] }
-                }
+                transition={{
+                  duration: shouldReduceMotion ? 0 : 0.2,
+                  ease: [0.32, 0.72, 0, 1],
+                }}
               >
-                <IoChevronDown className="h-5 w-5 flex-shrink-0" />
-              </motion.div>
-            </Box>
+                <IoChevronDown className="h-5 w-5 shrink-0" />
+              </motion.span>
+            </button>
             <AnimatePresence>
               {isActive && (
                 <MotionBox
+                  id={`faq-panel-${index}`}
+                  role="region"
+                  aria-labelledby={`faq-button-${index}`}
                   initial={
                     shouldReduceMotion
                       ? { height: 'auto', opacity: 1 }

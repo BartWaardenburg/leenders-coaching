@@ -2,12 +2,20 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { SectionRenderer } from './SectionRenderer';
 import { waitForMotionAnimations } from '../../test/chromatic-utils';
+import { Box } from '@/components/ui/Box';
+import {
+  mockHeaderSection,
+  mockContentSection,
+  mockCardsSection,
+  mockFAQSection,
+  mockFormSection,
+} from '@/mocks';
 
 const meta = {
   title: 'Sections/SectionRenderer',
   component: SectionRenderer,
   parameters: {
-    layout: 'padded',
+    layout: 'fullscreen',
   },
   argTypes: {
     type: {
@@ -24,103 +32,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/* Mock section data */
-const mockHeaderSection = {
-  _type: 'sectionHeader',
-  title: 'Welcome to Our Website',
-  description: 'Dit is een voorbeeld header sectie met titel en beschrijving.',
-  background: 'white',
-  border: false,
-};
-
-const mockContentSection = {
-  _type: 'sectionContent',
-  title: 'About Us',
-  description: 'Meer informatie over ons bedrijf en missie.',
-  content: [
-    {
-      _type: 'block',
-      children: [
-        {
-          _type: 'span',
-          text: 'We are a leading company in our industry, dedicated to providing excellent service and innovative solutions.',
-        },
-      ],
-    },
-  ],
-  background: 'gray',
-  border: true,
-};
-
-const mockCardsSection = {
-  _type: 'sectionCards',
-  displayTitle: 'Our Services',
-  description: 'Verken ons assortiment diensten',
-  cards: [
-    {
-      _key: 'card-1',
-      title: 'Service 1',
-      description: 'Beschrijving voor dienst 1',
-      featured: true,
-      variant: 'default',
-      border: true,
-      reverse: false,
-    },
-    {
-      _key: 'card-2',
-      title: 'Service 2',
-      description: 'Beschrijving voor dienst 2',
-      featured: false,
-      variant: 'default',
-      border: true,
-      reverse: true,
-    },
-  ],
-  background: 'white',
-  border: false,
-};
-
-const mockFAQSection = {
-  _type: 'sectionFAQ',
-  title: 'Frequently Asked Questions',
-  description: 'Vind antwoorden op veelgestelde vragen',
-  faqs: [
-    {
-      _key: 'faq-1',
-      question: 'What is your return policy?',
-      answer: 'We offer a 30-day return policy for all products.',
-    },
-    {
-      _key: 'faq-2',
-      question: 'How long does shipping take?',
-      answer: 'Standard shipping takes 3-5 business days.',
-    },
-  ],
-  background: 'gray',
-  border: true,
-};
-
-const mockFormSection = {
-  _type: 'sectionForm',
-  title: 'Contact Us',
-  description: 'Neem contact op met ons team',
-  formFields: [
-    {
-      _key: 'field-1',
-      type: 'text',
-      label: 'Naam',
-      required: true,
-    },
-    {
-      _key: 'field-2',
-      type: 'email',
-      label: 'Email',
-      required: true,
-    },
-  ],
-  background: 'white',
-  border: false,
-};
+/* Mock section data is now imported from @/mocks */
 
 export const HeaderSection: Story = {
   args: {
@@ -150,12 +62,12 @@ export const CardsSection: Story = {
     data: mockCardsSection,
   },
   play: async ({ canvas }) => {
-    await expect(canvas.getByText('Our Services')).toBeInTheDocument();
+    await expect(canvas.getByText('Onze Diensten')).toBeInTheDocument();
     await expect(
-      canvas.getByText('Verken ons assortiment diensten')
+      canvas.getByText('Verken ons uitgebreide aanbod van coaching diensten')
     ).toBeInTheDocument();
-    await expect(canvas.getByText('Service 1')).toBeInTheDocument();
-    await expect(canvas.getByText('Service 2')).toBeInTheDocument();
+    await expect(canvas.getByText('Loopbaancoaching')).toBeInTheDocument();
+    await expect(canvas.getByText('Persoonlijke Coaching')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -174,7 +86,31 @@ export const FAQSection: Story = {
 export const FormSection: Story = {
   args: {
     type: 'sectionForm',
-    data: mockFormSection,
+    data: {
+      _type: 'sectionForm',
+      title: 'Interne Formulier Titel',
+      displayTitle: 'Neem Contact Op',
+      description: 'Neem contact op met ons team',
+      form: {
+        submitLabel: 'Verstuur Bericht',
+        fields: [
+          {
+            _key: 'field-1',
+            type: 'text',
+            label: 'Naam',
+            required: true,
+          },
+          {
+            _key: 'field-2',
+            type: 'email',
+            label: 'E-mail',
+            required: true,
+          },
+        ],
+      },
+      background: 'white',
+      border: false,
+    },
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByTestId('section')).toBeInTheDocument();
@@ -185,12 +121,12 @@ export const FormSection: Story = {
 export const InvalidSectionType: Story = {
   args: {
     type: 'invalidSection',
-    data: { _type: 'invalidSection', title: 'This should not render' },
+    data: { _type: 'invalidSection', title: 'Dit zou niet moeten renderen' },
   },
   play: async ({ canvas }) => {
     // Invalid section type should not render anything
     await expect(
-      canvas.queryByText('This should not render')
+      canvas.queryByText('Dit zou niet moeten renderen')
     ).not.toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
@@ -213,7 +149,7 @@ export const MalformedData: Story = {
     data: {
       _type: 'sectionCards',
       // Missing required cards array
-      displayTitle: 'Malformed Section',
+      displayTitle: 'Ongeldige Sectie',
     },
   },
   play: async ({ canvas }) => {
@@ -231,13 +167,13 @@ export const AllSectionTypes: Story = {
     data: mockHeaderSection,
   },
   render: () => (
-    <div className="space-y-8">
+    <Box className="space-y-8">
       <SectionRenderer type="sectionHeader" data={mockHeaderSection} />
       <SectionRenderer type="sectionContent" data={mockContentSection} />
       <SectionRenderer type="sectionCards" data={mockCardsSection} />
       <SectionRenderer type="sectionFAQ" data={mockFAQSection} />
       <SectionRenderer type="sectionForm" data={mockFormSection} />
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getAllByTestId('section')).toHaveLength(5);
@@ -254,25 +190,25 @@ export const ErrorHandling: Story = {
     data: mockHeaderSection,
   },
   render: () => (
-    <div className="space-y-8">
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Invalid Section Type</h3>
+    <Box className="space-y-8">
+      <Box>
+        <h3 className="text-lg font-semibold mb-4">Ongeldig Sectie Type</h3>
         <SectionRenderer
           type="invalidSection"
-          data={{ title: 'Should not render' }}
+          data={{ title: 'Zou niet moeten renderen' }}
         />
-      </div>
+      </Box>
 
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Empty Data</h3>
+      <Box>
+        <h3 className="text-lg font-semibold mb-4">Lege Data</h3>
         <SectionRenderer type="sectionHeader" data={{}} />
-      </div>
+      </Box>
 
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Valid Section</h3>
+      <Box>
+        <h3 className="text-lg font-semibold mb-4">Geldige Sectie</h3>
         <SectionRenderer type="sectionHeader" data={mockHeaderSection} />
-      </div>
-    </div>
+      </Box>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByTestId('section')).toBeInTheDocument();

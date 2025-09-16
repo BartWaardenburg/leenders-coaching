@@ -87,13 +87,13 @@ export const SectionTestimonial = ({
                 </Heading>
               )}
               {description && (
-                <Text variant="large" className="max-w-2xl mx-auto">
+                <Text variant="large" maxWidth="2xl" className="mx-auto">
                   {description}
                 </Text>
               )}
             </Stack>
           )}
-          <Box className="py-8 -mx-4 sm:mx-0">
+          <Box className="p-8 -mx-4 sm:mx-0">
             <Carousel
               slides={testimonials.map((testimonial) => (
                 <TestimonialSlide key={testimonial.name} {...testimonial} />

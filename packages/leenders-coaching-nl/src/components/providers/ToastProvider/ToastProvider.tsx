@@ -10,10 +10,10 @@ import {
 import { Toast } from '@/components/ui/Toast/Toast';
 import { Stack } from '@/components/ui/Stack';
 import { Box } from '@/components/ui/Box';
-import type { ModalVariant } from '@/components/ui/Modal/Modal';
+import type { PastelVariant } from '@/utilities/tokens';
 
 type ToastOptions = {
-  variant?: ModalVariant;
+  variant?: PastelVariant;
   duration?: number;
 };
 
@@ -39,7 +39,7 @@ export const useToast = () => {
 type Toast = {
   id: string;
   message: ReactNode;
-  variant?: ModalVariant;
+  variant?: PastelVariant;
   duration?: number;
 };
 

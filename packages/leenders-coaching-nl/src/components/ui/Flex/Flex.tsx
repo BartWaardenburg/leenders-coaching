@@ -1,96 +1,121 @@
-import { twMerge } from 'tailwind-merge';
-import type { ComponentPropsWithoutRef, ElementType } from 'react';
+import type { ComponentRef, ElementType, ReactElement } from 'react';
+import { forwardRef } from 'react';
+import { cn } from '@/utilities/cn';
+import type {
+  PolymorphicProps,
+  BaseComponentProps,
+  FlexDirectionVariant,
+  FlexWrapVariant,
+  JustifyContentVariant,
+  AlignItemsVariant,
+  GapVariant,
+} from '@/utilities/types';
 
-type FlexDirection = 'row' | 'row-reverse' | 'column' | 'column-reverse';
-type FlexWrap = 'nowrap' | 'wrap' | 'wrap-reverse';
-type JustifyContent =
-  | 'start'
-  | 'end'
-  | 'center'
-  | 'between'
-  | 'around'
-  | 'evenly';
-type AlignItems = 'start' | 'end' | 'center' | 'baseline' | 'stretch';
-type Gap = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 14 | 16 | 20;
-
-type FlexProps<T extends ElementType = 'div'> = {
-  direction?: FlexDirection;
-  wrap?: FlexWrap;
-  justify?: JustifyContent;
-  items?: AlignItems;
-  gap?: Gap;
-  as?: T;
-  testid?: string;
-} & Omit<ComponentPropsWithoutRef<T>, 'as'>;
+type FlexProps<C extends ElementType = 'div'> = PolymorphicProps<
+  C,
+  BaseComponentProps & {
+    direction?: FlexDirectionVariant;
+    wrap?: FlexWrapVariant;
+    justify?: JustifyContentVariant;
+    items?: AlignItemsVariant;
+    gap?: GapVariant;
+    divide?: 'x' | 'y' | 'x-reverse' | 'y-reverse';
+    inline?: boolean;
+  }
+>;
 
 /**
- * A flexible layout component that wraps any HTML element with flexbox properties
+ * A minimal flexbox layout component focused on flex-specific properties.
+ *
+ * Provides a clean API for common flex layouts without re-implementing
+ * all Tailwind utilities. Use Box + Tailwind classes for other styling.
  */
-const Flex = <T extends ElementType = 'div'>({
-  direction = 'row',
-  wrap = 'nowrap',
-  justify = 'start',
-  items = 'stretch',
-  gap = 0,
-  as,
-  className,
-  children,
-  testid,
-  ...props
-}: FlexProps<T>) => {
-  const Component = as || 'div';
+const FlexComponent = forwardRef<Element, FlexProps<ElementType>>(
+  (
+    {
+      direction = 'row',
+      wrap = 'nowrap',
+      justify = 'start',
+      items = 'stretch',
+      gap,
+      divide,
+      inline = false,
+      as,
+      className,
+      children,
+      testid,
+      ...props
+    },
+    ref
+  ) => {
+    const Component = (as || 'div') as ElementType;
 
-  return (
-    <Component
-      data-testid={testid}
-      className={twMerge(
-        'flex',
-        /* Direction classes */
-        direction === 'row' && 'flex-row',
-        direction === 'row-reverse' && 'flex-row-reverse',
-        direction === 'column' && 'flex-col',
-        direction === 'column-reverse' && 'flex-col-reverse',
-        /* Wrap classes */
-        wrap === 'nowrap' && 'flex-nowrap',
-        wrap === 'wrap' && 'flex-wrap',
-        wrap === 'wrap-reverse' && 'flex-wrap-reverse',
-        /* Justify content classes */
-        justify === 'start' && 'justify-start',
-        justify === 'end' && 'justify-end',
-        justify === 'center' && 'justify-center',
-        justify === 'between' && 'justify-between',
-        justify === 'around' && 'justify-around',
-        justify === 'evenly' && 'justify-evenly',
-        /* Align items classes */
-        items === 'start' && 'items-start',
-        items === 'end' && 'items-end',
-        items === 'center' && 'items-center',
-        items === 'baseline' && 'items-baseline',
-        items === 'stretch' && 'items-stretch',
-        /* Gap classes */
-        gap === 0 && 'gap-0',
-        gap === 1 && 'gap-1',
-        gap === 2 && 'gap-2',
-        gap === 3 && 'gap-3',
-        gap === 4 && 'gap-4',
-        gap === 5 && 'gap-5',
-        gap === 6 && 'gap-6',
-        gap === 7 && 'gap-7',
-        gap === 8 && 'gap-8',
-        gap === 9 && 'gap-9',
-        gap === 10 && 'gap-10',
-        gap === 11 && 'gap-11',
-        gap === 12 && 'gap-12',
-        gap === 14 && 'gap-14',
-        gap === 16 && 'gap-16',
-        gap === 20 && 'gap-20',
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </Component>
-  );
-};
+    return (
+      <Component
+        ref={ref}
+        data-testid={testid}
+        className={cn(
+          inline ? 'inline-flex' : 'flex',
+          /* Direction classes */
+          direction === 'row' && 'flex-row',
+          direction === 'row-reverse' && 'flex-row-reverse',
+          direction === 'column' && 'flex-col',
+          direction === 'column-reverse' && 'flex-col-reverse',
+          /* Wrap classes */
+          wrap === 'nowrap' && 'flex-nowrap',
+          wrap === 'wrap' && 'flex-wrap',
+          wrap === 'wrap-reverse' && 'flex-wrap-reverse',
+          /* Justify content classes */
+          justify === 'start' && 'justify-start',
+          justify === 'end' && 'justify-end',
+          justify === 'center' && 'justify-center',
+          justify === 'between' && 'justify-between',
+          justify === 'around' && 'justify-around',
+          justify === 'evenly' && 'justify-evenly',
+          /* Align items classes */
+          items === 'start' && 'items-start',
+          items === 'end' && 'items-end',
+          items === 'center' && 'items-center',
+          items === 'baseline' && 'items-baseline',
+          items === 'stretch' && 'items-stretch',
+          /* Gap classes */
+          gap === 0 && 'gap-0',
+          gap === 1 && 'gap-1',
+          gap === 2 && 'gap-2',
+          gap === 3 && 'gap-3',
+          gap === 4 && 'gap-4',
+          gap === 5 && 'gap-5',
+          gap === 6 && 'gap-6',
+          gap === 7 && 'gap-7',
+          gap === 8 && 'gap-8',
+          gap === 9 && 'gap-9',
+          gap === 10 && 'gap-10',
+          gap === 11 && 'gap-11',
+          gap === 12 && 'gap-12',
+          gap === 14 && 'gap-14',
+          gap === 16 && 'gap-16',
+          gap === 20 && 'gap-20',
+          /* Divide classes */
+          divide === 'x' && 'divide-x',
+          divide === 'y' && 'divide-y',
+          divide === 'x-reverse' && 'divide-x-reverse',
+          divide === 'y-reverse' && 'divide-y-reverse',
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </Component>
+    );
+  }
+);
 
-export default Flex;
+FlexComponent.displayName = 'Flex';
+
+const Flex = FlexComponent as <C extends ElementType = 'div'>(
+  props: FlexProps<C> & {
+    ref?: React.Ref<ComponentRef<C>>;
+  }
+) => ReactElement;
+
+export { Flex };

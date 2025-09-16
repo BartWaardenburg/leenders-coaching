@@ -8,7 +8,7 @@ import {
   getImageDimensions,
   getDominantColor,
 } from '@/utilities/image';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/utilities/cn';
 
 type SanityImageWithMetadata = SanityImageSource & {
   asset?: {
@@ -52,10 +52,7 @@ export function SanityImage({
 }: Props) {
   if (!image?.asset) {
     return (
-      <div
-        className={twMerge('bg-muted/30 aspect-video', className)}
-        aria-hidden
-      />
+      <div className={cn('bg-muted/30 aspect-video', className)} aria-hidden />
     );
   }
 
@@ -63,10 +60,7 @@ export function SanityImage({
   const loader = createSanityLoader(image, qualityHint);
 
   /* Get base image URL for src (Next.js will use loader for different sizes) */
-  const baseUrl = createSanityLoader(
-    image,
-    qualityHint
-  )({ src: '', width: 1200 });
+  const baseUrl = loader({ src: '', width: 1200 });
 
   /* Extract LQIP for blur placeholder */
   const blurDataURL = getLQIP(

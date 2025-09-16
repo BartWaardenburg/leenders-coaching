@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Quote } from './Quote';
+import { mockCardData } from '@/mocks';
 
 const meta = {
   title: 'UI/Quote',
@@ -26,7 +27,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: "Life is what happens while you're busy making other plans.",
+    children: mockCardData.testimonial.quote,
   },
   play: async ({ canvas }) => {
     expect(canvas.getByRole('blockquote')).toBeInTheDocument();
@@ -36,12 +37,12 @@ export const Default: Story = {
 
 export const WithCitation: Story = {
   args: {
-    children: "Life is what happens while you're busy making other plans.",
-    cite: 'John Lennon',
+    children: mockCardData.testimonial.quote,
+    cite: mockCardData.testimonial.name,
   },
   play: async ({ canvas }) => {
     expect(canvas.getByRole('blockquote')).toBeInTheDocument();
-    expect(canvas.getByText('John Lennon')).toBeInTheDocument();
+    expect(canvas.getByText(mockCardData.testimonial.name)).toBeInTheDocument();
     // Simple static test - no animation wait needed
   },
 };
@@ -49,13 +50,13 @@ export const WithCitation: Story = {
 export const LongQuote: Story = {
   args: {
     children:
-      'Success is not final, failure is not fatal: it is the courage to continue that counts. In the midst of chaos, there is also opportunity. The only way to do great work is to love what you do.',
-    cite: 'Multiple inspirational quotes combined',
+      'Succes is niet definitief, falen is niet fataal: het is de moed om door te gaan die telt. Te midden van chaos is er ook kansen. De enige manier om geweldig werk te doen is om te houden van wat je doet.',
+    cite: 'Meerdere inspirerende citaten gecombineerd',
   },
   play: async ({ canvas }) => {
     expect(canvas.getByRole('blockquote')).toBeInTheDocument();
     expect(
-      canvas.getByText('Multiple inspirational quotes combined')
+      canvas.getByText('Meerdere inspirerende citaten gecombineerd')
     ).toBeInTheDocument();
     // Simple static test - no animation wait needed
   },

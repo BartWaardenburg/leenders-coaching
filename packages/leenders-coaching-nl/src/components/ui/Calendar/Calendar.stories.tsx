@@ -66,7 +66,7 @@ export const WithCustomDayContent: Story = {
     renderDay: (date) =>
       date.getDate() === 15 && (
         <Box className="border border-foreground/80 p-2 mt-1 hover:bg-foreground/5 transition-colors">
-          <Text variant="small">Event at 2 PM</Text>
+          <Text variant="small">Evenement om 14:00</Text>
         </Box>
       ),
   },
@@ -82,7 +82,7 @@ export const WithCustomDayContent: Story = {
     const monthElements = canvas.getAllByText('Maart 2024');
     expect(monthElements.length).toBeGreaterThan(0);
     expect(canvas.getByText('Ma')).toBeInTheDocument();
-    expect(canvas.getByText('Event at 2 PM')).toBeInTheDocument();
+    expect(canvas.getByText('Evenement om 14:00')).toBeInTheDocument();
     await waitForMotionAnimations({ canvas });
   },
 };

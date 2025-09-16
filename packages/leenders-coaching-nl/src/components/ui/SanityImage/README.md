@@ -16,7 +16,7 @@ A production-ready Sanity image component that leverages Sanity's CDN for optima
 ### Basic Usage
 
 ```tsx
-import { SanityImage } from '@/components/ui/Image';
+import { SanityImage } from '@/components/ui/SanityImage';
 
 <SanityImage
   image={sanityImageObject}
@@ -47,7 +47,7 @@ import { SanityImage } from '@/components/ui/Image';
   image={post.cover}
   alt={post.cover?.alt}
   sizes="(max-width: 768px) 100vw, 768px"
-  className="rounded-xl shadow-sm"
+  className="shadow-sm"
 />
 ```
 

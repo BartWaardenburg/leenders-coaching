@@ -114,7 +114,7 @@ const FooterSection = ({
         {title}
       </Heading>
       <Box
-        className={`border-t ${!isLast ? 'md:border-r' : ''} border-foreground/80 pt-4 sm:px-0 md:px-4 pb-8 flex-1`}
+        className={`border-t ${!isLast ? 'md:border-r' : ''} border-foreground/80 pt-4 sm:px-0 md:px-4 pb-8 flex-1 transition-theme`}
       >
         {children}
       </Box>
@@ -132,7 +132,7 @@ type SocialLinkProps = {
  * @param props - The social link props.
  * @returns A styled social media link with appropriate icon.
  */
-const SocialLink = ({ href, label }: SocialLinkProps) => (
+const SocialLinkItem = ({ href, label }: SocialLinkProps) => (
   <motion.div variants={linkVariants}>
     <Link
       href={href}
@@ -161,14 +161,14 @@ export const MenuFooter = ({ sections }: MenuFooterProps) => {
   if (!sections.about || !sections.contact) return null;
 
   return (
-    <Box>
+    <Box className="transition-theme">
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
         className="h-full"
       >
-        <Grid columns={{ default: 1, md: 3 }} gap={0} className="h-full">
+        <Grid cols={{ base: 1, md: 3 }} gap={0} className="h-full">
           <FooterSection title={sections.about.title || ''}>
             <Flex direction="column" className="h-full">
               <motion.div variants={linkVariants} className="flex-1">
@@ -188,7 +188,10 @@ export const MenuFooter = ({ sections }: MenuFooterProps) => {
                       link.platform &&
                       link.url && (
                         <Box as="li" key={link._key}>
-                          <SocialLink href={link.url} label={link.platform} />
+                          <SocialLinkItem
+                            href={link.url}
+                            label={link.platform}
+                          />
                         </Box>
                       )
                   )}
@@ -208,7 +211,7 @@ export const MenuFooter = ({ sections }: MenuFooterProps) => {
                       </Text>
                       <Link
                         href={sections.contact.projectEnquiry.href || '#'}
-                        className="text-sm underline hover:text-primary transition-colors ml-1"
+                        className="text-sm underline hover:text-primary transition-theme ml-1"
                       >
                         {sections.contact.projectEnquiry.linkText}
                       </Link>
@@ -223,7 +226,7 @@ export const MenuFooter = ({ sections }: MenuFooterProps) => {
                       </Text>
                       <Link
                         href={sections.contact.generalEnquiry.href || '#'}
-                        className="text-sm underline hover:text-primary transition-colors ml-1"
+                        className="text-sm underline hover:text-primary transition-theme ml-1"
                       >
                         {sections.contact.generalEnquiry.linkText}
                       </Link>
@@ -235,7 +238,7 @@ export const MenuFooter = ({ sections }: MenuFooterProps) => {
           </FooterSection>
         </Grid>
       </motion.div>
-      <Box className="h-px bg-foreground/80" />
+      <Box className="h-px bg-foreground/80 transition-theme" />
     </Box>
   );
 };

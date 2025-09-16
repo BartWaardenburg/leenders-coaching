@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { PricingCard } from './PricingCard';
 import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { mockPricingSection } from '@/mocks';
 
 const meta = {
   title: 'UI/PricingCard',
@@ -22,50 +23,40 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    title: 'Kennismakingsgesprek',
+    title: mockPricingSection.packages[0]?.title || 'Default Title',
     description:
-      'Een vrijblijvend gesprek om kennis te maken en je doelen te bespreken.',
-    price: 'Gratis',
-    features: [
-      { text: '30 minuten' },
-      { text: 'Online of op locatie' },
-      { text: 'Geen verplichtingen' },
-    ],
-    ctaLabel: 'Plan gesprek',
+      mockPricingSection.packages[0]?.description || 'Default Description',
+    price: mockPricingSection.packages[0]?.price || '€0',
+    features: mockPricingSection.packages[0]?.features || [],
+    ctaLabel: mockPricingSection.packages[0]?.ctaLabel || 'Click Me',
     onCtaClick: () => console.log('CTA clicked'),
-    variant: 'blue',
+    variant: mockPricingSection.packages[0]?.variant || 'blue',
   },
   play: async ({ canvas }) => {
-    await expect(canvas.getByText('Kennismakingsgesprek')).toBeVisible();
-    await expect(canvas.getByText('Gratis')).toBeVisible();
-    await expect(
-      canvas.getByRole('button', { name: 'Plan gesprek' })
-    ).toBeVisible();
+    await expect(canvas.getByText('Starter Pakket')).toBeVisible();
+    await expect(canvas.getByText('€150')).toBeVisible();
+    await expect(canvas.getByRole('button', { name: 'Boek Nu' })).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
 
 export const Popular: Story = {
   args: {
-    title: 'Coaching traject',
-    description: 'Een intensief coachingstraject om je doelen te bereiken.',
-    price: '€85',
-    features: [
-      { text: '5 sessies van 1 uur' },
-      { text: 'Persoonlijk actieplan' },
-      { text: 'Online of op locatie' },
-      { text: 'E-mail ondersteuning' },
-    ],
-    isPopular: true,
-    ctaLabel: 'Start traject',
+    title: mockPricingSection.packages[1]?.title || 'Popular Title',
+    description:
+      mockPricingSection.packages[1]?.description || 'Popular Description',
+    price: mockPricingSection.packages[1]?.price || '€0',
+    features: mockPricingSection.packages[1]?.features || [],
+    isPopular: mockPricingSection.packages[1]?.isPopular || false,
+    ctaLabel: mockPricingSection.packages[1]?.ctaLabel || 'Click Me',
     onCtaClick: () => console.log('CTA clicked'),
-    variant: 'purple',
+    variant: mockPricingSection.packages[1]?.variant || 'blue',
   },
   play: async ({ canvas }) => {
-    await expect(canvas.getByText('Coaching traject')).toBeVisible();
-    await expect(canvas.getByText('€85')).toBeVisible();
+    await expect(canvas.getByText('Professional Pakket')).toBeVisible();
+    await expect(canvas.getByText('€400')).toBeVisible();
     await expect(
-      canvas.getByRole('button', { name: 'Start traject' })
+      canvas.getByRole('button', { name: 'Start Nu' })
     ).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },

@@ -59,11 +59,11 @@ describe('POST /api/contact', () => {
    */
   it('should handle valid contact form submission', async () => {
     const mockData = {
-      name: 'John Doe',
-      email: 'john@example.com',
-      phone: '+1234567890',
-      message: 'Test message',
-      subject: 'Test subject',
+      name: 'Jan van der Berg',
+      email: 'jan.vandenberg@example.nl',
+      phone: '+31 6 12345678',
+      message: 'Hallo, ik ben geïnteresseerd in jullie coaching diensten.',
+      subject: 'Vraag over coaching sessies',
     };
 
     const request = new NextRequest('http://localhost:3000/api/contact', {
@@ -87,9 +87,9 @@ describe('POST /api/contact', () => {
    */
   it('should handle missing required fields', async () => {
     const mockData = {
-      name: 'John Doe',
+      name: 'Jan van der Berg',
       /* Missing email, subject */
-      message: 'Test message',
+      message: 'Hallo, ik ben geïnteresseerd in jullie coaching diensten.',
     };
 
     const request = new NextRequest('http://localhost:3000/api/contact', {

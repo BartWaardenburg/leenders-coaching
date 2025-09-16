@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionCards } from './SectionCards';
 import { Card } from '@/components/ui/Card';
 import { ComponentProps } from 'react';
+import { mockCardsSection } from '@/mocks';
 
 /* Story args type with numberOfCards */
 type StoryArgs = {
@@ -15,9 +16,27 @@ const meta = {
     layout: 'fullscreen',
   },
   argTypes: {
+    title: {
+      control: 'text',
+      description: 'De titel van de sectie',
+      required: true,
+    },
+    description: {
+      control: 'text',
+      description: 'De beschrijving tekst',
+    },
+    background: {
+      control: 'select',
+      options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
+      description: 'Achtergrondkleur van de sectie',
+    },
+    border: {
+      control: 'boolean',
+      description: 'Toon boven- en onderranden',
+    },
     numberOfCards: {
       control: { type: 'range', min: 1, max: 12, step: 1 },
-      description: 'Number of cards to display',
+      description: 'Aantal kaarten om weer te geven',
     },
   },
 } satisfies Meta<StoryArgs>;
@@ -25,77 +44,31 @@ const meta = {
 export default meta;
 type Story = StoryObj<StoryArgs>;
 
-/* Helper function to generate multiple cards */
-const generateCards = (count: number) => {
-  const cards = [
-    {
-      title: 'Personal Development',
-      excerpt:
-        'Work on your personal growth with targeted coaching sessions tailored to your needs.',
-      slug: 'personal-development',
-    },
-    {
-      title: 'Career Coaching',
-      excerpt:
-        'Get guidance on career transitions, leadership development, and professional growth.',
-      slug: 'career-coaching',
-    },
-    {
-      title: 'Life Balance',
-      excerpt:
-        'Find harmony between work, personal life, and well-being with expert coaching.',
-      slug: 'life-balance',
-    },
-    {
-      title: 'Team Building',
-      excerpt:
-        'Strengthen team dynamics and collaboration through focused coaching sessions.',
-      slug: 'team-building',
-    },
-    {
-      title: 'Stress Management',
-      excerpt:
-        'Learn effective techniques to handle stress and improve your mental wellbeing.',
-      slug: 'stress-management',
-    },
-    {
-      title: 'Communication Skills',
-      excerpt:
-        'Enhance your communication abilities for better personal and professional relationships.',
-      slug: 'communication-skills',
-    },
-  ];
-
-  /* Generate array of required length by repeating and shuffling cards */
-  const shuffledCards = Array(Math.ceil(count / cards.length))
-    .fill(cards)
-    .flat()
-    .slice(0, count)
-    .map((card, index) => ({
-      ...card,
-      slug: `${card.slug}-${index}`,
-    }))
-    .sort((a, b) => a.slug.localeCompare(b.slug));
-
-  return shuffledCards.map((card) => (
-    <Card key={card.slug} title={card.title} slug={card.slug}>
-      {card.excerpt}
+/* Use centralized mocks for different card counts */
+const getCards = (count: number) => {
+  return mockCardsSection.cards.slice(0, count).map((card) => (
+    <Card
+      key={card._key}
+      title={card.title}
+      variant={card.variant}
+      border={card.border}
+    >
+      {card.description}
     </Card>
   ));
 };
 
 const defaultArgs = {
-  title: 'Our Services',
-  description:
-    'Discover how we can help you achieve your goals with our comprehensive coaching services.',
+  title: mockCardsSection.displayTitle,
+  description: mockCardsSection.description,
   numberOfCards: 3,
-  children: generateCards(3),
+  children: getCards(3),
 };
 
 export const Default: Story = {
   args: defaultArgs,
   render: ({ numberOfCards, ...args }) => (
-    <SectionCards {...args}>{generateCards(numberOfCards)}</SectionCards>
+    <SectionCards {...args}>{getCards(numberOfCards)}</SectionCards>
   ),
 };
 
@@ -105,7 +78,7 @@ export const WithBackground: Story = {
     background: 'blue',
   },
   render: ({ numberOfCards, ...args }) => (
-    <SectionCards {...args}>{generateCards(numberOfCards)}</SectionCards>
+    <SectionCards {...args}>{getCards(numberOfCards)}</SectionCards>
   ),
 };
 
@@ -116,18 +89,7 @@ export const WithBorder: Story = {
     border: true,
   },
   render: ({ numberOfCards, ...args }) => (
-    <SectionCards {...args}>{generateCards(numberOfCards)}</SectionCards>
-  ),
-};
-
-export const NoTitle: Story = {
-  args: {
-    ...defaultArgs,
-    title: undefined,
-    description: undefined,
-  },
-  render: ({ numberOfCards, ...args }) => (
-    <SectionCards {...args}>{generateCards(numberOfCards)}</SectionCards>
+    <SectionCards {...args}>{getCards(numberOfCards)}</SectionCards>
   ),
 };
 
@@ -137,6 +99,16 @@ export const TwoCards: Story = {
     numberOfCards: 2,
   },
   render: ({ numberOfCards, ...args }) => (
-    <SectionCards {...args}>{generateCards(numberOfCards)}</SectionCards>
+    <SectionCards {...args}>{getCards(numberOfCards)}</SectionCards>
+  ),
+};
+
+export const SixCards: Story = {
+  args: {
+    ...defaultArgs,
+    numberOfCards: 6,
+  },
+  render: ({ numberOfCards, ...args }) => (
+    <SectionCards {...args}>{getCards(numberOfCards)}</SectionCards>
   ),
 };

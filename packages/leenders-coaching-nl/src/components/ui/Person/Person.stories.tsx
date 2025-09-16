@@ -14,7 +14,7 @@ export const Default: Story = {
   args: {
     name: 'John Doe',
     description: 'Software Ingenieur',
-    imageSrc: 'https://i.pravatar.cc/300',
+    imageSrc: 'https://i.pravatar.cc/300?img=5',
   },
   play: async ({ canvas }) => {
     expect(canvas.getByText('John Doe')).toBeInTheDocument();
@@ -27,7 +27,7 @@ export const Default: Story = {
 export const WithoutDescription: Story = {
   args: {
     name: 'Jane Smith',
-    imageSrc: 'https://i.pravatar.cc/300?2',
+    imageSrc: 'https://i.pravatar.cc/300?img=6',
   },
   play: async ({ canvas }) => {
     expect(canvas.getByText('Jane Smith')).toBeInTheDocument();
@@ -40,7 +40,7 @@ export const LongDescription: Story = {
   args: {
     name: 'Alex Johnson',
     description: 'Senior Marketing Directeur & Merk Strategie Consultant',
-    imageSrc: 'https://i.pravatar.cc/300?3',
+    imageSrc: 'https://i.pravatar.cc/300?img=7',
   },
   play: async ({ canvas }) => {
     expect(canvas.getByText('Alex Johnson')).toBeInTheDocument();

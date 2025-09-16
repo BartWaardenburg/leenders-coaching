@@ -1,11 +1,13 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/utilities/cn';
 
 type FormProps = {
   /** The form content */
   children: ReactNode;
   /** Called when the form is submitted */
   onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
+  /** Whether to prevent default form submission (default: true) */
+  preventDefault?: boolean;
   /** Additional CSS classes */
   className?: string;
 } & ComponentPropsWithoutRef<'form'>;
@@ -16,18 +18,22 @@ type FormProps = {
 export const Form = ({
   children,
   onSubmit,
+  preventDefault = true,
   className,
   ...props
 }: FormProps) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onSubmit?.(e);
+    if (!onSubmit) return;
+    if (preventDefault) {
+      e.preventDefault();
+    }
+    onSubmit(e);
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className={twMerge('w-full', className)}
+      className={cn('w-full', className)}
       {...props}
     >
       {children}

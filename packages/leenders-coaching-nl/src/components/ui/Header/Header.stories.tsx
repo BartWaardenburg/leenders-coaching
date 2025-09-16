@@ -1,12 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
+import { waitForMotionAnimations } from '@/test/chromatic-utils';
 import { Header } from './Header';
+import { mockGlobalData } from '@/mocks';
 
 const meta = {
   title: 'UI/Header',
   component: Header,
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
   },
 } satisfies Meta<typeof Header>;
 
@@ -15,12 +17,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    navigation: [
-      { _key: '1', label: 'Home', href: '/' },
-      { _key: '2', label: 'Over ons', href: '/about' },
-      { _key: '3', label: 'Diensten', href: '/services' },
-      { _key: '4', label: 'Contact', href: '/contact' },
-    ],
+    navigation: mockGlobalData.header.navigation,
     about: {
       title: 'Over ons',
       description: 'Meer informatie over onze diensten',
@@ -40,12 +37,12 @@ export const Default: Story = {
       projectEnquiry: {
         label: 'Project aanvraag',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
         label: 'Algemene vragen',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
     },
   },
@@ -91,12 +88,12 @@ export const HeaderMobileMenu: Story = {
       projectEnquiry: {
         label: 'Project aanvraag',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
         label: 'Algemene vragen',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
     },
   },
@@ -162,60 +159,47 @@ export const HeaderNavigation: Story = {
       projectEnquiry: {
         label: 'Project aanvraag',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
         label: 'Algemene vragen',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
     },
   },
-  // TODO: TEST IS HANGING WITH ERROR BUT PASSES
-  // play: async ({ canvas, userEvent, step }) => {
-  //   await step('Click on navigation items', async () => {
-  //     // First open the mobile menu to access navigation items
-  //     const menuButton = canvas.getByLabelText('Menu openen');
-  //     await userEvent.click(menuButton);
+  play: async ({ canvas, userEvent, step }) => {
+    await step('Open mobile menu to access navigation items', async () => {
+      const menuButton = canvas.getByLabelText('Menu openen/sluiten');
+      await userEvent.click(menuButton);
 
-  //     const homeLink = canvas.getByText('Home');
-  //     await userEvent.click(homeLink);
-  //     // Simple interaction - no animation wait needed
+      /* Wait for menu animation to complete */
+      await waitForMotionAnimations({ canvas });
+    });
 
-  //     const aboutLink = canvas.getAllByText('About')[0];
-  //     if (aboutLink) {
-  //       await userEvent.click(aboutLink);
-  //       // Simple interaction - no animation wait needed
-  //     }
+    await step('Verify navigation items are present', async () => {
+      /* Just verify that navigation items are visible without clicking them */
+      const homeLink = canvas.getByText('Home');
+      expect(homeLink).toBeVisible();
 
-  //     const servicesLink = canvas.getByText('Services');
-  //     await userEvent.click(servicesLink);
-  //     // Simple interaction - no animation wait needed
+      const aboutLinks = canvas.getAllByText('Over ons');
+      expect(aboutLinks.length).toBeGreaterThan(0);
+      expect(aboutLinks[0]).toBeVisible();
 
-  //     const contactLink = canvas.getByText('Contact');
-  //     await userEvent.click(contactLink);
-  //     // Simple interaction - no animation wait needed
-  //   });
+      const servicesLink = canvas.getByText('Diensten');
+      expect(servicesLink).toBeVisible();
 
-  //   await step('Hover over navigation items', async () => {
-  //     const homeLink = canvas.getByText('Home');
-  //     await userEvent.hover(homeLink);
-  //     // Simple interaction - no animation wait needed
-
-  //     const aboutLink = canvas.getAllByText('About')[0];
-  //     if (aboutLink) {
-  //       await userEvent.hover(aboutLink);
-  //       // Simple interaction - no animation wait needed
-  //     }
-  //   });
-  // },
+      const contactLink = canvas.getByText('Contact');
+      expect(contactLink).toBeVisible();
+    });
+  },
 };
 
 export const HeaderSocialLinks: Story = {
   args: {
     navigation: [
       { _key: '1', label: 'Home', href: '/' },
-      { _key: '2', label: 'About', href: '/about' },
+      { _key: '2', label: 'Over Ons', href: '/about' },
     ],
     about: {
       title: 'Over ons',
@@ -246,12 +230,12 @@ export const HeaderSocialLinks: Story = {
       projectEnquiry: {
         label: 'Project aanvraag',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
         label: 'Algemene vragen',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
     },
   },
@@ -260,41 +244,33 @@ export const HeaderSocialLinks: Story = {
       defaultViewport: 'mobile1',
     },
   },
-  // TODO: TEST IS HANGING WITH ERROR BUT PASSES
-  // play: async ({ canvas, userEvent, step }) => {
-  //   await step('Open mobile menu to access social links', async () => {
-  //     const menuButton = canvas.getByLabelText('Menu openen');
-  //     await userEvent.click(menuButton);
-  //   });
+  play: async ({ canvas, userEvent, step }) => {
+    await step('Open mobile menu to access social links', async () => {
+      const menuButton = canvas.getByLabelText('Menu openen/sluiten');
+      await userEvent.click(menuButton);
 
-  //   await step('Interact with social links', async () => {
-  //     // Check that social links are visible in mobile menu
-  //     const facebookLink = canvas.getByText('facebook');
-  //     const instagramLink = canvas.getByText('instagram');
-  //     const twitterLink = canvas.getByText('twitter');
+      /* Wait for menu animation to complete */
+      await waitForMotionAnimations({ canvas });
+    });
 
-  //     expect(facebookLink).toBeVisible();
-  //     expect(instagramLink).toBeVisible();
-  //     expect(twitterLink).toBeVisible();
+    await step('Verify social links are present', async () => {
+      /* Check that social links are visible in mobile menu */
+      const facebookLink = canvas.getByText('facebook');
+      const instagramLink = canvas.getByText('instagram');
+      const twitterLink = canvas.getByText('twitter');
 
-  //     // Hover over social links
-  //     await userEvent.hover(facebookLink);
-  //     // Simple interaction - no animation wait needed
-
-  //     await userEvent.hover(instagramLink);
-  //     // Simple interaction - no animation wait needed
-
-  //     await userEvent.hover(twitterLink);
-  //     // Simple interaction - no animation wait needed
-  //   });
-  // },
+      expect(facebookLink).toBeVisible();
+      expect(instagramLink).toBeVisible();
+      expect(twitterLink).toBeVisible();
+    });
+  },
 };
 
 export const HeaderContactLinks: Story = {
   args: {
     navigation: [
       { _key: '1', label: 'Home', href: '/' },
-      { _key: '2', label: 'About', href: '/about' },
+      { _key: '2', label: 'Over Ons', href: '/about' },
     ],
     about: {
       title: 'Over ons',
@@ -315,12 +291,12 @@ export const HeaderContactLinks: Story = {
       projectEnquiry: {
         label: 'Project aanvraag',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
         label: 'Algemene vragen',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
     },
   },
@@ -329,37 +305,35 @@ export const HeaderContactLinks: Story = {
       defaultViewport: 'mobile1',
     },
   },
-  // TODO: TEST IS HANGING WITH ERROR BUT PASSES
-  // play: async ({ canvas, userEvent, step }) => {
-  //   await step('Open mobile menu to access contact links', async () => {
-  //     const menuButton = canvas.getByLabelText('Menu openen');
-  //     await userEvent.click(menuButton);
-  //   });
+  play: async ({ canvas, userEvent, step }) => {
+    await step('Open mobile menu to access contact links', async () => {
+      const menuButton = canvas.getByLabelText('Menu openen/sluiten');
+      await userEvent.click(menuButton);
 
-  //   await step('Interact with contact links', async () => {
-  //     // Check that contact links are visible - use getAllByText since there are multiple
-  //     const contactLinks = canvas.getAllByText('Contact Us');
-  //     expect(contactLinks.length).toBeGreaterThan(0);
+      /* Wait for menu animation to complete */
+      await waitForMotionAnimations({ canvas });
+    });
 
-  //     // Click on the first contact link (should be a clickable link)
-  //     const clickableLinks = contactLinks.filter(
-  //       (link) => link.tagName === 'A'
-  //     );
-  //     if (clickableLinks.length > 0) {
-  //       if (clickableLinks[0]) {
-  //         await userEvent.click(clickableLinks[0]);
-  //       }
-  //       // Simple interaction - no animation wait needed
-  //     }
-  //   });
-  // },
+    await step('Verify contact links are present', async () => {
+      /* Check that contact links are visible - use getAllByText since there are multiple */
+      const contactLinks = canvas.getAllByText('Neem Contact Op');
+      expect(contactLinks.length).toBeGreaterThan(0);
+
+      /* Verify that at least one contact link is visible */
+      const clickableLinks = contactLinks.filter(
+        (link) => link.tagName === 'A'
+      );
+      expect(clickableLinks.length).toBeGreaterThan(0);
+      expect(clickableLinks[0]).toBeVisible();
+    });
+  },
 };
 
 export const HeaderThemeToggle: Story = {
   args: {
     navigation: [
       { _key: '1', label: 'Home', href: '/' },
-      { _key: '2', label: 'About', href: '/about' },
+      { _key: '2', label: 'Over Ons', href: '/about' },
     ],
     about: {
       title: 'Over ons',
@@ -380,12 +354,12 @@ export const HeaderThemeToggle: Story = {
       projectEnquiry: {
         label: 'Project aanvraag',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
         label: 'Algemene vragen',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
     },
   },
@@ -443,12 +417,12 @@ export const HeaderAccessibility: Story = {
       projectEnquiry: {
         label: 'Project aanvraag',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
         label: 'Algemene vragen',
         href: '/contact',
-        linkText: 'Contact Us',
+        linkText: 'Neem Contact Op',
       },
     },
   },

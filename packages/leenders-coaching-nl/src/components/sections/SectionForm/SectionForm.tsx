@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { submitContactForm } from '@/utilities/contact';
 import { useToast } from '@/components/providers/ToastProvider';
-import type { ModalVariant } from '@/components/ui/Modal/Modal';
+import type { PastelVariant } from '@/utilities/tokens';
 
 export type ContactFormData = {
   name: string;
@@ -22,7 +22,7 @@ export type ContactFormData = {
 };
 
 type ToastOptions = {
-  variant?: ModalVariant;
+  variant?: PastelVariant;
   duration?: number;
 };
 
@@ -153,7 +153,7 @@ export const SectionForm = ({
                   type="submit"
                   disabled={isSubmitting}
                   isLoading={isSubmitting}
-                  fullWidthOnContainer="form"
+                  fullWidthUntil="md"
                 >
                   {submitLabel}
                 </Button>

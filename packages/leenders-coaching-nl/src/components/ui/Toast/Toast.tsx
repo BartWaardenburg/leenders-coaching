@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { useState, useEffect, useRef } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/utilities/cn';
 import { IoClose } from 'react-icons/io5';
 import {
   motion,
@@ -11,7 +11,7 @@ import {
   type HTMLMotionProps,
 } from 'motion/react';
 import { Flex } from '@/components/ui/Flex';
-import { modalStyles, type ModalVariant } from '../Modal/Modal';
+import { pastelVariant, type PastelVariant } from '@/utilities/tokens';
 import { useConfig } from '@/components/providers/ClientConfigProvider';
 
 /**
@@ -19,7 +19,7 @@ import { useConfig } from '@/components/providers/ClientConfigProvider';
  * @typedef {Object} ToastProps
  * @property {string} id - Unique identifier for the toast
  * @property {ReactNode} message - Content to display in the toast
- * @property {ModalVariant} [variant='blue'] - Visual style variant of the toast
+ * @property {PastelVariant} [variant='blue'] - Visual style variant of the toast
  * @property {number} [duration] - Duration in ms before auto-dismissal. If not provided, toast won't auto-dismiss
  * @property {boolean} [showCloseButton=true] - Whether to show the close button
  * @property {(id: string) => void} [onClose] - Callback function when toast is closed
@@ -27,10 +27,11 @@ import { useConfig } from '@/components/providers/ClientConfigProvider';
 type ToastProps = {
   id: string;
   message: ReactNode;
-  variant?: ModalVariant;
+  variant?: PastelVariant;
   duration?: number;
   showCloseButton?: boolean;
   onClose?: (id: string) => void;
+  testid?: string;
 } & Omit<
   HTMLMotionProps<'div'>,
   | 'onAnimationStart'
@@ -52,7 +53,7 @@ const MotionFlex = motion.create(Flex);
  * @param {ToastProps} props - Component props
  * @param {string} props.id - Unique identifier for the toast
  * @param {ReactNode} props.message - Content to display in the toast
- * @param {ModalVariant} [props.variant='blue'] - Visual style variant of the toast
+ * @param {PastelVariant} [props.variant='blue'] - Visual style variant of the toast
  * @param {number} [props.duration] - Duration in ms before auto-dismissal
  * @param {boolean} [props.showCloseButton=true] - Whether to show the close button
  * @param {(id: string) => void} [props.onClose] - Callback function when toast is closed
@@ -68,6 +69,7 @@ export const Toast = ({
   showCloseButton = true,
   onClose,
   className,
+  testid,
   ...props
 }: ToastProps) => {
   const { accessibility } = useConfig();
@@ -120,12 +122,15 @@ export const Toast = ({
       {isVisible && (
         <MotionFlex
           direction="column"
-          className={twMerge(
+          className={cn(
             'relative border p-4 max-w-md w-full shadow-lg overflow-hidden',
-            modalStyles[variant],
+            pastelVariant[variant].bg,
+            pastelVariant[variant].borderDark,
+            pastelVariant[variant].textLight,
             className
           )}
           role="alert"
+          aria-live="polite"
           initial={
             shouldReduceMotion
               ? { opacity: 0 }
@@ -145,7 +150,7 @@ export const Toast = ({
                   },
                 }
           }
-          data-testid="toast-content"
+          data-testid={testid || 'toast-content'}
           exit={
             shouldReduceMotion
               ? { opacity: 0 }
@@ -187,8 +192,8 @@ export const Toast = ({
               <motion.button
                 type="button"
                 onClick={handleClose}
-                className={twMerge(
-                  'ml-2 p-2',
+                className={cn(
+                  'ml-2 p-2 cursor-pointer',
                   'text-inherit opacity-80 hover:opacity-100',
                   'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
                   'focus-visible:ring-current focus-visible:ring-offset-inherit'

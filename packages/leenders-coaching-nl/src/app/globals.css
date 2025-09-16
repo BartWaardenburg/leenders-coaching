@@ -41,6 +41,38 @@
   --color-pastel-teal: #e0ffff;
   --color-pastel-teal-dark: #1a4242;
 
+  /* Soft pastel colors using color-mix */
+  --color-pastel-blue-soft: color-mix(
+    in oklch,
+    var(--color-pastel-blue) 35%,
+    white
+  );
+  --color-pastel-purple-soft: color-mix(
+    in oklch,
+    var(--color-pastel-purple) 35%,
+    white
+  );
+  --color-pastel-green-soft: color-mix(
+    in oklch,
+    var(--color-pastel-green) 35%,
+    white
+  );
+  --color-pastel-pink-soft: color-mix(
+    in oklch,
+    var(--color-pastel-pink) 35%,
+    white
+  );
+  --color-pastel-yellow-soft: color-mix(
+    in oklch,
+    var(--color-pastel-yellow) 35%,
+    white
+  );
+  --color-pastel-teal-soft: color-mix(
+    in oklch,
+    var(--color-pastel-teal) 35%,
+    white
+  );
+
   /* Effects */
   --radius: 0.5rem;
 }
@@ -58,6 +90,38 @@
   --color-input: hsl(24 25% 20%);
   --color-ring: hsl(20 10% 80%);
   --color-destructive: hsl(0 84% 65%);
+
+  /* Soft pastel colors for dark mode - mix with dark background */
+  --color-pastel-blue-soft: color-mix(
+    in oklch,
+    var(--color-pastel-blue-dark) 28%,
+    var(--color-background)
+  );
+  --color-pastel-purple-soft: color-mix(
+    in oklch,
+    var(--color-pastel-purple-dark) 28%,
+    var(--color-background)
+  );
+  --color-pastel-green-soft: color-mix(
+    in oklch,
+    var(--color-pastel-green-dark) 28%,
+    var(--color-background)
+  );
+  --color-pastel-pink-soft: color-mix(
+    in oklch,
+    var(--color-pastel-pink-dark) 28%,
+    var(--color-background)
+  );
+  --color-pastel-yellow-soft: color-mix(
+    in oklch,
+    var(--color-pastel-yellow-dark) 28%,
+    var(--color-background)
+  );
+  --color-pastel-teal-soft: color-mix(
+    in oklch,
+    var(--color-pastel-teal-dark) 28%,
+    var(--color-background)
+  );
 }
 
 /* Base styles */
@@ -128,13 +192,5 @@ html {
       stroke, background-image;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 500ms;
-  }
-
-  .bg-menu {
-    background-color: var(--color-menu-background);
-  }
-
-  .dark .bg-menu {
-    background-color: var(--color-menu-background-dark);
   }
 }

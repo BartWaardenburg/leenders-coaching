@@ -32,21 +32,27 @@ vi.mock('@react-email/components', () => ({
     React.createElement('img', { src, alt, 'data-testid': 'img' }),
 }));
 
+// Import mock data after mock definition
+const mockEmailTemplates = {
+  notification: {
+    name: 'Jan van der Berg',
+    email: 'jan.vandenberg@example.nl',
+    subject: 'Vraag over coaching sessies',
+    message:
+      'Hallo, ik ben geïnteresseerd in jullie coaching diensten. Kunnen we een afspraak maken voor een kennismakingsgesprek?',
+  },
+};
+
 describe('ContactNotification', () => {
   it('should render with required props', () => {
-    const props = {
-      name: 'John Doe',
-      email: 'john@example.com',
-      subject: 'Test Subject',
-      message: 'This is a test message',
-    };
+    const props = mockEmailTemplates.notification;
 
     const { container } = render(<ContactNotification {...props} />);
 
-    expect(container.textContent).toContain('John Doe');
-    expect(container.textContent).toContain('john@example.com');
-    expect(container.textContent).toContain('Test Subject');
-    expect(container.textContent).toContain('This is a test message');
+    expect(container.textContent).toContain(props.name);
+    expect(container.textContent).toContain(props.email);
+    expect(container.textContent).toContain(props.subject);
+    expect(container.textContent).toContain(props.message);
   });
 
   it('should render with special characters in name', () => {

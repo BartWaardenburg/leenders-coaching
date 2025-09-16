@@ -26,10 +26,10 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: 'Container Example',
+    children: 'Container Voorbeeld',
   },
   play: async ({ canvas }) => {
-    await expect(canvas.getByText('Container Example')).toBeVisible();
+    await expect(canvas.getByText('Container Voorbeeld')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };

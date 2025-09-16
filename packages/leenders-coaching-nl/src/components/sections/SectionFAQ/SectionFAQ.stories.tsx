@@ -1,16 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionFAQ } from './SectionFAQ';
+import { mockFAQSection } from '@/mocks';
 
 const meta = {
   title: 'Sections/SectionFAQ',
   component: SectionFAQ,
   parameters: {
-    layout: 'full',
+    layout: 'fullscreen',
   },
   argTypes: {
     title: {
       control: 'text',
       description: 'De titel van de sectie',
+      required: true,
     },
     description: {
       control: 'text',
@@ -35,91 +37,18 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const samplePortableText = [
-  {
-    _type: 'block',
-    children: [
-      {
-        _type: 'span',
-        text: 'This is a detailed answer that includes ',
-      },
-      {
-        _type: 'span',
-        marks: ['strong'],
-        text: 'formatted content',
-      },
-      {
-        _type: 'span',
-        text: ' and ',
-      },
-      {
-        _type: 'span',
-        marks: ['link'],
-        text: 'links',
-        value: {
-          href: 'https://example.com',
-        },
-      },
-      {
-        _type: 'span',
-        text: '.',
-      },
-    ],
-    style: 'normal',
-  },
-  {
-    _type: 'block',
-    children: [
-      {
-        _type: 'span',
-        text: 'You can even have multiple paragraphs.',
-      },
-    ],
-    style: 'normal',
-  },
-];
+/* Use centralized mocks for different FAQ item counts */
+const getFAQItems = (count: number) => {
+  return mockFAQSection.faqs.slice(0, count);
+};
+
+// Using centralized mock data
 
 export const Default: Story = {
   args: {
-    title: 'Frequently Asked Questions',
-    description:
-      'Find answers to the most common questions about our services.',
-    items: [
-      {
-        question: 'What services do you offer?',
-        answer: samplePortableText,
-      },
-      {
-        question: 'How can I schedule an appointment?',
-        answer: [
-          {
-            _type: 'block',
-            children: [
-              {
-                _type: 'span',
-                text: 'You can schedule an appointment through our online booking system or contact us directly.',
-              },
-            ],
-            style: 'normal',
-          },
-        ],
-      },
-      {
-        question: 'What are your working hours?',
-        answer: [
-          {
-            _type: 'block',
-            children: [
-              {
-                _type: 'span',
-                text: 'We are available Monday through Friday, from 9:00 AM to 5:00 PM.',
-              },
-            ],
-            style: 'normal',
-          },
-        ],
-      },
-    ],
+    title: mockFAQSection.displayTitle,
+    description: mockFAQSection.description,
+    items: getFAQItems(3), // Show first 3 items
   },
 };
 
@@ -145,34 +74,18 @@ export const WithPurpleBackground: Story = {
   },
 };
 
-export const WithoutTitle: Story = {
-  args: {
-    description:
-      'Find answers to the most common questions about our services.',
-    items: Default.args.items,
-    background: 'green',
-  },
-};
-
 export const WithoutDescription: Story = {
   args: {
-    title: 'Frequently Asked Questions',
+    title: 'Veelgestelde Vragen',
     items: Default.args.items,
     background: 'pink',
     border: true,
   },
 };
 
-export const MinimalContent: Story = {
-  args: {
-    items: Default.args.items,
-    background: 'yellow',
-  },
-};
-
 export const SingleFAQ: Story = {
   args: {
-    title: 'Single FAQ Item',
+    title: 'Enkele FAQ Item',
     description: 'Soms heb je maar één FAQ item nodig.',
     items: [Default.args.items[0]!],
     background: 'teal',
@@ -180,85 +93,12 @@ export const SingleFAQ: Story = {
   },
 };
 
-export const ManyFAQs: Story = {
+export const ManyFAQItems: Story = {
   args: {
-    title: 'Comprehensive FAQ',
-    description:
-      'This section demonstrates how the FAQ handles multiple items.',
-    items: [
-      ...Default.args.items,
-      {
-        question: 'Do you offer group coaching sessions?',
-        answer: [
-          {
-            _type: 'block',
-            children: [
-              {
-                _type: 'span',
-                text: 'Yes, we offer both individual and group coaching sessions. Group sessions can be a great way to learn from others and share experiences.',
-              },
-            ],
-            style: 'normal',
-          },
-        ],
-      },
-      {
-        question: 'What is your cancellation policy?',
-        answer: [
-          {
-            _type: 'block',
-            children: [
-              {
-                _type: 'span',
-                text: 'We require 24 hours notice for cancellations. Cancellations made with less than 24 hours notice may be subject to a cancellation fee.',
-              },
-            ],
-            style: 'normal',
-          },
-        ],
-      },
-      {
-        question: 'How do I prepare for my first session?',
-        answer: [
-          {
-            _type: 'block',
-            children: [
-              {
-                _type: 'span',
-                text: 'Before your first session, think about your goals and what you hope to achieve. You may also want to prepare any questions you have about the coaching process.',
-              },
-            ],
-            style: 'normal',
-          },
-        ],
-      },
-    ],
+    title: mockFAQSection.displayTitle,
+    description: mockFAQSection.description,
+    items: getFAQItems(6),
     background: 'blue',
     border: true,
   },
-};
-
-export const AllBackgroundVariants: Story = {
-  parameters: {
-    controls: { hideNoControlsWarning: true },
-  },
-  args: {
-    items: [],
-  },
-  render: () => (
-    <div className="space-y-0">
-      {(['blue', 'purple', 'green', 'pink', 'yellow', 'teal'] as const).map(
-        (background) => (
-          <SectionFAQ
-            key={background}
-            title={`${background.charAt(0).toUpperCase() + background.slice(1)} Background FAQ`}
-            description={`This FAQ section demonstrates the ${background} background variant.`}
-            items={Default.args.items}
-            background={background}
-            border={true}
-          />
-        )
-      )}
-    </div>
-  ),
 };

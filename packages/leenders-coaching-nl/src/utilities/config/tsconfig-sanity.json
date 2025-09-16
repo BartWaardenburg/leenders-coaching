@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig-base.json",
+  "compilerOptions": {
+    "target": "ES2015",
+    "moduleResolution": "node",
+    "moduleDetection": "force",
+    "allowImportingTsExtensions": true
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
+}

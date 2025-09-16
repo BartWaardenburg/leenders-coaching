@@ -29,13 +29,6 @@ const meta = {
       description: 'Klik handler voor de knop',
     },
   },
-  decorators: [
-    (Story) => (
-      <div className="text-foreground">
-        <Story />
-      </div>
-    ),
-  ],
 } satisfies Meta<typeof IconButton>;
 
 export default meta;

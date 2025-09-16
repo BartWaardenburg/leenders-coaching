@@ -76,9 +76,9 @@ export const SectionPricing = ({
         </Flex>
       )}
       <Grid
-        columns={{
-          default: 1,
-          '@2xl': 3,
+        cols={{
+          base: 1,
+          lg: 3,
         }}
         gap={6}
       >

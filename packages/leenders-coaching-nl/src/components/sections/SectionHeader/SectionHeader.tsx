@@ -11,7 +11,15 @@ import { Box } from '@/components/ui/Box';
 type CallToAction = {
   href: string;
   label: string;
-  variant?: 'black' | 'transparent' | 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal';
+  variant?:
+    | 'black'
+    | 'transparent'
+    | 'blue'
+    | 'purple'
+    | 'green'
+    | 'pink'
+    | 'yellow'
+    | 'teal';
   isExternal?: boolean;
 };
 
@@ -45,7 +53,7 @@ export const SectionHeader = ({
       maxWidth="5xl"
       {...props}
     >
-      <Stack gap={8} className="md:items-center">
+      <Stack gap={8} className="md:items-start">
         <Box className="w-full text-center">
           {(title || description) && (
             <>
@@ -61,17 +69,19 @@ export const SectionHeader = ({
                 </Heading>
               )}
               {description && (
-                <Text className="mt-6 text-lg md:text-xl">{description}</Text>
+                <Text variant="large" className="mt-6 md:text-xl">
+                  {description}
+                </Text>
               )}
             </>
           )}
         </Box>
         {(primaryCta || secondaryCta) && (
-          <ButtonGroup flex width="full" justify="end">
+          <ButtonGroup width="full" justify="end" align="center">
             {primaryCta && (
               <Button
                 size="lg"
-                fullWidthOnContainer
+                fullWidthUntil="sm"
                 href={primaryCta.href}
                 variant={primaryCta.variant}
                 target={primaryCta.isExternal ? '_blank' : undefined}
@@ -83,11 +93,13 @@ export const SectionHeader = ({
             {secondaryCta && (
               <Button
                 size="lg"
-                fullWidthOnContainer
+                fullWidthUntil="sm"
                 href={secondaryCta.href}
                 variant={secondaryCta.variant}
                 target={secondaryCta.isExternal ? '_blank' : undefined}
-                rel={secondaryCta.isExternal ? 'noopener noreferrer' : undefined}
+                rel={
+                  secondaryCta.isExternal ? 'noopener noreferrer' : undefined
+                }
               >
                 {secondaryCta.label}
               </Button>

@@ -43,7 +43,7 @@ export const transformCardsSection = (
         slug={card.slug}
         image={card.image || undefined}
         variant={card.variant}
-        border
+        border={card.border}
         reverse={card.reverse}
       >
         {card.description && <p>{card.description}</p>}

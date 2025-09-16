@@ -34,17 +34,22 @@ vi.mock('@react-email/components', () => ({
     React.createElement('img', { src, alt, 'data-testid': 'img' }),
 }));
 
+// Import mock data after mock definition
+const mockEmailTemplates = {
+  confirmation: {
+    name: 'Jan van der Berg',
+    subject: 'Vraag over coaching sessies',
+  },
+};
+
 describe('ContactConfirmation', () => {
   it('should render with required props', () => {
-    const props = {
-      name: 'John Doe',
-      subject: 'Test Subject',
-    };
+    const props = mockEmailTemplates.confirmation;
 
     const { container } = render(<ContactConfirmation {...props} />);
 
-    expect(container.textContent).toContain('John Doe');
-    expect(container.textContent).toContain('Test Subject');
+    expect(container.textContent).toContain(props.name);
+    expect(container.textContent).toContain(props.subject);
     expect(container.textContent).toContain('Bedankt voor je bericht');
   });
 
@@ -73,10 +78,7 @@ describe('ContactConfirmation', () => {
   });
 
   it('should render correct email structure', () => {
-    const props = {
-      name: 'John Doe',
-      subject: 'Test Subject',
-    };
+    const props = mockEmailTemplates.confirmation;
 
     const { container } = render(<ContactConfirmation {...props} />);
 
@@ -90,17 +92,14 @@ describe('ContactConfirmation', () => {
   });
 
   it('should include all required sections', () => {
-    const props = {
-      name: 'John Doe',
-      subject: 'Test Subject',
-    };
+    const props = mockEmailTemplates.confirmation;
 
     const { container } = render(<ContactConfirmation {...props} />);
 
     // Check for key sections
     expect(container.textContent).toContain('Bedankt voor je bericht');
-    expect(container.textContent).toContain('Beste John Doe');
-    expect(container.textContent).toContain('Test Subject');
+    expect(container.textContent).toContain(`Beste ${props.name}`);
+    expect(container.textContent).toContain(props.subject);
     expect(container.textContent).toContain('Bezoek mijn website');
     expect(container.textContent).toContain('Privacy Beleid');
     expect(container.textContent).toContain('Algemene Voorwaarden');

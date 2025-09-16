@@ -1,16 +1,22 @@
-import type { ComponentProps } from 'react';
-import { twMerge } from 'tailwind-merge';
-import { Box } from '@/components/ui/Box';
+import type { ComponentPropsWithoutRef } from 'react';
+import { cn } from '@/utilities/cn';
 
-type ContainerProps = ComponentProps<'div'>;
+type ContainerProps<T extends React.ElementType = 'div'> = {
+  as?: T;
+} & ComponentPropsWithoutRef<T>;
 
 /**
  * Container component for consistent page layouts and spacing
  */
-export const Container = ({ className, ...props }: ContainerProps) => {
+export const Container = <T extends React.ElementType = 'div'>({
+  as,
+  className,
+  ...props
+}: ContainerProps<T>) => {
+  const C = as || 'div';
   return (
-    <Box
-      className={twMerge(
+    <C
+      className={cn(
         'container mx-auto px-4 sm:px-8 md:px-12 lg:px-16',
         className
       )}

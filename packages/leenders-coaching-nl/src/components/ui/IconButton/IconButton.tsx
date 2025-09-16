@@ -1,52 +1,76 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { forwardRef } from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '@/utilities/cn';
+
+const iconButtonVariants = cva(
+  'p-2 flex items-center justify-center cursor-pointer transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50',
+  {
+    variants: {
+      variant: {
+        primary:
+          'bg-primary/10 hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30',
+        ghost:
+          'bg-transparent text-foreground hover:bg-foreground/10 hover:text-foreground dark:bg-transparent dark:text-foreground dark:hover:bg-foreground/10 dark:hover:text-foreground',
+      },
+      shape: {
+        round: 'rounded-full',
+        square: 'rounded-none',
+      },
+      bordered: {
+        true: 'border border-foreground/80 dark:border-foreground/40',
+        false: '',
+      },
+    },
+    defaultVariants: {
+      variant: 'primary',
+      shape: 'round',
+      bordered: false,
+    },
+  }
+);
 
 type IconButtonProps = {
   children: ReactNode;
   label: string;
-  /** Visual style variant of the button */
-  variant?: 'primary' | 'ghost';
-  /** Shape of the button */
-  shape?: 'round' | 'square';
-  /** Whether to show a border */
-  bordered?: boolean;
-} & ComponentPropsWithoutRef<'button'>;
+} & VariantProps<typeof iconButtonVariants> &
+  ComponentPropsWithoutRef<'button'>;
 
 /**
  * Generic icon button with consistent styling
  * @param shape - 'round' (default) or 'square'
  * @param bordered - Whether to show a border (default: false)
  */
-export const IconButton = ({
-  children,
-  label,
-  variant = 'primary',
-  shape = 'round',
-  bordered = false,
-  className,
-  ...props
-}: IconButtonProps) => {
-  return (
-    <button
-      className={twMerge(
-        'p-2 transition-colors flex items-center justify-center',
-        /* Shape variants */
-        shape === 'round' && 'rounded-full',
-        shape === 'square' && 'rounded-none',
-        /* Border styles */
-        bordered && 'border border-foreground/80 dark:border-background/80',
-        /* Color variants */
-        variant === 'primary' && 'bg-primary/10 hover:bg-primary/20',
-        variant === 'ghost' && [
-          'hover:bg-foreground hover:text-background',
-          'dark:hover:bg-background dark:hover:text-foreground',
-        ],
-        className,
-      )}
-      aria-label={label}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-};
+export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
+  (
+    {
+      children,
+      label,
+      variant = 'primary',
+      shape = 'round',
+      bordered = false,
+      className,
+      ...props
+    },
+    ref
+  ) => {
+    const buttonStyles = cn(
+      iconButtonVariants({ variant, shape, bordered }),
+      className
+    );
+
+    return (
+      <button
+        ref={ref}
+        type="button"
+        className={buttonStyles}
+        aria-label={label}
+        {...props}
+      >
+        {children}
+      </button>
+    );
+  }
+);
+
+IconButton.displayName = 'IconButton';

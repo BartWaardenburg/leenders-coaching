@@ -9,7 +9,7 @@ import { Box } from '@/components/ui/Box';
 import { Heading } from '@/components/ui/Heading';
 import { Text } from '@/components/ui/Text';
 import { Flex } from '@/components/ui/Flex';
-import { SanityImage } from '@/components/ui/Image';
+import { SanityImage } from '@/components/ui/SanityImage';
 import type { Post } from '@/types/sanity/schema';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
@@ -99,7 +99,7 @@ const BlogPostPage = async ({ params }: BlogPostPageProps) => {
               image={post.image as SanityImageSource}
               alt={post.title || 'Blog post image'}
               fill
-              className="object-cover rounded-lg"
+              className="object-cover"
               priority
               followHotspot={true}
             />

@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/utilities/cn';
 
 import { Text } from '@/components/ui/Text';
 import { Link } from '@/components/ui/Link';
@@ -41,8 +41,8 @@ export const Footer = ({
   return (
     <Box
       as="footer"
-      className={twMerge(
-        'mt-auto bg-background dark:bg-menu transition-theme',
+      className={cn(
+        'mt-auto bg-background dark:[background-color:var(--color-menu-background-dark)] transition-theme',
         className
       )}
       {...props}

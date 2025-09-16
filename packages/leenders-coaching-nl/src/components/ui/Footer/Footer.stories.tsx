@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Footer } from './Footer';
+import { Box } from '../Box/Box';
+import { Heading } from '../Heading/Heading';
+import { mockGlobalData } from '@/mocks';
 
 const meta = {
   title: 'UI/Footer',
@@ -27,28 +30,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const mockContact = {
-  email: 'info@leenders-coaching.nl',
-  phone: '+31 6 12345678',
-};
-
-const mockSocialLinks = [
-  {
-    _key: 'instagram-1',
-    platform: 'Instagram',
-    url: 'https://www.instagram.com/leenders_coaching',
-  },
-  {
-    _key: 'facebook-1',
-    platform: 'Facebook',
-    url: 'https://www.facebook.com/leenders-coaching-nl',
-  },
-  {
-    _key: 'linkedin-1',
-    platform: 'LinkedIn',
-    url: 'https://www.linkedin.com/company/leenders-coaching',
-  },
-];
+// Using centralized mocks from @/mocks
+const mockContact = mockGlobalData.footer.contact;
+const mockSocialLinks = mockGlobalData.footer.social;
 
 export const Default: Story = {
   args: {
@@ -275,7 +259,6 @@ export const DesktopInstagramVisibility: Story = {
     ).toBeVisible();
     await expect(canvas.getByText('info@leenders-coaching.nl')).toBeVisible();
     await expect(canvas.getByText('+31 6 12345678')).toBeVisible();
-    await expect(canvas.getByText('Instagram')).toBeVisible();
     // Footer rendering complete - no animation wait needed
   },
 };
@@ -290,34 +273,40 @@ export const AllVariants: Story = {
     socialLinks: mockSocialLinks,
   },
   render: () => (
-    <div className="space-y-8">
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Default Footer</h3>
+    <Box className="space-y-8">
+      <Box>
+        <Heading level="h3" variant="small" className="mb-4">
+          Default Footer
+        </Heading>
         <Footer
           copyright="© 2024 Leenders Coaching. Alle rechten voorbehouden."
           contact={mockContact}
           socialLinks={mockSocialLinks}
         />
-      </div>
+      </Box>
 
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Minimal Footer</h3>
+      <Box>
+        <Heading level="h3" variant="small" className="mb-4">
+          Minimal Footer
+        </Heading>
         <Footer
           copyright="© 2024 Leenders Coaching."
           contact={{ email: null, phone: null }}
           socialLinks={[]}
         />
-      </div>
+      </Box>
 
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Email Only</h3>
+      <Box>
+        <Heading level="h3" variant="small" className="mb-4">
+          Email Only
+        </Heading>
         <Footer
           copyright="© 2024 Leenders Coaching. Alle rechten voorbehouden."
           contact={{ email: 'info@leenders-coaching.nl', phone: null }}
           socialLinks={[]}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(

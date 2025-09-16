@@ -29,7 +29,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    src: 'https://i.pravatar.cc/300',
+    src: 'https://i.pravatar.cc/300?img=5',
     alt: 'Avatar afbeelding',
     size: 'md',
   },
@@ -41,7 +41,7 @@ export const Default: Story = {
 
 export const Small: Story = {
   args: {
-    src: 'https://i.pravatar.cc/300',
+    src: 'https://i.pravatar.cc/300?img=6',
     alt: 'Kleine avatar',
     size: 'sm',
   },
@@ -53,7 +53,7 @@ export const Small: Story = {
 
 export const Large: Story = {
   args: {
-    src: 'https://i.pravatar.cc/300',
+    src: 'https://i.pravatar.cc/300?img=8',
     alt: 'Grote avatar',
     size: 'lg',
   },
@@ -65,18 +65,26 @@ export const Large: Story = {
 
 export const AllSizes: Story = {
   args: {
-    src: 'https://i.pravatar.cc/300',
+    src: 'https://i.pravatar.cc/300?img=9',
     alt: 'Avatar afbeelding',
   },
   render: () => (
     <div className="flex gap-4 items-center">
-      <Avatar src="https://i.pravatar.cc/300?1" alt="Kleine avatar" size="sm" />
       <Avatar
-        src="https://i.pravatar.cc/300?2"
+        src="https://i.pravatar.cc/300?img=4"
+        alt="Kleine avatar"
+        size="sm"
+      />
+      <Avatar
+        src="https://i.pravatar.cc/300?img=5"
         alt="Middelgrote avatar"
         size="md"
       />
-      <Avatar src="https://i.pravatar.cc/300?3" alt="Grote avatar" size="lg" />
+      <Avatar
+        src="https://i.pravatar.cc/300?img=7"
+        alt="Grote avatar"
+        size="lg"
+      />
     </div>
   ),
   play: async ({ canvas }) => {
@@ -89,7 +97,7 @@ export const AllSizes: Story = {
 
 export const FillSize: Story = {
   args: {
-    src: 'https://i.pravatar.cc/300',
+    src: 'https://i.pravatar.cc/300?img=10',
     alt: 'Vul avatar',
     size: 'fill',
   },
@@ -110,7 +118,7 @@ export const FallbackState: Story = {
     size: 'md',
   },
   play: async ({ canvas }) => {
-    await expect(canvas.getByText('J')).toBeVisible();
+    await expect(canvas.getByText('JJ')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };
@@ -126,17 +134,17 @@ export const AllStates: Story = {
     <div className="flex flex-col gap-6">
       <div className="flex gap-4 items-center">
         <Avatar
-          src="https://i.pravatar.cc/300?1"
+          src="https://i.pravatar.cc/300?img=4"
           alt="Kleine met afbeelding"
           size="sm"
         />
         <Avatar
-          src="https://i.pravatar.cc/300?2"
+          src="https://i.pravatar.cc/300?img=5"
           alt="Middelgrote met afbeelding"
           size="md"
         />
         <Avatar
-          src="https://i.pravatar.cc/300?3"
+          src="https://i.pravatar.cc/300?img=7"
           alt="Grote met afbeelding"
           size="lg"
         />
@@ -148,7 +156,7 @@ export const AllStates: Story = {
       </div>
       <div className="w-32 h-32">
         <Avatar
-          src="https://i.pravatar.cc/300?4"
+          src="https://i.pravatar.cc/300?img=10"
           alt="Vul met afbeelding"
           size="fill"
         />
@@ -164,11 +172,11 @@ export const AllStates: Story = {
       canvas.getByAltText('Middelgrote met afbeelding')
     ).toBeVisible();
     await expect(canvas.getByAltText('Grote met afbeelding')).toBeVisible();
-    await expect(canvas.getByText('K')).toBeVisible();
-    await expect(canvas.getByText('M')).toBeVisible();
-    await expect(canvas.getByText('G')).toBeVisible();
+    await expect(canvas.getByText('KF')).toBeVisible();
+    await expect(canvas.getByText('MF')).toBeVisible();
+    await expect(canvas.getByText('GF')).toBeVisible();
     await expect(canvas.getByAltText('Vul met afbeelding')).toBeVisible();
-    await expect(canvas.getByText('V')).toBeVisible();
+    await expect(canvas.getByText('VF')).toBeVisible();
     await waitForMotionAnimations({ canvas });
   },
 };

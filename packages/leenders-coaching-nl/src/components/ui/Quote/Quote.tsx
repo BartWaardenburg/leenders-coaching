@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/utilities/cn';
 import { motion, type HTMLMotionProps } from 'motion/react';
 
 import { Text } from '@/components/ui/Text';
@@ -32,7 +32,7 @@ const MotionBox = motion.create(Box);
 export const Quote = ({ children, cite, className, ...props }: QuoteProps) => {
   return (
     <motion.blockquote
-      className={twMerge('relative', className)}
+      className={cn('relative', className)}
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{
