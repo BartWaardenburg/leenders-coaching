@@ -2,7 +2,7 @@ import { defineType } from 'sanity';
 
 export const socialLink = defineType({
   name: 'socialLink',
-  title: 'Social Media Link',
+  title: 'Social media link',
   type: 'object',
   fields: [
     {
@@ -11,8 +11,10 @@ export const socialLink = defineType({
       type: 'string',
       options: {
         list: [
-          { title: 'Instagram', value: 'instagram' },
           { title: 'LinkedIn', value: 'linkedin' },
+          { title: 'Instagram', value: 'instagram' },
+          { title: 'Facebook', value: 'facebook' },
+          { title: 'Twitter', value: 'twitter' },
         ],
       },
     },
@@ -23,4 +25,10 @@ export const socialLink = defineType({
       validation: (rule) => rule.required(),
     },
   ],
+  preview: {
+    select: {
+      title: 'platform',
+      subtitle: 'url',
+    },
+  },
 });

@@ -6,12 +6,12 @@ import { defineField, defineType } from 'sanity';
  */
 export const postType = defineType({
   name: 'post',
-  title: 'Post',
+  title: 'Blogpost',
   type: 'document',
   groups: [
     {
       name: 'content',
-      title: 'Content',
+      title: 'Inhoud',
     },
     {
       name: 'seo',
@@ -21,21 +21,21 @@ export const postType = defineType({
   fields: [
     defineField({
       name: 'title',
-      title: 'Title',
+      title: 'Titel',
       type: 'string',
       group: 'content',
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'description',
-      title: 'Description',
+      title: 'Beschrijving',
       type: 'text',
       group: 'content',
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'slug',
-      title: 'Slug',
+      title: 'URL-pad',
       type: 'slug',
       group: 'content',
       options: { source: 'title' },
@@ -43,7 +43,7 @@ export const postType = defineType({
     }),
     defineField({
       name: 'publishedAt',
-      title: 'Published At',
+      title: 'Gepubliceerd op',
       type: 'datetime',
       group: 'content',
       initialValue: () => new Date().toISOString(),
@@ -51,7 +51,7 @@ export const postType = defineType({
     }),
     defineField({
       name: 'categories',
-      title: 'Categories',
+      title: 'Categorieën',
       type: 'array',
       group: 'content',
       of: [{ type: 'reference', to: [{ type: 'category' }] }],
@@ -59,59 +59,46 @@ export const postType = defineType({
     }),
     defineField({
       name: 'image',
-      title: 'Main Image',
-      type: 'image',
+      title: 'Hoofdafbeelding',
+      type: 'accessibleImage',
       group: 'content',
-      options: {
-        hotspot: true,
-      },
       validation: (rule) => rule.required(),
-      fields: [
-        {
-          name: 'alt',
-          type: 'string',
-          title: 'Alternative text',
-          description:
-            'Beschrijf de inhoud van de afbeelding (voor toegankelijkheid)',
-          validation: (Rule) => Rule.required().min(3),
-        },
-      ],
     }),
     defineField({
       name: 'featured',
-      title: 'Featured Post',
+      title: 'Uitgelichte post',
       type: 'boolean',
       group: 'content',
       initialValue: false,
     }),
     defineField({
       name: 'variant',
-      title: 'Color Variant',
+      title: 'Kleurvariant',
       type: 'colorVariant',
     }),
     defineField({
       name: 'content',
-      title: 'Content',
+      title: 'Inhoud',
       type: 'array',
       group: 'content',
       of: [
         {
           type: 'block',
           styles: [
-            { title: 'Normal', value: 'normal' },
+            { title: 'Normaal', value: 'normal' },
             { title: 'H2', value: 'h2' },
             { title: 'H3', value: 'h3' },
             { title: 'H4', value: 'h4' },
-            { title: 'Quote', value: 'blockquote' },
+            { title: 'Citaat', value: 'blockquote' },
           ],
           lists: [
-            { title: 'Bullet', value: 'bullet' },
-            { title: 'Numbered', value: 'number' },
+            { title: 'Opsommingstekens', value: 'bullet' },
+            { title: 'Genummerd', value: 'number' },
           ],
           marks: {
             decorators: [
-              { title: 'Strong', value: 'strong' },
-              { title: 'Emphasis', value: 'em' },
+              { title: 'Vetgedrukt', value: 'strong' },
+              { title: 'Cursief', value: 'em' },
             ],
             annotations: [
               {
@@ -130,21 +117,7 @@ export const postType = defineType({
           },
         },
         {
-          type: 'image',
-          options: { hotspot: true },
-          fields: [
-            {
-              name: 'alt',
-              type: 'string',
-              title: 'Alternative text',
-              description: 'Important for SEO and accessibility.',
-            },
-            {
-              name: 'caption',
-              type: 'string',
-              title: 'Caption',
-            },
-          ],
+          type: 'accessibleImage',
         },
       ],
     }),
@@ -154,7 +127,7 @@ export const postType = defineType({
       type: 'metadata',
       group: 'seo',
       description:
-        'Custom metadata for this post. If not set, default site metadata will be used.',
+        'Aangepaste metadata voor deze post. Als niet ingesteld, wordt de standaard site metadata gebruikt.',
     }),
   ],
   preview: {

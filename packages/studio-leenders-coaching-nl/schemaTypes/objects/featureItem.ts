@@ -3,47 +3,37 @@ import { defineType, defineField } from 'sanity';
 /* Feature Item Object */
 export const featureItem = defineType({
   name: 'featureItem',
-  title: 'Feature Item',
+  title: 'Feature item',
   type: 'object',
   description:
-    'A feature item with title, description, image, and optional link',
+    'Een feature item met titel, beschrijving, afbeelding en optionele link',
   fields: [
     defineField({
       name: 'title',
-      title: 'Title',
+      title: 'Titel',
       type: 'string',
-      description: 'The title of the feature',
+      description: 'De titel van de feature',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'description',
-      title: 'Description',
+      title: 'Beschrijving',
       type: 'text',
-      description: 'A brief description of the feature',
+      description: 'Een korte beschrijving van de feature',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'image',
-      title: 'Image',
-      type: 'image',
-      description: 'An illustrative image for the feature',
-      options: { hotspot: true },
+      title: 'Afbeelding',
+      type: 'accessibleImage',
+      description: 'Illustratieve afbeelding voor de feature',
       validation: (Rule) => Rule.required(),
-      fields: [
-        defineField({
-          name: 'alt',
-          title: 'Alt Text',
-          type: 'string',
-          description: 'Alternative text for accessibility',
-          validation: (Rule) => Rule.required(),
-        }),
-      ],
     }),
     defineField({
       name: 'link',
       title: 'Link',
       type: 'link',
-      description: 'Optional link for this feature item',
+      description: 'Optionele link voor dit feature item',
     }),
   ],
 });

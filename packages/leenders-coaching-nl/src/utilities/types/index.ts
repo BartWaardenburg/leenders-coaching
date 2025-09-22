@@ -4,7 +4,6 @@ export {
   type SizeVariant,
   type ColorVariant,
   type MaxWidthVariant,
-  type TextAlignVariant,
   type FlexDirectionVariant,
   type FlexWrapVariant,
   type JustifyContentVariant,

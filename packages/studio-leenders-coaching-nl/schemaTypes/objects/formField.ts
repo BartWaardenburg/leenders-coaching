@@ -3,7 +3,7 @@ import { defineType, defineField } from 'sanity';
 /* Form Field Option Object */
 export const formFieldOption = defineType({
   name: 'formFieldOption',
-  title: 'Form Field Option',
+  title: 'Formulier veld optie',
   type: 'object',
   fields: [
     defineField({
@@ -14,7 +14,7 @@ export const formFieldOption = defineType({
     }),
     defineField({
       name: 'value',
-      title: 'Value',
+      title: 'Waarde',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
@@ -24,7 +24,7 @@ export const formFieldOption = defineType({
 /* Form Field Object */
 export const formField = defineType({
   name: 'formField',
-  title: 'Form Field',
+  title: 'Formulier veld',
   type: 'object',
   fields: [
     defineField({
@@ -35,21 +35,21 @@ export const formField = defineType({
     }),
     defineField({
       name: 'type',
-      title: 'Field Type',
+      title: 'Veld type',
       type: 'string',
       options: {
         list: [
-          { title: 'Text', value: 'text' },
+          { title: 'Tekst', value: 'text' },
           { title: 'Email', value: 'email' },
           { title: 'Textarea', value: 'textarea' },
-          { title: 'Select', value: 'select' },
+          { title: 'Selecteer', value: 'select' },
         ],
       },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'required',
-      title: 'Required',
+      title: 'Verplicht',
       type: 'boolean',
       initialValue: false,
     }),
@@ -60,7 +60,7 @@ export const formField = defineType({
     }),
     defineField({
       name: 'options',
-      title: 'Options',
+      title: 'Opties',
       type: 'array',
       of: [{ type: 'formFieldOption' }],
       hidden: ({ parent }) => parent?.type !== 'select',

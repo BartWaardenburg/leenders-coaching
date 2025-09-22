@@ -1,2 +1,2 @@
 export { Section } from './Section';
-export type { PastelColor } from './Section';
+export type { PastelVariant } from '@/utilities/tokens';

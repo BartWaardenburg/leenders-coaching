@@ -3,29 +3,29 @@ import { defineType, defineField } from 'sanity';
 /* Form Configuration Object */
 export const formConfiguration = defineType({
   name: 'formConfiguration',
-  title: 'Form Configuration',
+  title: 'Formulier configuratie',
   type: 'object',
   fields: [
     defineField({
       name: 'emailTo',
-      title: 'Email To',
+      title: 'Email naar',
       type: 'string',
-      description: 'Email address to send form submissions to',
+      description: 'Email adres om formulier inzendingen naar te sturen',
       validation: (Rule) => Rule.required().email(),
     }),
     defineField({
       name: 'emailSubject',
-      title: 'Email Subject Template',
+      title: 'Email onderwerp template',
       type: 'string',
       description:
-        'Subject line template for form submission emails. Use {subject} to include the submitted subject.',
+        'Onderwerp regel template voor formulier inzending emails. Gebruik {subject} om het ingezonden onderwerp te includeren.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'submitLabel',
-      title: 'Submit Button Label',
+      title: 'Verzend knop label',
       type: 'string',
-      description: 'Text to display on the submit button',
+      description: 'Tekst om te tonen op de verzend knop',
       initialValue: 'Verstuur bericht',
     }),
   ],

@@ -7,7 +7,7 @@ import { client } from '@/utilities/sanity';
  * Let Sanity CDN pick the best format for the browser (WebP/AVIF) and control quality
  */
 const builder = imageUrlBuilder(client);
-const urlFor = (source: SanityImageSource) => builder.image(source);
+export const urlFor = (source: SanityImageSource) => builder.image(source);
 
 /**
  * Generate a custom loader function for Next.js Image component

@@ -3,30 +3,30 @@ import { defineType, Rule } from 'sanity';
 /* Time Slot Object */
 export const timeSlot = defineType({
   name: 'timeSlot',
-  title: 'Time Slot',
+  title: 'Tijdslot',
   type: 'object',
-  description: 'Define a time slot with start and end times',
+  description: 'Definieer een tijdslot met begin- en eindtijd',
   fields: [
     {
       name: 'startTime',
-      title: 'Start Time',
+      title: 'Begintijd',
       type: 'datetime',
-      description: 'The start time of the slot',
+      description: 'De begintijd van het slot',
       validation: (Rule: Rule) => Rule.required(),
     },
     {
       name: 'endTime',
-      title: 'End Time',
+      title: 'Eindtijd',
       type: 'datetime',
-      description: 'The end time of the slot',
+      description: 'De eindtijd van het slot',
       validation: (Rule: Rule) =>
         Rule.required().min(Rule.valueOfField('startTime')),
     },
     {
       name: 'isAvailable',
-      title: 'Available',
+      title: 'Beschikbaar',
       type: 'boolean',
-      description: 'Whether this time slot is available for booking',
+      description: 'Of dit tijdslot beschikbaar is voor boeking',
       initialValue: true,
     },
   ],

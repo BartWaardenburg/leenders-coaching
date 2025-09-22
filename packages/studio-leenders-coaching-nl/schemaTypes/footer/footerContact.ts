@@ -2,7 +2,7 @@ import { defineType } from 'sanity';
 
 export const footerContact = defineType({
   name: 'footerContact',
-  title: 'Footer Contact',
+  title: 'Footer contact',
   type: 'object',
   fields: [
     {
@@ -13,7 +13,7 @@ export const footerContact = defineType({
     },
     {
       name: 'phone',
-      title: 'Phone',
+      title: 'Telefoon',
       type: 'string',
     },
   ],

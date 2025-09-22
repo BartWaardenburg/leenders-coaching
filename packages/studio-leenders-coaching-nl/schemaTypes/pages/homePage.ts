@@ -4,8 +4,13 @@ import { baseGroups, basePageFields } from './baseFields';
 /* Home Page */
 export const homePage = defineType({
   name: 'homePage',
-  title: 'Home Page',
+  title: 'Homepagina',
   type: 'document',
   groups: baseGroups,
   fields: [...basePageFields],
+  preview: {
+    select: {
+      title: 'title',
+    },
+  },
 });

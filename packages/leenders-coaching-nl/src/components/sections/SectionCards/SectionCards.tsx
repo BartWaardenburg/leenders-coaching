@@ -1,6 +1,7 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 
-import { Section, type PastelColor } from '@/components/ui/Section';
+import { Section } from '@/components/ui/Section';
+import type { PastelVariant } from '@/utilities/tokens';
 import { Stack } from '@/components/ui/Stack';
 import { Heading } from '@/components/ui/Heading';
 import { Text } from '@/components/ui/Text';
@@ -11,7 +12,7 @@ type SectionCardsProps = {
   title?: ReactNode;
   description?: ReactNode;
   children: ReactNode;
-  background?: PastelColor;
+  background?: PastelVariant;
   border?: boolean;
 } & ComponentPropsWithoutRef<'section'>;
 

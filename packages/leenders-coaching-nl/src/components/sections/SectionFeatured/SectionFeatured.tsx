@@ -1,16 +1,15 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
-import type { StaticImageData } from 'next/image';
-import Image from 'next/image';
+import { ImageRenderer } from '@/components/ui/ImageRenderer';
+import { isValidImage, type ImageSource } from '@/utilities/image';
 
-import { Section, type PastelColor } from '@/components/ui/Section';
+import { Section } from '@/components/ui/Section';
+import type { PastelVariant } from '@/utilities/tokens';
 import { Grid } from '@/components/ui/Grid';
 import { Heading } from '@/components/ui/Heading';
 import { Text } from '@/components/ui/Text';
 import { Stack } from '@/components/ui/Stack';
 import { Box } from '@/components/ui/Box';
 import { Button } from '@/components/ui/Button';
-import { SanityImage } from '@/components/ui/SanityImage';
 
 type CallToAction = {
   href: string;
@@ -32,11 +31,11 @@ type SectionFeaturedProps = {
   /** The description text */
   description?: ReactNode;
   /** The image - can be a Sanity image object, static image, or string URL */
-  image: SanityImageSource | StaticImageData | string | null;
+  image: ImageSource;
   /** Optional call-to-action button */
   cta?: CallToAction;
   /** Optional background color */
-  background?: PastelColor;
+  background?: PastelVariant;
   /** Whether to show a border */
   border?: boolean;
   /** Whether to reverse the layout (image on right) */
@@ -76,31 +75,18 @@ export const SectionFeatured = ({
     </Stack>
   );
 
-  const ImageContainer = image ? (
+  const ImageContainer = isValidImage(image) ? (
     <Box className="relative aspect-[4/3] w-full h-full sm:aspect-[16/9]">
-      {/* Check if image is a Sanity image object (has asset property) */}
-      {typeof image === 'object' && 'asset' in image ? (
-        <SanityImage
-          image={image as SanityImageSource}
-          alt=""
-          fill
-          className="object-cover"
-          sizes="(max-width: 640px) 100vw, 50vw"
-          priority={true}
-          followHotspot={true}
-          qualityHint={80}
-        />
-      ) : (
-        /* For static images or string URLs, use next/image */
-        <Image
-          src={image as string | StaticImageData}
-          alt=""
-          fill
-          className="object-cover"
-          sizes="(max-width: 640px) 100vw, 50vw"
-          priority={true}
-        />
-      )}
+      <ImageRenderer
+        image={image}
+        alt=""
+        fill
+        className="object-cover"
+        sizes="(max-width: 640px) 100vw, 50vw"
+        priority={true}
+        followHotspot={true}
+        qualityHint={80}
+      />
     </Box>
   ) : (
     <Box className="relative aspect-[4/3] w-full h-full sm:aspect-[16/9] bg-muted" />

@@ -2,7 +2,7 @@ import { defineType } from 'sanity';
 
 export const navigationItem = defineType({
   name: 'navigationItem',
-  title: 'Navigation Item',
+  title: 'Navigatie item',
   type: 'object',
   fields: [
     {

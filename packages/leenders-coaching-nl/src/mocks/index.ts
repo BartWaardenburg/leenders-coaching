@@ -17,6 +17,7 @@ export {
 // Section mocks
 export {
   mockHeaderSection,
+  mockHeaderSectionNoCtas,
   mockContentSection,
   mockCardsSection,
   mockFAQSection,
@@ -59,3 +60,14 @@ export {
   mockSanityQuery,
   mockSanityResponse,
 } from './sanity-mocks';
+
+// Blog mocks
+export {
+  mockBlogPost,
+  mockBlogPostGreen,
+  mockBlogPostPurple,
+  mockCategories,
+  mockBlogPosts,
+  mockResolvedBlogPost,
+  mockResolvedBlogPosts,
+} from './blog-mocks';

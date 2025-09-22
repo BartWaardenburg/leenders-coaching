@@ -2,30 +2,30 @@ import { defineType, defineField } from 'sanity';
 
 export const formMessages = defineType({
   name: 'formMessages',
-  title: 'Form Messages',
+  title: 'Formulier berichten',
   type: 'object',
   fields: [
     defineField({
       name: 'required',
-      title: 'Required Field',
+      title: 'Verplicht veld',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'invalid',
-      title: 'Invalid Format',
+      title: 'Ongeldig formaat',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'success',
-      title: 'Success Message',
+      title: 'Succes bericht',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'error',
-      title: 'Error Message',
+      title: 'Fout bericht',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
@@ -34,12 +34,12 @@ export const formMessages = defineType({
 
 export const forms = defineType({
   name: 'forms',
-  title: 'Forms',
+  title: 'Formulieren',
   type: 'object',
   fields: [
     defineField({
       name: 'messages',
-      title: 'Form Messages',
+      title: 'Formulier berichten',
       type: 'formMessages',
     }),
   ],

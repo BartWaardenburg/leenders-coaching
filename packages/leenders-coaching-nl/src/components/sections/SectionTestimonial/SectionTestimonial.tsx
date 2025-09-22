@@ -2,7 +2,8 @@ import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import type { StaticImageData } from 'next/image';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
-import { Section, type PastelColor } from '@/components/ui/Section';
+import { Section } from '@/components/ui/Section';
+import type { PastelVariant } from '@/utilities/tokens';
 import { Stack } from '@/components/ui/Stack';
 import { Heading } from '@/components/ui/Heading';
 import { Box } from '@/components/ui/Box';
@@ -30,7 +31,7 @@ type SectionTestimonialProps = {
   /** Array of testimonials */
   testimonials: Testimonial[];
   /** Optional background color */
-  background?: PastelColor;
+  background?: PastelVariant;
   /** Whether to show a border */
   border?: boolean;
 } & ComponentPropsWithoutRef<'section'>;

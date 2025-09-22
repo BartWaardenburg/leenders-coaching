@@ -2,63 +2,64 @@ import { defineType, defineField } from 'sanity';
 
 export const seo = defineType({
   name: 'seo',
-  title: 'Global SEO Settings',
+  title: 'Globale SEO instellingen',
   type: 'object',
-  description: 'Default SEO settings for the entire website',
+  description: 'Standaard SEO instellingen voor de hele website',
   fields: [
     defineField({
       name: 'title',
-      title: 'Default Title',
+      title: 'Standaard titel',
       type: 'string',
       description:
-        'Default title template for all pages. Use {page} to insert the page title.',
+        "Standaard titel template voor alle pagina's. Gebruik {page} om de pagina titel in te voegen.",
       initialValue: '{page} | Leenders Coaching',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'description',
-      title: 'Default Description',
+      title: 'Standaard beschrijving',
       type: 'text',
       description:
-        "Default meta description for pages that don't specify their own",
+        "Standaard meta beschrijving voor pagina's die hun eigen niet specificeren",
       validation: (Rule) => Rule.required().max(155),
     }),
     defineField({
       name: 'keywords',
-      title: 'Default Keywords',
+      title: 'Standaard sleutelwoorden',
       type: 'array',
       of: [{ type: 'string' }],
-      description: "Default keywords for pages that don't specify their own",
+      description:
+        "Standaard sleutelwoorden voor pagina's die hun eigen niet specificeren",
     }),
     defineField({
       name: 'openGraph',
-      title: 'Default Social Media Settings',
+      title: 'Standaard social media instellingen',
       type: 'openGraph',
-      description: 'Default social media sharing settings',
+      description: 'Standaard social media sharing instellingen',
     }),
     defineField({
       name: 'twitter',
-      title: 'Default Twitter Settings',
+      title: 'Standaard Twitter instellingen',
       type: 'twitter',
-      description: 'Default Twitter card settings',
+      description: 'Standaard Twitter card instellingen',
     }),
     defineField({
       name: 'robots',
-      title: 'Default Search Engine Settings',
+      title: 'Standaard zoekmachine instellingen',
       type: 'robots',
-      description: 'Default search engine behavior settings',
+      description: 'Standaard zoekmachine gedrag instellingen',
     }),
     defineField({
       name: 'googleSiteVerification',
-      title: 'Google Site Verification',
+      title: 'Google site verificatie',
       type: 'string',
-      description: 'Google Search Console verification code',
+      description: 'Google Search Console verificatie code',
     }),
     defineField({
       name: 'bingSiteVerification',
-      title: 'Bing Site Verification',
+      title: 'Bing site verificatie',
       type: 'string',
-      description: 'Bing Webmaster Tools verification code',
+      description: 'Bing Webmaster Tools verificatie code',
     }),
   ],
 });

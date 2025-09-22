@@ -103,22 +103,20 @@ const FooterSection = ({
   children,
   isLast = false,
 }: FooterSectionProps) => (
-  <motion.div variants={sectionVariants} className="h-full">
-    <Flex direction="column" className="h-full">
-      <Heading
-        level="h3"
-        variant="small"
-        spacing="none"
-        className="mb-6 sm:px-0 md:px-4"
-      >
-        {title}
-      </Heading>
-      <Box
-        className={`border-t ${!isLast ? 'md:border-r' : ''} border-foreground/80 pt-4 sm:px-0 md:px-4 pb-8 flex-1 transition-theme`}
-      >
-        {children}
-      </Box>
-    </Flex>
+  <motion.div variants={sectionVariants} className="h-full flex flex-col">
+    <Heading
+      level="h3"
+      variant="small"
+      spacing="none"
+      className="mb-6 sm:px-0 md:px-4"
+    >
+      {title}
+    </Heading>
+    <Box
+      className={`border-t ${!isLast ? 'md:border-r' : ''} border-foreground/80 pt-4 pb-8 sm:px-0 md:px-4 transition-theme flex-1`}
+    >
+      {children}
+    </Box>
   </motion.div>
 );
 
@@ -166,12 +164,15 @@ export const MenuFooter = ({ sections }: MenuFooterProps) => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="h-full"
       >
-        <Grid cols={{ base: 1, md: 3 }} gap={0} className="h-full">
+        <Grid
+          cols={{ base: 1, md: 3 }}
+          gap={0}
+          className="w-full border-b border-foreground/80 h-full"
+        >
           <FooterSection title={sections.about.title || ''}>
-            <Flex direction="column" className="h-full">
-              <motion.div variants={linkVariants} className="flex-1">
+            <Flex direction="column">
+              <motion.div variants={linkVariants}>
                 <Text variant="muted" className="text-sm">
                   {sections.about.description}
                 </Text>
@@ -180,8 +181,8 @@ export const MenuFooter = ({ sections }: MenuFooterProps) => {
           </FooterSection>
 
           <FooterSection title={sections.social?.title || ''}>
-            <Flex direction="column" className="h-full">
-              <Box as="ul" className="flex-1">
+            <Flex direction="column">
+              <Box as="ul">
                 <Stack space={4}>
                   {sections.social?.links.map(
                     (link) =>
@@ -201,8 +202,8 @@ export const MenuFooter = ({ sections }: MenuFooterProps) => {
           </FooterSection>
 
           <FooterSection title={sections.contact.title || ''} isLast>
-            <Flex direction="column" className="h-full">
-              <Stack space={4} className="flex-1">
+            <Flex direction="column">
+              <Stack space={4}>
                 {sections.contact.projectEnquiry && (
                   <motion.div variants={linkVariants}>
                     <Box>

@@ -6,12 +6,12 @@ import { defineField, defineType } from 'sanity';
  */
 export const categoryType = defineType({
   name: 'category',
-  title: 'Category',
+  title: 'Categorie',
   type: 'document',
   groups: [
     {
       name: 'content',
-      title: 'Content',
+      title: 'Inhoud',
     },
     {
       name: 'seo',
@@ -21,20 +21,20 @@ export const categoryType = defineType({
   fields: [
     defineField({
       name: 'title',
-      title: 'Title',
+      title: 'Titel',
       type: 'string',
       group: 'content',
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'description',
-      title: 'Description',
+      title: 'Beschrijving',
       type: 'text',
       group: 'content',
     }),
     defineField({
       name: 'slug',
-      title: 'Slug',
+      title: 'URL-pad',
       type: 'slug',
       group: 'content',
       options: { source: 'title' },
@@ -42,9 +42,17 @@ export const categoryType = defineType({
     }),
     defineField({
       name: 'color',
-      title: 'Color',
+      title: 'Kleur',
       type: 'colorVariant',
       group: 'content',
+    }),
+    defineField({
+      name: 'header',
+      title: 'Header sectie',
+      type: 'sectionHeader',
+      group: 'content',
+      description:
+        'Optionele header sectie voor de categorie pagina. Als niet ingesteld, wordt een standaard header gebruikt.',
     }),
     defineField({
       name: 'metadata',
@@ -52,7 +60,7 @@ export const categoryType = defineType({
       type: 'metadata',
       group: 'seo',
       description:
-        'Custom metadata for this category. If not set, default site metadata will be used.',
+        'Aangepaste metadata voor deze categorie. Als niet ingesteld, wordt de standaard site metadata gebruikt.',
     }),
   ],
   preview: {

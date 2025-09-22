@@ -94,7 +94,7 @@ export const Person = ({
           src={imageSrc}
           alt={
             imageAlt ||
-            (typeof imageSrc === 'object' && 'asset' in imageSrc
+            (typeof imageSrc === 'object' && 'image' in imageSrc
               ? (imageSrc as { alt?: string })?.alt
               : undefined) ||
             name

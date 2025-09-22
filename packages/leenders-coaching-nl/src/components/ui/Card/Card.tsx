@@ -2,14 +2,13 @@
 
 import { FC, ReactNode } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import type { StaticImageData } from 'next/image';
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
-import { SanityImage } from '@/components/ui/SanityImage';
+import { ImageRenderer } from '@/components/ui/ImageRenderer';
+import { isValidImage, type ImageSource } from '@/utilities/image';
 import { Text } from '@/components/ui/Text';
 import { Heading } from '@/components/ui/Heading';
 import { Flex } from '@/components/ui/Flex';
 import { Box } from '@/components/ui/Box';
+import { ViewTransition } from '@/components/ui/ViewTransition';
 import { cn } from '@/utilities/cn';
 import { useConfig } from '@/components/providers/ClientConfigProvider';
 import { motion, easeInOut, useReducedMotion } from 'motion/react';
@@ -69,7 +68,7 @@ export type CardProps = {
   categories?: string[];
   children?: ReactNode;
   slug?: string;
-  image?: string | StaticImageData | SanityImageSource;
+  image?: ImageSource;
   variant?: CardVariant;
   border?: boolean;
   reverse?: boolean;
@@ -196,7 +195,7 @@ export const Card: FC<CardProps> = ({
       className="h-full"
     >
       <Flex className="h-full flex-col @lg:flex-row">
-        {image && (
+        {isValidImage(image) && (
           <Box
             className={cn(
               'relative border-b @lg:border-b-0 @lg:border-l-0 @lg:border-r border-foreground/80 h-48 @lg:h-auto w-full @lg:w-1/3 @4xl:w-1/2 shrink-0 overflow-hidden',
@@ -204,26 +203,15 @@ export const Card: FC<CardProps> = ({
             )}
           >
             <motion.div variants={imageVariants} className="h-full w-full">
-              {/* Check if image is a Sanity image object or static image/URL */}
-              {typeof image === 'object' && 'asset' in image ? (
-                <SanityImage
-                  image={image as SanityImageSource}
-                  alt={title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
-                  followHotspot={true}
-                  qualityHint={80}
-                />
-              ) : (
-                <Image
-                  src={image as string | StaticImageData}
-                  alt={title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
-                />
-              )}
+              <ImageRenderer
+                image={image}
+                alt={title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
+                followHotspot={true}
+                qualityHint={80}
+              />
             </motion.div>
           </Box>
         )}
@@ -244,14 +232,16 @@ export const Card: FC<CardProps> = ({
               )}
 
               <Box className="pb-6 w-full">
-                <Heading
-                  level="h2"
-                  variant="medium"
-                  weight="normal"
-                  spacing="none"
-                >
-                  {title}
-                </Heading>
+                <ViewTransition name={`title-${slug}`} disabled={!slug}>
+                  <Heading
+                    level="h2"
+                    variant="medium"
+                    weight="normal"
+                    spacing="none"
+                  >
+                    {title}
+                  </Heading>
+                </ViewTransition>
               </Box>
 
               {hasMetaData && (
@@ -264,24 +254,31 @@ export const Card: FC<CardProps> = ({
                   >
                     {date && (
                       <Box className="pr-4 py-2 w-1/2">
-                        <Text
-                          variant="card-meta"
-                          textAlign="right"
-                          className="break-words hyphens-auto overflow-hidden"
-                        >
-                          {date}
-                        </Text>
+                        <ViewTransition name={`date-${slug}`} disabled={!slug}>
+                          <Text
+                            variant="card-meta"
+                            textAlign="right"
+                            className="break-words hyphens-auto overflow-hidden"
+                          >
+                            {date}
+                          </Text>
+                        </ViewTransition>
                       </Box>
                     )}
                     {categories.length > 0 && (
                       <Box className="pl-4 py-2 w-1/2">
-                        <Text
-                          variant="card-meta"
-                          textAlign="left"
-                          className="break-words hyphens-auto overflow-hidden"
+                        <ViewTransition
+                          name={`categories-${slug}`}
+                          disabled={!slug}
                         >
-                          {categories.join(', ')}
-                        </Text>
+                          <Text
+                            variant="card-meta"
+                            textAlign="left"
+                            className="break-words hyphens-auto overflow-hidden"
+                          >
+                            {categories.join(', ')}
+                          </Text>
+                        </ViewTransition>
                       </Box>
                     )}
                   </Flex>

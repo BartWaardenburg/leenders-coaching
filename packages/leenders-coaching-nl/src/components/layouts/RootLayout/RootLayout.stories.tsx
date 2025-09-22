@@ -43,8 +43,7 @@ const mockContent = {
   header: {
     title: mockHeaderSection.displayTitle,
     description: mockHeaderSection.description,
-    primaryCta: mockButtonVariants.primary,
-    secondaryCta: mockButtonVariants.secondary,
+    ctas: [mockButtonVariants.primary, mockButtonVariants.secondary],
   },
   content: mockContentSection.content,
   longContent: mockSanityBlock.multiple,
@@ -60,8 +59,7 @@ export const AllSections: Story = {
       <SectionHeader
         title={mockContent.header.title}
         description={mockContent.header.description}
-        primaryCta={mockContent.header.primaryCta}
-        secondaryCta={mockContent.header.secondaryCta}
+        ctas={mockContent.header.ctas}
         background="blue"
       />
       <SectionContent

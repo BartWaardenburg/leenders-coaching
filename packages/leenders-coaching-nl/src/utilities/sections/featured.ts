@@ -29,7 +29,7 @@ export const transformFeaturedSection = (
   return {
     title: data.displayTitle || undefined,
     description: data.description || '',
-    image: data.image || null,
+    image: data.image?.image || null,
     cta: data.cta
       ? {
           href: data.cta.href || '',

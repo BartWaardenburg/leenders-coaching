@@ -3,47 +3,34 @@ import { defineType } from 'sanity';
 /* Testimonial Object */
 export const testimonial = defineType({
   name: 'testimonial',
-  title: 'Testimonial',
+  title: 'Getuigenis',
   type: 'object',
   fields: [
     {
       name: 'quote',
       type: 'text',
-      title: 'Quote',
-      description: 'The testimonial text',
+      title: 'Citaat',
+      description: 'De getuigenis tekst',
       validation: (Rule: any) => Rule.required(),
     },
     {
       name: 'name',
       type: 'string',
-      title: 'Author Name',
+      title: 'Auteur naam',
       validation: (Rule: any) => Rule.required(),
     },
     {
       name: 'role',
       type: 'string',
-      title: 'Author Role/Title',
-      description: 'Optional role or description of the person',
+      title: 'Auteur rol/titel',
+      description: 'Optionele rol of beschrijving van de persoon',
     },
     {
       name: 'image',
-      title: 'Author Image',
-      type: 'image',
+      title: 'Profielafbeelding',
+      type: 'accessibleImage',
       description:
-        'Profile picture of the person giving the testimonial (optional)',
-      options: {
-        hotspot: true,
-      },
-      fields: [
-        {
-          name: 'alt',
-          type: 'string',
-          title: 'Alternative text',
-          description:
-            'Beschrijf de inhoud van de afbeelding (voor toegankelijkheid)',
-          validation: (Rule: any) => Rule.required().min(3),
-        },
-      ],
+        'Profielfoto van de persoon die de getuigenis geeft (optioneel)',
     },
   ],
 });

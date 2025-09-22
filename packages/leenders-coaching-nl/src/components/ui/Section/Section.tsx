@@ -5,14 +5,9 @@ import { Container } from '../Container';
 import { pastelVariant, type PastelVariant } from '@/utilities/tokens';
 
 /**
- * Available pastel color options for section backgrounds and borders
- */
-export type PastelColor = PastelVariant;
-
-/**
  * Background styles mapping for pastel colors with dark mode support
  */
-const backgroundStyles: Record<PastelColor, string> = {
+const backgroundStyles: Record<PastelVariant, string> = {
   blue: pastelVariant.blue.bg,
   purple: pastelVariant.purple.bg,
   green: pastelVariant.green.bg,
@@ -24,7 +19,7 @@ const backgroundStyles: Record<PastelColor, string> = {
 /**
  * Border styles mapping for pastel colors with dark mode support
  */
-const borderStyles: Record<PastelColor, string> = {
+const borderStyles: Record<PastelVariant, string> = {
   blue: pastelVariant.blue.borderDark,
   purple: pastelVariant.purple.borderDark,
   green: pastelVariant.green.borderDark,
@@ -71,7 +66,7 @@ type SectionProps = {
   /** Child elements to render within the section */
   children: React.ReactNode;
   /** Pastel color theme for background and borders */
-  background?: PastelColor;
+  background?: PastelVariant;
   /** Whether to show colored borders on top and bottom */
   border?: boolean;
   /** Whether to disable the default padding */
@@ -90,7 +85,7 @@ type SectionProps = {
  *
  * @param props - The component props
  * @param props.children - Child elements to render within the section
- * @param props.background - Pastel color theme for background and borders
+ * @param props.background - Pastel variant theme for background and borders
  * @param props.border - Whether to show colored borders on top and bottom
  * @param props.noPadding - Whether to disable the default responsive padding
  * @param props.maxWidth - Maximum width constraint for the section content

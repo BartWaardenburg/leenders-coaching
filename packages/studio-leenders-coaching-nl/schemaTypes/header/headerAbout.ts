@@ -2,17 +2,17 @@ import { defineType } from 'sanity';
 
 export const headerAbout = defineType({
   name: 'headerAbout',
-  title: 'Header About',
+  title: 'Header over',
   type: 'object',
   fields: [
     {
       name: 'title',
-      title: 'Title',
+      title: 'Titel',
       type: 'string',
     },
     {
       name: 'description',
-      title: 'Description',
+      title: 'Beschrijving',
       type: 'text',
     },
   ],

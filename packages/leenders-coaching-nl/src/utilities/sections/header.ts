@@ -31,21 +31,12 @@ export const transformHeaderSection = (
     description: data.description || '',
     background: data.background,
     border: data.border,
-    primaryCta: data.primaryCta
-      ? {
-          href: data.primaryCta.href || '',
-          label: data.primaryCta.label || '',
-          isExternal: data.primaryCta.isExternal,
-          variant: data.primaryCta.variant,
-        }
-      : undefined,
-    secondaryCta: data.secondaryCta
-      ? {
-          href: data.secondaryCta.href || '',
-          label: data.secondaryCta.label || '',
-          isExternal: data.secondaryCta.isExternal,
-          variant: data.secondaryCta.variant,
-        }
-      : undefined,
+    ctas:
+      data.ctas?.map((cta) => ({
+        href: cta.href || '',
+        label: cta.label || '',
+        isExternal: cta.isExternal,
+        variant: cta.variant,
+      })) || [],
   };
 };

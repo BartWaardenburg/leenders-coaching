@@ -739,10 +739,6 @@ export const mockSanityDocument = {
     excerpt:
       'Ontdek hoe je realistische en haalbare doelen stelt die je motiveren om te groeien.',
     content: mockSanityBlock.multiple,
-    author: {
-      _ref: 'author-jan',
-      _type: 'reference',
-    },
     image: mockSanityImage.withMetadata,
     category: 'Persoonlijke Ontwikkeling',
     publishedAt: '2024-01-15T00:00:00Z',
@@ -752,26 +748,6 @@ export const mockSanityDocument = {
         'Leer hoe je realistische en haalbare doelen stelt die je motiveren om te groeien.',
       keywords: ['doelstellingen', 'persoonlijke ontwikkeling', 'coaching'],
     },
-  },
-  author: {
-    _id: 'author-jan',
-    _type: 'author',
-    _rev: 'rev-789',
-    _createdAt: '2024-01-01T00:00:00Z',
-    _updatedAt: '2024-01-01T00:00:00Z',
-    name: 'Jan Leenders',
-    bio: 'Ervaren coach met meer dan 10 jaar ervaring in het begeleiden van mensen bij hun persoonlijke en professionele ontwikkeling.',
-    image: mockSanityImage.profile,
-    social: [
-      {
-        platform: 'linkedin',
-        url: 'https://linkedin.com/in/janleenders',
-      },
-      {
-        platform: 'twitter',
-        url: 'https://twitter.com/janleenders',
-      },
-    ],
   },
 };
 
@@ -825,7 +801,7 @@ export const mockSanityQuery = {
       slug,
       seo,
       content,
-      sections[] {
+      sections[]-> {
         _type,
         title,
         displayTitle,
@@ -864,10 +840,6 @@ export const mockSanityQuery = {
       slug,
       excerpt,
       content,
-      author-> {
-        name,
-        image
-      },
       image,
       category,
       publishedAt,

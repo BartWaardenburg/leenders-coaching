@@ -52,9 +52,12 @@ export const Avatar = memo<AvatarProps>(
         )}
       >
         {/* Check if src is a Sanity image object or static image/URL */}
-        {src && typeof src === 'object' && 'asset' in src ? (
+        {src &&
+        typeof src === 'object' &&
+        'image' in src &&
+        src.image?.asset ? (
           <SanityImage
-            image={src as SanityImageSource}
+            image={src.image as SanityImageSource}
             alt={alt}
             fill
             className="object-cover"

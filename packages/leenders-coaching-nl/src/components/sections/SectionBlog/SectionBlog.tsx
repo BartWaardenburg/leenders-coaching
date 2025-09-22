@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { PastelColor, Section } from '@/components/ui/Section';
+import { Section } from '@/components/ui/Section';
+import type { PastelVariant } from '@/utilities/tokens';
 import { Heading } from '@/components/ui/Heading';
 import { Text } from '@/components/ui/Text';
 import { Box } from '@/components/ui/Box';
@@ -9,8 +10,10 @@ import { Flex } from '@/components/ui/Flex';
 import { Grid } from '@/components/ui/Grid';
 import { Card } from '@/components/ui/Card';
 import { Pagination } from '@/components/ui/Pagination';
+import { ViewTransition } from '@/components/ui/ViewTransition';
+import { extractSanityImage } from '@/utilities/image';
 
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import type { ImageSource } from '@/utilities/image';
 
 export type BlogPost = {
   title: string;
@@ -18,9 +21,9 @@ export type BlogPost = {
   slug: string;
   date: string;
   categories: string[];
-  image: string | SanityImageSource | null;
+  image: ImageSource;
   featured?: boolean;
-  variant?: PastelColor;
+  variant?: PastelVariant;
 };
 
 interface SectionBlogProps {
@@ -37,7 +40,7 @@ interface SectionBlogProps {
   postsPerPage?: number;
   className?: string;
   /** Optional background color */
-  background?: PastelColor;
+  background?: PastelVariant;
   /** Whether to show a border */
   border?: boolean;
   /** Test ID for the section */
@@ -137,23 +140,24 @@ export const SectionBlog = ({
               className="mb-12"
             >
               {currentPosts.map((post, index) => (
-                <Card
-                  key={post.slug}
-                  title={post.title}
-                  date={post.date}
-                  categories={post.categories}
-                  slug={post.slug}
-                  image={post.image || undefined}
-                  variant={post.variant || 'blue'}
-                  featured={post.featured}
-                  border
-                  reverse={index % 2 === 1}
-                  testid="card"
-                >
-                  <Text testid="post-description" variant="muted">
-                    {post.description}
-                  </Text>
-                </Card>
+                <ViewTransition key={post.slug} name={`post-${post.slug}`}>
+                  <Card
+                    title={post.title}
+                    date={post.date}
+                    categories={post.categories}
+                    slug={post.slug}
+                    image={extractSanityImage(post.image) || undefined}
+                    variant={post.variant || 'blue'}
+                    featured={post.featured}
+                    border
+                    reverse={index % 2 === 1}
+                    testid="card"
+                  >
+                    <Text testid="post-description" variant="muted">
+                      {post.description}
+                    </Text>
+                  </Card>
+                </ViewTransition>
               ))}
             </Grid>
 

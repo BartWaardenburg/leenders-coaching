@@ -63,11 +63,6 @@ export type MaxWidthVariant =
   | 'full';
 
 /**
- * Common text alignment variants
- */
-export type TextAlignVariant = 'left' | 'center' | 'right';
-
-/**
  * Common flex direction variants
  */
 export type FlexDirectionVariant =

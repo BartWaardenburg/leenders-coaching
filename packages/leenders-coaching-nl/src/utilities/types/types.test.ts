@@ -5,7 +5,6 @@ import type {
   SizeVariant,
   ColorVariant,
   MaxWidthVariant,
-  TextAlignVariant,
   FlexDirectionVariant,
   FlexWrapVariant,
   JustifyContentVariant,
@@ -92,11 +91,6 @@ describe('Shared Types', () => {
         'full',
       ];
       expect(maxWidths).toHaveLength(12);
-    });
-
-    it('should have correct text align variants', () => {
-      const textAligns: TextAlignVariant[] = ['left', 'center', 'right'];
-      expect(textAligns).toHaveLength(3);
     });
 
     it('should have correct flex direction variants', () => {

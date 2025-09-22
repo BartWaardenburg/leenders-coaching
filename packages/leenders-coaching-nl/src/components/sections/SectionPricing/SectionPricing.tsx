@@ -1,4 +1,5 @@
-import { Section, PastelColor } from '@/components/ui/Section';
+import { Section } from '@/components/ui/Section';
+import type { PastelVariant } from '@/utilities/tokens';
 import { Heading } from '@/components/ui/Heading';
 import { Text } from '@/components/ui/Text';
 import { Flex } from '@/components/ui/Flex';
@@ -16,7 +17,7 @@ interface PricingPackage {
   features: PricingFeature[];
   isPopular?: boolean;
   ctaLabel: string;
-  variant?: 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal';
+  variant?: PastelVariant;
 }
 
 interface SectionPricingProps {
@@ -25,7 +26,7 @@ interface SectionPricingProps {
   packages: PricingPackage[];
   onBooking?: () => void;
   className?: string;
-  background?: PastelColor;
+  background?: PastelVariant;
   border?: boolean;
   testid?: string;
 }

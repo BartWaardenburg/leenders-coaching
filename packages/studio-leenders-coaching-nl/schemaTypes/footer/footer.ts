@@ -7,20 +7,26 @@ export const footer = defineType({
   fields: [
     {
       name: 'copyright',
-      title: 'Copyright Text',
+      title: 'Copyright tekst',
       type: 'string',
       validation: (rule) => rule.required(),
     },
     {
       name: 'contact',
-      title: 'Contact Information',
+      title: 'Contact informatie',
       type: 'footerContact',
     },
     {
       name: 'socialLinks',
-      title: 'Social Media Links',
+      title: 'Social media links',
       type: 'array',
       of: [{ type: 'socialLink' }],
     },
   ],
+  preview: {
+    select: {
+      title: 'copyright',
+      subtitle: 'contact.email',
+    },
+  },
 });

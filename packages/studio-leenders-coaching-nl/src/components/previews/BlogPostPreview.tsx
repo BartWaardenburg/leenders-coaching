@@ -1,3 +1,4 @@
+import React from 'react';
 import { Card, Text, Stack, Badge, Flex } from '@sanity/ui';
 import { CalendarIcon, UserIcon } from '@sanity/icons';
 import type { SanityDocument } from 'sanity';

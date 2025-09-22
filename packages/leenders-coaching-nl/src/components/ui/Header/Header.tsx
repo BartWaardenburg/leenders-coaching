@@ -190,9 +190,10 @@ export const Header = ({
         ref={headerRef}
         as="header"
         className={cn(
-          'fixed top-0 z-50 w-full transition-theme bg-background',
-          isMenuOpen &&
-            '[background-color:var(--color-menu-background)] dark:[background-color:var(--color-menu-background-dark)]',
+          'fixed top-0 z-50 w-full transition-theme',
+          isMenuOpen
+            ? '[background-color:var(--color-menu-background)] dark:[background-color:var(--color-menu-background-dark)]'
+            : 'bg-background',
           className
         )}
         {...props}
@@ -239,14 +240,15 @@ export const Header = ({
             aria-labelledby="header-menu-title"
           >
             <Box className="h-screen overflow-y-auto">
-              <Container className="min-h-screen pt-36">
+              <Container className="h-full pt-36">
                 <motion.div
                   variants={contentVariants}
                   initial="hidden"
                   animate="visible"
                   exit="hidden"
+                  className="h-full"
                 >
-                  <Flex direction="column" className="h-full">
+                  <Flex direction="column" className="h-full justify-between">
                     <Box as="nav" className="mb-16 text-left md:text-right">
                       <h2 id="header-menu-title" className="sr-only">
                         Navigatiemenu

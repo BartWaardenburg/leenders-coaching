@@ -9,6 +9,7 @@ export * from './featureItem';
 export * from './formConfiguration';
 export * from './formField';
 export * from './forms';
+export * from './image';
 export * from './interface';
 export * from './link';
 export * from './metadata';

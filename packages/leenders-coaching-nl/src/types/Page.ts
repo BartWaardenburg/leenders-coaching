@@ -14,6 +14,8 @@ import type {
 export interface BasePage {
   _id: string;
   _type: string;
+  _createdAt?: string;
+  _updatedAt?: string;
   title?: string;
   slug?: {
     current?: string;

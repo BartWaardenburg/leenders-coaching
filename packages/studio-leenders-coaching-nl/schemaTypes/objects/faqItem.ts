@@ -3,27 +3,27 @@ import { defineType } from 'sanity';
 /* FAQ Item Object */
 export const faqItem = defineType({
   name: 'faqItem',
-  title: 'FAQ Item',
+  title: 'FAQ item',
   type: 'object',
-  description: 'A question and answer pair for the FAQ section',
+  description: 'Een vraag en antwoord paar voor de FAQ sectie',
   fields: [
     {
       name: 'question',
-      title: 'Question',
+      title: 'Vraag',
       type: 'string',
-      description: 'The question text',
+      description: 'De vraag tekst',
       validation: (Rule) => Rule.required(),
     },
     {
       name: 'answer',
-      title: 'Answer',
+      title: 'Antwoord',
       type: 'richText',
-      description: 'The answer content with rich text formatting',
+      description: 'De antwoord inhoud met rijke tekst opmaak',
       validation: (Rule) => Rule.required(),
       options: {
         // Override the default styles to only allow normal and h4
         styles: [
-          { title: 'Normal', value: 'normal' },
+          { title: 'Normaal', value: 'normal' },
           { title: 'H4', value: 'h4' },
         ],
       },

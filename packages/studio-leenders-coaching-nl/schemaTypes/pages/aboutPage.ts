@@ -8,4 +8,9 @@ export const aboutPage = defineType({
   type: 'document',
   groups: baseGroups,
   fields: [...basePageFields],
+  preview: {
+    select: {
+      title: 'title',
+    },
+  },
 });

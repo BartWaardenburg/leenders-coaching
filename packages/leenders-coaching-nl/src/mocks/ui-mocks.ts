@@ -207,10 +207,6 @@ export const mockCardData = {
       'Ontdek hoe je realistische en haalbare doelen stelt die je motiveren om te groeien.',
     slug: '5-tips-voor-effectieve-doelstellingen',
     publishedAt: '2024-01-15',
-    author: {
-      name: 'Jan Leenders',
-      image: 'https://picsum.photos/id/237/80/80',
-    },
     image: 'https://picsum.photos/id/1027/800/500',
     category: 'Persoonlijke Ontwikkeling',
   },

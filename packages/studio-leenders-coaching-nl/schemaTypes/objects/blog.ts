@@ -3,23 +3,23 @@ import { defineType, defineField } from 'sanity';
 /* Blog labels for UI text configuration */
 export const blogLabels = defineType({
   name: 'blogLabels',
-  title: 'Blog Labels',
+  title: 'Blog labels',
   type: 'object',
-  description: 'Configure text labels used in the blog section',
+  description: 'Configureer tekst labels gebruikt in de blog sectie',
   fields: [
     defineField({
       name: 'featured',
-      title: 'Featured Label',
+      title: 'Uitgelicht label',
       type: 'string',
-      description: 'Text to show for featured posts',
+      description: 'Tekst om te tonen voor uitgelichte posts',
       validation: (Rule) => Rule.required(),
       initialValue: 'Uitgelicht',
     }),
     defineField({
       name: 'readArticle',
-      title: 'Read Article',
+      title: 'Lees artikel',
       type: 'string',
-      description: 'Text for the read article button',
+      description: 'Tekst voor de lees artikel knop',
       validation: (Rule) => Rule.required(),
       initialValue: 'Lees artikel',
     }),
@@ -29,15 +29,15 @@ export const blogLabels = defineType({
 /* Blog URL path configuration */
 export const blogPaths = defineType({
   name: 'blogPaths',
-  title: 'Blog URL Paths',
+  title: 'Blog URL paden',
   type: 'object',
-  description: 'Configure URL paths for the blog section',
+  description: 'Configureer URL paden voor de blog sectie',
   fields: [
     defineField({
       name: 'blog',
-      title: 'Blog Path',
+      title: 'Blog pad',
       type: 'string',
-      description: 'The URL path for the blog section (e.g., "/blog")',
+      description: 'Het URL pad voor de blog sectie (bijv. "/blog")',
       validation: (Rule) => Rule.required(),
       initialValue: '/blog',
     }),
@@ -56,7 +56,7 @@ export const blog = defineType({
     }),
     defineField({
       name: 'paths',
-      title: 'URL Paths',
+      title: 'URL paden',
       type: 'blogPaths',
     }),
   ],

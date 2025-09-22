@@ -27,13 +27,9 @@ const meta = {
       control: 'boolean',
       description: 'Toon boven- en onderranden',
     },
-    primaryCta: {
+    ctas: {
       control: 'object',
-      description: 'Primaire call-to-action knop configuratie',
-    },
-    secondaryCta: {
-      control: 'object',
-      description: 'Secundaire call-to-action knop configuratie',
+      description: 'Array van call-to-action knoppen (maximaal 2)',
     },
   },
 } satisfies Meta<typeof SectionHeader>;
@@ -74,14 +70,18 @@ export const WithButtons: Story = {
       'Deze sectie bevat call-to-action knoppen die rechts uitgelijnd zijn op desktop.',
     background: 'blue',
     border: true,
-    primaryCta: {
-      href: '/contact',
-      label: 'Aan de slag',
-    },
-    secondaryCta: {
-      href: '/about',
-      label: 'Meer informatie',
-    },
+    ctas: [
+      {
+        href: '/contact',
+        label: 'Aan de slag',
+        variant: 'blue',
+      },
+      {
+        href: '/about',
+        label: 'Meer informatie',
+        variant: 'transparent',
+      },
+    ],
   },
 };
 
@@ -90,11 +90,13 @@ export const WithoutDescription: Story = {
     title: 'Sectie Zonder Beschrijving',
     background: 'pink',
     border: true,
-    primaryCta: {
-      href: '/services',
-      label: 'Bekijk diensten',
-      variant: 'pink',
-    },
+    ctas: [
+      {
+        href: '/services',
+        label: 'Bekijk diensten',
+        variant: 'pink',
+      },
+    ],
   },
 };
 
@@ -103,11 +105,13 @@ export const SingleCTA: Story = {
     title: 'Enkele Call To Action',
     description: 'Soms heb je maar één duidelijke call to action nodig.',
     background: 'yellow',
-    primaryCta: {
-      href: '/signup',
-      label: 'Meld je nu aan',
-      variant: 'yellow',
-    },
+    ctas: [
+      {
+        href: '/signup',
+        label: 'Meld je nu aan',
+        variant: 'yellow',
+      },
+    ],
   },
 };
 
@@ -118,18 +122,20 @@ export const ExternalLinks: Story = {
       'Deze sectie demonstreert externe links met juiste beveiligingsattributen.',
     background: 'teal',
     border: true,
-    primaryCta: {
-      href: 'https://example.com',
-      label: 'Externe link',
-      variant: 'teal',
-      isExternal: true,
-    },
-    secondaryCta: {
-      href: 'https://github.com',
-      label: 'GitHub',
-      variant: 'black',
-      isExternal: true,
-    },
+    ctas: [
+      {
+        href: 'https://example.com',
+        label: 'Externe link',
+        variant: 'teal',
+        isExternal: true,
+      },
+      {
+        href: 'https://github.com',
+        label: 'GitHub',
+        variant: 'black',
+        isExternal: true,
+      },
+    ],
   },
 };
 
@@ -157,11 +163,13 @@ export const AllButtonVariants: Story = {
           title={`${variant.charAt(0).toUpperCase() + variant.slice(1)} Knop Variant`}
           description={`Deze sectie demonstreert de ${variant} knop variant.`}
           background="blue"
-          primaryCta={{
-            href: '#',
-            label: `${variant.charAt(0).toUpperCase() + variant.slice(1)} Knop`,
-            variant,
-          }}
+          ctas={[
+            {
+              href: '#',
+              label: `${variant.charAt(0).toUpperCase() + variant.slice(1)} Knop`,
+              variant,
+            },
+          ]}
         />
       ))}
     </div>
@@ -183,11 +191,13 @@ export const AllBackgroundVariants: Story = {
             description={`Deze sectie demonstreert de ${background} achtergrond variant.`}
             background={background}
             border={true}
-            primaryCta={{
-              href: '#',
-              label: 'Aan de slag',
-              variant: background,
-            }}
+            ctas={[
+              {
+                href: '#',
+                label: 'Aan de slag',
+                variant: background,
+              },
+            ]}
           />
         )
       )}
@@ -202,15 +212,17 @@ export const LongContent: Story = {
       'Dit is een langere beschrijving die demonstreert hoe de sectie uitgebreidere tekstinhoud afhandelt. Het toont hoe de lay-out zich aanpast aan verschillende hoeveelheden inhoud terwijl het goede leesbaarheid en visuele hiërarchie behoudt. De tekst kan over meerdere regels lopen en de sectie zal het elegant afhandelen.',
     background: 'purple',
     border: true,
-    primaryCta: {
-      href: '/contact',
-      label: 'Begin vandaag',
-      variant: 'purple',
-    },
-    secondaryCta: {
-      href: '/about',
-      label: 'Meer over ons',
-      variant: 'transparent',
-    },
+    ctas: [
+      {
+        href: '/contact',
+        label: 'Begin vandaag',
+        variant: 'purple',
+      },
+      {
+        href: '/about',
+        label: 'Meer over ons',
+        variant: 'transparent',
+      },
+    ],
   },
 };

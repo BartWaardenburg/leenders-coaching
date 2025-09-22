@@ -3,7 +3,8 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import * as reactHookForm from 'react-hook-form';
 
-import { Section, type PastelColor } from '@/components/ui/Section';
+import { Section } from '@/components/ui/Section';
+import type { PastelVariant } from '@/utilities/tokens';
 import { Stack } from '@/components/ui/Stack';
 import { Heading } from '@/components/ui/Heading';
 import { Box } from '@/components/ui/Box';
@@ -12,7 +13,6 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { submitContactForm } from '@/utilities/contact';
 import { useToast } from '@/components/providers/ToastProvider';
-import type { PastelVariant } from '@/utilities/tokens';
 
 export type ContactFormData = {
   name: string;
@@ -30,7 +30,7 @@ type SectionFormProps = {
   title?: string;
   description?: string;
   submitLabel?: string;
-  background?: PastelColor;
+  background?: PastelVariant;
   border?: boolean;
 } & Omit<ComponentPropsWithoutRef<'section'>, 'onSubmit'>;
 

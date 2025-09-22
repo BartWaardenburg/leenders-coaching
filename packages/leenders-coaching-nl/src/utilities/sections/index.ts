@@ -1,7 +1,6 @@
 import type { ComponentProps } from 'react';
 
 import { transformHeaderSection } from './header';
-import { transformBlogSection } from './blog';
 import { transformCalendarSection } from './calendar';
 import { transformCardsSection } from './cards';
 import { transformContentSection } from './content';
@@ -11,6 +10,7 @@ import { transformFormSection } from './form';
 import { transformPricingSection } from './pricing';
 import { transformTestimonialSection } from './testimonial';
 import { transformTimelineSection } from './timeline';
+import { transformBlogSectionSync } from './blog';
 
 import { SectionBlog } from '@/components/sections/SectionBlog/SectionBlog';
 import { SectionCalendar } from '@/components/sections/SectionCalendar/SectionCalendar';
@@ -54,11 +54,11 @@ export type SectionProps<T extends SectionType> = ComponentProps<
  */
 export const sectionTransformers: {
   [K in SectionType]: (
-    data: Record<string, unknown>,
+    data: Record<string, unknown>
   ) => ComponentProps<SectionComponent<K>>;
 } = {
+  sectionBlog: transformBlogSectionSync,
   sectionHeader: transformHeaderSection,
-  sectionBlog: transformBlogSection,
   sectionCalendar: transformCalendarSection,
   sectionCards: transformCardsSection,
   sectionContent: transformContentSection,

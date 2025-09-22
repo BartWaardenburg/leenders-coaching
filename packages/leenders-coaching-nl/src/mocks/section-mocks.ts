@@ -11,6 +11,33 @@ export const mockHeaderSection = {
     'Professionele coaching voor persoonlijke en professionele groei. Ontdek je potentieel en bereik je doelen met onze ervaren coaches.',
   background: 'white',
   border: false,
+  ctas: [
+    {
+      _type: 'callToAction',
+      label: 'Boek een Sessie',
+      href: '/contact',
+      variant: 'blue',
+      isExternal: false,
+    },
+    {
+      _type: 'callToAction',
+      label: 'Meer Informatie',
+      href: '/over-mij',
+      variant: 'transparent',
+      isExternal: false,
+    },
+  ],
+};
+
+export const mockHeaderSectionNoCtas = {
+  _type: 'sectionHeader',
+  title: 'Interne Header Titel Zonder CTAs',
+  displayTitle: 'Welkom bij Leenders Coaching',
+  description:
+    'Professionele coaching voor persoonlijke en professionele groei. Ontdek je potentieel en bereik je doelen met onze ervaren coaches.',
+  background: 'white',
+  border: false,
+  ctas: [],
 };
 
 export const mockContentSection = {
