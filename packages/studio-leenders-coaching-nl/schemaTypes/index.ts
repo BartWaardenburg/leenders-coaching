@@ -59,11 +59,13 @@ import {
   forms,
   formMessages,
   colorVariant,
+  accessibleImage,
+  socialImage,
 } from './objects';
 
 import { footer, footerContact, socialLink } from './footer';
 
-import configuration from './configuration';
+import { configuration } from './configuration';
 
 import {
   header,
@@ -140,6 +142,8 @@ export const schemaTypes = [
   forms,
   formMessages,
   colorVariant,
+  accessibleImage,
+  socialImage,
 
   /* Footer. */
   footer,

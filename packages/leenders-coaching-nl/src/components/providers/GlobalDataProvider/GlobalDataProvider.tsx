@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { ConfigType } from '../ConfigProvider/ConfigProvider';
+import type { ConfigType } from '@/components/providers/ConfigProvider';
 import type { SocialLink } from '@/components/ui/Header/Header';
 
 import { getGlobalData } from '@/utilities/groq-queries';
@@ -85,11 +85,16 @@ export const GlobalDataProvider = async ({
   /* Transform data to match component types */
   const headerData = {
     navigation:
-      transformNullableArray(header.navigation, (item) => ({
-        _key: transformNullable(item?._key, ''),
-        label: transformNullable(item?.label, ''),
-        href: transformNullable(item?.href, '#'),
-      })) || defaultHeader.navigation,
+      transformNullableArray(header.navigation, (item) => {
+        const href = transformNullable(item?.href, '#');
+        // Ensure href starts with "/" for absolute paths
+        const absoluteHref = href.startsWith('/') ? href : `/${href}`;
+        return {
+          _key: transformNullable(item?._key, ''),
+          label: transformNullable(item?.label, ''),
+          href: absoluteHref,
+        };
+      }) || defaultHeader.navigation,
     about: {
       title: transformNullable(header.about?.title, defaultHeader.about.title),
       description: transformNullable(
@@ -119,10 +124,14 @@ export const GlobalDataProvider = async ({
           header.contact?.projectEnquiry?.label,
           defaultHeader.contact.projectEnquiry.label
         ),
-        href: transformNullable(
-          header.contact?.projectEnquiry?.href,
-          defaultHeader.contact.projectEnquiry.href
-        ),
+        href: (() => {
+          const href = transformNullable(
+            header.contact?.projectEnquiry?.href,
+            defaultHeader.contact.projectEnquiry.href
+          );
+          // Ensure href starts with "/" for absolute paths
+          return href.startsWith('/') ? href : `/${href}`;
+        })(),
         linkText: transformNullable(
           header.contact?.projectEnquiry?.linkText,
           defaultHeader.contact.projectEnquiry.linkText
@@ -133,10 +142,14 @@ export const GlobalDataProvider = async ({
           header.contact?.generalEnquiry?.label,
           defaultHeader.contact.generalEnquiry.label
         ),
-        href: transformNullable(
-          header.contact?.generalEnquiry?.href,
-          defaultHeader.contact.generalEnquiry.href
-        ),
+        href: (() => {
+          const href = transformNullable(
+            header.contact?.generalEnquiry?.href,
+            defaultHeader.contact.generalEnquiry.href
+          );
+          // Ensure href starts with "/" for absolute paths
+          return href.startsWith('/') ? href : `/${href}`;
+        })(),
         linkText: transformNullable(
           header.contact?.generalEnquiry?.linkText,
           defaultHeader.contact.generalEnquiry.linkText

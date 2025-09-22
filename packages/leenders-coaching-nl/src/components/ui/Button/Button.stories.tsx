@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { fn } from 'storybook/test';
 import { Button } from './Button';
+import { Box } from '../Box/Box';
+import { mockButtonVariants, mockLoadingStates } from '@/mocks';
 
 const meta = {
   title: 'UI/Button',
@@ -37,10 +39,6 @@ const meta = {
       control: 'boolean',
       description: 'Of de knop uitgeschakeld is',
     },
-    fullWidthOnContainer: {
-      control: 'boolean',
-      description: 'Of de knop de volledige breedte moet innemen op container',
-    },
     children: {
       control: 'text',
       description: 'De inhoud van de knop',
@@ -57,11 +55,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: 'Click me',
+    children: mockButtonVariants.primary.label,
     onClick: fn(),
   },
   play: async ({ canvas, userEvent, args }) => {
-    const button = canvas.getByRole('button', { name: 'Click me' });
+    const button = canvas.getByRole('button', {
+      name: mockButtonVariants.primary.label,
+    });
     await expect(button).toBeVisible();
 
     /* Test click interaction. */
@@ -74,12 +74,12 @@ export const Default: Story = {
 
 export const WithLoading: Story = {
   args: {
-    children: 'Loading...',
+    children: mockLoadingStates.button.label,
     isLoading: true,
     onClick: fn(),
   },
   play: async ({ canvas, args }) => {
-    const button = canvas.getByRole('button', { name: 'Loading...' });
+    const button = canvas.getByRole('button', { busy: true });
     await expect(button).toBeVisible();
     await expect(button).toBeDisabled();
 
@@ -94,12 +94,14 @@ export const WithLoading: Story = {
 
 export const Disabled: Story = {
   args: {
-    children: 'Disabled',
+    children: mockButtonVariants.secondary.label,
     disabled: true,
     onClick: fn(),
   },
   play: async ({ canvas, args }) => {
-    const button = canvas.getByRole('button', { name: 'Disabled' });
+    const button = canvas.getByRole('button', {
+      name: mockButtonVariants.secondary.label,
+    });
     await expect(button).toBeVisible();
     await expect(button).toBeDisabled();
 
@@ -114,16 +116,16 @@ export const Disabled: Story = {
 
 export const AsLink: Story = {
   args: {
-    children: 'Go to Home',
-    href: '/',
+    children: mockButtonVariants.primary.label,
+    href: mockButtonVariants.primary.href,
   },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByRole('link', { name: 'Go to Home' })
+      canvas.getByRole('link', { name: mockButtonVariants.primary.label })
     ).toBeVisible();
     await expect(
-      canvas.getByRole('link', { name: 'Go to Home' })
-    ).toHaveAttribute('href', '/');
+      canvas.getByRole('link', { name: mockButtonVariants.primary.label })
+    ).toHaveAttribute('href', mockButtonVariants.primary.href);
     /* Simple button interaction - no animation wait needed. */
   },
 };
@@ -133,10 +135,10 @@ export const AllVariants: Story = {
     controls: { hideNoControlsWarning: true },
   },
   args: {
-    children: 'Button',
+    children: 'Knop',
   },
   render: (args) => (
-    <div className="flex flex-wrap gap-4">
+    <Box className="flex flex-wrap gap-4">
       {(
         [
           'black',
@@ -153,7 +155,7 @@ export const AllVariants: Story = {
           {variant.charAt(0).toUpperCase() + variant.slice(1)}
         </Button>
       ))}
-    </div>
+    </Box>
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByRole('button', { name: 'Black' })).toBeVisible();
@@ -175,26 +177,26 @@ export const AllSizes: Story = {
     controls: { hideNoControlsWarning: true },
   },
   args: {
-    children: 'Button',
+    children: 'Knop',
     onClick: fn(),
   },
   render: (args) => (
-    <div className="flex items-center gap-4">
+    <Box className="flex items-center gap-4">
       <Button {...args} size="sm">
-        Small
+        Klein
       </Button>
       <Button {...args} size="md">
-        Medium
+        Middel
       </Button>
       <Button {...args} size="lg">
-        Large
+        Groot
       </Button>
-    </div>
+    </Box>
   ),
   play: async ({ canvas, userEvent, args }) => {
-    const smallButton = canvas.getByRole('button', { name: 'Small' });
-    const mediumButton = canvas.getByRole('button', { name: 'Medium' });
-    const largeButton = canvas.getByRole('button', { name: 'Large' });
+    const smallButton = canvas.getByRole('button', { name: 'Klein' });
+    const mediumButton = canvas.getByRole('button', { name: 'Middel' });
+    const largeButton = canvas.getByRole('button', { name: 'Groot' });
 
     await expect(smallButton).toBeVisible();
     await expect(mediumButton).toBeVisible();
@@ -214,11 +216,11 @@ export const AllSizes: Story = {
 
 export const InteractiveDemo: Story = {
   args: {
-    children: 'Interactive Button',
+    children: 'Interactieve Knop',
     onClick: fn(),
   },
   play: async ({ canvas, userEvent, args, step }) => {
-    const button = canvas.getByRole('button', { name: 'Interactive Button' });
+    const button = canvas.getByRole('button', { name: 'Interactieve Knop' });
 
     await step('Initial state', async () => {
       await expect(button).toBeVisible();

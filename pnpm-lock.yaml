@@ -83,6 +83,12 @@ importers:
       '@vercel/related-projects':
         specifier: 1.0.0
         version: 1.0.0
+      class-variance-authority:
+        specifier: 0.7.1
+        version: 0.7.1
+      clsx:
+        specifier: 2.1.1
+        version: 2.1.1
       motion:
         specifier: 12.23.12
         version: 12.23.12(@emotion/is-prop-valid@1.2.2)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -95,6 +101,9 @@ importers:
       next-themes:
         specifier: 0.4.6
         version: 0.4.6(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      next-view-transitions:
+        specifier: 0.3.4
+        version: 0.3.4(next@15.5.2(@babel/core@7.28.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react:
         specifier: 19.1.1
         version: 19.1.1
@@ -1023,6 +1032,9 @@ packages:
 
   '@codemirror/view@6.38.2':
     resolution: {integrity: sha512-bTWAJxL6EOFLPzTx+O5P5xAO3gTqpatQ2b/ARQ8itfU/v2LlpS3pH2fkL0A3E/Fx8Y2St2KES7ZEV0sHTsSW/A==}
+
+  '@codemirror/view@6.38.3':
+    resolution: {integrity: sha512-x2t87+oqwB1mduiQZ6huIghjMt4uZKFEdj66IcXw7+a5iBEvv9lh7EWDRHI7crnD4BMGpnyq/RzmCGbiEZLcvQ==}
 
   '@commitlint/cli@19.8.1':
     resolution: {integrity: sha512-LXUdNIkspyxrlV6VDHWBmCZRtkEVRpBKxi2Gtw3J54cGWhLCTouVD/Q6ZSaSvd2YaDObWK8mDjrz3TIKtaQMAA==}
@@ -3928,6 +3940,9 @@ packages:
     peerDependencies:
       devtools-protocol: '*'
 
+  class-variance-authority@0.7.1:
+    resolution: {integrity: sha512-Ka+9Trutv7G8M6WT6SeiRWz792K5qEqIGEGzXKhAE6xOWAY6pPH8U+9IY3oCMv6kqTmLsv7Xh/2w2RigkePMsg==}
+
   classnames@2.5.1:
     resolution: {integrity: sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==}
 
@@ -3979,6 +3994,10 @@ packages:
   clone@1.0.4:
     resolution: {integrity: sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==}
     engines: {node: '>=0.8'}
+
+  clsx@2.1.1:
+    resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
+    engines: {node: '>=6'}
 
   codemirror@6.0.2:
     resolution: {integrity: sha512-VhydHotNW5w1UGK0Qj96BwSk/Zqbp9WbnyK2W/eVMv4QyF41INRGpjUhFJY7/uDNuudSc33a/PKr4iDqRduvHw==}
@@ -6278,6 +6297,13 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
       react-dom: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
+
+  next-view-transitions@0.3.4:
+    resolution: {integrity: sha512-SSiskenQ8JkEFGzPjvFwC5LGGoqgTxM5dxexkeugxvcXFLpWI2ZUh4IsCURD3ovW+8Ue7xXlrtrpy8b7XR7IwQ==}
+    peerDependencies:
+      next: '>=14.0.0'
+      react: ^18.2.0
+      react-dom: ^18.2.0
 
   next@15.5.2:
     resolution: {integrity: sha512-H8Otr7abj1glFhbGnvUt3gz++0AF1+QoCXEBmd/6aKbfdFwrn0LpA836Ed5+00va/7HQSDD+mOoVhn3tNy3e/Q==}
@@ -9428,10 +9454,17 @@ snapshots:
     dependencies:
       '@codemirror/language': 6.11.3
       '@codemirror/state': 6.5.2
-      '@codemirror/view': 6.38.2
+      '@codemirror/view': 6.38.3
       '@lezer/highlight': 1.2.1
 
   '@codemirror/view@6.38.2':
+    dependencies:
+      '@codemirror/state': 6.5.2
+      crelt: 1.0.6
+      style-mod: 4.1.2
+      w3c-keyname: 2.2.8
+
+  '@codemirror/view@6.38.3':
     dependencies:
       '@codemirror/state': 6.5.2
       crelt: 1.0.6
@@ -10343,9 +10376,9 @@ snapshots:
 
   '@polka/url@1.0.0-next.29': {}
 
-  '@portabletext/block-tools@3.5.3(@sanity/schema@4.6.1(@types/react@19.1.13)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.1.13))(@types/react@19.1.13)':
+  '@portabletext/block-tools@3.5.3(@sanity/schema@4.6.1(@types/react@19.1.13))(@sanity/types@4.6.1(@types/react@19.1.13))(@types/react@19.1.13)':
     dependencies:
-      '@portabletext/sanity-bridge': 1.1.8(@sanity/schema@4.6.1(@types/react@19.1.13)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.1.13))
+      '@portabletext/sanity-bridge': 1.1.8(@sanity/schema@4.6.1(@types/react@19.1.13))(@sanity/types@4.6.1(@types/react@19.1.13))
       '@portabletext/schema': 1.2.0
       '@sanity/types': 4.6.1(@types/react@19.1.13)(debug@4.4.1)
       '@types/react': 19.1.13
@@ -10354,12 +10387,12 @@ snapshots:
     transitivePeerDependencies:
       - '@sanity/schema'
 
-  '@portabletext/editor@2.8.0(@portabletext/sanity-bridge@1.1.8(@sanity/schema@4.6.1(@types/react@19.1.13))(@sanity/types@4.6.1(@types/react@19.1.13)))(@sanity/schema@4.6.1(@types/react@19.1.13)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.1.13))(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(rxjs@7.8.2)':
+  '@portabletext/editor@2.8.0(@portabletext/sanity-bridge@1.1.8(@sanity/schema@4.6.1(@types/react@19.1.13))(@sanity/types@4.6.1(@types/react@19.1.13)))(@sanity/schema@4.6.1(@types/react@19.1.13))(@sanity/types@4.6.1(@types/react@19.1.13))(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(rxjs@7.8.2)':
     dependencies:
-      '@portabletext/block-tools': 3.5.3(@sanity/schema@4.6.1(@types/react@19.1.13)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.1.13))(@types/react@19.1.13)
+      '@portabletext/block-tools': 3.5.3(@sanity/schema@4.6.1(@types/react@19.1.13))(@sanity/types@4.6.1(@types/react@19.1.13))(@types/react@19.1.13)
       '@portabletext/keyboard-shortcuts': 1.1.1
       '@portabletext/patches': 1.1.8
-      '@portabletext/sanity-bridge': 1.1.8(@sanity/schema@4.6.1(@types/react@19.1.13)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.1.13))
+      '@portabletext/sanity-bridge': 1.1.8(@sanity/schema@4.6.1(@types/react@19.1.13))(@sanity/types@4.6.1(@types/react@19.1.13))
       '@portabletext/schema': 1.2.0
       '@portabletext/to-html': 3.0.0
       '@sanity/schema': 4.6.1(@types/react@19.1.13)(debug@4.4.1)
@@ -10395,7 +10428,7 @@ snapshots:
       '@portabletext/types': 2.0.15
       react: 19.1.1
 
-  '@portabletext/sanity-bridge@1.1.8(@sanity/schema@4.6.1(@types/react@19.1.13)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.1.13))':
+  '@portabletext/sanity-bridge@1.1.8(@sanity/schema@4.6.1(@types/react@19.1.13))(@sanity/types@4.6.1(@types/react@19.1.13))':
     dependencies:
       '@portabletext/schema': 1.2.0
       '@sanity/schema': 4.6.1(@types/react@19.1.13)(debug@4.4.1)
@@ -12722,6 +12755,10 @@ snapshots:
       mitt: 3.0.1
       zod: 3.25.76
 
+  class-variance-authority@0.7.1:
+    dependencies:
+      clsx: 2.1.1
+
   classnames@2.5.1: {}
 
   clean-stack@3.0.1:
@@ -12773,6 +12810,8 @@ snapshots:
 
   clone@1.0.4: {}
 
+  clsx@2.1.1: {}
+
   codemirror@6.0.2:
     dependencies:
       '@codemirror/autocomplete': 6.18.7
@@ -12781,7 +12820,7 @@ snapshots:
       '@codemirror/lint': 6.8.5
       '@codemirror/search': 6.5.11
       '@codemirror/state': 6.5.2
-      '@codemirror/view': 6.38.2
+      '@codemirror/view': 6.38.3
 
   color-convert@1.9.3:
     dependencies:
@@ -15313,6 +15352,12 @@ snapshots:
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 
+  next-view-transitions@0.3.4(next@15.5.2(@babel/core@7.28.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
+    dependencies:
+      next: 15.5.2(@babel/core@7.28.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      react: 19.1.1
+      react-dom: 19.1.1(react@19.1.1)
+
   next@15.5.2(@babel/core@7.28.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
     dependencies:
       '@next/env': 15.5.2
@@ -16320,8 +16365,8 @@ snapshots:
       '@dnd-kit/utilities': 3.2.2(react@19.1.1)
       '@juggle/resize-observer': 3.4.0
       '@mux/mux-player-react': 3.5.3(@types/react-dom@19.1.9(@types/react@19.1.13))(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@portabletext/block-tools': 3.5.3(@sanity/schema@4.6.1(@types/react@19.1.13)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.1.13))(@types/react@19.1.13)
-      '@portabletext/editor': 2.8.0(@portabletext/sanity-bridge@1.1.8(@sanity/schema@4.6.1(@types/react@19.1.13))(@sanity/types@4.6.1(@types/react@19.1.13)))(@sanity/schema@4.6.1(@types/react@19.1.13)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.1.13))(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(rxjs@7.8.2)
+      '@portabletext/block-tools': 3.5.3(@sanity/schema@4.6.1(@types/react@19.1.13))(@sanity/types@4.6.1(@types/react@19.1.13))(@types/react@19.1.13)
+      '@portabletext/editor': 2.8.0(@portabletext/sanity-bridge@1.1.8(@sanity/schema@4.6.1(@types/react@19.1.13))(@sanity/types@4.6.1(@types/react@19.1.13)))(@sanity/schema@4.6.1(@types/react@19.1.13))(@sanity/types@4.6.1(@types/react@19.1.13))(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(rxjs@7.8.2)
       '@portabletext/react': 4.0.3(react@19.1.1)
       '@portabletext/toolkit': 3.0.1
       '@rexxars/react-json-inspector': 9.0.1(react@19.1.1)

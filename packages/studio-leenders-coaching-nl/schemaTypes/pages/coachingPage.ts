@@ -8,4 +8,9 @@ export const coachingPage = defineType({
   type: 'document',
   groups: baseGroups,
   fields: [...basePageFields],
+  preview: {
+    select: {
+      title: 'title',
+    },
+  },
 });

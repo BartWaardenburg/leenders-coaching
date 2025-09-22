@@ -3,7 +3,8 @@ import type { ComponentPropsWithoutRef } from 'react';
 import { Button } from '@/components/ui/Button';
 import { ButtonGroup } from '@/components/ui/ButtonGroup';
 import { Heading } from '@/components/ui/Heading';
-import { Section, type PastelColor } from '@/components/ui/Section';
+import { Section } from '@/components/ui/Section';
+import type { PastelVariant } from '@/utilities/tokens';
 import { Stack } from '@/components/ui/Stack';
 import { Text } from '@/components/ui/Text';
 import { Box } from '@/components/ui/Box';
@@ -11,17 +12,24 @@ import { Box } from '@/components/ui/Box';
 type CallToAction = {
   href: string;
   label: string;
-  variant?: 'black' | 'transparent' | 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal';
+  variant?:
+    | 'black'
+    | 'transparent'
+    | 'blue'
+    | 'purple'
+    | 'green'
+    | 'pink'
+    | 'yellow'
+    | 'teal';
   isExternal?: boolean;
 };
 
 type SectionHeaderProps = {
   title?: string;
   description?: string;
-  primaryCta?: CallToAction;
-  secondaryCta?: CallToAction;
+  ctas?: CallToAction[];
   border?: boolean;
-  background?: PastelColor;
+  background?: PastelVariant;
 } & ComponentPropsWithoutRef<'section'>;
 
 /**
@@ -30,8 +38,7 @@ type SectionHeaderProps = {
 export const SectionHeader = ({
   title,
   description,
-  primaryCta,
-  secondaryCta,
+  ctas,
   border = false,
   background,
   className,
@@ -45,13 +52,13 @@ export const SectionHeader = ({
       maxWidth="5xl"
       {...props}
     >
-      <Stack gap={8} className="md:items-center">
+      <Stack gap={8} className="md:items-start">
         <Box className="w-full text-center">
           {(title || description) && (
             <>
               {title && (
                 <Heading
-                  level="h2"
+                  level="h1"
                   variant="large"
                   showBorder
                   borderColor={background}
@@ -61,37 +68,28 @@ export const SectionHeader = ({
                 </Heading>
               )}
               {description && (
-                <Text className="mt-6 text-lg md:text-xl">{description}</Text>
+                <Text variant="large" className="mt-6 md:text-xl">
+                  {description}
+                </Text>
               )}
             </>
           )}
         </Box>
-        {(primaryCta || secondaryCta) && (
-          <ButtonGroup flex width="full" justify="end">
-            {primaryCta && (
+        {ctas && ctas.length > 0 && (
+          <ButtonGroup width="full" justify="end" align="center">
+            {ctas.map((cta, index) => (
               <Button
+                key={index}
                 size="lg"
-                fullWidthOnContainer
-                href={primaryCta.href}
-                variant={primaryCta.variant}
-                target={primaryCta.isExternal ? '_blank' : undefined}
-                rel={primaryCta.isExternal ? 'noopener noreferrer' : undefined}
+                fullWidthUntil="sm"
+                href={cta.href}
+                variant={cta.variant}
+                target={cta.isExternal ? '_blank' : undefined}
+                rel={cta.isExternal ? 'noopener noreferrer' : undefined}
               >
-                {primaryCta.label}
+                {cta.label}
               </Button>
-            )}
-            {secondaryCta && (
-              <Button
-                size="lg"
-                fullWidthOnContainer
-                href={secondaryCta.href}
-                variant={secondaryCta.variant}
-                target={secondaryCta.isExternal ? '_blank' : undefined}
-                rel={secondaryCta.isExternal ? 'noopener noreferrer' : undefined}
-              >
-                {secondaryCta.label}
-              </Button>
-            )}
+            ))}
           </ButtonGroup>
         )}
       </Stack>

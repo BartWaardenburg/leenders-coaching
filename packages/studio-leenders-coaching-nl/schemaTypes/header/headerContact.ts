@@ -2,22 +2,22 @@ import { defineType } from 'sanity';
 
 export const headerContact = defineType({
   name: 'headerContact',
-  title: 'Header Contact',
+  title: 'Header contact',
   type: 'object',
   fields: [
     {
       name: 'title',
-      title: 'Title',
+      title: 'Titel',
       type: 'string',
     },
     {
       name: 'projectEnquiry',
-      title: 'Project Enquiry',
+      title: 'Project aanvraag',
       type: 'headerEnquiry',
     },
     {
       name: 'generalEnquiry',
-      title: 'General Enquiry',
+      title: 'Algemene aanvraag',
       type: 'headerEnquiry',
     },
   ],

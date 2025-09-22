@@ -2,24 +2,24 @@ import { defineType, defineField } from 'sanity';
 
 export const mobileMenu = defineType({
   name: 'mobileMenu',
-  title: 'Mobile Menu',
+  title: 'Mobiel menu',
   type: 'object',
   fields: [
     defineField({
       name: 'toggleButton',
-      title: 'Toggle Button',
+      title: 'Toggle knop',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'menuLabel',
-      title: 'Menu Label',
+      title: 'Menu label',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'closeButton',
-      title: 'Close Button',
+      title: 'Sluit knop',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
@@ -28,12 +28,12 @@ export const mobileMenu = defineType({
 
 export const themeToggle = defineType({
   name: 'themeToggle',
-  title: 'Theme Toggle',
+  title: 'Thema toggle',
   type: 'object',
   fields: [
     defineField({
       name: 'label',
-      title: 'Toggle Label',
+      title: 'Toggle label',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
@@ -42,30 +42,30 @@ export const themeToggle = defineType({
 
 export const buttonLabels = defineType({
   name: 'buttonLabels',
-  title: 'Button Labels',
+  title: 'Knop labels',
   type: 'object',
   fields: [
     defineField({
       name: 'loadMore',
-      title: 'Load More',
+      title: 'Laad meer',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'readMore',
-      title: 'Read More',
+      title: 'Lees meer',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'submit',
-      title: 'Submit',
+      title: 'Verstuur',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'close',
-      title: 'Close',
+      title: 'Sluiten',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
@@ -79,17 +79,17 @@ export const uiInterface = defineType({
   fields: [
     defineField({
       name: 'mobileMenu',
-      title: 'Mobile Menu',
+      title: 'Mobiel menu',
       type: 'mobileMenu',
     }),
     defineField({
       name: 'themeToggle',
-      title: 'Theme Toggle',
+      title: 'Thema toggle',
       type: 'themeToggle',
     }),
     defineField({
       name: 'buttons',
-      title: 'Button Labels',
+      title: 'Knop labels',
       type: 'buttonLabels',
     }),
   ],

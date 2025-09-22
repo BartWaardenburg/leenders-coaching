@@ -10,6 +10,9 @@ import { StatsWriterPlugin } from 'webpack-stats-plugin';
  * - Optionally writes Webpack stats to JSON for bundle analysis.
  */
 const nextConfig: NextConfig = {
+  experimental: {
+    viewTransition: true,
+  },
   eslint: {
     /* Ignore ESLint errors during production builds */
     ignoreDuringBuilds: true,

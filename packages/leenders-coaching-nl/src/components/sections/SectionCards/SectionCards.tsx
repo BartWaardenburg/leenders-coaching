@@ -1,6 +1,7 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 
-import { Section, type PastelColor } from '@/components/ui/Section';
+import { Section } from '@/components/ui/Section';
+import type { PastelVariant } from '@/utilities/tokens';
 import { Stack } from '@/components/ui/Stack';
 import { Heading } from '@/components/ui/Heading';
 import { Text } from '@/components/ui/Text';
@@ -11,7 +12,7 @@ type SectionCardsProps = {
   title?: ReactNode;
   description?: ReactNode;
   children: ReactNode;
-  background?: PastelColor;
+  background?: PastelVariant;
   border?: boolean;
 } & ComponentPropsWithoutRef<'section'>;
 
@@ -39,7 +40,13 @@ export const SectionCards = ({
         {(title || description) && (
           <Stack space={4} className="text-center">
             {title && (
-              <Heading level="h2" variant="large" showBorder borderColor={background} textAlign="center">
+              <Heading
+                level="h2"
+                variant="large"
+                showBorder
+                borderColor={background}
+                textAlign="center"
+              >
                 {title}
               </Heading>
             )}
@@ -51,11 +58,7 @@ export const SectionCards = ({
           </Stack>
         )}
         <Box className="flex justify-center w-full">
-          <Grid
-            columns={{ default: 1, '@md': 2, '@lg': 3 }}
-            gap={6}
-            className="w-full"
-          >
+          <Grid cols={{ base: 1, md: 2, lg: 3 }} gap={6} className="w-full">
             {children}
           </Grid>
         </Box>

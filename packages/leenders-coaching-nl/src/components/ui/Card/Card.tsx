@@ -2,63 +2,63 @@
 
 import { FC, ReactNode } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import type { StaticImageData } from 'next/image';
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
-import { SanityImage } from '@/components/ui/Image';
+import { ImageRenderer } from '@/components/ui/ImageRenderer';
+import { isValidImage, type ImageSource } from '@/utilities/image';
 import { Text } from '@/components/ui/Text';
 import { Heading } from '@/components/ui/Heading';
 import { Flex } from '@/components/ui/Flex';
 import { Box } from '@/components/ui/Box';
-import { twMerge } from 'tailwind-merge';
+import { ViewTransition } from '@/components/ui/ViewTransition';
+import { cn } from '@/utilities/cn';
 import { useConfig } from '@/components/providers/ClientConfigProvider';
 import { motion, easeInOut, useReducedMotion } from 'motion/react';
+import { pastelVariant, type PastelVariant } from '@/utilities/tokens';
 
-type CardVariant = 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal';
+type CardVariant = PastelVariant;
 
 const cardBackgrounds: Record<CardVariant, string> = {
-  blue: 'bg-pastel-blue dark:bg-pastel-blue-dark',
-  purple: 'bg-pastel-purple dark:bg-pastel-purple-dark',
-  green: 'bg-pastel-green dark:bg-pastel-green-dark',
-  pink: 'bg-pastel-pink dark:bg-pastel-pink-dark',
-  yellow: 'bg-pastel-yellow dark:bg-pastel-yellow-dark',
-  teal: 'bg-pastel-teal dark:bg-pastel-teal-dark',
+  blue: pastelVariant.blue.bg,
+  purple: pastelVariant.purple.bg,
+  green: pastelVariant.green.bg,
+  pink: pastelVariant.pink.bg,
+  yellow: pastelVariant.yellow.bg,
+  teal: pastelVariant.teal.bg,
 };
 
 const cardBordersLight: Record<CardVariant, string> = {
-  blue: 'border-pastel-blue dark:border-pastel-blue-dark',
-  purple: 'border-pastel-purple dark:border-pastel-purple-dark',
-  green: 'border-pastel-green dark:border-pastel-green-dark',
-  pink: 'border-pastel-pink dark:border-pastel-pink-dark',
-  yellow: 'border-pastel-yellow dark:border-pastel-yellow-dark',
-  teal: 'border-pastel-teal dark:border-pastel-teal-dark',
+  blue: pastelVariant.blue.borderLight,
+  purple: pastelVariant.purple.borderLight,
+  green: pastelVariant.green.borderLight,
+  pink: pastelVariant.pink.borderLight,
+  yellow: pastelVariant.yellow.borderLight,
+  teal: pastelVariant.teal.borderLight,
 };
 
 const cardBordersDark: Record<CardVariant, string> = {
-  blue: 'border-pastel-blue-dark dark:border-pastel-blue',
-  purple: 'border-pastel-purple-dark dark:border-pastel-purple',
-  green: 'border-pastel-green-dark dark:border-pastel-green',
-  pink: 'border-pastel-pink-dark dark:border-pastel-pink',
-  yellow: 'border-pastel-yellow-dark dark:border-pastel-yellow',
-  teal: 'border-pastel-teal-dark dark:border-pastel-teal',
+  blue: pastelVariant.blue.borderDark,
+  purple: pastelVariant.purple.borderDark,
+  green: pastelVariant.green.borderDark,
+  pink: pastelVariant.pink.borderDark,
+  yellow: pastelVariant.yellow.borderDark,
+  teal: pastelVariant.teal.borderDark,
 };
 
 const cardBordersHoverLight: Record<CardVariant, string> = {
-  blue: 'hover:border-pastel-blue hover:dark:border-pastel-blue-dark',
-  purple: 'hover:border-pastel-purple hover:dark:border-pastel-purple-dark',
-  green: 'hover:border-pastel-green hover:dark:border-pastel-green-dark',
-  pink: 'hover:border-pastel-pink hover:dark:border-pastel-pink-dark',
-  yellow: 'hover:border-pastel-yellow hover:dark:border-pastel-yellow-dark',
-  teal: 'hover:border-pastel-teal hover:dark:border-pastel-teal-dark',
+  blue: pastelVariant.blue.hoverBorderLight,
+  purple: pastelVariant.purple.hoverBorderLight,
+  green: pastelVariant.green.hoverBorderLight,
+  pink: pastelVariant.pink.hoverBorderLight,
+  yellow: pastelVariant.yellow.hoverBorderLight,
+  teal: pastelVariant.teal.hoverBorderLight,
 };
 
 const cardBordersHoverDark: Record<CardVariant, string> = {
-  blue: 'hover:border-pastel-blue-dark hover:dark:border-pastel-blue',
-  purple: 'hover:border-pastel-purple-dark hover:dark:border-pastel-purple',
-  green: 'hover:border-pastel-green-dark hover:dark:border-pastel-green',
-  pink: 'hover:border-pastel-pink-dark hover:dark:border-pastel-pink',
-  yellow: 'hover:border-pastel-yellow-dark hover:dark:border-pastel-yellow',
-  teal: 'hover:border-pastel-teal-dark hover:dark:border-pastel-teal',
+  blue: pastelVariant.blue.hoverBorderDark,
+  purple: pastelVariant.purple.hoverBorderDark,
+  green: pastelVariant.green.hoverBorderDark,
+  pink: pastelVariant.pink.hoverBorderDark,
+  yellow: pastelVariant.yellow.hoverBorderDark,
+  teal: pastelVariant.teal.hoverBorderDark,
 };
 
 export type CardProps = {
@@ -68,7 +68,7 @@ export type CardProps = {
   categories?: string[];
   children?: ReactNode;
   slug?: string;
-  image?: string | StaticImageData | SanityImageSource;
+  image?: ImageSource;
   variant?: CardVariant;
   border?: boolean;
   reverse?: boolean;
@@ -95,7 +95,7 @@ export const Card: FC<CardProps> = ({
   const config = useConfig();
   const shouldReduceMotion = useReducedMotion();
   const hasMetaData = date || categories.length > 0;
-  const cardClasses = twMerge(
+  const cardClasses = cn(
     'group relative h-full transition-theme block @container border',
     cardBackgrounds[variant],
     border ? cardBordersDark[variant] : cardBordersLight[variant],
@@ -127,6 +127,7 @@ export const Card: FC<CardProps> = ({
       !shouldReduceMotion && {
         hover: {
           y: -5,
+          opacity: 1,
           transition: {
             duration: 0.2,
             ease: easeInOut,
@@ -146,6 +147,14 @@ export const Card: FC<CardProps> = ({
             duration: 0.3,
             ease: [0.2, 0.65, 0.3, 0.9] as const,
           },
+    },
+    hover: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.2,
+        ease: easeInOut,
+      },
     },
   } as const;
 
@@ -167,6 +176,7 @@ export const Card: FC<CardProps> = ({
       !shouldReduceMotion && {
         hover: {
           scale: 1.05,
+          opacity: 1,
           transition: {
             duration: 0.3,
             ease: easeInOut,
@@ -185,32 +195,23 @@ export const Card: FC<CardProps> = ({
       className="h-full"
     >
       <Flex className="h-full flex-col @lg:flex-row">
-        {image && (
+        {isValidImage(image) && (
           <Box
-            className={twMerge(
+            className={cn(
               'relative border-b @lg:border-b-0 @lg:border-l-0 @lg:border-r border-foreground/80 h-48 @lg:h-auto w-full @lg:w-1/3 @4xl:w-1/2 shrink-0 overflow-hidden',
               reverse && '@lg:order-last @lg:border-r-0 @lg:border-l'
             )}
           >
             <motion.div variants={imageVariants} className="h-full w-full">
-              {/* Check if image is a Sanity image object or static image/URL */}
-              {typeof image === 'object' && 'asset' in image ? (
-                <SanityImage
-                  image={image as SanityImageSource}
-                  alt={title}
-                  fill
-                  className="object-cover"
-                  followHotspot={true}
-                  qualityHint={80}
-                />
-              ) : (
-                <Image
-                  src={image as string | StaticImageData}
-                  alt={title}
-                  fill
-                  className="object-cover"
-                />
-              )}
+              <ImageRenderer
+                image={image}
+                alt={title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
+                followHotspot={true}
+                qualityHint={80}
+              />
             </motion.div>
           </Box>
         )}
@@ -231,42 +232,53 @@ export const Card: FC<CardProps> = ({
               )}
 
               <Box className="pb-6 w-full">
-                <Heading
-                  level="h2"
-                  variant="medium"
-                  weight="normal"
-                  spacing="none"
-                >
-                  {title}
-                </Heading>
+                <ViewTransition name={`title-${slug}`} disabled={!slug}>
+                  <Heading
+                    level="h2"
+                    variant="medium"
+                    weight="normal"
+                    spacing="none"
+                  >
+                    {title}
+                  </Heading>
+                </ViewTransition>
               </Box>
 
               {hasMetaData && (
                 <Box className="border-b border-t border-foreground/80">
                   <Flex
                     gap={0}
-                    className="relative divide-foreground/80 flex-row divide-x w-full overflow-hidden"
+                    direction="row"
+                    divide="x"
+                    className="relative divide-foreground/80 w-full overflow-hidden"
                   >
                     {date && (
                       <Box className="pr-4 py-2 w-1/2">
-                        <Text
-                          variant="card-meta"
-                          textAlign="right"
-                          className="break-words hyphens-auto overflow-hidden"
-                        >
-                          {date}
-                        </Text>
+                        <ViewTransition name={`date-${slug}`} disabled={!slug}>
+                          <Text
+                            variant="card-meta"
+                            textAlign="right"
+                            className="break-words hyphens-auto overflow-hidden"
+                          >
+                            {date}
+                          </Text>
+                        </ViewTransition>
                       </Box>
                     )}
                     {categories.length > 0 && (
                       <Box className="pl-4 py-2 w-1/2">
-                        <Text
-                          variant="card-meta"
-                          textAlign="left"
-                          className="break-words hyphens-auto overflow-hidden"
+                        <ViewTransition
+                          name={`categories-${slug}`}
+                          disabled={!slug}
                         >
-                          {categories.join(', ')}
-                        </Text>
+                          <Text
+                            variant="card-meta"
+                            textAlign="left"
+                            className="break-words hyphens-auto overflow-hidden"
+                          >
+                            {categories.join(', ')}
+                          </Text>
+                        </ViewTransition>
                       </Box>
                     )}
                   </Flex>

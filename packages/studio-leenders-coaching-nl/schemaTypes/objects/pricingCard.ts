@@ -3,33 +3,33 @@ import { defineType } from 'sanity';
 /* Pricing Card Object */
 export const pricingCard = defineType({
   name: 'pricingCard',
-  title: 'Pricing Card',
+  title: 'Prijskaart',
   type: 'object',
   fields: [
     {
       name: 'title',
       type: 'string',
-      title: 'Title',
+      title: 'Titel',
       validation: (Rule: any) => Rule.required(),
     },
     {
       name: 'description',
       type: 'text',
-      title: 'Description',
+      title: 'Beschrijving',
       validation: (Rule: any) => Rule.required(),
     },
     {
       name: 'price',
       type: 'string',
-      title: 'Price',
-      description: 'Price per session (e.g. "€75" or "Gratis")',
+      title: 'Prijs',
+      description: 'Prijs per sessie (bijv. "€75" of "Gratis")',
       validation: (Rule: any) => Rule.required(),
     },
     {
       name: 'features',
       type: 'array',
-      title: 'Features',
-      description: 'List of features included in this package',
+      title: 'Functies',
+      description: 'Lijst van functies die in dit pakket zijn inbegrepen',
       of: [
         {
           type: 'object',
@@ -38,7 +38,7 @@ export const pricingCard = defineType({
             {
               name: 'text',
               type: 'string',
-              title: 'Feature Text',
+              title: 'Functie tekst',
               validation: (Rule: any) => Rule.required(),
             },
           ],
@@ -49,20 +49,20 @@ export const pricingCard = defineType({
     {
       name: 'isPopular',
       type: 'boolean',
-      title: 'Is Popular Package',
-      description: 'Highlight this as the most chosen package',
+      title: 'Is populair pakket',
+      description: 'Markeer dit als het meest gekozen pakket',
       initialValue: false,
     },
     {
       name: 'ctaLabel',
       type: 'string',
-      title: 'Button Text',
+      title: 'Knoptekst',
       validation: (Rule: any) => Rule.required(),
     },
     {
       name: 'variant',
       type: 'colorVariant',
-      title: 'Color Variant',
+      title: 'Kleurvariant',
       initialValue: 'blue',
     },
   ],

@@ -1,13 +1,14 @@
 import { type ComponentPropsWithoutRef, type ReactNode } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/utilities/cn';
 import { motion, easeOut } from 'motion/react';
+import { pastelVariant, type PastelVariant } from '@/utilities/tokens';
 
 import { Box } from '@/components/ui/Box';
 import { Stack } from '@/components/ui/Stack';
 import { Text } from '@/components/ui/Text';
 import { Heading } from '@/components/ui/Heading';
 
-type Color = 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal';
+type Color = PastelVariant;
 
 export type TimelineStep = {
   /** The title of the step */
@@ -73,52 +74,56 @@ export const Timeline = ({
   testid,
   ...props
 }: TimelineProps) => {
-  const colorClasses = {
+  const colorClasses: Record<
+    PastelVariant,
+    { bg: string; border: string; line: string }
+  > = {
     blue: {
-      bg: 'bg-pastel-blue/50 dark:bg-pastel-blue-dark/50',
-      border: 'border-pastel-blue-dark dark:border-pastel-blue',
+      bg: pastelVariant.blue.bgSoft,
+      border: pastelVariant.blue.borderDark,
       line: 'bg-pastel-blue-dark dark:bg-pastel-blue',
     },
     purple: {
-      bg: 'bg-pastel-purple/50 dark:bg-pastel-purple-dark/50',
-      border: 'border-pastel-purple-dark dark:border-pastel-purple',
+      bg: pastelVariant.purple.bgSoft,
+      border: pastelVariant.purple.borderDark,
       line: 'bg-pastel-purple-dark dark:bg-pastel-purple',
     },
     green: {
-      bg: 'bg-pastel-green/50 dark:bg-pastel-green-dark/50',
-      border: 'border-pastel-green-dark dark:border-pastel-green',
+      bg: pastelVariant.green.bgSoft,
+      border: pastelVariant.green.borderDark,
       line: 'bg-pastel-green-dark dark:bg-pastel-green',
     },
     pink: {
-      bg: 'bg-pastel-pink/50 dark:bg-pastel-pink-dark/50',
-      border: 'border-pastel-pink-dark dark:border-pastel-pink',
+      bg: pastelVariant.pink.bgSoft,
+      border: pastelVariant.pink.borderDark,
       line: 'bg-pastel-pink-dark dark:bg-pastel-pink',
     },
     yellow: {
-      bg: 'bg-pastel-yellow/50 dark:bg-pastel-yellow-dark/50',
-      border: 'border-pastel-yellow-dark dark:border-pastel-yellow',
+      bg: pastelVariant.yellow.bgSoft,
+      border: pastelVariant.yellow.borderDark,
       line: 'bg-pastel-yellow-dark dark:bg-pastel-yellow',
     },
     teal: {
-      bg: 'bg-pastel-teal/50 dark:bg-pastel-teal-dark/50',
-      border: 'border-pastel-teal-dark dark:border-pastel-teal',
+      bg: pastelVariant.teal.bgSoft,
+      border: pastelVariant.teal.borderDark,
       line: 'bg-pastel-teal-dark dark:bg-pastel-teal',
     },
   };
 
   return (
     <Box
-      className={twMerge('relative', className)}
+      role="list"
+      className={cn('relative', className)}
       data-testid={testid}
       {...props}
     >
       {/* Timeline steps */}
       <Stack gap={6} className="relative">
         {/* Timeline line with decorative elements */}
-        <Box className="absolute inset-0">
+        <Box aria-hidden className="absolute inset-0">
           {/* Start dot */}
           <Box
-            className={twMerge(
+            className={cn(
               'absolute left-4 md:left-1/2 -top-1 w-3 h-3 rounded-full -translate-x-[5px] md:-translate-x-[6px] z-10',
               colorClasses[color].line
             )}
@@ -126,7 +131,7 @@ export const Timeline = ({
 
           {/* Main line */}
           <MotionBox
-            className={twMerge(
+            className={cn(
               'absolute left-4 md:left-1/2 top-0 h-full w-px -translate-x-[0.5px] origin-top',
               colorClasses[color].line
             )}
@@ -138,7 +143,7 @@ export const Timeline = ({
 
           {/* End dot */}
           <Box
-            className={twMerge(
+            className={cn(
               'absolute left-4 md:left-1/2 -bottom-1 w-3 h-3 rounded-full -translate-x-[5px] md:-translate-x-[6px] z-10',
               colorClasses[color].line
             )}
@@ -152,6 +157,7 @@ export const Timeline = ({
           return (
             <Box
               key={index}
+              role="listitem"
               className="relative flex flex-col md:flex-row md:items-center"
             >
               {/* Mobile view */}
@@ -160,7 +166,7 @@ export const Timeline = ({
                 <Box className="flex justify-center items-center w-8 relative">
                   {/* Horizontal connector line */}
                   <MotionBox
-                    className={twMerge(
+                    className={cn(
                       'absolute top-1/2 left-4 h-px',
                       colorClasses[stepColor].line
                     )}
@@ -174,7 +180,7 @@ export const Timeline = ({
                   />
                   {/* Dot */}
                   <MotionBox
-                    className={twMerge(
+                    className={cn(
                       'w-4 h-4 rounded-full border z-10',
                       'bg-background dark:bg-background-dark',
                       colorClasses[stepColor].border
@@ -210,7 +216,7 @@ export const Timeline = ({
 
                   <Stack
                     gap={2}
-                    className={twMerge(
+                    className={cn(
                       'p-6 border',
                       colorClasses[stepColor].bg,
                       colorClasses[stepColor].border,
@@ -250,7 +256,7 @@ export const Timeline = ({
                       >
                         <Box className="pr-8 relative">
                           <MotionBox
-                            className={twMerge(
+                            className={cn(
                               'absolute right-0 top-1/2 h-px',
                               colorClasses[stepColor].line
                             )}
@@ -264,7 +270,7 @@ export const Timeline = ({
                           />
                           <Stack
                             gap={2}
-                            className={twMerge(
+                            className={cn(
                               'p-6 border',
                               colorClasses[stepColor].bg,
                               colorClasses[stepColor].border,
@@ -315,7 +321,7 @@ export const Timeline = ({
                   }}
                 >
                   <Box
-                    className={twMerge(
+                    className={cn(
                       'w-4 h-4 rounded-full border-2 z-10',
                       'bg-background dark:bg-background-dark',
                       colorClasses[stepColor].border
@@ -339,7 +345,7 @@ export const Timeline = ({
                       >
                         <Box className="pl-8 relative">
                           <MotionBox
-                            className={twMerge(
+                            className={cn(
                               'absolute left-0 top-1/2 h-px',
                               colorClasses[stepColor].line
                             )}
@@ -353,7 +359,7 @@ export const Timeline = ({
                           />
                           <Stack
                             gap={2}
-                            className={twMerge(
+                            className={cn(
                               'p-6 border',
                               colorClasses[stepColor].bg,
                               colorClasses[stepColor].border,

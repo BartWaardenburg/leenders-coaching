@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionCalendar } from './SectionCalendar';
+import { Text } from '../../ui/Text/Text';
+import { mockCalendarSection } from '@/mocks';
 
 const meta = {
   title: 'Sections/SectionCalendar',
@@ -8,22 +10,31 @@ const meta = {
     layout: 'fullscreen',
   },
   argTypes: {
+    title: {
+      control: 'text',
+      description: 'De titel van de sectie',
+      required: true,
+    },
+    description: {
+      control: 'text',
+      description: 'De beschrijving tekst',
+    },
     background: {
       control: 'select',
       options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
-      description: 'Background color of the section',
+      description: 'Achtergrondkleur van de sectie',
     },
     border: {
       control: 'boolean',
-      description: 'Show top and bottom borders',
+      description: 'Toon boven- en onderranden',
     },
     initialDate: {
       control: 'date',
-      description: 'The initial date to display in the calendar',
+      description: 'De initiële datum om weer te geven in de kalender',
     },
     renderDay: {
       control: false,
-      description: 'Custom render function for day content',
+      description: 'Aangepaste render functie voor dag inhoud',
     },
   },
 } satisfies Meta<typeof SectionCalendar>;
@@ -33,9 +44,9 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    title: 'Calendar',
-    description: 'Select a date to schedule your appointment.',
-    initialDate: new Date('2024-03-15'),
+    title: mockCalendarSection.displayTitle,
+    description: mockCalendarSection.description,
+    initialDate: mockCalendarSection.initialDate,
   },
   render: (args) => {
     const initialDate =
@@ -88,9 +99,11 @@ export const WithCustomDayContent: Story = {
       const day = date.getDay();
       if (day === 0 || day === 6) return null;
       return (
-        <div className="text-xs text-foreground/70">
-          {day % 2 === 0 ? '2 slots available' : '1 slot available'}
-        </div>
+        <Text variant="small" className="text-foreground/70">
+          {day % 2 === 0
+            ? '2 tijdsloten beschikbaar'
+            : '1 tijdslot beschikbaar'}
+        </Text>
       );
     },
   },

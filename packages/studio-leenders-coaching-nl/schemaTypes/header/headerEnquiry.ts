@@ -2,7 +2,7 @@ import { defineType } from 'sanity';
 
 export const headerEnquiry = defineType({
   name: 'headerEnquiry',
-  title: 'Header Enquiry',
+  title: 'Header aanvraag',
   type: 'object',
   fields: [
     {
@@ -17,7 +17,7 @@ export const headerEnquiry = defineType({
     },
     {
       name: 'linkText',
-      title: 'Link Text',
+      title: 'Link tekst',
       type: 'string',
     },
   ],

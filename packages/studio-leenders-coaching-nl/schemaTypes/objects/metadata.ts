@@ -6,44 +6,48 @@ import { defineType, defineField } from 'sanity';
  */
 export const openGraphImage = defineType({
   name: 'openGraphImage',
-  title: 'Open Graph Image',
+  title: 'Open Graph afbeelding',
   type: 'object',
-  description: 'Image settings for social media sharing',
+  description: 'Afbeelding instellingen voor social media sharing',
   fields: [
     defineField({
-      name: 'url',
-      title: 'Image',
-      type: 'image',
-      options: {
-        hotspot: true,
-      },
-      description: 'Recommended size: 1200x630 pixels',
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'alt',
-      title: 'Alt Text',
-      type: 'string',
-      description: 'Alternative text for accessibility',
-      validation: (Rule) => Rule.required(),
+      name: 'image',
+      title: 'Afbeelding',
+      type: 'accessibleImage',
+      description: 'Optionele aangepaste afbeelding voor social media',
     }),
     defineField({
       name: 'width',
-      title: 'Width',
+      title: 'Breedte',
       type: 'number',
-      description: 'Width of the image in pixels',
+      description: 'Breedte van de afbeelding in pixels',
       initialValue: 1200,
       validation: (Rule) => Rule.required().min(200).max(5000),
     }),
     defineField({
       name: 'height',
-      title: 'Height',
+      title: 'Hoogte',
       type: 'number',
-      description: 'Height of the image in pixels',
+      description: 'Hoogte van de afbeelding in pixels',
       initialValue: 630,
       validation: (Rule) => Rule.required().min(200).max(5000),
     }),
   ],
+  preview: {
+    select: {
+      title: 'alt',
+      media: 'image',
+      width: 'width',
+      height: 'height',
+    },
+    prepare({ title, media, width, height }) {
+      return {
+        title: title || 'Open Graph afbeelding',
+        media,
+        subtitle: width && height ? `${width}×${height}px` : 'Geen afmetingen',
+      };
+    },
+  },
 });
 
 /**
@@ -54,31 +58,31 @@ export const openGraph = defineType({
   name: 'openGraph',
   title: 'Open Graph',
   type: 'object',
-  description: 'Settings for social media sharing',
+  description: 'Instellingen voor social media sharing',
   fields: [
     defineField({
       name: 'title',
-      title: 'Title',
+      title: 'Titel',
       type: 'string',
-      description: 'Title for social media sharing (max 60 characters)',
+      description: 'Titel voor social media sharing (max 60 tekens)',
       validation: (Rule) => Rule.max(60),
     }),
     defineField({
       name: 'description',
-      title: 'Description',
+      title: 'Beschrijving',
       type: 'text',
-      description: 'Description for social media sharing (max 155 characters)',
+      description: 'Beschrijving voor social media sharing (max 155 tekens)',
       validation: (Rule) => Rule.max(155),
     }),
     defineField({
       name: 'type',
       title: 'Type',
       type: 'string',
-      description: 'The type of content',
+      description: 'Het type inhoud',
       options: {
         list: [
           { title: 'Website', value: 'website' },
-          { title: 'Article', value: 'article' },
+          { title: 'Artikel', value: 'article' },
         ],
       },
       initialValue: 'website',
@@ -87,20 +91,20 @@ export const openGraph = defineType({
       name: 'url',
       title: 'URL',
       type: 'url',
-      description: 'The canonical URL of the page',
+      description: 'De canonieke URL van de pagina',
     }),
     defineField({
       name: 'siteName',
-      title: 'Site Name',
+      title: 'Site naam',
       type: 'string',
-      description: 'The name of the website',
+      description: 'De naam van de website',
       initialValue: 'Leenders Coaching',
     }),
     defineField({
       name: 'image',
-      title: 'Image',
+      title: 'Afbeelding',
       type: 'openGraphImage',
-      description: 'Image for social media sharing',
+      description: 'Optionele aangepaste afbeelding voor social media',
     }),
   ],
 });
@@ -111,25 +115,30 @@ export const openGraph = defineType({
  */
 export const twitterImage = defineType({
   name: 'twitterImage',
-  title: 'Twitter Image',
+  title: 'Twitter afbeelding',
   type: 'object',
+  description: 'Afbeelding instellingen voor Twitter cards',
   fields: [
     defineField({
-      name: 'url',
-      title: 'URL',
-      type: 'image',
-      options: {
-        hotspot: true,
-      },
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'alt',
-      title: 'Alt Text',
-      type: 'string',
-      description: 'Alternative text for accessibility',
+      name: 'image',
+      title: 'Afbeelding',
+      type: 'accessibleImage',
+      description: 'Optionele aangepaste Twitter afbeelding',
     }),
   ],
+  preview: {
+    select: {
+      title: 'alt',
+      media: 'image',
+    },
+    prepare({ title, media }) {
+      return {
+        title: title || 'Twitter afbeelding',
+        media,
+        subtitle: 'Twitter Card',
+      };
+    },
+  },
 });
 
 /**
@@ -140,47 +149,50 @@ export const twitter = defineType({
   name: 'twitter',
   title: 'Twitter Card',
   type: 'object',
-  description: 'Settings for Twitter sharing',
+  description: 'Instellingen voor Twitter sharing',
   fields: [
     defineField({
       name: 'card',
-      title: 'Card Type',
+      title: 'Card type',
       type: 'string',
       options: {
         list: [
-          { title: 'Summary', value: 'summary' },
-          { title: 'Summary with Large Image', value: 'summary_large_image' },
+          { title: 'Samenvatting', value: 'summary' },
+          {
+            title: 'Samenvatting met grote afbeelding',
+            value: 'summary_large_image',
+          },
         ],
       },
       initialValue: 'summary_large_image',
     }),
     defineField({
       name: 'site',
-      title: 'Site Account',
+      title: 'Site account',
       type: 'string',
-      description: '@username of website (without @)',
+      description: '@gebruikersnaam van website (zonder @)',
       validation: (Rule) =>
         Rule.custom((username) => {
           if (!username) return true;
-          if (username.startsWith('@')) return 'Please remove the @ symbol';
+          if (username.startsWith('@')) return 'Verwijder het @ symbool';
           return true;
         }),
     }),
     defineField({
       name: 'creator',
-      title: 'Creator Account',
+      title: 'Maker account',
       type: 'string',
-      description: '@username of content creator (without @)',
+      description: '@gebruikersnaam van content maker (zonder @)',
       validation: (Rule) =>
         Rule.custom((username) => {
           if (!username) return true;
-          if (username.startsWith('@')) return 'Please remove the @ symbol';
+          if (username.startsWith('@')) return 'Verwijder het @ symbool';
           return true;
         }),
     }),
     defineField({
       name: 'image',
-      title: 'Image',
+      title: 'Afbeelding',
       type: 'twitterImage',
     }),
   ],
@@ -192,21 +204,21 @@ export const twitter = defineType({
  */
 export const googleBot = defineType({
   name: 'googleBot',
-  title: 'Google Bot Settings',
+  title: 'Google Bot instellingen',
   type: 'object',
   fields: [
     defineField({
       name: 'index',
-      title: 'Allow Google Indexing',
+      title: 'Google indexering toestaan',
       type: 'boolean',
-      description: 'Allow Google to index this page',
+      description: 'Sta Google toe om deze pagina te indexeren',
       initialValue: true,
     }),
     defineField({
       name: 'follow',
-      title: 'Allow Google Following Links',
+      title: 'Google links volgen toestaan',
       type: 'boolean',
-      description: 'Allow Google to follow links on this page',
+      description: 'Sta Google toe om links op deze pagina te volgen',
       initialValue: true,
     }),
   ],
@@ -218,42 +230,42 @@ export const googleBot = defineType({
  */
 export const robots = defineType({
   name: 'robots',
-  title: 'Search Engine Settings',
+  title: 'Zoekmachine instellingen',
   type: 'object',
-  description: 'Control how search engines interact with this page',
+  description: 'Beheer hoe zoekmachines met deze pagina omgaan',
   fields: [
     defineField({
       name: 'index',
-      title: 'Allow Indexing',
+      title: 'Indexering toestaan',
       type: 'boolean',
-      description: 'Allow search engines to index this page',
+      description: 'Sta zoekmachines toe om deze pagina te indexeren',
       initialValue: true,
     }),
     defineField({
       name: 'follow',
-      title: 'Allow Following Links',
+      title: 'Links volgen toestaan',
       type: 'boolean',
-      description: 'Allow search engines to follow links on this page',
+      description: 'Sta zoekmachines toe om links op deze pagina te volgen',
       initialValue: true,
     }),
     defineField({
       name: 'googleBot',
-      title: 'Google-specific Settings',
+      title: 'Google-specifieke instellingen',
       type: 'object',
-      description: "Special settings for Google's crawler",
+      description: "Speciale instellingen voor Google's crawler",
       fields: [
         defineField({
           name: 'index',
-          title: 'Allow Google Indexing',
+          title: 'Google indexering toestaan',
           type: 'boolean',
-          description: 'Allow Google to index this page',
+          description: 'Sta Google toe om deze pagina te indexeren',
           initialValue: true,
         }),
         defineField({
           name: 'follow',
-          title: 'Allow Google Following Links',
+          title: 'Google links volgen toestaan',
           type: 'boolean',
-          description: 'Allow Google to follow links on this page',
+          description: 'Sta Google toe om links op deze pagina te volgen',
           initialValue: true,
         }),
       ],
@@ -269,47 +281,47 @@ export const metadata = defineType({
   name: 'metadata',
   title: 'SEO & Metadata',
   type: 'object',
-  description: 'Search engine optimization and social sharing settings',
+  description: 'Zoekmachine optimalisatie en social sharing instellingen',
   fields: [
     defineField({
       name: 'title',
-      title: 'Meta Title',
+      title: 'Meta titel',
       type: 'string',
-      description: 'Page title for search engines (max 60 characters)',
+      description: 'Paginatitel voor zoekmachines (max 60 tekens)',
       validation: (Rule) => Rule.required().max(60),
     }),
     defineField({
       name: 'description',
-      title: 'Meta Description',
+      title: 'Meta beschrijving',
       type: 'text',
-      description: 'Brief description for search results (max 155 characters)',
+      description: 'Korte beschrijving voor zoekresultaten (max 155 tekens)',
       validation: (Rule) => Rule.required().max(155),
     }),
     defineField({
       name: 'keywords',
-      title: 'Keywords',
+      title: 'Sleutelwoorden',
       type: 'array',
       of: [{ type: 'string' }],
       description:
-        'Keywords to help search engines understand the content (optional)',
+        'Sleutelwoorden om zoekmachines te helpen de inhoud te begrijpen (optioneel)',
     }),
     defineField({
       name: 'openGraph',
-      title: 'Social Media Sharing',
+      title: 'Social media sharing',
       type: 'openGraph',
-      description: 'Settings for social media sharing previews',
+      description: 'Instellingen voor social media sharing previews',
     }),
     defineField({
       name: 'twitter',
-      title: 'Twitter Settings',
+      title: 'Twitter instellingen',
       type: 'twitter',
-      description: 'Specific settings for Twitter sharing',
+      description: 'Specifieke instellingen voor Twitter sharing',
     }),
     defineField({
       name: 'robots',
-      title: 'Search Engine Settings',
+      title: 'Zoekmachine instellingen',
       type: 'robots',
-      description: 'Control how search engines handle this page',
+      description: 'Beheer hoe zoekmachines met deze pagina omgaan',
     }),
   ],
 });

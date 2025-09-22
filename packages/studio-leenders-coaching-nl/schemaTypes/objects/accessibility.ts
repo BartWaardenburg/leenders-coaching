@@ -2,18 +2,18 @@ import { defineType, defineField } from 'sanity';
 
 export const closeButtons = defineType({
   name: 'closeButtons',
-  title: 'Close Button Labels',
+  title: 'Sluitknop labels',
   type: 'object',
   fields: [
     defineField({
       name: 'toast',
-      title: 'Toast Notification',
+      title: 'Toast notificatie',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'modal',
-      title: 'Modal Dialog',
+      title: 'Modal dialoog',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
@@ -22,18 +22,18 @@ export const closeButtons = defineType({
 
 export const calendarNavigation = defineType({
   name: 'calendarNavigation',
-  title: 'Calendar Navigation',
+  title: 'Kalender navigatie',
   type: 'object',
   fields: [
     defineField({
       name: 'previousMonth',
-      title: 'Previous Month',
+      title: 'Vorige maand',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'nextMonth',
-      title: 'Next Month',
+      title: 'Volgende maand',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
@@ -42,17 +42,17 @@ export const calendarNavigation = defineType({
 
 export const accessibility = defineType({
   name: 'accessibility',
-  title: 'Accessibility',
+  title: 'Toegankelijkheid',
   type: 'object',
   fields: [
     defineField({
       name: 'closeButtons',
-      title: 'Close Button Labels',
+      title: 'Sluitknop labels',
       type: 'closeButtons',
     }),
     defineField({
       name: 'calendar',
-      title: 'Calendar Navigation',
+      title: 'Kalender navigatie',
       type: 'calendarNavigation',
     }),
   ],

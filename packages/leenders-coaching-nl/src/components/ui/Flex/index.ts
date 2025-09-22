@@ -1,1 +1,1 @@
-export { default as Flex } from './Flex';
+export { Flex } from './Flex';

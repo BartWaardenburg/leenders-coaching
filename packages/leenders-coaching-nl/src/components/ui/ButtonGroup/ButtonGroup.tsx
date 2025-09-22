@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/utilities/cn';
 import { Flex } from '@/components/ui/Flex';
 
 type ResponsiveValue<T> = {
@@ -13,6 +13,24 @@ type ResponsiveValue<T> = {
 
 type JustifyValue = 'start' | 'end' | 'center';
 type WidthValue = 'full' | 'auto';
+type AlignValue = 'start' | 'end' | 'center';
+
+const JUSTIFY = {
+  start: 'justify-start',
+  end: 'justify-end',
+  center: 'justify-center',
+} as const;
+
+const WIDTH = {
+  full: 'w-full',
+  auto: 'w-auto',
+} as const;
+
+const ALIGN = {
+  start: 'items-start',
+  end: 'items-end',
+  center: 'items-center',
+} as const;
 
 type ButtonGroupProps = {
   children: ReactNode;
@@ -22,8 +40,8 @@ type ButtonGroupProps = {
   justify?: JustifyValue | ResponsiveValue<JustifyValue>;
   /** Width control with responsive values */
   width?: WidthValue | ResponsiveValue<WidthValue>;
-  /** Whether to wrap the buttons in a flex container */
-  flex?: boolean;
+  /** Container alignment with responsive values */
+  align?: AlignValue | ResponsiveValue<AlignValue>;
 } & ComponentPropsWithoutRef<'div'>;
 
 /**
@@ -35,33 +53,21 @@ export const ButtonGroup = ({
   stackOnMobile = true,
   justify = 'center',
   width = 'auto',
-  flex = false,
+  align = 'center',
   ...props
 }: ButtonGroupProps) => {
-  /* Convert justify prop to responsive classes */
-  const getJustifyClasses = () => {
-    if (typeof justify === 'string') {
-      return `justify-${justify}`;
+  /* Convert responsive values to classes using explicit maps */
+  const getResponsiveClasses = <T extends Record<string, string>>(
+    value: string | Record<string, keyof T>,
+    map: T
+  ) => {
+    if (typeof value === 'string') {
+      return map[value];
     }
 
-    return Object.entries(justify)
-      .map(([breakpoint, value]) =>
-        breakpoint === 'base'
-          ? `justify-${value}`
-          : `${breakpoint}:justify-${value}`,
-      )
-      .join(' ');
-  };
-
-  /* Convert width prop to responsive classes */
-  const getWidthClasses = () => {
-    if (typeof width === 'string') {
-      return `w-${width}`;
-    }
-
-    return Object.entries(width)
-      .map(([breakpoint, value]) =>
-        breakpoint === 'base' ? `w-${value}` : `${breakpoint}:w-${value}`,
+    return Object.entries(value)
+      .map(([breakpoint, key]) =>
+        breakpoint === 'base' ? map[key] : `${breakpoint}:${map[key]}`
       )
       .join(' ');
   };
@@ -69,14 +75,13 @@ export const ButtonGroup = ({
   return (
     <Flex
       direction={stackOnMobile ? 'column' : 'row'}
-      items="center"
       gap={4}
-      className={twMerge(
-        getJustifyClasses(),
-        getWidthClasses(),
-        stackOnMobile && 'sm:flex-row',
-        flex && 'flex',
-        className,
+      className={cn(
+        getResponsiveClasses(justify, JUSTIFY),
+        getResponsiveClasses(width, WIDTH),
+        getResponsiveClasses(align, ALIGN),
+        stackOnMobile && '@lg:flex-row',
+        className
       )}
       {...props}
     >

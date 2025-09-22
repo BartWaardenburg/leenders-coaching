@@ -1,29 +1,29 @@
 import { defineType, defineField } from 'sanity';
 
-const configuration = defineType({
+export const configuration = defineType({
   name: 'configuration',
-  title: 'Configuration',
+  title: 'Configuratie',
   type: 'document',
   groups: [
-    { name: 'general', title: 'General Settings' },
+    { name: 'general', title: 'Algemene Instellingen' },
     { name: 'seo', title: 'SEO & Metadata' },
-    { name: 'accessibility', title: 'Accessibility' },
+    { name: 'accessibility', title: 'Toegankelijkheid' },
     { name: 'interface', title: 'Interface' },
     { name: 'blog', title: 'Blog' },
-    { name: 'forms', title: 'Forms' },
+    { name: 'forms', title: 'Formulieren' },
   ],
   fields: [
     /* General Settings */
     defineField({
       name: 'title',
-      title: 'Site Title',
+      title: 'Site titel',
       type: 'string',
       group: 'general',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'description',
-      title: 'Site Description',
+      title: 'Site beschrijving',
       type: 'text',
       group: 'general',
       validation: (Rule) => Rule.required(),
@@ -32,7 +32,7 @@ const configuration = defineType({
     /* SEO & Metadata Settings */
     defineField({
       name: 'seo',
-      title: 'SEO Settings',
+      title: 'SEO instellingen',
       type: 'seo',
       group: 'seo',
     }),
@@ -40,7 +40,7 @@ const configuration = defineType({
     /* Accessibility Settings */
     defineField({
       name: 'accessibility',
-      title: 'Accessibility',
+      title: 'Toegankelijkheid',
       type: 'accessibility',
       group: 'accessibility',
     }),
@@ -64,7 +64,7 @@ const configuration = defineType({
     /* Form Settings */
     defineField({
       name: 'forms',
-      title: 'Forms',
+      title: 'Formulieren',
       type: 'forms',
       group: 'forms',
     }),
@@ -75,5 +75,3 @@ const configuration = defineType({
     },
   },
 });
-
-export default configuration;

@@ -25,11 +25,11 @@ export default meta;
 type Story = StoryObj;
 
 const sampleData = {
-  name: 'John Doe',
-  email: 'john.doe@example.com',
+  name: 'Jan Jansen',
+  email: 'jan.jansen@voorbeeld.nl',
   subject: 'Vraag over coaching',
   message:
-    'Beste Leenders Coaching,\n\nIk zou graag meer informatie willen over jullie coaching diensten en hoe deze mij kunnen helpen. Kunnen jullie wat meer informatie verstrekken?\n\nBij voorbaat dank,\nJohn',
+    'Beste Leenders Coaching,\n\nIk zou graag meer informatie willen over jullie coaching diensten en hoe deze mij kunnen helpen. Kunnen jullie wat meer informatie verstrekken?\n\nBij voorbaat dank,\nJan',
 };
 
 /**
@@ -103,7 +103,7 @@ const EmailFrame = ({ title, description, html }: EmailFrameProps) => {
       <Text variant="default" className="mb-6">
         {description}
       </Text>
-      <Box className="border rounded-lg overflow-hidden shadow-md">
+      <Box className="border overflow-hidden shadow-md">
         <iframe
           ref={iframeRef}
           title={title}

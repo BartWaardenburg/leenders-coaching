@@ -88,7 +88,10 @@ export const structure = (S: StructureBuilder) =>
                 .title('Blog')
                 .id('blogPage')
                 .child(
-                  S.document().schemaType('blogPage').documentId('blogPage')
+                  S.document()
+                    .schemaType('blogPage')
+                    .documentId('blogPage')
+                    .title('Blog Page')
                 ),
               S.listItem()
                 .title('Contact')
@@ -159,6 +162,7 @@ export const structure = (S: StructureBuilder) =>
                     .title('Blog Posts')
                     .child((id) =>
                       S.document()
+                        .schemaType('post')
                         .documentId(id)
                         .views([
                           S.view.form().icon(EditIcon),

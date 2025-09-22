@@ -1,3 +1,5 @@
+import type { PastelVariant } from '@/utilities/tokens';
+
 /**
  * Base interface for all section types
  */
@@ -6,7 +8,7 @@ export interface Section {
   _type: string;
   title?: string;
   displayTitle?: string;
-  background?: 'blue' | 'purple' | 'green' | 'pink' | 'yellow' | 'teal';
+  background?: PastelVariant;
   showBorder?: boolean;
   description?: string;
 }

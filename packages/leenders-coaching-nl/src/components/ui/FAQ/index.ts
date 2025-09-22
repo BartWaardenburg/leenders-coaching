@@ -1,1 +1,1 @@
-export { FAQ, type FAQItem, type FAQVariant } from './FAQ';
+export { FAQ, type FAQItem } from './FAQ';

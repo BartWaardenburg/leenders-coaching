@@ -1,56 +1,50 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionTimeline } from './SectionTimeline';
 import { Button } from '@/components/ui/Button';
+import { mockTimelineSection } from '@/mocks';
 
 const meta = {
   title: 'Sections/SectionTimeline',
   component: SectionTimeline,
   parameters: {
-    layout: 'padded',
+    layout: 'fullscreen',
+  },
+  argTypes: {
+    title: {
+      control: 'text',
+      description: 'De titel van de sectie',
+      required: true,
+    },
+    description: {
+      control: 'text',
+      description: 'De beschrijving tekst',
+    },
+    background: {
+      control: 'select',
+      options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
+      description: 'Achtergrondkleur van de sectie',
+    },
+    border: {
+      control: 'boolean',
+      description: 'Toon boven- en onderranden',
+    },
+    steps: {
+      control: 'object',
+      description: 'Array van timeline stap objecten',
+    },
   },
 } satisfies Meta<typeof SectionTimeline>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const defaultSteps = [
-  {
-    title: 'Initial Consultation',
-    description:
-      'A free introductory meeting to discuss your goals and how coaching can help you achieve them.',
-    date: 'Week 1',
-  },
-  {
-    title: 'Goal Setting',
-    description:
-      "Together we'll define clear, achievable goals and create a personalized coaching plan.",
-    date: 'Week 2',
-  },
-  {
-    title: 'Regular Sessions',
-    description:
-      'Weekly or bi-weekly coaching sessions to work on your goals and overcome challenges.',
-    date: 'Weeks 3-8',
-  },
-  {
-    title: 'Progress Review',
-    description:
-      'Regular check-ins to measure progress and adjust the coaching plan as needed.',
-    date: 'Week 9',
-  },
-  {
-    title: 'Final Evaluation',
-    description:
-      'Review achievements, celebrate success, and plan for continued growth.',
-    date: 'Week 12',
-  },
-];
+// Using centralized mock data
+const defaultSteps = mockTimelineSection.steps;
 
 export const Default: Story = {
   args: {
-    title: 'Your Coaching Journey',
-    description:
-      'A step-by-step guide to your personal development and growth with our coaching program.',
+    title: mockTimelineSection.displayTitle,
+    description: mockTimelineSection.description,
     steps: defaultSteps,
   },
 };
@@ -73,19 +67,19 @@ export const WithCustomContent: Story = {
     },
   },
   args: {
-    title: 'Start Your Journey Today',
+    title: 'Begin Vandaag Uw Reis',
     description:
-      'Take the first step towards achieving your goals with our personalized coaching program.',
+      'Zet de eerste stap naar het bereiken van uw doelen met ons gepersonaliseerde coaching programma.',
     steps: [
       ...defaultSteps.slice(0, 3),
       {
-        title: 'Book Your Session',
+        title: 'Boek Uw Sessie',
         description:
-          'Ready to start your coaching journey? Schedule your first session now.',
-        date: 'Today',
+          'Klaar om uw coaching reis te beginnen? Plan nu uw eerste sessie in.',
+        date: 'Vandaag',
         content: (
           <Button variant="blue" size="sm" href="/contact" className="mt-2">
-            Schedule Now
+            Plan Nu In
           </Button>
         ),
       },

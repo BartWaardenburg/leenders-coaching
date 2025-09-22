@@ -3,35 +3,35 @@ import { defineType } from 'sanity';
 /* Call to Action Object */
 export const callToAction = defineType({
   name: 'callToAction',
-  title: 'Call to Action',
+  title: 'Actieknop',
   type: 'object',
   fields: [
     {
       name: 'label',
       type: 'string',
-      title: 'Button Text',
+      title: 'Knoptekst',
       validation: (Rule: any) => Rule.required(),
     },
     {
       name: 'href',
       type: 'string',
-      title: 'Button Link',
+      title: 'Knoplink',
       validation: (Rule: any) => Rule.required(),
     },
     {
       name: 'variant',
       type: 'string',
-      title: 'Button Variant',
+      title: 'Knopvariant',
       options: {
         list: [
-          { title: 'Black', value: 'black' },
-          { title: 'Transparent', value: 'transparent' },
-          { title: 'Blue', value: 'blue' },
-          { title: 'Purple', value: 'purple' },
-          { title: 'Green', value: 'green' },
-          { title: 'Pink', value: 'pink' },
-          { title: 'Yellow', value: 'yellow' },
-          { title: 'Teal', value: 'teal' },
+          { title: 'Zwart', value: 'black' },
+          { title: 'Transparant', value: 'transparent' },
+          { title: 'Blauw', value: 'blue' },
+          { title: 'Paars', value: 'purple' },
+          { title: 'Groen', value: 'green' },
+          { title: 'Roze', value: 'pink' },
+          { title: 'Geel', value: 'yellow' },
+          { title: 'Turquoise', value: 'teal' },
         ],
       },
       initialValue: 'black',
@@ -39,8 +39,8 @@ export const callToAction = defineType({
     {
       name: 'isExternal',
       type: 'boolean',
-      title: 'Open in New Tab',
-      description: 'If checked, the link will open in a new tab',
+      title: 'In nieuw tabblad openen',
+      description: 'Indien aangevinkt, opent de link in een nieuw tabblad',
       initialValue: false,
     },
   ],

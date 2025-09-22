@@ -1,6 +1,7 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 
-import { Section, type PastelColor } from '@/components/ui/Section';
+import { Section } from '@/components/ui/Section';
+import type { PastelVariant } from '@/utilities/tokens';
 import { Stack } from '@/components/ui/Stack';
 import { Heading } from '@/components/ui/Heading';
 import { Box } from '@/components/ui/Box';
@@ -22,7 +23,7 @@ type SectionCalendarProps = {
   /** Configuration for disabled dates */
   disabledDates?: DisabledDates;
   /** Optional background color */
-  background?: PastelColor;
+  background?: PastelVariant;
   /** Whether to show a border */
   border?: boolean;
 } & ComponentPropsWithoutRef<'section'>;

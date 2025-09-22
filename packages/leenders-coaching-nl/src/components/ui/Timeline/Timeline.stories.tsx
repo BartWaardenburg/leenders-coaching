@@ -4,6 +4,7 @@ import { Timeline } from './Timeline';
 import { Button } from '@/components/ui/Button';
 import type { ComponentProps } from 'react';
 import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { mockTimelineSection } from '@/mocks';
 
 type TimelineProps = ComponentProps<typeof Timeline>;
 type TimelineStep = TimelineProps['steps'][number];
@@ -26,57 +27,33 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const defaultSteps: TimelineStep[] = [
-  {
-    title: 'Initial Consultation',
-    description:
-      'A free introductory meeting to discuss your goals and how coaching can help you achieve them.',
-    date: 'Week 1',
-  },
-  {
-    title: 'Goal Setting',
-    description:
-      "Together we'll define clear, achievable goals and create a personalized coaching plan.",
-    date: 'Week 2',
-  },
-  {
-    title: 'Regular Sessions',
-    description:
-      'Weekly or bi-weekly coaching sessions to work on your goals and overcome challenges.',
-    date: 'Weeks 3-8',
-  },
-  {
-    title: 'Progress Review',
-    description:
-      'Regular check-ins to measure progress and adjust the coaching plan as needed.',
-    date: 'Week 9',
-  },
-  {
-    title: 'Final Evaluation',
-    description:
-      'Review achievements, celebrate success, and plan for continued growth.',
-    date: 'Week 12',
-  },
-];
+// Using centralized mock data
+const defaultSteps: TimelineStep[] = mockTimelineSection.steps.map(
+  (step, index) => ({
+    title: step.title,
+    description: step.description,
+    date: `Week ${index + 1}`,
+  })
+);
 
 export const Default: Story = {
   args: {
     steps: defaultSteps,
   },
   play: async ({ canvas }) => {
-    const initialConsultation = canvas.getAllByText('Initial Consultation');
+    const initialConsultation = canvas.getAllByText('Kennismakingsgesprek');
     expect(initialConsultation.length).toBeGreaterThan(0);
 
-    const goalSetting = canvas.getAllByText('Goal Setting');
+    const goalSetting = canvas.getAllByText('Doelstellingen Bepalen');
     expect(goalSetting.length).toBeGreaterThan(0);
 
-    const regularSessions = canvas.getAllByText('Regular Sessions');
+    const regularSessions = canvas.getAllByText('Actieplan Opstellen');
     expect(regularSessions.length).toBeGreaterThan(0);
 
-    const progressReview = canvas.getAllByText('Progress Review');
+    const progressReview = canvas.getAllByText('Implementatie');
     expect(progressReview.length).toBeGreaterThan(0);
 
-    const finalEvaluation = canvas.getAllByText('Final Evaluation');
+    const finalEvaluation = canvas.getAllByText('Voortgangsbeoordeling');
     expect(finalEvaluation.length).toBeGreaterThan(0);
 
     await waitForMotionAnimations({ canvas });
@@ -89,19 +66,19 @@ export const WithColor: Story = {
     color: 'purple',
   },
   play: async ({ canvas }) => {
-    const initialConsultation = canvas.getAllByText('Initial Consultation');
+    const initialConsultation = canvas.getAllByText('Kennismakingsgesprek');
     expect(initialConsultation.length).toBeGreaterThan(0);
 
-    const goalSetting = canvas.getAllByText('Goal Setting');
+    const goalSetting = canvas.getAllByText('Doelstellingen Bepalen');
     expect(goalSetting.length).toBeGreaterThan(0);
 
-    const regularSessions = canvas.getAllByText('Regular Sessions');
+    const regularSessions = canvas.getAllByText('Actieplan Opstellen');
     expect(regularSessions.length).toBeGreaterThan(0);
 
-    const progressReview = canvas.getAllByText('Progress Review');
+    const progressReview = canvas.getAllByText('Implementatie');
     expect(progressReview.length).toBeGreaterThan(0);
 
-    const finalEvaluation = canvas.getAllByText('Final Evaluation');
+    const finalEvaluation = canvas.getAllByText('Voortgangsbeoordeling');
     expect(finalEvaluation.length).toBeGreaterThan(0);
 
     await waitForMotionAnimations({ canvas });
@@ -121,13 +98,13 @@ export const WithCustomContent: Story = {
     steps: [
       ...defaultSteps.slice(0, 3),
       {
-        title: 'Book Your Session',
+        title: 'Boek Uw Sessie',
         description:
-          'Ready to start your coaching journey? Schedule your first session now.',
-        date: 'Today',
+          'Klaar om uw coaching reis te beginnen? Plan nu uw eerste sessie in.',
+        date: 'Vandaag',
         content: (
           <Button variant="blue" size="sm" href="/contact" className="mt-2">
-            Schedule Now
+            Plan Nu In
           </Button>
         ),
       },
@@ -135,20 +112,20 @@ export const WithCustomContent: Story = {
     color: 'blue',
   },
   play: async ({ canvas }) => {
-    const initialConsultation = canvas.getAllByText('Initial Consultation');
+    const initialConsultation = canvas.getAllByText('Kennismakingsgesprek');
     expect(initialConsultation.length).toBeGreaterThan(0);
 
-    const goalSetting = canvas.getAllByText('Goal Setting');
+    const goalSetting = canvas.getAllByText('Doelstellingen Bepalen');
     expect(goalSetting.length).toBeGreaterThan(0);
 
-    const regularSessions = canvas.getAllByText('Regular Sessions');
+    const regularSessions = canvas.getAllByText('Actieplan Opstellen');
     expect(regularSessions.length).toBeGreaterThan(0);
 
     // Check for custom content (use getAllByText to handle multiple instances)
-    const bookYourSession = canvas.getAllByText('Book Your Session');
+    const bookYourSession = canvas.getAllByText('Boek Uw Sessie');
     expect(bookYourSession.length).toBeGreaterThan(0);
     expect(
-      canvas.getByRole('link', { name: 'Schedule Now' })
+      canvas.getByRole('link', { name: 'Plan Nu In' })
     ).toBeInTheDocument();
 
     await waitForMotionAnimations({ canvas });
@@ -169,19 +146,19 @@ export const WithIndividualColors: Story = {
     }),
   },
   play: async ({ canvas }) => {
-    const initialConsultation = canvas.getAllByText('Initial Consultation');
+    const initialConsultation = canvas.getAllByText('Kennismakingsgesprek');
     expect(initialConsultation.length).toBeGreaterThan(0);
 
-    const goalSetting = canvas.getAllByText('Goal Setting');
+    const goalSetting = canvas.getAllByText('Doelstellingen Bepalen');
     expect(goalSetting.length).toBeGreaterThan(0);
 
-    const regularSessions = canvas.getAllByText('Regular Sessions');
+    const regularSessions = canvas.getAllByText('Actieplan Opstellen');
     expect(regularSessions.length).toBeGreaterThan(0);
 
-    const progressReview = canvas.getAllByText('Progress Review');
+    const progressReview = canvas.getAllByText('Implementatie');
     expect(progressReview.length).toBeGreaterThan(0);
 
-    const finalEvaluation = canvas.getAllByText('Final Evaluation');
+    const finalEvaluation = canvas.getAllByText('Voortgangsbeoordeling');
     expect(finalEvaluation.length).toBeGreaterThan(0);
 
     await waitForMotionAnimations({ canvas });

@@ -1,6 +1,7 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 
-import { Section, type PastelColor } from '@/components/ui/Section';
+import { Section } from '@/components/ui/Section';
+import type { PastelVariant } from '@/utilities/tokens';
 import { Stack } from '@/components/ui/Stack';
 import { Heading } from '@/components/ui/Heading';
 import { Box } from '@/components/ui/Box';
@@ -14,7 +15,7 @@ type SectionContentProps = Omit<
   /** The title of the section */
   title?: ReactNode;
   /** Optional background color */
-  background?: PastelColor;
+  background?: PastelVariant;
   /** Whether to show a border */
   border?: boolean;
   /** The main content as Portable Text blocks */

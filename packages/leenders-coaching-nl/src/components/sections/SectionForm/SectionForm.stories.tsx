@@ -3,21 +3,24 @@ import { SectionForm } from './SectionForm';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Stack } from '@/components/ui/Stack';
+import { Box } from '@/components/ui/Box';
+import { mockFormSection } from '@/mocks';
 
 const meta = {
   title: 'Sections/SectionForm',
   component: SectionForm,
   parameters: {
-    layout: 'padded',
+    layout: 'fullscreen',
   },
   argTypes: {
     title: {
       control: 'text',
-      description: 'Titel van de sectie',
+      description: 'De titel van de sectie',
+      required: true,
     },
     description: {
       control: 'text',
-      description: 'Beschrijving tekst onder de titel',
+      description: 'De beschrijving tekst',
     },
     submitLabel: {
       control: 'text',
@@ -30,7 +33,7 @@ const meta = {
     },
     border: {
       control: 'boolean',
-      description: 'Of er een rand rond de sectie moet worden getoond',
+      description: 'Toon boven- en onderranden',
     },
   },
 } satisfies Meta<typeof SectionForm>;
@@ -42,10 +45,10 @@ const FormContent = () => (
   <Stack gap={6}>
     <Input label="Naam" type="text" name="name" placeholder="Je naam" />
     <Input
-      label="Email"
+      label="E-mail"
       type="email"
       name="email"
-      placeholder="your@email.com"
+      placeholder="uw@email.com"
     />
     <Input
       label="Bericht"
@@ -53,17 +56,16 @@ const FormContent = () => (
       name="message"
       placeholder="Je bericht"
     />
-    <Button type="submit" variant="blue" fullWidthOnContainer>
-      Submit
+    <Button type="submit" variant="blue" className="w-full">
+      Versturen
     </Button>
   </Stack>
 );
 
 export const Default: Story = {
   args: {
-    title: 'Contact Us',
-    description:
-      "Fill out the form below and we'll get back to you as soon as possible.",
+    title: mockFormSection.displayTitle,
+    description: mockFormSection.description,
     children: <FormContent />,
   },
 };
@@ -83,23 +85,9 @@ export const WithBackgroundAndBorder: Story = {
   },
 };
 
-export const NoTitle: Story = {
-  args: {
-    children: <FormContent />,
-  },
-};
-
-export const WithoutTitle: Story = {
-  args: {
-    description:
-      "Fill out the form below and we'll get back to you as soon as possible.",
-    background: 'green',
-  },
-};
-
 export const WithoutDescription: Story = {
   args: {
-    title: 'Contact Us',
+    title: 'Neem Contact Op',
     background: 'pink',
     border: true,
   },
@@ -107,9 +95,9 @@ export const WithoutDescription: Story = {
 
 export const CustomSubmitLabel: Story = {
   args: {
-    title: 'Custom Submit Button',
+    title: 'Aangepaste Verzendknop',
     description: 'Dit formulier heeft een aangepast verzendknop label.',
-    submitLabel: 'Send Message Now',
+    submitLabel: 'Verstuur Bericht Nu',
     background: 'yellow',
     border: true,
   },
@@ -121,29 +109,29 @@ export const AllBackgroundVariants: Story = {
   },
   args: {},
   render: () => (
-    <div className="space-y-0">
+    <Box className="space-y-0">
       {(['blue', 'purple', 'green', 'pink', 'yellow', 'teal'] as const).map(
         (background) => (
           <SectionForm
             key={background}
-            title={`${background.charAt(0).toUpperCase() + background.slice(1)} Background`}
-            description={`This form demonstrates the ${background} background variant.`}
-            submitLabel={`Submit ${background.charAt(0).toUpperCase() + background.slice(1)} Form`}
+            title={`${background.charAt(0).toUpperCase() + background.slice(1)} Achtergrond`}
+            description={`Dit formulier demonstreert de ${background} achtergrond variant.`}
+            submitLabel={`Verstuur ${background.charAt(0).toUpperCase() + background.slice(1)} Formulier`}
             background={background}
             border={true}
           />
         )
       )}
-    </div>
+    </Box>
   ),
 };
 
 export const LongContent: Story = {
   args: {
-    title: 'Contact Form with Long Content',
+    title: 'Contactformulier Met Lange Inhoud',
     description:
-      'This is a longer description that demonstrates how the form section handles more extensive text content. It shows how the layout adapts to different amounts of content while maintaining good readability and visual hierarchy. The text can span multiple lines and the section will handle it gracefully.',
-    submitLabel: 'Send Your Message',
+      'Dit is een langere beschrijving die demonstreert hoe de formulier sectie uitgebreidere tekstinhoud afhandelt. Het toont hoe de lay-out zich aanpast aan verschillende hoeveelheden inhoud terwijl het goede leesbaarheid en visuele hiërarchie behoudt. De tekst kan over meerdere regels lopen en de sectie zal het elegant afhandelen.',
+    submitLabel: 'Verstuur Uw Bericht',
     background: 'teal',
     border: true,
   },

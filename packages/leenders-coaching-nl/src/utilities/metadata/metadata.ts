@@ -254,9 +254,29 @@ export const generateMetadata = async ({
         )
     : structuredData;
 
-  const defaultImages = defaultMetadata.openGraph.images
-    ? [...defaultMetadata.openGraph.images]
-    : undefined;
+  /* Generate dynamic Open Graph image if no images provided */
+  const generateDynamicOGImage = () => {
+    const baseUrl = 'https://leenders-coaching.nl';
+    const params = new URLSearchParams();
+
+    params.set('title', pageTitle);
+
+    if (description || siteMetadata.description) {
+      params.set('description', description || siteMetadata.description);
+    }
+
+    return `${baseUrl}/api/og?${params.toString()}`;
+  };
+
+  /* Use provided images, fallback to dynamic generation, or use default static images */
+  const finalImages = images || [
+    {
+      url: generateDynamicOGImage(),
+      width: 1200,
+      height: 630,
+      alt: pageTitle,
+    },
+  ];
 
   return {
     title: pageTitle,
@@ -265,12 +285,12 @@ export const generateMetadata = async ({
       title: pageTitle,
       description: description || siteMetadata.description,
       type,
-      images: images || defaultImages,
+      images: finalImages,
       siteName: siteMetadata.title,
     },
     twitter: {
       card: 'summary_large_image',
-      images: images || defaultImages,
+      images: finalImages,
     },
     robots: {
       index: !noindex,

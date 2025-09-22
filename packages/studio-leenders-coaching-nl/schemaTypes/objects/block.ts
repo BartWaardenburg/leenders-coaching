@@ -3,7 +3,7 @@ import { defineType } from 'sanity';
 /* Reusable rich text block configuration */
 export const block = defineType({
   name: 'richText',
-  title: 'Rich Text',
+  title: 'Rijke tekst',
   type: 'array',
   of: [
     {
@@ -43,19 +43,9 @@ export const block = defineType({
       },
     },
     {
-      type: 'image',
-      title: 'Image',
-      description: 'Add an image to your content',
-      options: { hotspot: true },
-      fields: [
-        {
-          name: 'alt',
-          type: 'string',
-          title: 'Alternative text',
-          description: 'Important for SEO and accessibility',
-          validation: (Rule) => Rule.required(),
-        },
-      ],
+      type: 'accessibleImage',
+      title: 'Afbeelding',
+      description: 'Voeg een afbeelding toe aan je content',
     },
   ],
 });

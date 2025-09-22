@@ -1,6 +1,6 @@
 'use client';
 
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/utilities/cn';
 import { motion, useReducedMotion, type HTMLMotionProps } from 'motion/react';
 import type { StaticImageData } from 'next/image';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
@@ -47,10 +47,7 @@ export const Person = ({
   return (
     <MotionStack
       direction="row"
-      className={twMerge(
-        'items-stretch border border-foreground/80',
-        className
-      )}
+      className={cn('items-stretch border border-foreground/80', className)}
       initial={
         shouldReduceMotion
           ? { opacity: 1, scale: 1 }
@@ -97,7 +94,7 @@ export const Person = ({
           src={imageSrc}
           alt={
             imageAlt ||
-            (typeof imageSrc === 'object' && 'asset' in imageSrc
+            (typeof imageSrc === 'object' && 'image' in imageSrc
               ? (imageSrc as { alt?: string })?.alt
               : undefined) ||
             name

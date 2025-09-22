@@ -7,23 +7,23 @@ export const header = defineType({
   fields: [
     {
       name: 'navigation',
-      title: 'Navigation',
+      title: 'Navigatie',
       type: 'array',
       of: [{ type: 'navigationItem' }],
     },
     {
       name: 'about',
-      title: 'About Section',
+      title: 'Over sectie',
       type: 'headerAbout',
     },
     {
       name: 'social',
-      title: 'Social Section',
+      title: 'Social sectie',
       type: 'headerSocial',
     },
     {
       name: 'contact',
-      title: 'Contact Section',
+      title: 'Contact sectie',
       type: 'headerContact',
     },
   ],
@@ -35,7 +35,7 @@ export const header = defineType({
     prepare({ title, subtitle }) {
       return {
         title: title || 'Header',
-        subtitle: subtitle || 'Navigation & Layout',
+        subtitle: subtitle || 'Navigatie & Layout',
       };
     },
   },

@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 import type { ContactPage } from '@/types/Page';
 import { createPageComponent } from '@/utilities/page';
 
-/* 
+/*
  * Create page component with type, fallback title, and optional wrapper
  */
 const { getMetadata, PageComponent } = createPageComponent<ContactPage>(
   'contactPage',
-  'Contact | Leenders Coaching'
+  'Contact'
 );
 
 /* Generate metadata from Sanity data */

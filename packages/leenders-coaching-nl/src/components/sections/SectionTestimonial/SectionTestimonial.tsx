@@ -2,7 +2,8 @@ import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import type { StaticImageData } from 'next/image';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
-import { Section, type PastelColor } from '@/components/ui/Section';
+import { Section } from '@/components/ui/Section';
+import type { PastelVariant } from '@/utilities/tokens';
 import { Stack } from '@/components/ui/Stack';
 import { Heading } from '@/components/ui/Heading';
 import { Box } from '@/components/ui/Box';
@@ -30,7 +31,7 @@ type SectionTestimonialProps = {
   /** Array of testimonials */
   testimonials: Testimonial[];
   /** Optional background color */
-  background?: PastelColor;
+  background?: PastelVariant;
   /** Whether to show a border */
   border?: boolean;
 } & ComponentPropsWithoutRef<'section'>;
@@ -87,13 +88,13 @@ export const SectionTestimonial = ({
                 </Heading>
               )}
               {description && (
-                <Text variant="large" className="max-w-2xl mx-auto">
+                <Text variant="large" maxWidth="2xl" className="mx-auto">
                   {description}
                 </Text>
               )}
             </Stack>
           )}
-          <Box className="py-8 -mx-4 sm:mx-0">
+          <Box className="p-8 -mx-4 sm:mx-0">
             <Carousel
               slides={testimonials.map((testimonial) => (
                 <TestimonialSlide key={testimonial.name} {...testimonial} />

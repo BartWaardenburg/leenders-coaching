@@ -1,8 +1,12 @@
+export { getPage, getHomePage } from './pages';
+
+export { getGlobalData, getSiteSettings } from './global';
+
 export {
-  getHomePage,
   getBlogPosts,
   getBlogPostBySlug,
-  getGlobalData,
-  getSiteSettings,
-  getPage,
-} from './groq-queries';
+  getCategories,
+  getCategoryBySlug,
+  getPostsByCategory,
+  getPostsByCategorySlug,
+} from './blog';

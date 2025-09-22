@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import * as React from 'react';
 import { expect, fn } from 'storybook/test';
 import { Input } from './Input';
+import { Box } from '../Box/Box';
+import { Text } from '../Text/Text';
 
 const meta = {
   title: 'UI/Input',
@@ -48,8 +50,8 @@ export const Default: Story = {
     // Input rendering complete - no animation wait needed
 
     // Test typing interaction
-    await userEvent.type(input, 'Hello World');
-    await expect(input).toHaveValue('Hello World');
+    await userEvent.type(input, 'Hallo Wereld');
+    await expect(input).toHaveValue('Hallo Wereld');
     await expect(args.onChange).toHaveBeenCalled();
   },
 };
@@ -79,8 +81,8 @@ export const WithLabel: Story = {
     // Input rendering complete - no animation wait needed
 
     // Test typing email
-    await userEvent.type(input, 'test@example.com');
-    await expect(input).toHaveValue('test@example.com');
+    await userEvent.type(input, 'test@voorbeeld.nl');
+    await expect(input).toHaveValue('test@voorbeeld.nl');
     await expect(args.onChange).toHaveBeenCalled();
   },
 };
@@ -184,10 +186,10 @@ export const Textarea: Story = {
     // Test typing in textarea
     await userEvent.type(
       textarea,
-      'This is a long message that spans multiple lines.'
+      'Dit is een lang bericht dat over meerdere regels loopt.'
     );
     await expect(textarea).toHaveValue(
-      'This is a long message that spans multiple lines.'
+      'Dit is een lang bericht dat over meerdere regels loopt.'
     );
     await expect(args.onChange).toHaveBeenCalled();
   },
@@ -256,7 +258,7 @@ export const FormInteraction: Story = {
       };
 
     return (
-      <div className="w-full max-w-md space-y-4">
+      <Box className="w-full max-w-md space-y-4">
         <Input
           label="Naam"
           placeholder="Voer je naam in"
@@ -277,12 +279,16 @@ export const FormInteraction: Story = {
           value={formData.message}
           onChange={handleChange('message')}
         />
-        <div className="text-sm text-muted-foreground">
-          <p>Naam: {formData.name || 'Niet opgegeven'}</p>
-          <p>Email: {formData.email || 'Niet opgegeven'}</p>
-          <p>Bericht: {formData.message || 'Niet opgegeven'}</p>
-        </div>
-      </div>
+        <Box className="text-sm text-muted-foreground">
+          <Text variant="small">Naam: {formData.name || 'Niet opgegeven'}</Text>
+          <Text variant="small">
+            Email: {formData.email || 'Niet opgegeven'}
+          </Text>
+          <Text variant="small">
+            Bericht: {formData.message || 'Niet opgegeven'}
+          </Text>
+        </Box>
+      </Box>
     );
   },
   play: async ({ canvas, userEvent, step }) => {

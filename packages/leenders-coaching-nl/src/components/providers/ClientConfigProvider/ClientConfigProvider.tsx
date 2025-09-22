@@ -8,6 +8,7 @@ const ConfigContext = createContext<ConfigType | null>(null);
 type ClientConfigProviderProps = {
   children: ReactNode;
   config: ConfigType;
+  testid?: string;
 };
 
 /**
@@ -18,11 +19,12 @@ type ClientConfigProviderProps = {
 export const ClientConfigProvider = ({
   children,
   config,
+  testid,
 }: ClientConfigProviderProps) => {
   return (
     <ConfigContext.Provider value={config}>
       <div
-        data-testid="client-config-provider"
+        data-testid={testid || 'client-config-provider'}
         data-config={JSON.stringify(config)}
       >
         {children}
