@@ -8,6 +8,7 @@ import type { PastelVariant } from '@/utilities/tokens';
 import { Stack } from '@/components/ui/Stack';
 import { Heading } from '@/components/ui/Heading';
 import { Box } from '@/components/ui/Box';
+import { Text } from '@/components/ui/Text';
 import { Form } from '@/components/ui/Form';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -124,7 +125,9 @@ export const SectionForm = ({
                 </Heading>
               )}
               {description && (
-                <Box className="max-w-2xl mx-auto">{description}</Box>
+                <Text variant="large" className="max-w-2xl mx-auto">
+                  {description}
+                </Text>
               )}
             </Stack>
           )}

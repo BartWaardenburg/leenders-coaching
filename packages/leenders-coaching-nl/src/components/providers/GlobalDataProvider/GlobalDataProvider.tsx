@@ -44,14 +44,12 @@ const defaultHeader = {
   contact: {
     title: 'Contact',
     projectEnquiry: {
-      label: 'Project aanvraag',
       href: '/contact',
-      linkText: 'Neem contact op',
+      linkText: 'Coaching aanvraag',
     },
     generalEnquiry: {
-      label: 'Algemene vragen',
       href: '/contact',
-      linkText: 'Contact',
+      linkText: 'Algemene vragen',
     },
   },
 };
@@ -120,10 +118,6 @@ export const GlobalDataProvider = async ({
         defaultHeader.contact.title
       ),
       projectEnquiry: {
-        label: transformNullable(
-          header.contact?.projectEnquiry?.label,
-          defaultHeader.contact.projectEnquiry.label
-        ),
         href: (() => {
           const href = transformNullable(
             header.contact?.projectEnquiry?.href,
@@ -138,10 +132,6 @@ export const GlobalDataProvider = async ({
         ),
       },
       generalEnquiry: {
-        label: transformNullable(
-          header.contact?.generalEnquiry?.label,
-          defaultHeader.contact.generalEnquiry.label
-        ),
         href: (() => {
           const href = transformNullable(
             header.contact?.generalEnquiry?.href,

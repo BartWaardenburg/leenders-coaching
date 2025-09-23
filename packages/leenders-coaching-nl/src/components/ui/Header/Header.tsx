@@ -44,12 +44,10 @@ type HeaderProps = Omit<ComponentPropsWithoutRef<'header'>, 'about'> & {
   contact: {
     title: string;
     projectEnquiry: {
-      label: string;
       href: string;
       linkText: string;
     };
     generalEnquiry: {
-      label: string;
       href: string;
       linkText: string;
     };

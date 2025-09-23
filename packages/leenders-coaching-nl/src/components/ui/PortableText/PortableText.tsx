@@ -191,8 +191,16 @@ const components: PortableTextComponents = {
     ),
   },
   listItem: {
-    bullet: ({ children }) => <li className="mb-1">{children}</li>,
-    number: ({ children }) => <li className="mb-1">{children}</li>,
+    bullet: ({ children }) => (
+      <li className="leading-relaxed transition-theme text-foreground font-normal font-montserrat mb-1">
+        {children}
+      </li>
+    ),
+    number: ({ children }) => (
+      <li className="leading-relaxed transition-theme text-foreground font-normal font-montserrat mb-1">
+        {children}
+      </li>
+    ),
   },
 };
 

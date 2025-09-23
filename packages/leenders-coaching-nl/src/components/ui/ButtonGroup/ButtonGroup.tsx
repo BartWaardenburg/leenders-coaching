@@ -77,7 +77,10 @@ export const ButtonGroup = ({
       direction={stackOnMobile ? 'column' : 'row'}
       gap={4}
       className={cn(
-        getResponsiveClasses(justify, JUSTIFY),
+        // On mobile (when stacked), center the buttons instead of using justify-end
+        stackOnMobile
+          ? 'justify-center'
+          : getResponsiveClasses(justify, JUSTIFY),
         getResponsiveClasses(width, WIDTH),
         getResponsiveClasses(align, ALIGN),
         stackOnMobile && '@lg:flex-row',

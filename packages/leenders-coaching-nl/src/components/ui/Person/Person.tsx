@@ -47,7 +47,10 @@ export const Person = ({
   return (
     <MotionStack
       direction="row"
-      className={cn('items-stretch border border-foreground/80', className)}
+      className={cn(
+        'items-stretch border border-foreground/80 justify-self-center w-[98px] sm:justify-self-auto sm:w-auto',
+        className
+      )}
       initial={
         shouldReduceMotion
           ? { opacity: 1, scale: 1 }
@@ -106,7 +109,7 @@ export const Person = ({
       <MotionStack
         direction="col"
         justify="center"
-        className="flex-1 min-w-0"
+        className="flex-1 min-w-0 sm:flex hidden"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{

@@ -13,6 +13,10 @@ const meta = {
       control: 'text',
       description: 'De titel van de sectie',
     },
+    description: {
+      control: 'text',
+      description: 'Optionele beschrijving van de sectie',
+    },
     content: {
       control: 'object',
       description: 'Portable Text content blokken',
@@ -38,6 +42,7 @@ const defaultContent = mockContentSection.content;
 export const Default: Story = {
   args: {
     title: mockContentSection.displayTitle,
+    description: mockContentSection.description,
     content: defaultContent,
   },
 };
@@ -54,5 +59,12 @@ export const WithBackgroundAndBorder: Story = {
     ...Default.args,
     background: 'blue',
     border: true,
+  },
+};
+
+export const WithDescriptionOnly: Story = {
+  args: {
+    description: mockContentSection.description,
+    content: defaultContent,
   },
 };

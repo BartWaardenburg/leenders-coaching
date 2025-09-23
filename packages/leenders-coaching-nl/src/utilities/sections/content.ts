@@ -29,6 +29,7 @@ export const transformContentSection = (
 
   return {
     title: data.displayTitle || undefined,
+    description: data.description || undefined,
     /* Cast content to PortableTextBlock[] since Sanity's type is compatible but TypeScript does not recognize it. */
     content: (data.content || []) as PortableTextBlock[],
     background: data.background,

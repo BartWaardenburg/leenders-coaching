@@ -5,6 +5,7 @@ import type { PastelVariant } from '@/utilities/tokens';
 import { Stack } from '@/components/ui/Stack';
 import { Heading } from '@/components/ui/Heading';
 import { Box } from '@/components/ui/Box';
+import { Text } from '@/components/ui/Text';
 import { PortableText } from '@/components/ui/PortableText';
 import type { PortableTextBlock } from '@portabletext/react';
 
@@ -14,6 +15,8 @@ type SectionContentProps = Omit<
 > & {
   /** The title of the section */
   title?: ReactNode;
+  /** Optional description text */
+  description?: ReactNode;
   /** Optional background color */
   background?: PastelVariant;
   /** Whether to show a border */
@@ -23,10 +26,11 @@ type SectionContentProps = Omit<
 };
 
 /**
- * Section component for displaying Portable Text content with an optional title
+ * Section component for displaying Portable Text content with an optional title and description
  */
 export const SectionContent = ({
   title,
+  description,
   content,
   background,
   border = false,
@@ -42,18 +46,25 @@ export const SectionContent = ({
       {...props}
     >
       <Stack gap={8}>
-        {title && (
-          <Box className="w-full">
-            <Heading
-              level="h2"
-              variant="large"
-              showBorder
-              borderColor={background}
-              textAlign="center"
-            >
-              {title}
-            </Heading>
-          </Box>
+        {(title || description) && (
+          <Stack space={4} className="text-center">
+            {title && (
+              <Heading
+                level="h2"
+                variant="large"
+                showBorder
+                borderColor={background}
+                textAlign="center"
+              >
+                {title}
+              </Heading>
+            )}
+            {description && (
+              <Text variant="large" className="max-w-2xl mx-auto">
+                {description}
+              </Text>
+            )}
+          </Stack>
         )}
         <Box className="mx-auto">
           <Box className="pt-6 max-w-3xl">

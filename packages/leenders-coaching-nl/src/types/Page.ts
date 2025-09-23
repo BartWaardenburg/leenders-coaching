@@ -5,6 +5,8 @@ import type {
   CoachingPage as SanityCoachingPage,
   ContactPage as SanityContactPage,
   HomePage as SanityHomePage,
+  PrivacyPage as SanityPrivacyPage,
+  VoorwaardenPage as SanityVoorwaardenPage,
   Metadata as SanityMetadata,
 } from './sanity/schema';
 
@@ -53,3 +55,13 @@ export type CoachingPage = SanityCoachingPage;
  * Contact page type
  */
 export type ContactPage = SanityContactPage;
+
+/**
+ * Voorwaarden page type
+ */
+export type VoorwaardenPage = SanityVoorwaardenPage;
+
+/**
+ * Privacy page type
+ */
+export type PrivacyPage = SanityPrivacyPage;

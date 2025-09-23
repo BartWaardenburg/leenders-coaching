@@ -19,6 +19,8 @@ const singletons = [
   'approachPage',
   'blogPage',
   'contactPage',
+  'voorwaardenPage',
+  'privacyPage',
   'post',
   'category',
   'sectionHeader',
@@ -100,6 +102,22 @@ export const structure = (S: StructureBuilder) =>
                   S.document()
                     .schemaType('contactPage')
                     .documentId('contactPage')
+                ),
+              S.listItem()
+                .title('Voorwaarden')
+                .id('voorwaardenPage')
+                .child(
+                  S.document()
+                    .schemaType('voorwaardenPage')
+                    .documentId('voorwaardenPage')
+                ),
+              S.listItem()
+                .title('Privacy')
+                .id('privacyPage')
+                .child(
+                  S.document()
+                    .schemaType('privacyPage')
+                    .documentId('privacyPage')
                 ),
             ])
         ),

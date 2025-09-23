@@ -5,6 +5,8 @@ import {
   approachPage,
   blogPage,
   contactPage,
+  voorwaardenPage,
+  privacyPage,
 } from './pages';
 
 import { postType, categoryType } from './documents';
@@ -88,6 +90,8 @@ export const schemaTypes = [
   approachPage,
   blogPage,
   contactPage,
+  voorwaardenPage,
+  privacyPage,
 
   /* Documents. */
   postType,

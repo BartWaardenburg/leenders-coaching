@@ -14,7 +14,6 @@ type MenuFooterSection = {
 };
 
 type MenuFooterEnquiry = {
-  label: string | null;
   href: string | null;
   linkText: string | null;
 };
@@ -208,7 +207,7 @@ export const MenuFooter = ({ sections }: MenuFooterProps) => {
                   <motion.div variants={linkVariants}>
                     <Box>
                       <Text as="span" className="text-sm">
-                        {sections.contact.projectEnquiry.label} /
+                        /
                       </Text>
                       <Link
                         href={sections.contact.projectEnquiry.href || '#'}
@@ -223,7 +222,7 @@ export const MenuFooter = ({ sections }: MenuFooterProps) => {
                   <motion.div variants={linkVariants}>
                     <Box>
                       <Text as="span" className="text-sm">
-                        {sections.contact.generalEnquiry.label} /
+                        /
                       </Text>
                       <Link
                         href={sections.contact.generalEnquiry.href || '#'}
@@ -234,6 +233,32 @@ export const MenuFooter = ({ sections }: MenuFooterProps) => {
                     </Box>
                   </motion.div>
                 )}
+                <motion.div variants={linkVariants}>
+                  <Box>
+                    <Text as="span" className="text-sm">
+                      /
+                    </Text>
+                    <Link
+                      href="/privacy"
+                      className="text-sm underline hover:text-primary transition-theme ml-1"
+                    >
+                      Privacy
+                    </Link>
+                  </Box>
+                </motion.div>
+                <motion.div variants={linkVariants}>
+                  <Box>
+                    <Text as="span" className="text-sm">
+                      /
+                    </Text>
+                    <Link
+                      href="/voorwaarden"
+                      className="text-sm underline hover:text-primary transition-theme ml-1"
+                    >
+                      Voorwaarden
+                    </Link>
+                  </Box>
+                </motion.div>
               </Stack>
             </Flex>
           </FooterSection>

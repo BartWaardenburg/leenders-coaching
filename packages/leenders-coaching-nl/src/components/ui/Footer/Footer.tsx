@@ -56,12 +56,35 @@ export const Footer = ({
           gap={8}
           className="py-6 md:flex-row md:items-center"
         >
-          {/* Copyright - first on desktop, second on mobile */}
-          {copyright && (
-            <Text variant="muted" className="text-sm order-2 md:order-1">
-              {copyright}
-            </Text>
-          )}
+          {/* Copyright and Legal Links - first on desktop, second on mobile */}
+          <Flex
+            direction="column"
+            items="start"
+            gap={2}
+            className="order-2 md:order-1"
+          >
+            {copyright && (
+              <Text variant="muted" className="text-sm">
+                {copyright}
+              </Text>
+            )}
+            <Flex direction="row" gap={4}>
+              <Link
+                href="/privacy"
+                variant="subtle"
+                className="text-sm text-muted-foreground hover:text-primary transition-theme"
+              >
+                Privacy
+              </Link>
+              <Link
+                href="/voorwaarden"
+                variant="subtle"
+                className="text-sm text-muted-foreground hover:text-primary transition-theme"
+              >
+                Voorwaarden
+              </Link>
+            </Flex>
+          </Flex>
 
           {/* Instagram - hidden on mobile, second on desktop */}
           {instagramLink?.url && (
