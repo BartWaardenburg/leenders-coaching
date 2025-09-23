@@ -31,7 +31,7 @@ const montserratData = fetch(
  * Default image configuration for the OG image.
  */
 const defaultImageConfig = {
-  url: '/images/hummingbird-symbol-resilience.png',
+  url: '/images/hummingbird-symbol-resilience.jpg',
   width: 1200,
   height: 800,
 };

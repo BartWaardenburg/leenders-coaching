@@ -35,12 +35,10 @@ export const Default: Story = {
     contact: {
       title: 'Neem contact op',
       projectEnquiry: {
-        label: 'Project aanvraag',
         href: '/contact',
         linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
-        label: 'Algemene vragen',
         href: '/contact',
         linkText: 'Neem Contact Op',
       },
@@ -86,12 +84,10 @@ export const HeaderMobileMenu: Story = {
     contact: {
       title: 'Neem contact op',
       projectEnquiry: {
-        label: 'Project aanvraag',
         href: '/contact',
         linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
-        label: 'Algemene vragen',
         href: '/contact',
         linkText: 'Neem Contact Op',
       },
@@ -157,12 +153,10 @@ export const HeaderNavigation: Story = {
     contact: {
       title: 'Neem contact op',
       projectEnquiry: {
-        label: 'Project aanvraag',
         href: '/contact',
         linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
-        label: 'Algemene vragen',
         href: '/contact',
         linkText: 'Neem Contact Op',
       },
@@ -228,12 +222,10 @@ export const HeaderSocialLinks: Story = {
     contact: {
       title: 'Neem contact op',
       projectEnquiry: {
-        label: 'Project aanvraag',
         href: '/contact',
         linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
-        label: 'Algemene vragen',
         href: '/contact',
         linkText: 'Neem Contact Op',
       },
@@ -289,12 +281,10 @@ export const HeaderContactLinks: Story = {
     contact: {
       title: 'Neem contact op',
       projectEnquiry: {
-        label: 'Project aanvraag',
         href: '/contact',
         linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
-        label: 'Algemene vragen',
         href: '/contact',
         linkText: 'Neem Contact Op',
       },
@@ -352,12 +342,10 @@ export const HeaderThemeToggle: Story = {
     contact: {
       title: 'Neem contact op',
       projectEnquiry: {
-        label: 'Project aanvraag',
         href: '/contact',
         linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
-        label: 'Algemene vragen',
         href: '/contact',
         linkText: 'Neem Contact Op',
       },
@@ -415,12 +403,10 @@ export const HeaderAccessibility: Story = {
     contact: {
       title: 'Neem contact op',
       projectEnquiry: {
-        label: 'Project aanvraag',
         href: '/contact',
         linkText: 'Neem Contact Op',
       },
       generalEnquiry: {
-        label: 'Algemene vragen',
         href: '/contact',
         linkText: 'Neem Contact Op',
       },
