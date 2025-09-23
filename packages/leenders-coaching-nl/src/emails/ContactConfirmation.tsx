@@ -28,8 +28,9 @@ export const ContactConfirmation = ({
   return (
     <Html>
       <Head>
-        <style dangerouslySetInnerHTML={{
-          __html: `
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
             @font-face {
               font-family: 'Playfair Display';
               font-style: normal;
@@ -60,8 +61,9 @@ export const ContactConfirmation = ({
               line-height: 1.25;
               color: rgb(48, 36, 29);
             }
-          `
-        }} />
+          `,
+          }}
+        />
       </Head>
       <Preview>Bedankt voor je bericht aan Leenders Coaching</Preview>
       <Body style={main}>
@@ -91,21 +93,23 @@ export const ContactConfirmation = ({
           <Heading style={heading}>Bedankt voor je bericht!</Heading>
 
           <Section style={contentSection}>
+            <Text style={text}>Beste {name},</Text>
             <Text style={text}>
-              Beste {name},
+              Bedankt voor je bericht met het onderwerp &quot;{subject}&quot;.
+              Ik heb je bericht goed ontvangen.
             </Text>
             <Text style={text}>
-              Bedankt voor je bericht met het onderwerp &quot;{subject}&quot;. We hebben je bericht goed ontvangen.
+              Ik zal je bericht zo snel mogelijk bekijken en binnen 2 werkdagen
+              reageren. Tijdens drukke periodes kan dit iets langer duren, maar
+              ik doe mijn best om je zo snel mogelijk te helpen.
             </Text>
             <Text style={text}>
-              Ons team zal je bericht zo snel mogelijk bekijken en binnen 2 werkdagen reageren. Tijdens drukke periodes kan dit iets langer duren, maar we doen ons best om je zo snel mogelijk te helpen.
-            </Text>
-            <Text style={text}>
-              Als je vragen hebt of aanvullende informatie wilt delen, kun je altijd reageren op deze e-mail.
+              Als je vragen hebt of aanvullende informatie wilt delen, kun je
+              altijd reageren op deze e-mail.
             </Text>
 
             <Section style={buttonContainer}>
-              <Button href="https://leenders-coaching.nl/contact" style={button}>
+              <Button href="https://leenders-coaching.nl/" style={button}>
                 Bezoek mijn website
               </Button>
             </Section>
@@ -115,13 +119,20 @@ export const ContactConfirmation = ({
 
           <Section style={footerSection}>
             <Text style={footer}>
-              © {new Date().getFullYear()} Leenders Coaching. Alle rechten voorbehouden.
+              © {new Date().getFullYear()} Leenders Coaching. Alle rechten
+              voorbehouden.
               <br />
-              <Link style={footerLink} href="https://leenders-coaching.nl/privacy">
+              <Link
+                style={footerLink}
+                href="https://leenders-coaching.nl/privacy"
+              >
                 Privacy Beleid
               </Link>{' '}
               •{' '}
-              <Link style={footerLink} href="https://leenders-coaching.nl/voorwaarden">
+              <Link
+                style={footerLink}
+                href="https://leenders-coaching.nl/voorwaarden"
+              >
                 Algemene Voorwaarden
               </Link>
             </Text>
@@ -134,7 +145,8 @@ export const ContactConfirmation = ({
 
 const main = {
   backgroundColor: '#F5F5F5',
-  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+  fontFamily:
+    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
   color: '#1F2937',
   padding: '24px 0',
 };
@@ -159,7 +171,8 @@ const headerSection = {
 };
 
 const heading = {
-  fontFamily: '"Playfair Display", serif, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
+  fontFamily:
+    '"Playfair Display", serif, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
   fontSize: '38px',
   fontWeight: '700',
   color: 'rgb(48, 36, 29)',
@@ -185,7 +198,8 @@ const contentSection = {
 };
 
 const text = {
-  fontFamily: 'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
+  fontFamily:
+    'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
   fontSize: '16px',
   fontWeight: '400',
   color: '#4B5563',
@@ -208,7 +222,8 @@ const button = {
   backgroundColor: 'transparent',
   color: '#1F2937',
   padding: '16px 32px',
-  fontFamily: 'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
+  fontFamily:
+    'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
   fontWeight: '500',
   fontSize: '13px',
   textDecoration: 'none',
@@ -238,14 +253,16 @@ const footerLink = {
   color: '#1F2937',
   textDecoration: 'none',
   fontWeight: '500',
-  fontFamily: 'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
+  fontFamily:
+    'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
   fontSize: '13px',
   letterSpacing: '0.1em',
   transition: 'color 0.2s ease-in-out',
 };
 
 const footer = {
-  fontFamily: 'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
+  fontFamily:
+    'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
   fontWeight: '400',
   fontSize: '13px',
   color: '#6B7280',
@@ -256,4 +273,4 @@ const footer = {
   letterSpacing: '0.1em',
 };
 
-export default ContactConfirmation; 
+export default ContactConfirmation;

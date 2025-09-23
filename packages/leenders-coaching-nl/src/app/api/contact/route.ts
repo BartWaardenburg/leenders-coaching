@@ -21,11 +21,7 @@ type ContactFormRequest = ContactFormData & {
  */
 export async function POST(request: Request) {
   try {
-    console.log('Contact API endpoint called');
-
     const data = (await request.json()) as ContactFormRequest;
-    console.log('Received form data:', data);
-
     const { name, email, subject, message, formConfig } = data;
 
     /* Validate the request data */

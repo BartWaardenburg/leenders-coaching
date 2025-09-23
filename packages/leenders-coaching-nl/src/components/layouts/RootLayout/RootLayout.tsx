@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { draftMode } from 'next/headers';
 import { VisualEditing } from 'next-sanity';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
@@ -42,6 +43,7 @@ export const RootLayout = async ({ children, fonts }: RootLayoutProps) => {
               <ToastProvider>
                 {children}
                 <Analytics />
+                <SpeedInsights />
                 {isEnabled && (
                   <>
                     <VisualEditing />
