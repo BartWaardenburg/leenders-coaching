@@ -349,7 +349,7 @@ export type PricingCard = {
     _key: string;
   }>;
   isPopular?: boolean;
-  ctaLabel?: string;
+  callToAction?: CallToAction;
   variant?: ColorVariant;
 };
 

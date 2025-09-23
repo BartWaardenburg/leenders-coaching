@@ -32,5 +32,6 @@ export const transformFormSection = (
     submitLabel: data.form?.submitLabel || undefined,
     background: data.background,
     border: data.border,
+    form: data.form,
   };
 };

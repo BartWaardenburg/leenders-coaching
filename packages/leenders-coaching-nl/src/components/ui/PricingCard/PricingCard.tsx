@@ -41,14 +41,20 @@ interface PricingFeature {
   text: string;
 }
 
+interface CallToAction {
+  label?: string;
+  href?: string;
+  variant?: PricingCardVariant;
+  isExternal?: boolean;
+}
+
 interface PricingCardProps {
   title: string;
   description: string;
   price: string;
   features: PricingFeature[];
   isPopular?: boolean;
-  ctaLabel: string;
-  onCtaClick?: () => void;
+  callToAction?: CallToAction;
   variant?: PricingCardVariant;
   testid?: string;
 }
@@ -62,8 +68,7 @@ export const PricingCard = ({
   price,
   features,
   isPopular = false,
-  ctaLabel,
-  onCtaClick,
+  callToAction,
   variant = 'blue',
   testid,
 }: PricingCardProps) => {
@@ -166,15 +171,20 @@ export const PricingCard = ({
               </Box>
             </Box>
 
-            {onCtaClick && (
+            {callToAction && callToAction.label && callToAction.href && (
               <Flex className="mt-auto" justify="end">
                 <Button
-                  onClick={onCtaClick}
-                  variant={variant}
+                  href={callToAction.href}
+                  variant={callToAction.variant || variant}
+                  role="button"
                   className="transition-theme"
                   fullWidthUntil="lg"
+                  target={callToAction.isExternal ? '_blank' : undefined}
+                  rel={
+                    callToAction.isExternal ? 'noopener noreferrer' : undefined
+                  }
                 >
-                  {ctaLabel}
+                  {callToAction.label}
                 </Button>
               </Flex>
             )}

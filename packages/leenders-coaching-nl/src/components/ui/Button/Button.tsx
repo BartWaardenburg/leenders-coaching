@@ -45,6 +45,7 @@ type ButtonBaseProps = {
   isLoading?: boolean;
   fullWidthUntil?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   disabled?: boolean;
+  role?: 'button' | 'link';
 } & VariantProps<typeof buttonVariants>;
 
 type ButtonAsButtonProps = ButtonBaseProps &
@@ -53,7 +54,10 @@ type ButtonAsButtonProps = ButtonBaseProps &
   };
 
 type ButtonAsLinkProps = ButtonBaseProps &
-  Omit<ComponentPropsWithoutRef<'a'>, 'href' | keyof ButtonBaseProps> & {
+  Omit<
+    ComponentPropsWithoutRef<'a'>,
+    'href' | 'role' | keyof ButtonBaseProps
+  > & {
     href: string;
   };
 
@@ -115,11 +119,13 @@ export const Button = forwardRef<
     );
 
     if (href) {
-      const { href: _, ...linkProps } = props as ButtonAsLinkProps;
+      const { href: _, role, ...linkProps } = props as ButtonAsLinkProps;
+      const linkRole = role || 'link';
       return (
         <Link
           ref={ref as React.ForwardedRef<HTMLAnchorElement>}
           href={href}
+          role={linkRole}
           className={cn(
             buttonStyles,
             (disabled || isLoading) && 'pointer-events-none opacity-50'

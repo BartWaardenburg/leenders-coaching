@@ -1,13 +1,18 @@
 import type { ContactFormData } from '@/components/sections/SectionForm/SectionForm';
+import type { FormConfiguration } from '@/types/sanity/schema';
+
+type ContactFormRequest = ContactFormData & {
+  formConfig?: FormConfiguration;
+};
 
 /**
  * Submit contact form data to the API
- * @param data - The contact form data to submit
+ * @param data - The contact form data to submit including optional form configuration
  * @returns Promise that resolves when the form is successfully submitted
  * @throws Error if the API request fails
  */
 export const submitContactForm = async (
-  data: ContactFormData
+  data: ContactFormRequest
 ): Promise<void> => {
   const response = await fetch('/api/contact', {
     method: 'POST',

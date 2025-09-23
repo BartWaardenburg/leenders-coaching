@@ -54,10 +54,9 @@ export const pricingCard = defineType({
       initialValue: false,
     },
     {
-      name: 'ctaLabel',
-      type: 'string',
-      title: 'Knoptekst',
-      validation: (Rule: any) => Rule.required(),
+      name: 'callToAction',
+      type: 'callToAction',
+      title: 'Actieknop',
     },
     {
       name: 'variant',

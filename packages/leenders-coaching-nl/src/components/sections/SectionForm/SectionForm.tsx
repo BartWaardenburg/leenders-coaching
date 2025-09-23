@@ -32,6 +32,12 @@ type SectionFormProps = {
   submitLabel?: string;
   background?: PastelVariant;
   border?: boolean;
+  form?: {
+    _type: 'formConfiguration';
+    emailTo?: string;
+    emailSubject?: string;
+    submitLabel?: string;
+  };
 } & Omit<ComponentPropsWithoutRef<'section'>, 'onSubmit'>;
 
 /**
@@ -40,9 +46,10 @@ type SectionFormProps = {
 export const SectionForm = ({
   title,
   description,
-  submitLabel = 'Verstuur bericht',
+  submitLabel,
   background,
   border = false,
+  form,
   className,
   ...props
 }: SectionFormProps) => {
@@ -66,7 +73,10 @@ export const SectionForm = ({
 
   const handleFormSubmit = async (data: ContactFormData) => {
     try {
-      await submitContactForm(data);
+      await submitContactForm({
+        ...data,
+        formConfig: form,
+      });
       reset();
       if (showToast) {
         showToast(
@@ -155,7 +165,7 @@ export const SectionForm = ({
                   isLoading={isSubmitting}
                   fullWidthUntil="md"
                 >
-                  {submitLabel}
+                  {submitLabel || form?.submitLabel || 'Verstuur bericht'}
                 </Button>
               </Box>
             </Stack>

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { ContactNotification, ContactConfirmation } from '@/emails';
 import type { ContactFormData } from '@/components/sections/SectionForm/SectionForm';
+import type { FormConfiguration } from '@/types/sanity/schema';
 
 /* Initialize Resend with API key from environment variables */
 const resendApiKey = process.env.RESEND_API_KEY;
@@ -9,6 +10,10 @@ if (!resendApiKey) {
   throw new Error('RESEND_API_KEY is not defined in environment variables');
 }
 const resend = new Resend(resendApiKey);
+
+type ContactFormRequest = ContactFormData & {
+  formConfig?: FormConfiguration;
+};
 
 /**
  * API handler for contact form submissions
@@ -18,10 +23,10 @@ export async function POST(request: Request) {
   try {
     console.log('Contact API endpoint called');
 
-    const data = (await request.json()) as ContactFormData;
+    const data = (await request.json()) as ContactFormRequest;
     console.log('Received form data:', data);
 
-    const { name, email, subject, message } = data;
+    const { name, email, subject, message, formConfig } = data;
 
     /* Validate the request data */
     if (!name || !email || !subject || !message) {
@@ -37,11 +42,17 @@ export async function POST(request: Request) {
       );
     }
 
-    /* Send notification email to Leenders Coaching */
+    /* Get configuration from form config or use defaults */
+    const emailTo = formConfig?.emailTo || 'info@leenders-coaching.nl';
+    const emailSubject =
+      formConfig?.emailSubject || `Contact formulier: {subject}`;
+    const finalSubject = emailSubject.replace('{subject}', subject);
+
+    /* Send notification email to configured recipient */
     const notificationResult = await resend.emails.send({
       from: 'noreply@informatie.leenders-coaching.nl',
-      to: 'info@leenders-coaching.nl',
-      subject: `Contact formulier: ${subject}`,
+      to: emailTo,
+      subject: finalSubject,
       react: ContactNotification({ name, email, subject, message }),
       replyTo: email,
     });
@@ -63,7 +74,7 @@ export async function POST(request: Request) {
       to: email,
       subject: 'Bedankt voor je bericht aan Leenders Coaching',
       react: ContactConfirmation({ name, subject }),
-      replyTo: 'info@leenders-coaching.nl',
+      replyTo: emailTo,
     });
 
     if (confirmationResult.error) {

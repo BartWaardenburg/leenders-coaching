@@ -1,6 +1,7 @@
 import type { ComponentProps } from 'react';
 import type { SectionPricing } from '@/components/sections/SectionPricing';
 import type { SectionPricing as SanitySectionPricing } from '@/types/sanity/schema';
+import type { PastelVariant } from '@/utilities/tokens';
 
 /**
  * Type guard to check if data is a valid Sanity pricing section.
@@ -11,6 +12,27 @@ const isSanitySectionPricing = (
   data: Record<string, unknown>
 ): data is SanitySectionPricing => {
   return data._type === 'sectionPricing';
+};
+
+/**
+ * Helper function to ensure variant is a valid PastelVariant
+ * @param variant - The variant to validate
+ * @returns A valid PastelVariant or undefined
+ */
+const validateVariant = (
+  variant: string | undefined
+): PastelVariant | undefined => {
+  const validVariants: PastelVariant[] = [
+    'blue',
+    'purple',
+    'green',
+    'pink',
+    'yellow',
+    'teal',
+  ];
+  return variant && validVariants.includes(variant as PastelVariant)
+    ? (variant as PastelVariant)
+    : undefined;
 };
 
 /**
@@ -41,8 +63,15 @@ export const transformPricingSection = (
             text: feature.text || '',
           })) || [],
         isPopular: pkg.isPopular,
-        ctaLabel: pkg.ctaLabel || '',
-        variant: pkg.variant,
+        callToAction: pkg.callToAction
+          ? {
+              label: pkg.callToAction.label || '',
+              href: pkg.callToAction.href || '',
+              variant: validateVariant(pkg.callToAction.variant),
+              isExternal: pkg.callToAction.isExternal,
+            }
+          : { label: '', href: '' },
+        variant: validateVariant(pkg.variant),
       })) || [],
     background: data.background,
     border: data.border,

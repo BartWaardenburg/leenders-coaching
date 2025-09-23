@@ -10,13 +10,11 @@ export const callToAction = defineType({
       name: 'label',
       type: 'string',
       title: 'Knoptekst',
-      validation: (Rule: any) => Rule.required(),
     },
     {
       name: 'href',
       type: 'string',
       title: 'Knoplink',
-      validation: (Rule: any) => Rule.required(),
     },
     {
       name: 'variant',

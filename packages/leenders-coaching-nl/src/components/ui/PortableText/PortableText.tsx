@@ -17,24 +17,26 @@ type LinkAnnotation = {
   blank?: boolean;
 };
 
-type SanityImageBlock = {
-  _type: 'image';
-  asset: {
-    _ref: string;
-    _type?: 'reference';
-    url?: string;
-  };
-  hotspot?: {
-    x: number;
-    y: number;
-    height: number;
-    width: number;
-  };
-  crop?: {
-    top: number;
-    bottom: number;
-    left: number;
-    right: number;
+type AccessibleImageBlock = {
+  _type: 'accessibleImage';
+  image: {
+    asset: {
+      _ref: string;
+      _type?: 'reference';
+      url?: string;
+    };
+    hotspot?: {
+      x: number;
+      y: number;
+      height: number;
+      width: number;
+    };
+    crop?: {
+      top: number;
+      bottom: number;
+      left: number;
+      right: number;
+    };
   };
   alt?: string;
   caption?: string;
@@ -134,14 +136,14 @@ const components: PortableTextComponents = {
     },
   },
   types: {
-    image: ({ value }: { value: SanityImageBlock }) => {
-      if (!value?.asset) return null;
+    accessibleImage: ({ value }: { value: AccessibleImageBlock }) => {
+      if (!value?.image?.asset) return null;
 
       return (
         <Box className="my-8">
           <Box className="relative border border-foreground/80 h-48 md:h-[400px] w-full overflow-hidden bg-pastel-blue dark:bg-pastel-blue-dark">
             <SanityImage
-              image={value}
+              image={value.image}
               alt={value?.alt || ''}
               fill
               className="object-cover"

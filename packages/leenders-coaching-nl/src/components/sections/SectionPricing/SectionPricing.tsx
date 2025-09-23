@@ -2,12 +2,20 @@ import { Section } from '@/components/ui/Section';
 import type { PastelVariant } from '@/utilities/tokens';
 import { Heading } from '@/components/ui/Heading';
 import { Text } from '@/components/ui/Text';
-import { Flex } from '@/components/ui/Flex';
+import { Stack } from '@/components/ui/Stack';
+import { Box } from '@/components/ui/Box';
 import { PricingCard } from '@/components/ui/PricingCard/PricingCard';
 import { Grid } from '@/components/ui/Grid';
 
 interface PricingFeature {
   text: string;
+}
+
+interface CallToAction {
+  label: string;
+  href: string;
+  variant?: PastelVariant;
+  isExternal?: boolean;
 }
 
 interface PricingPackage {
@@ -16,7 +24,7 @@ interface PricingPackage {
   price: string;
   features: PricingFeature[];
   isPopular?: boolean;
-  ctaLabel: string;
+  callToAction: CallToAction;
   variant?: PastelVariant;
 }
 
@@ -24,7 +32,6 @@ interface SectionPricingProps {
   title?: string;
   description?: string;
   packages: PricingPackage[];
-  onBooking?: () => void;
   className?: string;
   background?: PastelVariant;
   border?: boolean;
@@ -39,7 +46,6 @@ export const SectionPricing = ({
   description,
   packages,
   className,
-  onBooking,
   background,
   border = false,
   testid,
@@ -50,54 +56,59 @@ export const SectionPricing = ({
       background={background}
       border={border}
       className={className}
+      maxWidth="6xl"
       testid={testid}
       {...props}
     >
-      {(title || description) && (
-        <Flex direction="column" items="center" className="mb-16" testid="flex">
-          {title && (
-            <Heading
-              level="h2"
-              variant="large"
-              showBorder
-              borderColor={background}
-              textAlign="center"
-            >
-              {title}
-            </Heading>
+      <Box className="mx-auto">
+        <Stack gap={8} testid="stack">
+          {(title || description) && (
+            <Stack space={4} className="text-center">
+              {title && (
+                <Heading
+                  level="h2"
+                  variant="large"
+                  showBorder
+                  borderColor={background}
+                  textAlign="center"
+                >
+                  {title}
+                </Heading>
+              )}
+              {description && (
+                <Text
+                  variant="large"
+                  className="max-w-2xl mx-auto"
+                  testid="text"
+                >
+                  {description}
+                </Text>
+              )}
+            </Stack>
           )}
-          {description && (
-            <Text
-              testid="text"
-              className="text-muted-foreground text-center max-w-2xl"
-            >
-              {description}
-            </Text>
-          )}
-        </Flex>
-      )}
-      <Grid
-        cols={{
-          base: 1,
-          lg: 3,
-        }}
-        gap={6}
-      >
-        {packages.map((pkg, index) => (
-          <PricingCard
-            key={index}
-            title={pkg.title}
-            description={pkg.description}
-            price={pkg.price}
-            features={pkg.features}
-            isPopular={pkg.isPopular}
-            ctaLabel={pkg.ctaLabel}
-            variant={pkg.variant}
-            testid="pricing-card"
-            {...(onBooking && { onCtaClick: onBooking })}
-          />
-        ))}
-      </Grid>
+          <Grid
+            cols={{
+              base: 1,
+              lg: 3,
+            }}
+            gap={6}
+          >
+            {packages.map((pkg, index) => (
+              <PricingCard
+                key={index}
+                title={pkg.title}
+                description={pkg.description}
+                price={pkg.price}
+                features={pkg.features}
+                isPopular={pkg.isPopular}
+                callToAction={pkg.callToAction}
+                variant={pkg.variant}
+                testid="pricing-card"
+              />
+            ))}
+          </Grid>
+        </Stack>
+      </Box>
     </Section>
   );
 };

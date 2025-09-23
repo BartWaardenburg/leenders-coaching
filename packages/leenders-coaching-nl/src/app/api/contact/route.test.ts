@@ -8,10 +8,10 @@ import { POST } from './route';
 
 /*
  * Mock the contact utility.
- * sendContactEmail is mocked but not used directly in these tests.
+ * submitContactForm is mocked but not used directly in these tests.
  */
-vi.mock('@/lib/api/contact', () => ({
-  sendContactEmail: vi.fn(),
+vi.mock('@/utilities/contact', () => ({
+  submitContactForm: vi.fn(),
 }));
 
 /*

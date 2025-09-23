@@ -136,6 +136,27 @@ export const SECTION_BLOG_POST_FRAGMENT = `
 `;
 
 /**
+ * Fragment for pricing card objects in pricing sections
+ */
+export const PRICING_CARD_FRAGMENT = `
+  _key,
+  title,
+  description,
+  price,
+  features[] {
+    text
+  },
+  isPopular,
+  callToAction {
+    label,
+    href,
+    variant,
+    isExternal
+  },
+  variant
+`;
+
+/**
  * GROQ fragment for generic section handling
  * This handles any section type dynamically without assuming specific section types
  */
@@ -151,6 +172,19 @@ export const GENERIC_SECTION_FRAGMENT = `
     "showAllPosts": select(_type == "sectionBlog" => showAllPosts),
     "showFeaturedOnly": select(_type == "sectionBlog" => showFeaturedOnly),
     "sortOrder": select(_type == "sectionBlog" => sortOrder),
+    "packages": select(
+      _type == "sectionPricing" => packages[] {
+        ${PRICING_CARD_FRAGMENT}
+      }
+    ),
+    "form": select(
+      _type == "sectionForm" => form {
+        _type,
+        emailTo,
+        emailSubject,
+        submitLabel
+      }
+    ),
     testimonials[] {
       ...,
       image {

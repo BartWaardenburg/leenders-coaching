@@ -31,10 +31,6 @@ const meta = {
       control: 'object',
       description: 'Array van prijs pakket objecten',
     },
-    onBooking: {
-      control: false,
-      description: 'Callback functie wanneer boeken wordt geklikt',
-    },
   },
 } satisfies Meta<typeof SectionPricing>;
 
@@ -49,6 +45,5 @@ export const Default: Story = {
     title: mockPricingSection.displayTitle,
     description: mockPricingSection.description,
     packages: defaultPackages,
-    onBooking: () => console.log('Booking clicked'),
   },
 };

@@ -39,6 +39,11 @@ const meta = {
       control: 'boolean',
       description: 'Of de knop uitgeschakeld is',
     },
+    role: {
+      control: 'select',
+      options: ['button', 'link'],
+      description: 'De toegankelijkheidsrol van het element',
+    },
     children: {
       control: 'text',
       description: 'De inhoud van de knop',

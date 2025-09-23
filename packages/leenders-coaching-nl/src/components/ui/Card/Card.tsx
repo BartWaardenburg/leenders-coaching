@@ -73,6 +73,7 @@ export type CardProps = {
   border?: boolean;
   reverse?: boolean;
   testid?: string;
+  _key?: string;
 } & React.ComponentPropsWithoutRef<'div'>;
 
 /**
@@ -90,6 +91,7 @@ export const Card: FC<CardProps> = ({
   border = false,
   reverse = false,
   testid,
+  _key,
   ...props
 }) => {
   const config = useConfig();
@@ -232,7 +234,7 @@ export const Card: FC<CardProps> = ({
               )}
 
               <Box className="pb-6 w-full">
-                <ViewTransition name={`title-${slug}`} disabled={!slug}>
+                <ViewTransition name={`title-${slug}-${_key}`} disabled={!slug}>
                   <Heading
                     level="h2"
                     variant="medium"
@@ -254,7 +256,10 @@ export const Card: FC<CardProps> = ({
                   >
                     {date && (
                       <Box className="pr-4 py-2 w-1/2">
-                        <ViewTransition name={`date-${slug}`} disabled={!slug}>
+                        <ViewTransition
+                          name={`date-${slug}-${_key}`}
+                          disabled={!slug}
+                        >
                           <Text
                             variant="card-meta"
                             textAlign="right"
@@ -268,7 +273,7 @@ export const Card: FC<CardProps> = ({
                     {categories.length > 0 && (
                       <Box className="pl-4 py-2 w-1/2">
                         <ViewTransition
-                          name={`categories-${slug}`}
+                          name={`categories-${slug}-${_key}`}
                           disabled={!slug}
                         >
                           <Text

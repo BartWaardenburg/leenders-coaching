@@ -28,9 +28,13 @@ export const Default: Story = {
       mockPricingSection.packages[0]?.description || 'Default Description',
     price: mockPricingSection.packages[0]?.price || '€0',
     features: mockPricingSection.packages[0]?.features || [],
-    ctaLabel: mockPricingSection.packages[0]?.ctaLabel || 'Click Me',
-    onCtaClick: () => console.log('CTA clicked'),
-    variant: mockPricingSection.packages[0]?.variant || 'blue',
+    callToAction: mockPricingSection.packages[0]?.callToAction || {
+      label: 'Click Me',
+      href: '/contact',
+      variant: 'blue',
+      isExternal: false,
+    },
+    variant: mockPricingSection.packages[0]?.callToAction.variant || 'blue',
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByText('Starter Pakket')).toBeVisible();
@@ -48,9 +52,13 @@ export const Popular: Story = {
     price: mockPricingSection.packages[1]?.price || '€0',
     features: mockPricingSection.packages[1]?.features || [],
     isPopular: mockPricingSection.packages[1]?.isPopular || false,
-    ctaLabel: mockPricingSection.packages[1]?.ctaLabel || 'Click Me',
-    onCtaClick: () => console.log('CTA clicked'),
-    variant: mockPricingSection.packages[1]?.variant || 'blue',
+    callToAction: mockPricingSection.packages[1]?.callToAction || {
+      label: 'Click Me',
+      href: '/contact',
+      variant: 'blue',
+      isExternal: false,
+    },
+    variant: mockPricingSection.packages[1]?.callToAction.variant || 'blue',
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByText('Professional Pakket')).toBeVisible();
@@ -75,8 +83,12 @@ export const Extended: Story = {
       { text: 'E-mail ondersteuning' },
       { text: '10% korting op vervolgsessies' },
     ],
-    ctaLabel: 'Start traject',
-    onCtaClick: () => console.log('CTA clicked'),
+    callToAction: {
+      label: 'Start traject',
+      href: '/contact',
+      variant: 'teal',
+      isExternal: false,
+    },
     variant: 'teal',
   },
   play: async ({ canvas }) => {

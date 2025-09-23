@@ -1935,10 +1935,11 @@
           },
           "optional": true
         },
-        "ctaLabel": {
+        "callToAction": {
           "type": "objectAttribute",
           "value": {
-            "type": "string"
+            "type": "inline",
+            "name": "callToAction"
           },
           "optional": true
         },

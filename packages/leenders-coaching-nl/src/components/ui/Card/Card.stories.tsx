@@ -6,7 +6,7 @@ import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 import { Section } from '@/components/ui/Section';
 import { Text } from '@/components/ui/Text';
 
-import exampleImage from '../../../assets/images/99-Simone-louise-boonstoppel-fotografie.jpg';
+import exampleImage from '../../../assets/images/hummingbird-symbol-resilience.png';
 import { Grid } from '../Grid';
 
 const meta = {

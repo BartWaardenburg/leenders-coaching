@@ -10,8 +10,8 @@ import { Text } from '@/components/ui/Text';
 import { Box } from '@/components/ui/Box';
 
 type CallToAction = {
-  href: string;
-  label: string;
+  href?: string;
+  label?: string;
   variant?:
     | 'black'
     | 'transparent'
@@ -77,19 +77,21 @@ export const SectionHeader = ({
         </Box>
         {ctas && ctas.length > 0 && (
           <ButtonGroup width="full" justify="end" align="center">
-            {ctas.map((cta, index) => (
-              <Button
-                key={index}
-                size="lg"
-                fullWidthUntil="sm"
-                href={cta.href}
-                variant={cta.variant}
-                target={cta.isExternal ? '_blank' : undefined}
-                rel={cta.isExternal ? 'noopener noreferrer' : undefined}
-              >
-                {cta.label}
-              </Button>
-            ))}
+            {ctas
+              .filter((cta) => cta.label && cta.href)
+              .map((cta, index) => (
+                <Button
+                  key={index}
+                  size="lg"
+                  fullWidthUntil="sm"
+                  href={cta.href}
+                  variant={cta.variant}
+                  target={cta.isExternal ? '_blank' : undefined}
+                  rel={cta.isExternal ? 'noopener noreferrer' : undefined}
+                >
+                  {cta.label}
+                </Button>
+              ))}
           </ButtonGroup>
         )}
       </Stack>

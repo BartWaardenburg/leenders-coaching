@@ -45,6 +45,7 @@ export const transformCardsSection = (
         variant={card.variant}
         border={card.border}
         reverse={card.reverse}
+        _key={card._key}
       >
         {card.description && <p>{card.description}</p>}
       </Card>

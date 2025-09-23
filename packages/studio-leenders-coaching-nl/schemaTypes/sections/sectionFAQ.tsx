@@ -1,3 +1,4 @@
+import React from 'react';
 import { defineType, Rule } from 'sanity';
 import { baseSectionFields } from './baseFields';
 import { SectionPreview } from '../components/SectionPreview';

@@ -12,8 +12,8 @@ import { Box } from '@/components/ui/Box';
 import { Button } from '@/components/ui/Button';
 
 type CallToAction = {
-  href: string;
-  label: string;
+  href?: string;
+  label?: string;
   variant?:
     | 'black'
     | 'transparent'
@@ -65,7 +65,7 @@ export const SectionFeatured = ({
         </Heading>
       )}
       {description && <Text variant="large">{description}</Text>}
-      {cta && (
+      {cta && cta.label && cta.href && (
         <Box className="m-2 flex justify-end">
           <Button href={cta.href} variant={cta.variant} size="lg">
             {cta.label}

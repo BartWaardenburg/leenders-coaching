@@ -31,7 +31,7 @@ const montserratData = fetch(
  * Default image configuration for the OG image.
  */
 const defaultImageConfig = {
-  url: '/images/99-Simone-louise-boonstoppel-fotografie.jpg',
+  url: '/images/hummingbird-symbol-resilience.png',
   width: 1200,
   height: 800,
 };
