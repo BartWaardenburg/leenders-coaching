@@ -278,7 +278,7 @@ export async function GET(request: Request) {
                     letterSpacing: '0.1em',
                   }}
                 >
-                  Lees artikel
+                  Lees meer
                 </div>
               </div>
             </div>
