@@ -1,5 +1,6 @@
 import { type Metadata } from 'next';
 import { getSiteSettings } from '../groq-queries';
+import { urlFor } from '../image';
 
 /* Default fallback values */
 const defaultMetadata = {
@@ -32,12 +33,15 @@ const defaultMetadata = {
 type GenerateMetadataOptions = {
   title?: string;
   description?: string;
-  images?: {
-    url: string;
-    width?: number;
-    height?: number;
+  image?: {
+    image?: {
+      asset?: {
+        _ref: string;
+        _type: string;
+      };
+    };
     alt?: string;
-  }[];
+  };
   type?: 'website' | 'article' | 'profile';
   noindex?: boolean;
   structuredData?: object;
@@ -219,7 +223,7 @@ export const generateOrganizationStructuredData = ({
  * Generates metadata for a page, merging with default metadata from Sanity.
  * @param title - Optional page title
  * @param description - Optional page description
- * @param images - Optional array of images for OpenGraph
+ * @param image - Optional accessible image for OpenGraph
  * @param type - OpenGraph type (default: 'website')
  * @param noindex - Whether to prevent indexing (default: false)
  * @param structuredData - Optional custom structured data
@@ -228,7 +232,7 @@ export const generateOrganizationStructuredData = ({
 export const generateMetadata = async ({
   title,
   description,
-  images,
+  image,
   type = 'website',
   noindex = false,
   structuredData,
@@ -246,7 +250,10 @@ export const generateMetadata = async ({
       ? generateArticleStructuredData({
           title: pageTitle,
           description: description || siteMetadata.description,
-          image: images?.[0]?.url,
+          image:
+            image && image.image
+              ? urlFor(image.image).width(480).height(630).auto('format').url()
+              : undefined,
         })
       : generateWebsiteStructuredData(
           pageTitle,
@@ -254,7 +261,7 @@ export const generateMetadata = async ({
         )
     : structuredData;
 
-  /* Generate dynamic Open Graph image if no images provided */
+  /* Generate dynamic Open Graph image URL */
   const generateDynamicOGImage = () => {
     const baseUrl = 'https://leenders-coaching.nl';
     const params = new URLSearchParams();
@@ -265,16 +272,26 @@ export const generateMetadata = async ({
       params.set('description', description || siteMetadata.description);
     }
 
+    /* Add custom image if provided */
+    if (image && image.image) {
+      const imageUrl = urlFor(image.image)
+        .width(1200)
+        .height(630)
+        .auto('format')
+        .url();
+      params.set('image', imageUrl);
+    }
+
     return `${baseUrl}/api/og?${params.toString()}`;
   };
 
-  /* Use provided images, fallback to dynamic generation, or use default static images */
-  const finalImages = images || [
+  /* Use dynamic Open Graph image */
+  const finalImages = [
     {
       url: generateDynamicOGImage(),
       width: 1200,
       height: 630,
-      alt: pageTitle,
+      alt: image?.alt || pageTitle,
     },
   ];
 

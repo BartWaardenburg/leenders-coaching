@@ -50,8 +50,10 @@ export async function GET(request: Request) {
 
   /* Get the base URL from the request */
   const baseUrl = new URL(request.url).origin;
-  const imagePath =
-    searchParams.get('image') || `${baseUrl}${defaultImageConfig.url}`;
+
+  /* Prioritize custom image from Sanity metadata, fallback to default */
+  const customImage = searchParams.get('image');
+  const imagePath = customImage || `${baseUrl}${defaultImageConfig.url}`;
 
   if (!title) {
     return new Response('Missing title parameter', { status: 400 });
@@ -91,7 +93,7 @@ export async function GET(request: Request) {
             position: 'relative',
           }}
         >
-          {/* Image Section */}
+          {/* Image Section - Uses custom image from Sanity metadata if provided, otherwise falls back to default */}
           <div
             style={{
               position: 'absolute',

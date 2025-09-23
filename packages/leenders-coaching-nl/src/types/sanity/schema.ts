@@ -214,57 +214,9 @@ export type Seo = {
   title?: string;
   description?: string;
   keywords?: Array<string>;
-  openGraph?: OpenGraph;
-  twitter?: Twitter;
-  robots?: Robots;
+  image?: AccessibleImage;
   googleSiteVerification?: string;
   bingSiteVerification?: string;
-};
-
-export type GoogleBot = {
-  _type: 'googleBot';
-  index?: boolean;
-  follow?: boolean;
-};
-
-export type TwitterImage = {
-  _type: 'twitterImage';
-  image?: AccessibleImage;
-};
-
-export type OpenGraphImage = {
-  _type: 'openGraphImage';
-  image?: AccessibleImage;
-  width?: number;
-  height?: number;
-};
-
-export type Robots = {
-  _type: 'robots';
-  index?: boolean;
-  follow?: boolean;
-  googleBot?: {
-    index?: boolean;
-    follow?: boolean;
-  };
-};
-
-export type Twitter = {
-  _type: 'twitter';
-  card?: 'summary' | 'summary_large_image';
-  site?: string;
-  creator?: string;
-  image?: TwitterImage;
-};
-
-export type OpenGraph = {
-  _type: 'openGraph';
-  title?: string;
-  description?: string;
-  type?: 'website' | 'article';
-  url?: string;
-  siteName?: string;
-  image?: OpenGraphImage;
 };
 
 export type Testimonial = {
@@ -1361,10 +1313,7 @@ export type Metadata = {
   _type: 'metadata';
   title?: string;
   description?: string;
-  keywords?: Array<string>;
-  openGraph?: OpenGraph;
-  twitter?: Twitter;
-  robots?: Robots;
+  image?: AccessibleImage;
 };
 
 export type SanityImagePaletteSwatch = {
@@ -1511,12 +1460,6 @@ export type AllSanitySchemaTypes =
   | CalendarNavigation
   | CloseButtons
   | Seo
-  | GoogleBot
-  | TwitterImage
-  | OpenGraphImage
-  | Robots
-  | Twitter
-  | OpenGraph
   | Testimonial
   | TimeSlot
   | FormFieldOption

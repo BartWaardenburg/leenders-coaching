@@ -4,7 +4,6 @@ import type { ReactNode } from 'react';
 import { SectionRenderer } from '@/components/sections/SectionRenderer';
 import { getPage } from '@/utilities/groq-queries';
 import { generateMetadata as generateMetadataUtil } from '@/utilities/metadata/metadata';
-import { urlFor } from '@/utilities/image';
 import type { BasePage } from '@/types/Page';
 
 /**
@@ -43,94 +42,29 @@ export const generatePageMetadata = async (
 
   const { metadata } = page;
 
-  /* Determine the OpenGraph type based on page type or Sanity data */
-  const ogType = metadata.openGraph?.type === 'article' ? 'article' : 'website';
-
-  /* Generate dynamic Open Graph image using the API endpoint */
-  const generateOGImageUrl = () => {
-    const baseUrl = 'https://leenders-coaching.nl';
-    const params = new URLSearchParams();
-
-    /* Add required title parameter */
-    params.set('title', metadata.title || fallbackTitle);
-
-    /* Add description if available */
-    if (metadata.description) {
-      params.set('description', metadata.description);
-    }
-
-    /* Add custom image from Sanity if available */
-    if (metadata.openGraph?.image?.image?.image?.asset) {
-      const imageUrl = urlFor(metadata.openGraph.image.image.image)
-        .width(1200)
-        .height(630)
-        .auto('format')
-        .fit('max')
-        .url();
-      if (imageUrl) {
-        params.set('image', imageUrl);
-      }
-    }
-
-    return `${baseUrl}/api/og?${params.toString()}`;
-  };
-
-  /* Use dynamic Open Graph image */
-  const images = [
-    {
-      url: generateOGImageUrl(),
-      width: 1200,
-      height: 630,
-      alt: metadata.title || fallbackTitle,
-    },
-  ];
+  /* Determine the OpenGraph type based on page type */
+  const ogType = 'website';
 
   /* Generate structured data based on page type */
-  const structuredData =
-    ogType === 'article'
-      ? {
-          '@context': 'https://schema.org',
-          '@type': 'Article',
-          headline: metadata.title || fallbackTitle,
-          description: metadata.description,
-          image: images?.[0]?.url,
-          datePublished: page._createdAt,
-          dateModified: page._updatedAt,
-          author: {
-            '@type': 'Person',
-            name: 'Leenders Coaching',
-          },
-          publisher: {
-            '@type': 'Organization',
-            name: 'Leenders Coaching',
-            logo: {
-              '@type': 'ImageObject',
-              url: 'https://leenders-coaching.nl/logo.png',
-            },
-          },
-        }
-      : {
-          '@context': 'https://schema.org',
-          '@type': 'WebPage',
-          name: metadata.title || fallbackTitle,
-          description: metadata.description,
-          url:
-            metadata.openGraph?.url ||
-            `https://leenders-coaching.nl/${page.slug?.current || ''}`,
-          publisher: {
-            '@type': 'Organization',
-            name: 'Leenders Coaching',
-            url: 'https://leenders-coaching.nl',
-          },
-        };
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: metadata.title || fallbackTitle,
+    description: metadata.description,
+    url: `https://leenders-coaching.nl/${page.slug?.current || ''}`,
+    publisher: {
+      '@type': 'Organization',
+      name: 'Leenders Coaching',
+      url: 'https://leenders-coaching.nl',
+    },
+  };
 
   /* Use the comprehensive metadata utility which includes JSON-LD */
   return generateMetadataUtil({
     title: metadata.title || fallbackTitle,
     description: metadata.description,
-    images,
+    image: metadata.image,
     type: ogType,
-    noindex: metadata.robots?.index === false,
     structuredData,
   });
 };

@@ -18,7 +18,15 @@ export type ResolvedBlogPost = Omit<Post, 'categories'> & {
   metadata?: {
     title?: string;
     description?: string;
-    openGraph?: unknown;
+    image?: {
+      image?: {
+        asset?: {
+          _ref: string;
+          _type: string;
+        };
+      };
+      alt?: string;
+    };
   };
 };
 
@@ -36,81 +44,7 @@ export const generateBlogPostMetadata = async (
     return {};
   }
 
-  const {
-    metadata,
-    title,
-    description,
-    publishedAt,
-    image,
-    categories,
-    variant,
-  } = post;
-
-  /* Generate dynamic Open Graph image using the API endpoint */
-  const generateOGImageUrl = () => {
-    const baseUrl = 'https://leenders-coaching.nl';
-    const params = new URLSearchParams();
-
-    /* Add required title parameter */
-    params.set('title', metadata?.title || title || 'Untitled Post');
-
-    /* Add description if available */
-    if (metadata?.description || description) {
-      params.set('description', metadata?.description || description || '');
-    }
-
-    /* Add variant for styling */
-    if (variant) {
-      params.set('variant', variant);
-    }
-
-    /* Add post image if available */
-    if (image && image.image?.asset) {
-      const imageUrl = urlFor(image.image)
-        .width(1200)
-        .height(630)
-        .auto('format')
-        .fit('max')
-        .url();
-      params.set('image', imageUrl);
-    }
-
-    /* Add categories for display */
-    if (categories && categories.length > 0) {
-      const categoryTitles = categories
-        .filter((category) => category != null)
-        .map((category) => category.title)
-        .join(', ');
-      if (categoryTitles) {
-        params.set('categories', categoryTitles);
-      }
-    }
-
-    /* Add publication date */
-    if (publishedAt) {
-      const date = new Date(publishedAt);
-      params.set(
-        'date',
-        date.toLocaleDateString('nl-NL', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        })
-      );
-    }
-
-    return `${baseUrl}/api/og?${params.toString()}`;
-  };
-
-  /* Use dynamic Open Graph image */
-  const images = [
-    {
-      url: generateOGImageUrl(),
-      width: 1200,
-      height: 630,
-      alt: metadata?.title || title || 'Blog post image',
-    },
-  ];
+  const { metadata, title, description, publishedAt, image } = post;
 
   /* Generate comprehensive structured data for blog posts */
   const structuredData = {
@@ -118,7 +52,16 @@ export const generateBlogPostMetadata = async (
     '@type': 'Article',
     headline: metadata?.title || title || 'Untitled Post',
     description: metadata?.description || description || '',
-    image: images?.[0]?.url,
+    image:
+      metadata?.image && metadata.image.image
+        ? urlFor(metadata.image.image)
+            .width(480)
+            .height(630)
+            .auto('format')
+            .url()
+        : image && image.image
+          ? urlFor(image.image).width(480).height(630).auto('format').url()
+          : undefined,
     datePublished: publishedAt,
     dateModified: post._updatedAt,
     author: {
@@ -142,9 +85,9 @@ export const generateBlogPostMetadata = async (
   return generateMetadata({
     title: metadata?.title || title || 'Untitled Post',
     description: metadata?.description || description || '',
-    images,
+    image: metadata?.image || image, // Use custom metadata image or fallback to post image
     type: 'article',
-    noindex: metadata?.robots?.index === false,
+    noindex: false, // Simplified - no robots config in new schema
     structuredData,
   });
 };
@@ -157,10 +100,21 @@ export const generateBlogPostMetadata = async (
  */
 export const generateBlogCategoryMetadata = async (
   category: {
-    metadata?: unknown;
+    metadata?: {
+      title?: string;
+      description?: string;
+      image?: {
+        image?: {
+          asset?: {
+            _ref: string;
+            _type: string;
+          };
+        };
+        alt?: string;
+      };
+    };
     title?: string;
     description?: string;
-    robots?: { index?: boolean };
   },
   slug: string
 ): Promise<Metadata> => {
@@ -168,14 +122,7 @@ export const generateBlogCategoryMetadata = async (
     return {};
   }
 
-  const metadata = category.metadata as
-    | {
-        title?: string;
-        description?: string;
-        robots?: { index?: boolean };
-      }
-    | undefined;
-  const { title, description, robots } = category;
+  const { metadata, title, description } = category;
 
   /* Generate comprehensive structured data for category pages */
   const structuredData = {
@@ -200,8 +147,9 @@ export const generateBlogCategoryMetadata = async (
       metadata?.description ||
       description ||
       `Ontdek alle blog artikelen in de categorie ${title}`,
+    image: metadata?.image,
     type: 'website',
-    noindex: robots?.index === false,
+    noindex: false, // Simplified - no robots config in new schema
     structuredData,
   });
 };

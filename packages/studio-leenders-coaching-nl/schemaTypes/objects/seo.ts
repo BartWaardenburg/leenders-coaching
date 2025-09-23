@@ -32,22 +32,10 @@ export const seo = defineType({
         "Standaard sleutelwoorden voor pagina's die hun eigen niet specificeren",
     }),
     defineField({
-      name: 'openGraph',
-      title: 'Standaard social media instellingen',
-      type: 'openGraph',
-      description: 'Standaard social media sharing instellingen',
-    }),
-    defineField({
-      name: 'twitter',
-      title: 'Standaard Twitter instellingen',
-      type: 'twitter',
-      description: 'Standaard Twitter card instellingen',
-    }),
-    defineField({
-      name: 'robots',
-      title: 'Standaard zoekmachine instellingen',
-      type: 'robots',
-      description: 'Standaard zoekmachine gedrag instellingen',
+      name: 'image',
+      title: 'Standaard social media afbeelding',
+      type: 'accessibleImage',
+      description: 'Standaard afbeelding voor social media sharing',
     }),
     defineField({
       name: 'googleSiteVerification',
