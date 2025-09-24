@@ -239,7 +239,13 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
 
         {/* Dot indicators */}
         {slides.length > 1 && (
-          <Stack direction="row" justify="center" className="mt-8 gap-2">
+          <Stack
+            direction="row"
+            justify="center"
+            className="mt-8 gap-2"
+            role="group"
+            aria-label="Carousel voortgang"
+          >
             {slides.map((_, index) => (
               <MotionBox
                 key={index}
@@ -263,7 +269,8 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
                   duration: shouldReduceMotion ? 0 : 0.3,
                   ease: 'easeInOut',
                 }}
-                aria-label={`Huidige slide ${index + 1} van ${slides.length}`}
+                aria-current={index === page ? 'true' : 'false'}
+                aria-label={`Slide ${index + 1} van ${slides.length}`}
               />
             ))}
           </Stack>
