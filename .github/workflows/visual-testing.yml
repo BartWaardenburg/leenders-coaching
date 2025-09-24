@@ -142,28 +142,32 @@ jobs:
   accessibility-testing:
     name: 'Accessibility Testing'
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.55.0-jammy
+      options: --ipc=host
     timeout-minutes: 15
     needs: build-storybook
+
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
 
     steps:
       - name: '🔄 Checkout repository'
         uses: actions/checkout@v5
 
-      - name: '⚙️ Setup Environment'
-        uses: ./.github/actions/setup
+      - name: 'Setup Node.js + pnpm'
+        uses: actions/setup-node@v5
         with:
-          node-version: '22'
-          pnpm-version: '10.15.1'
-          working-directory: ''
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: '**/pnpm-lock.yaml'
 
       - name: '📥 Download Storybook build'
         uses: actions/download-artifact@v4
         with:
           name: storybook-build-${{ github.sha }}
           path: packages/leenders-coaching-nl/storybook-static
-
-      - name: '🔍 Install Playwright browsers'
-        run: pnpm --filter leenders-coaching-nl run ci:install-playwright
 
       - name: '♿ Run accessibility tests'
         run: pnpm --filter leenders-coaching-nl run ci:test-a11y

@@ -52,6 +52,9 @@ jobs:
   frontend-tests:
     name: 'Frontend Tests'
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.55.0-jammy
+      options: --ipc=host
     timeout-minutes: 15
     permissions:
       contents: read
@@ -59,6 +62,8 @@ jobs:
       pull-requests: write
 
     env:
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
       NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
       NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
       NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
@@ -68,6 +73,14 @@ jobs:
     steps:
       - name: 'Checkout code'
         uses: actions/checkout@v5
+
+      - name: 'Setup Node.js + pnpm'
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: '**/pnpm-lock.yaml'
+
       - name: '🧪 Run Frontend Tests'
         uses: ./.github/actions/test
         with:

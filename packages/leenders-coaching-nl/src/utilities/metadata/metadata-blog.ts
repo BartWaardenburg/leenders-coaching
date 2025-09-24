@@ -89,6 +89,7 @@ export const generateBlogPostMetadata = async (
     type: 'article',
     noindex: false, // Simplified - no robots config in new schema
     structuredData,
+    url: `https://leenders-coaching.nl/blog/${slug}`,
   });
 };
 
@@ -149,7 +150,8 @@ export const generateBlogCategoryMetadata = async (
       `Ontdek alle blog artikelen in de categorie ${title}`,
     image: metadata?.image,
     type: 'website',
-    noindex: false, // Simplified - no robots config in new schema
+    noindex: false,
     structuredData,
+    url: `https://leenders-coaching.nl/blog/categorie/${slug}`,
   });
 };

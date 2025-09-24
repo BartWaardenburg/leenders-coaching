@@ -16,6 +16,7 @@ export const generateMetadata = async (): Promise<Metadata> =>
       "De pagina die je zoekt bestaat niet. Laat je niet ontmoedigen, er zijn nog veel andere waardevolle pagina's om te ontdekken.",
     noindex: true,
     type: 'website',
+    url: 'https://leenders-coaching.nl/404',
   });
 
 /**

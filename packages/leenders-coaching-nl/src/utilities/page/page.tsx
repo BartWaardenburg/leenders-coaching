@@ -37,6 +37,7 @@ export const generatePageMetadata = async (
       title: fallbackTitle,
       description:
         'Professionele coaching voor persoonlijke en professionele groei.',
+      url: `https://leenders-coaching.nl/${page?.slug?.current || ''}`,
     });
   }
 
@@ -66,6 +67,7 @@ export const generatePageMetadata = async (
     image: metadata.image,
     type: ogType,
     structuredData,
+    url: `https://leenders-coaching.nl/${page.slug?.current || ''}`,
   });
 };
 

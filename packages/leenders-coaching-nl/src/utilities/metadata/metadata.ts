@@ -10,7 +10,7 @@ const defaultMetadata = {
   openGraph: {
     type: 'website' as const,
     locale: 'nl_NL',
-    url: 'https://www.leenders-coaching.nl',
+    url: 'https://leenders-coaching.nl',
     siteName: 'Leenders Coaching',
     images: [
       {
@@ -45,6 +45,7 @@ type GenerateMetadataOptions = {
   type?: 'website' | 'article' | 'profile';
   noindex?: boolean;
   structuredData?: object;
+  url?: string;
 };
 
 /**
@@ -227,6 +228,7 @@ export const generateOrganizationStructuredData = ({
  * @param type - OpenGraph type (default: 'website')
  * @param noindex - Whether to prevent indexing (default: false)
  * @param structuredData - Optional custom structured data
+ * @param url - Optional canonical URL for the page
  * @returns Complete metadata object for Next.js
  */
 export const generateMetadata = async ({
@@ -236,6 +238,7 @@ export const generateMetadata = async ({
   type = 'website',
   noindex = false,
   structuredData,
+  url,
 }: GenerateMetadataOptions): Promise<Metadata> => {
   /* Get site metadata from Sanity */
   const siteMetadata = await getSiteMetadata();
@@ -302,6 +305,7 @@ export const generateMetadata = async ({
       title: pageTitle,
       description: description || siteMetadata.description,
       type,
+      url: url || defaultMetadata.openGraph.url,
       images: finalImages,
       siteName: siteMetadata.title,
     },

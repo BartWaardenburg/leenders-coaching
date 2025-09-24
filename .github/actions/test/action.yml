@@ -84,6 +84,7 @@ runs:
       run: pnpm run ${{ inputs.quality-command }}
 
     - name: Cache Playwright browsers
+      if: ${{ env.PLAYWRIGHT_BROWSERS_PATH != '/ms-playwright' }}
       id: cache-playwright
       uses: actions/cache@v4
       with:
@@ -96,16 +97,16 @@ runs:
           playwright-${{ runner.os }}-
 
     - name: Install Playwright browsers + Linux deps
-      if: runner.os == 'Linux'
+      if: ${{ runner.os == 'Linux' && env.PLAYWRIGHT_BROWSERS_PATH != '/ms-playwright' }}
       shell: bash
       env:
         PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/ms-playwright
       run: |
         set -eux
         sudo apt-get update
-        pnpm dlx playwright install --with-deps chromium chromium-headless-shell
+        pnpm dlx playwright install --with-deps chromium
         echo "Installed browsers:"
-        find "$PLAYWRIGHT_BROWSERS_PATH" -maxdepth 3 -type f -name 'chrome' -o -name 'headless_shell' | xargs -r ls -l
+        find "$PLAYWRIGHT_BROWSERS_PATH" -maxdepth 3 -type f -name 'chrome' | xargs -r ls -l
 
     - name: Assert PW path
       shell: bash
@@ -117,8 +118,8 @@ runs:
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       env:
-        PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/ms-playwright
-        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+        PLAYWRIGHT_BROWSERS_PATH: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
+        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
       run: pnpm run ${{ inputs.test-command }}
 
     - name: Upload coverage to Codecov

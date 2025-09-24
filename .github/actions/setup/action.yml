@@ -23,10 +23,12 @@ runs:
     - name: Set Playwright env
       shell: bash
       run: |
-        PW_DIR="${GITHUB_WORKSPACE}/.cache/ms-playwright"
-        echo "PLAYWRIGHT_BROWSERS_PATH=$PW_DIR" >> "$GITHUB_ENV"
+        if [[ -z "${PLAYWRIGHT_BROWSERS_PATH:-}" ]]; then
+          PW_DIR="${GITHUB_WORKSPACE}/.cache/ms-playwright"
+          echo "PLAYWRIGHT_BROWSERS_PATH=$PW_DIR" >> "$GITHUB_ENV"
+          mkdir -p "$PW_DIR"
+        fi
         echo "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1" >> "$GITHUB_ENV"
-        mkdir -p "$PW_DIR"
 
     - name: Enable Corepack & pin pnpm
       shell: bash
