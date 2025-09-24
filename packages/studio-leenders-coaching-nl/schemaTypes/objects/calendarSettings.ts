@@ -93,5 +93,53 @@ export const calendarSettings = defineType({
         },
       ],
     },
+    {
+      name: 'bookingEnabled',
+      title: 'Boeking inschakelen',
+      type: 'boolean',
+      description: 'Of gebruikers afspraken kunnen boeken via de kalender',
+      initialValue: false,
+    },
+    {
+      name: 'availableTimeSlots',
+      title: 'Beschikbare tijdslots',
+      type: 'array',
+      description: 'Tijdslots die beschikbaar zijn voor boeking',
+      of: [{ type: 'timeSlot' }],
+      hidden: ({ parent }) => !parent?.bookingEnabled,
+    },
+    {
+      name: 'bookingFormConfig',
+      title: 'Boekingsformulier configuratie',
+      type: 'object',
+      description: 'Configuratie voor het boekingsformulier',
+      fields: [
+        {
+          name: 'title',
+          title: 'Titel',
+          type: 'string',
+          initialValue: 'Afspraak boeken',
+        },
+        {
+          name: 'description',
+          title: 'Beschrijving',
+          type: 'text',
+        },
+        {
+          name: 'emailTo',
+          title: 'E-mail ontvanger',
+          type: 'string',
+          initialValue: 'simone@leenders-coaching.nl',
+        },
+        {
+          name: 'successMessage',
+          title: 'Succesbericht',
+          type: 'text',
+          initialValue:
+            'Bedankt voor je afspraak aanvraag! We nemen zo snel mogelijk contact met je op.',
+        },
+      ],
+      hidden: ({ parent }) => !parent?.bookingEnabled,
+    },
   ],
 });

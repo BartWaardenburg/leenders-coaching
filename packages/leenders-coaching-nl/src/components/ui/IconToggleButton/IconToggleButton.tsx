@@ -1,7 +1,7 @@
 'use client';
 
 import { forwardRef } from 'react';
-import type { MouseEvent } from 'react';
+import type { MouseEvent, KeyboardEvent } from 'react';
 import {
   motion,
   AnimatePresence,
@@ -21,7 +21,9 @@ type IconToggleButtonProps = {
   label: string;
   className?: string;
   speed?: TransitionSpeed;
-  onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (
+    e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>
+  ) => void;
 } & Omit<HTMLMotionProps<'button'>, 'aria-label' | 'onClick'>;
 
 const MotionIcon = motion.create(Icon);
@@ -67,6 +69,12 @@ export const IconToggleButton = forwardRef<
         aria-label={label}
         aria-pressed={isToggled}
         onClick={onClick}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onClick?.(e);
+          }
+        }}
         {...props}
       >
         <AnimatePresence mode="wait" initial={false}>

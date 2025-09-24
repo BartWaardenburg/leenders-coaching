@@ -1,8 +1,7 @@
 import type { ComponentPropsWithoutRef } from 'react';
+import Link from 'next/link';
 import { cn } from '@/utilities/cn';
 
-import { Text } from '@/components/ui/Text';
-import { Link } from '@/components/ui/Link';
 import { Container } from '@/components/ui/Container';
 import { Box } from '@/components/ui/Box';
 import { Flex } from '@/components/ui/Flex';
@@ -63,41 +62,30 @@ export const Footer = ({
             gap={2}
             className="order-2 md:order-1"
           >
-            {copyright && (
-              <Text variant="muted" className="text-sm">
-                {copyright}
-              </Text>
-            )}
-            <Flex direction="row" gap={4}>
+            <Box>
               <Link
                 href="/privacy"
-                variant="subtle"
-                className="text-sm text-muted-foreground hover:text-primary transition-theme"
+                className="text-sm underline hover:text-primary transition-theme"
               >
                 Privacy
               </Link>
+            </Box>
+            <Box>
               <Link
                 href="/voorwaarden"
-                variant="subtle"
-                className="text-sm text-muted-foreground hover:text-primary transition-theme"
+                className="text-sm underline hover:text-primary transition-theme"
               >
                 Voorwaarden
               </Link>
-            </Flex>
+            </Box>
+            {copyright && (
+              <Box>
+                <span className="text-sm underline transition-theme">
+                  {copyright}
+                </span>
+              </Box>
+            )}
           </Flex>
-
-          {/* Instagram - hidden on mobile, second on desktop */}
-          {instagramLink?.url && (
-            <Link
-              href={instagramLink.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="subtle"
-              className="hidden md:inline-flex md:items-center md:order-2 text-sm text-muted-foreground hover:text-primary transition-theme"
-            >
-              Instagram
-            </Link>
-          )}
 
           {/* Contact - first on mobile, last on desktop */}
           <Flex
@@ -107,32 +95,37 @@ export const Footer = ({
             className="order-1 md:order-3"
           >
             {contact.email && (
-              <Link
-                href={`mailto:${contact.email}`}
-                variant="subtle"
-                className="text-sm"
-              >
-                <Text
-                  variant="muted"
-                  className="hover:text-primary transition-theme"
+              <Box>
+                <Link
+                  href={`mailto:${contact.email}`}
+                  className="text-sm underline hover:text-primary transition-theme mr-1"
                 >
                   {contact.email}
-                </Text>
-              </Link>
+                </Link>
+              </Box>
             )}
             {contact.phone && (
-              <Link
-                href={`tel:${contact.phone}`}
-                variant="subtle"
-                className="text-sm"
-              >
-                <Text
-                  variant="muted"
-                  className="hover:text-primary transition-theme"
+              <Box>
+                <Link
+                  href={`tel:${contact.phone}`}
+                  className="text-sm underline hover:text-primary transition-theme"
                 >
                   {contact.phone}
-                </Text>
-              </Link>
+                </Link>
+              </Box>
+            )}
+
+            {instagramLink?.url && (
+              <Box>
+                <Link
+                  href={instagramLink.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm underline hover:text-primary transition-theme"
+                >
+                  Instagram
+                </Link>
+              </Box>
             )}
           </Flex>
         </Flex>

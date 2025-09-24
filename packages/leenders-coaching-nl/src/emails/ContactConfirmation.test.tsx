@@ -127,10 +127,7 @@ describe('ContactConfirmation', () => {
     const { getByTestId } = render(<ContactConfirmation {...props} />);
 
     const button = getByTestId('button');
-    expect(button).toHaveAttribute(
-      'href',
-      'https://leenders-coaching.nl/contact'
-    );
+    expect(button).toHaveAttribute('href', 'https://leenders-coaching.nl/');
     expect(button.textContent).toContain('Bezoek mijn website');
   });
 

@@ -782,7 +782,6 @@ export const mockSanityQuery = {
         contact {
           email,
           phone,
-          address
         },
         copyright
       },
@@ -930,9 +929,8 @@ export const mockSanityResponse = {
         },
       ],
       contact: {
-        email: 'info@leenders-coaching.nl',
+        email: 'simone@leenders-coaching.nl',
         phone: '+31 6 12345678',
-        address: 'Coachingstraat 123, 1234 AB Amsterdam',
       },
       copyright: '© 2024 Leenders Coaching. Alle rechten voorbehouden.',
     },

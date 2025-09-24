@@ -84,12 +84,16 @@ export const formatMonthYear = (date: Date): string => {
 };
 
 /**
- * Checks if a date is in the past (before today)
+ * Checks if a date is in the past or today (before or equal to today)
  * @param date - The date to check
- * @returns True if the date is in the past, false otherwise
+ * @returns True if the date is in the past or today, false otherwise
  */
 export const isPastDay = (date: Date): boolean => {
-  return date < new Date(new Date().setHours(0, 0, 0, 0));
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const checkDate = new Date(date);
+  checkDate.setHours(0, 0, 0, 0);
+  return checkDate <= today;
 };
 
 /**

@@ -1176,6 +1176,43 @@
             "value": "timeSlot"
           }
         },
+        "dayOfWeek": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "number",
+                "value": 0
+              },
+              {
+                "type": "number",
+                "value": 1
+              },
+              {
+                "type": "number",
+                "value": 2
+              },
+              {
+                "type": "number",
+                "value": 3
+              },
+              {
+                "type": "number",
+                "value": 4
+              },
+              {
+                "type": "number",
+                "value": 5
+              },
+              {
+                "type": "number",
+                "value": 6
+              }
+            ]
+          },
+          "optional": true
+        },
         "startTime": {
           "type": "objectAttribute",
           "value": {
@@ -1183,10 +1220,10 @@
           },
           "optional": true
         },
-        "endTime": {
+        "duration": {
           "type": "objectAttribute",
           "value": {
-            "type": "string"
+            "type": "number"
           },
           "optional": true
         },
@@ -2760,6 +2797,72 @@
                 "optional": true
               },
               "after": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              }
+            }
+          },
+          "optional": true
+        },
+        "bookingEnabled": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
+          },
+          "optional": true
+        },
+        "availableTimeSlots": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "array",
+            "of": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              },
+              "rest": {
+                "type": "inline",
+                "name": "timeSlot"
+              }
+            }
+          },
+          "optional": true
+        },
+        "bookingFormConfig": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "object",
+            "attributes": {
+              "title": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "description": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "emailTo": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "successMessage": {
                 "type": "objectAttribute",
                 "value": {
                   "type": "string"

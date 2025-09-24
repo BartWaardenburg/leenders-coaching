@@ -74,5 +74,6 @@ export const transformCalendarSection = (
     disabledDates,
     background: data.background,
     border: data.border,
+    settings, // Pass through the entire settings object for booking functionality
   };
 };

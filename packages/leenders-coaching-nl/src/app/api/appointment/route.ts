@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { ContactNotification, ContactConfirmation } from '@/emails';
-import type { ContactFormData } from '@/components/sections/SectionForm/SectionForm';
-import type { FormConfiguration } from '@/types/sanity/schema';
+import { AppointmentNotification, AppointmentConfirmation } from '@/emails';
 
 /* Initialize Resend with API key from environment variables */
 const resendApiKey = process.env.RESEND_API_KEY;
@@ -11,26 +9,35 @@ if (!resendApiKey) {
 }
 const resend = new Resend(resendApiKey);
 
-type ContactFormRequest = ContactFormData & {
-  formConfig?: FormConfiguration;
+type AppointmentFormData = {
+  name: string;
+  email: string;
+  phone?: string;
+  message?: string;
+  selectedDate: string;
+  selectedTimeSlot: {
+    startTime?: string;
+    duration?: number;
+  };
 };
 
 /**
- * API handler for contact form submissions
- * POST /api/contact
+ * API handler for appointment booking submissions
+ * POST /api/appointment
  */
 export async function POST(request: Request) {
   try {
-    const data = (await request.json()) as ContactFormRequest;
-    const { name, email, subject, message, formConfig } = data;
+    const data = (await request.json()) as AppointmentFormData;
+    const { name, email, phone, message, selectedDate, selectedTimeSlot } =
+      data;
 
     /* Validate the request data */
-    if (!name || !email || !subject || !message) {
+    if (!name || !email || !selectedDate || !selectedTimeSlot) {
       console.log('Missing required fields:', {
         name,
         email,
-        subject,
-        message,
+        selectedDate,
+        selectedTimeSlot,
       });
       return NextResponse.json(
         { error: 'Missing required fields' },
@@ -38,18 +45,28 @@ export async function POST(request: Request) {
       );
     }
 
-    /* Get configuration from form config or use defaults */
-    const emailTo = formConfig?.emailTo || 'simone@leenders-coaching.nl';
-    const emailSubject =
-      formConfig?.emailSubject || `Contact formulier: {subject}`;
-    const finalSubject = emailSubject.replace('{subject}', subject);
+    /* Validate email format */
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { error: 'Invalid email format' },
+        { status: 400 }
+      );
+    }
 
-    /* Send notification email to configured recipient */
+    /* Send notification email to coach */
     const notificationResult = await resend.emails.send({
       from: 'noreply@informatie.leenders-coaching.nl',
-      to: emailTo,
-      subject: finalSubject,
-      react: ContactNotification({ name, email, subject, message }),
+      to: 'simone@leenders-coaching.nl',
+      subject: `Nieuwe afspraak aanvraag - ${name}`,
+      react: AppointmentNotification({
+        name,
+        email,
+        phone,
+        selectedDate,
+        selectedTimeSlot,
+        message,
+      }),
       replyTo: email,
     });
 
@@ -64,13 +81,16 @@ export async function POST(request: Request) {
       );
     }
 
-    /* Send confirmation email to the sender */
+    /* Send confirmation email to the client */
     const confirmationResult = await resend.emails.send({
       from: 'noreply@informatie.leenders-coaching.nl',
       to: email,
-      subject: 'Bedankt voor je bericht aan Leenders Coaching',
-      react: ContactConfirmation({ name, subject }),
-      replyTo: emailTo,
+      subject: 'Afspraak aanvraag ontvangen - Leenders Coaching',
+      react: AppointmentConfirmation({
+        name,
+        selectedDate,
+        selectedTimeSlot,
+      }),
     });
 
     if (confirmationResult.error) {
@@ -86,9 +106,9 @@ export async function POST(request: Request) {
       confirmationId: confirmationResult.data?.id,
     });
   } catch (error) {
-    console.error('Contact form error:', error);
+    console.error('Appointment booking error:', error);
     return NextResponse.json(
-      { error: 'Failed to send message' },
+      { error: 'Failed to book appointment' },
       { status: 500 }
     );
   }

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Heading } from './Heading';
-import { waitForMotionAnimations } from '../../../test/chromatic-utils';
+import { waitForAnimationsToComplete } from '@/mocks/test-utils';
 import { Box } from '../Box/Box';
 import { mockCardData } from '@/mocks';
 
@@ -106,7 +106,7 @@ export const WithBorder: Story = {
     await expect(
       canvas.getByRole('heading', { name: 'Kop Met Rand' })
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await waitForAnimationsToComplete('heading-test');
   },
 };
 
@@ -159,7 +159,7 @@ export const WithColoredBorder: Story = {
     await expect(
       canvas.getByRole('heading', { name: 'Teal Rand' })
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await waitForAnimationsToComplete('heading-test');
   },
 };
 
@@ -173,7 +173,7 @@ export const MutedHeading: Story = {
     await expect(
       canvas.getByRole('heading', { name: 'Gedempte Kop' })
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await waitForAnimationsToComplete('heading-test');
   },
 };
 
@@ -187,7 +187,7 @@ export const NoSpacing: Story = {
     await expect(
       canvas.getByRole('heading', { name: 'Kop Zonder Onderste Marge' })
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await waitForAnimationsToComplete('heading-test');
   },
 };
 
@@ -239,7 +239,7 @@ export const AllHeadingLevels: Story = {
     await expect(
       canvas.getByRole('heading', { name: 'Heading Level 6' })
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await waitForAnimationsToComplete('heading-test');
   },
 };
 
@@ -279,7 +279,7 @@ export const AllVariants: Story = {
     await expect(
       canvas.getByRole('heading', { name: 'Small Variant' })
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await waitForAnimationsToComplete('heading-test');
   },
 };
 
@@ -307,7 +307,7 @@ export const AllWeights: Story = {
     await expect(
       canvas.getByRole('heading', { name: 'Bold Weight Heading' })
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await waitForAnimationsToComplete('heading-test');
   },
 };
 
@@ -341,7 +341,7 @@ export const TextAlignment: Story = {
     await expect(
       canvas.getByRole('heading', { name: 'Right Aligned Heading' })
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await waitForAnimationsToComplete('heading-test');
   },
 };
 
@@ -360,6 +360,6 @@ export const CombinedProps: Story = {
     await expect(
       canvas.getByRole('heading', { name: 'Combined Properties Example' })
     ).toBeVisible();
-    await waitForMotionAnimations({ canvas });
+    await waitForAnimationsToComplete('heading-test');
   },
 };

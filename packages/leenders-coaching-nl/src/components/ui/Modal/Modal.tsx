@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { useState, useEffect, useCallback, useId, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { cn } from '@/utilities/cn';
 import { IoClose } from 'react-icons/io5';
 import {
@@ -18,16 +19,29 @@ import { pastelVariant, type PastelVariant } from '@/utilities/tokens';
 
 export type ModalVariant = PastelVariant;
 
+/**
+ * Props for the Modal component.
+ */
 type ModalProps = {
+  /** Controls whether the modal is open */
   isOpen: boolean;
+  /** Modal content */
   children: ReactNode;
+  /** Accessible label for the modal (used for screen readers) */
   label: string;
+  /** Pastel color variant for modal styling */
   variant?: ModalVariant;
+  /** Whether to show the close button (default: true) */
   showCloseButton?: boolean;
+  /** Callback fired when the modal requests to close */
   onClose?: () => void;
+  /** ID of the element that describes the modal */
   ariaDescribedBy?: string;
+  /** Callback fired when modal opens and should autofocus an element */
   onOpenAutoFocus?: (element: HTMLElement) => void;
+  /** Callback fired when modal closes and should autofocus an element */
   onCloseAutoFocus?: (element: HTMLElement) => void;
+  /** Test id for the modal content */
   testid?: string;
 } & Omit<
   HTMLMotionProps<'div'>,
@@ -44,11 +58,15 @@ type ModalProps = {
 const MotionFlex = motion.create(Flex);
 
 /**
- * Generic full-screen modal component with proper accessibility and pastel styling
+ * Full-screen modal component with accessibility, focus management, and pastel styling.
  *
- * @param onClose - Callback function called when modal should close. Note: In normal mode,
- *   this callback is delayed by 400ms to sync with the exit animation. In test environments
- *   or when reduced motion is enabled, the callback is called immediately for faster testing.
+ * - Handles focus trap and scroll lock.
+ * - Animates in/out with reduced motion support.
+ * - Restores focus to the trigger element on close.
+ * - Makes main content inert while open for screen readers.
+ *
+ * @param props - ModalProps
+ * @returns React portal with modal content
  */
 export const Modal = ({
   isOpen,
@@ -65,47 +83,47 @@ export const Modal = ({
   ...props
 }: ModalProps) => {
   const [isVisible, setIsVisible] = useState(isOpen);
+  const [isMounted, setIsMounted] = useState(false);
   const { accessibility } = useConfig();
-  const systemReducedMotion = useReducedMotion();
+  const shouldReduceMotion = useReducedMotion();
   const titleId = useId();
   const modalRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
 
-  // In test environments (like Storybook), we want to treat reduced motion as active
-  // This ensures immediate onClose callbacks for faster, more reliable tests
-  const shouldReduceMotion =
-    systemReducedMotion || process.env.NODE_ENV === 'test';
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
-  // Store the element that opened the modal for focus restoration
+  /** Store the element that opened the modal for focus restoration */
   useEffect(() => {
     if (isOpen) {
       triggerRef.current = (document.activeElement as HTMLElement) || null;
     }
   }, [isOpen]);
 
-  // Focus trap functionality
+  /** Trap focus within the modal when visible */
   useFocusTrap(isVisible, modalRef, triggerRef.current);
 
+  /**
+   * Handles closing the modal, including focus restoration and animation timing.
+   */
   const handleClose = useCallback(() => {
-    /* Call onCloseAutoFocus before closing */
     const element = triggerRef.current ?? document.body;
     _onCloseAutoFocus?.(element);
 
-    /* If reduced motion is active (like in tests), call onClose immediately */
     if (shouldReduceMotion) {
-      // Call onClose synchronously before any state changes
       onClose?.();
-      // Then update state in the next tick
       requestAnimationFrame(() => setIsVisible(false));
     } else {
       setIsVisible(false);
-      /* Otherwise, wait for the exit animation to complete */
+      /** Wait for the exit animation to complete before firing onClose */
       setTimeout(() => {
         onClose?.();
       }, 400);
     }
   }, [onClose, shouldReduceMotion, _onCloseAutoFocus]);
 
+  /** Sync isVisible with isOpen prop */
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
@@ -114,7 +132,7 @@ export const Modal = ({
     }
   }, [isOpen]);
 
-  // Handle onOpenAutoFocus when modal becomes visible
+  /** Autofocus the first focusable element when modal becomes visible */
   useEffect(() => {
     if (!isVisible) return;
 
@@ -124,6 +142,7 @@ export const Modal = ({
     _onOpenAutoFocus?.(firstFocusable);
   }, [isVisible, _onOpenAutoFocus]);
 
+  /** Handle Escape key to close modal */
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && onClose) {
@@ -137,12 +156,12 @@ export const Modal = ({
     }
   }, [isOpen, onClose, handleClose]);
 
+  /** Lock scroll and make main content inert while modal is visible */
   useEffect(() => {
     if (!isVisible) return;
 
     lockScroll();
 
-    // Make the main content inert for screen readers
     const mainContent = document.querySelector('main');
     if (mainContent) {
       mainContent.setAttribute('inert', 'true');
@@ -156,7 +175,12 @@ export const Modal = ({
     };
   }, [isVisible]);
 
-  return (
+  /** Avoid rendering during SSR */
+  if (!isMounted) {
+    return null;
+  }
+
+  const modalContent = (
     <AnimatePresence mode="wait">
       {isVisible && (
         <MotionFlex
@@ -164,12 +188,8 @@ export const Modal = ({
           items="center"
           justify="center"
           className={cn(
-            'fixed inset-0 z-50 p-4 bg-background/80 backdrop-blur-sm'
+            'fixed inset-0 z-50 p-4 backdrop-blur-sm overflow-y-auto'
           )}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={titleId}
-          aria-describedby={ariaDescribedBy}
           onClick={handleClose}
           initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -184,9 +204,12 @@ export const Modal = ({
           <MotionFlex
             ref={modalRef}
             direction="column"
-            role="document"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
+            aria-describedby={ariaDescribedBy}
             className={cn(
-              'relative max-w-lg w-full border p-6 shadow-lg',
+              'relative max-w-lg w-full border p-6 shadow-lg my-auto min-h-0',
               pastelVariant[variant].bg,
               pastelVariant[variant].borderDark,
               pastelVariant[variant].textLight,
@@ -321,4 +344,6 @@ export const Modal = ({
       )}
     </AnimatePresence>
   );
+
+  return createPortal(modalContent, document.body);
 };

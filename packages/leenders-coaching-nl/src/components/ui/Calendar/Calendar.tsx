@@ -32,6 +32,8 @@ type CalendarProps = {
   onSelectDate?: (date: Date) => void;
   /** Configuration for disabled dates */
   disabledDates?: DisabledDates;
+  /** Maximum number of months in the future to allow navigation */
+  maxMonthsInFuture?: number;
 };
 
 const MotionBox = motion.create(Box);
@@ -46,6 +48,7 @@ export const Calendar: FC<CalendarProps> = ({
   renderDay,
   onSelectDate,
   disabledDates,
+  maxMonthsInFuture,
 }: CalendarProps) => {
   const { accessibility } = useConfig();
   const [currentDate, setCurrentDate] = useState(initialDate);
@@ -54,9 +57,18 @@ export const Calendar: FC<CalendarProps> = ({
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setCurrentDate(initialDate);
+    setCurrentDate((prev) =>
+      prev.getFullYear() === initialDate.getFullYear() &&
+      prev.getMonth() === initialDate.getMonth()
+        ? prev
+        : initialDate
+    );
   }, [initialDate]);
 
+  /**
+   * Move to the previous month and set animation direction.
+   * Disables if already at the current month.
+   */
   const handlePreviousMonth = () => {
     setDirection(-1);
     setCurrentDate(
@@ -64,18 +76,49 @@ export const Calendar: FC<CalendarProps> = ({
     );
   };
 
+  /**
+   * Move to the next month and set animation direction.
+   * Respects the maximum months in future limit if set.
+   */
   const handleNextMonth = () => {
+    if (maxMonthsInFuture !== undefined) {
+      const today = new Date();
+      const maxDate = new Date(
+        today.getFullYear(),
+        today.getMonth() + maxMonthsInFuture
+      );
+      const nextMonth = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() + 1
+      );
+
+      // Don't navigate if we would exceed the maximum months limit
+      if (nextMonth > maxDate) {
+        return;
+      }
+    }
+
     setDirection(1);
     setCurrentDate(
       new Date(currentDate.getFullYear(), currentDate.getMonth() + 1)
     );
   };
 
+  /**
+   * Handles clicking on a day cell.
+   * Ignores clicks on past, disabled, or out-of-range days.
+   * @param day The date that was clicked
+   */
   const handleDayClick = (day: Date) => {
-    if (isPastDay(day) || isDateDisabled(day, disabledDates)) return;
+    if (!isInteractive(day)) return;
     onSelectDate?.(day);
   };
 
+  /**
+   * Handles keyboard navigation and selection for a day cell.
+   * @param e Keyboard event
+   * @param day The date associated with the cell
+   */
   const handleKeyDown = (e: React.KeyboardEvent, day: Date) => {
     if (!isInteractive(day)) return;
 
@@ -104,16 +147,27 @@ export const Calendar: FC<CalendarProps> = ({
     }
   };
 
+  /**
+   * Determines if a day is interactive (not past and not disabled).
+   * @param day The date to check
+   * @returns True if the day is interactive
+   */
   const isInteractive = (day: Date) => {
     return !isPastDay(day) && !isDateDisabled(day, disabledDates);
   };
 
+  /**
+   * Moves keyboard focus to another day in the grid, based on arrow key navigation.
+   * @param currentDay The currently focused day
+   * @param deltaX Horizontal movement (columns)
+   * @param deltaY Vertical movement (rows)
+   */
   const moveFocus = (currentDay: Date, deltaX: number, deltaY: number) => {
     const weeks = generateCalendarWeeks(currentDate);
     let currentWeekIndex = -1;
     let currentDayIndex = -1;
 
-    // Find current day position
+    // Find the current day position in the weeks grid
     for (let weekIndex = 0; weekIndex < weeks.length; weekIndex++) {
       const week = weeks[weekIndex];
       if (!week) continue;
@@ -132,7 +186,7 @@ export const Calendar: FC<CalendarProps> = ({
     const newWeekIndex = currentWeekIndex + deltaY;
     const newDayIndex = currentDayIndex + deltaX;
 
-    // Check bounds
+    // Check if the new position is within bounds and interactive
     if (
       newWeekIndex >= 0 &&
       newWeekIndex < weeks.length &&
@@ -143,7 +197,7 @@ export const Calendar: FC<CalendarProps> = ({
       const newDay = newWeek?.[newDayIndex];
       if (newDay && isInteractive(newDay)) {
         setFocusedDate(newDay);
-        // Focus the element
+        // Focus the element in the DOM
         requestAnimationFrame(() => {
           const element = gridRef.current?.querySelector(
             `[data-ts="${newDay.getTime()}"]`
@@ -154,9 +208,30 @@ export const Calendar: FC<CalendarProps> = ({
     }
   };
 
+  /**
+   * Checks if the next month button should be disabled.
+   * @returns True if the next month button should be disabled
+   */
+  const isNextMonthDisabled = () => {
+    if (maxMonthsInFuture === undefined) return false;
+
+    const today = new Date();
+    const maxDate = new Date(
+      today.getFullYear(),
+      today.getMonth() + maxMonthsInFuture
+    );
+    const nextMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1
+    );
+
+    return nextMonth > maxDate;
+  };
+
   const weeks = generateCalendarWeeks(currentDate);
   const currentMonthYearText = formatMonthYear(currentDate);
   const isCurrentMonthTodayValue = isCurrentMonthToday(currentDate);
+  const isNextMonthDisabledValue = isNextMonthDisabled();
 
   const slideVariants = {
     enter: (direction: number) => ({
@@ -175,8 +250,8 @@ export const Calendar: FC<CalendarProps> = ({
 
   return (
     <Box className={cn('w-full max-w-none', className)}>
-      {/* Month and year header with navigation */}
-      <Flex justify="between" items="center" className="mb-4 md:hidden">
+      {/* Mobile: Month and year header with navigation */}
+      <Flex justify="between" items="center" className="mb-4 lg:hidden">
         <IconButton
           label={accessibility.calendar.previousMonth}
           onClick={!isCurrentMonthTodayValue ? handlePreviousMonth : undefined}
@@ -219,23 +294,29 @@ export const Calendar: FC<CalendarProps> = ({
 
         <IconButton
           label={accessibility.calendar.nextMonth}
-          onClick={handleNextMonth}
+          onClick={!isNextMonthDisabledValue ? handleNextMonth : undefined}
+          disabled={isNextMonthDisabledValue}
           variant="ghost"
         >
           <Icon
             path="M8.25 4.5l7.5 7.5-7.5 7.5"
-            className="w-6 h-6 text-foreground"
+            className={cn(
+              'w-6 h-6',
+              isNextMonthDisabledValue
+                ? 'text-foreground/50'
+                : 'text-foreground'
+            )}
           />
         </IconButton>
       </Flex>
 
-      <Flex className="flex-col md:flex-row md:items-stretch gap-4">
-        {/* Previous month button - desktop only */}
+      <Flex className="flex-col lg:flex-row lg:items-stretch gap-4">
+        {/* Desktop: Previous month button */}
         <Flex
           justify="center"
           onClick={!isCurrentMonthTodayValue ? handlePreviousMonth : undefined}
           className={cn(
-            'hidden md:flex w-8 self-center cursor-pointer group transition-opacity duration-200',
+            'hidden lg:flex w-8 self-center cursor-pointer group transition-opacity duration-200',
             !isCurrentMonthTodayValue
               ? 'cursor-pointer hover:opacity-70'
               : 'opacity-50 cursor-default'
@@ -255,13 +336,13 @@ export const Calendar: FC<CalendarProps> = ({
 
         <MotionBox
           className="flex-1"
-          key={currentDate.toISOString()}
+          key={`${currentDate.getFullYear()}-${currentDate.getMonth()}`}
           initial={{ opacity: 0, scale: 1 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
         >
-          {/* Month and year header - desktop only */}
-          <Flex justify="center" className="mb-6 hidden md:flex relative">
+          {/* Desktop: Month and year header */}
+          <Flex justify="center" className="mb-6 hidden lg:flex relative">
             <AnimatePresence mode="wait" custom={direction}>
               <MotionText
                 key={currentMonthYearText}
@@ -281,7 +362,7 @@ export const Calendar: FC<CalendarProps> = ({
             </AnimatePresence>
           </Flex>
 
-          {/* Week day headers */}
+          {/* Weekday headers */}
           <Box className="border border-foreground/20 border-b-0">
             <Box role="row" className="grid grid-cols-7">
               {weekDays.map((day, index) => (
@@ -289,7 +370,7 @@ export const Calendar: FC<CalendarProps> = ({
                   key={day}
                   role="columnheader"
                   className={cn(
-                    'p-2 md:p-3 text-center bg-pastel-pink dark:bg-pastel-pink-dark',
+                    'p-2 lg:p-3 text-center bg-pastel-pink dark:bg-pastel-pink-dark',
                     index !== 0 && 'border-l border-foreground/20'
                   )}
                 >
@@ -338,7 +419,7 @@ export const Calendar: FC<CalendarProps> = ({
                             : undefined
                         }
                         className={cn(
-                          'p-2 md:p-3 min-h-[4rem] md:min-h-[5rem] transition-colors duration-200 relative',
+                          'p-2 lg:p-3 min-h-[4rem] lg:min-h-[5rem] transition-colors duration-200 relative',
                           dayIndex !== 0 && 'border-l border-foreground/20',
                           weekIndex !== 0 && 'border-t border-foreground/20',
                           dayIsCurrentMonth
@@ -383,7 +464,7 @@ export const Calendar: FC<CalendarProps> = ({
                             : undefined
                         }
                       >
-                        <Flex direction="column" className="gap-1 md:gap-2">
+                        <Flex direction="column" className="gap-1 lg:gap-2">
                           <Text
                             variant="small"
                             className={cn(
@@ -410,16 +491,24 @@ export const Calendar: FC<CalendarProps> = ({
           </Box>
         </MotionBox>
 
-        {/* Next month button - desktop only */}
+        {/* Desktop: Next month button */}
         <Flex
           justify="center"
-          onClick={handleNextMonth}
-          className="hidden md:flex w-8 self-center cursor-pointer group transition-opacity duration-200 hover:opacity-70"
+          onClick={!isNextMonthDisabledValue ? handleNextMonth : undefined}
+          className={cn(
+            'hidden lg:flex w-8 self-center transition-opacity duration-200',
+            !isNextMonthDisabledValue
+              ? 'cursor-pointer group hover:opacity-70'
+              : 'opacity-50 cursor-default'
+          )}
         >
           <Text
             variant="card-meta"
             weight="medium"
-            className="border-l border-foreground/80 group-hover:border-primary transition-colors duration-200 [writing-mode:vertical-rl]"
+            className={cn(
+              'border-l border-foreground/80 transition-colors duration-200 [writing-mode:vertical-rl]',
+              !isNextMonthDisabledValue && 'group-hover:border-primary'
+            )}
           >
             {accessibility.calendar.nextMonth}
           </Text>

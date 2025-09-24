@@ -229,8 +229,9 @@ export type Testimonial = {
 
 export type TimeSlot = {
   _type: 'timeSlot';
+  dayOfWeek?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
   startTime?: string;
-  endTime?: string;
+  duration?: number;
   isAvailable?: boolean;
 };
 
@@ -488,6 +489,18 @@ export type CalendarSettings = {
     }>;
     before?: string;
     after?: string;
+  };
+  bookingEnabled?: boolean;
+  availableTimeSlots?: Array<
+    {
+      _key: string;
+    } & TimeSlot
+  >;
+  bookingFormConfig?: {
+    title?: string;
+    description?: string;
+    emailTo?: string;
+    successMessage?: string;
   };
 };
 

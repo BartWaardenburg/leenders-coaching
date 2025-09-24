@@ -57,7 +57,7 @@ const defaultHeader = {
 const defaultFooter = {
   copyright: '© 2024 Leenders Coaching. Alle rechten voorbehouden.',
   contact: {
-    email: 'info@leenders-coaching.nl',
+    email: 'simone@leenders-coaching.nl',
     phone: null,
   },
   socialLinks: [],
