@@ -3,8 +3,8 @@ import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 
-import logoColor from '@/assets/images/logo-color.png';
-import logoWhite from '@/assets/images/logo-white.png';
+import logoColor208 from '@/assets/images/logo-color-208x69.png';
+import logoWhite208 from '@/assets/images/logo-white-208x69.png';
 
 /**
  * Logo component that switches between color and white variants based on theme
@@ -33,10 +33,10 @@ export const Logo = () => {
       >
         <div className="absolute inset-0 flex items-center justify-center">
           <Image
-            src={logoColor}
+            src={logoColor208}
             alt="Simone Leenders Coaching"
-            width={936}
-            height={312}
+            width={208}
+            height={69}
             sizes="(max-width: 768px) 208px, 208px"
             className="object-cover w-full"
             priority
@@ -50,10 +50,10 @@ export const Logo = () => {
     <Link href="/" className="relative block w-52 aspect-[3/1] overflow-hidden">
       <div className="absolute inset-0 flex items-center justify-center">
         <Image
-          src={isDark ? logoWhite : logoColor}
+          src={isDark ? logoWhite208 : logoColor208}
           alt="Simone Leenders Coaching"
-          width={936}
-          height={312}
+          width={208}
+          height={69}
           sizes="(max-width: 768px) 208px, 208px"
           className="object-cover w-full"
           priority
