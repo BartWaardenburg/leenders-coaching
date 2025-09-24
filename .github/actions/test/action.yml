@@ -87,59 +87,27 @@ runs:
       id: cache-playwright
       uses: actions/cache@v4
       with:
-        path: ~/.cache/ms-playwright
+        path: ${{ env.HOME }}/.cache/ms-playwright
         key: playwright-${{ runner.os }}-v${{ hashFiles('pnpm-lock.yaml', 'packages/leenders-coaching-nl/package.json') }}
         restore-keys: |
           playwright-${{ runner.os }}-
-
-    - name: Check if browsers are cached
-      shell: bash
-      run: |
-        echo "Cache hit: ${{ steps.cache-playwright.outputs.cache-hit }}"
-        echo "PLAYWRIGHT_BROWSERS_PATH: $PLAYWRIGHT_BROWSERS_PATH"
-        if [ -d ~/.cache/ms-playwright ]; then
-          echo "Browser cache directory exists"
-          ls -la ~/.cache/ms-playwright/ | head -20
-        else
-          echo "Browser cache directory does not exist"
-        fi
 
     - name: Install Playwright browsers
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
-        echo "Checking if browsers need installation..."
-        echo "Cache hit: ${{ steps.cache-playwright.outputs.cache-hit }}"
-        if [ -d ~/.cache/ms-playwright ] && [ -f ~/.cache/ms-playwright/chromium-*/chrome-linux/chrome ]; then
-          echo "Browsers already cached and available"
+        if [ -d "$HOME/.cache/ms-playwright" ] && [ -f "$HOME/.cache/ms-playwright/chromium-*/chrome-linux/chrome" ]; then
+          echo "✅ Browsers already cached and available"
         else
-          echo "Installing Playwright browsers..."
+          echo "📦 Installing Playwright browsers..."
           pnpm --filter leenders-coaching-nl run ci:install-playwright
-          echo "Browsers installed, verifying..."
-          ls -la ~/.cache/ms-playwright/ | head -10
+          echo "✅ Browsers installed successfully"
         fi
 
     - name: Run comprehensive tests
       shell: bash
       working-directory: ${{ inputs.working-directory }}
-      run: |
-        echo "Running tests with PLAYWRIGHT_BROWSERS_PATH: $PLAYWRIGHT_BROWSERS_PATH"
-        echo "Checking browser availability before test run..."
-        if [ -d ~/.cache/ms-playwright ]; then
-          echo "Browser directory exists, contents:"
-          ls -la ~/.cache/ms-playwright/
-          if [ -f ~/.cache/ms-playwright/chromium-*/chrome-linux/chrome ]; then
-            echo "Chromium browser found!"
-          else
-            echo "Chromium browser not found in expected location"
-            echo "Available chromium directories:"
-            ls -la ~/.cache/ms-playwright/ | grep chromium
-          fi
-        else
-          echo "Browser cache directory not found!"
-        fi
-        echo "Starting test run..."
-        pnpm run ${{ inputs.test-command }}
+      run: pnpm run ${{ inputs.test-command }}
 
     - name: Upload coverage to Codecov
       if: ${{ inputs.coverage-upload == 'true' && inputs.codecov-token != '' }}
