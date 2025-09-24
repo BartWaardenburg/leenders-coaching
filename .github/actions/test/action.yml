@@ -87,15 +87,10 @@ runs:
       id: browser-check
       shell: bash
       run: |
-        echo "🔍 Checking Playwright environment..."
-        echo "PLAYWRIGHT_BROWSERS_PATH: ${PLAYWRIGHT_BROWSERS_PATH:-not set}"
-
         if [[ "${PLAYWRIGHT_BROWSERS_PATH:-}" == "/ms-playwright" ]]; then
           echo "✅ Using prebaked browsers at $PLAYWRIGHT_BROWSERS_PATH"
-          echo "📁 Browser directory contents:"
-          ls -la "$PLAYWRIGHT_BROWSERS_PATH" || true
           echo "🔍 Available browsers:"
-          find "$PLAYWRIGHT_BROWSERS_PATH" -maxdepth 3 -type f -name 'chrome' -o -name 'chromium' | head -5 || true
+          find "$PLAYWRIGHT_BROWSERS_PATH" -maxdepth 3 -type f -name 'chrome' -o -name 'chromium' | head -3 || true
           echo "container_mode=true" >> $GITHUB_OUTPUT
         else
           echo "📦 Setting up browsers for regular runner..."
