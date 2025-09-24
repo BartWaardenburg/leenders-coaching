@@ -20,6 +20,10 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: Set Playwright browsers path
+      shell: bash
+      run: echo "PLAYWRIGHT_BROWSERS_PATH=~/.cache/ms-playwright" >> $GITHUB_ENV
+
     - name: Enable Corepack & pin pnpm
       shell: bash
       run: |
