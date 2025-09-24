@@ -53,9 +53,9 @@
   },
   "engines": {
     "node": ">=22.0.0",
-    "pnpm": "10.15.1"
+    "pnpm": "10.17.1"
   },
-  "packageManager": "pnpm@10.15.1",
+  "packageManager": "pnpm@10.17.1",
   "pnpm": {
     "overrides": {
       "tmp": "0.2.5"
