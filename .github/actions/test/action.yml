@@ -88,21 +88,32 @@ runs:
       uses: actions/cache@v4
       with:
         path: ${{ env.HOME }}/.cache/ms-playwright
-        key: playwright-${{ runner.os }}-v${{ hashFiles('pnpm-lock.yaml', 'packages/leenders-coaching-nl/package.json') }}
+        key: >-
+          playwright-${{ runner.os }}-
+          v1-${{ hashFiles('packages/leenders-coaching-nl/package.json') }}-
+          lock-${{ hashFiles('pnpm-lock.yaml') }}
         restore-keys: |
           playwright-${{ runner.os }}-
+
+    - name: Install Playwright OS deps (Linux only)
+      if: runner.os == 'Linux'
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: pnpm dlx playwright install-deps chromium
 
     - name: Install Playwright browsers
       shell: bash
       working-directory: ${{ inputs.working-directory }}
+      env:
+        PLAYWRIGHT_BROWSERS_PATH: ${{ env.HOME }}/.cache/ms-playwright
+        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 0
+      run: pnpm dlx playwright install chromium
+
+    - name: Verify Chromium presence
+      shell: bash
       run: |
-        if [ -d "$HOME/.cache/ms-playwright" ] && [ -f "$HOME/.cache/ms-playwright/chromium-*/chrome-linux/chrome" ]; then
-          echo "✅ Browsers already cached and available"
-        else
-          echo "📦 Installing Playwright browsers..."
-          pnpm --filter leenders-coaching-nl run ci:install-playwright
-          echo "✅ Browsers installed successfully"
-        fi
+        ls -la "$HOME/.cache/ms-playwright" || true
+        test -d "$HOME/.cache/ms-playwright" || (echo "No Playwright cache dir" && exit 1)
 
     - name: Run comprehensive tests
       shell: bash
