@@ -14,7 +14,7 @@ jobs:
     name: 'Test & Coverage Analysis'
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.55.1-jammy
+      image: mcr.microsoft.com/playwright:v1.55.0-jammy
       options: --ipc=host
     timeout-minutes: 20
     permissions:
@@ -63,6 +63,8 @@ jobs:
           github-sha: ${{ github.sha }}
           env: |
             {
+              "PLAYWRIGHT_BROWSERS_PATH": "/ms-playwright",
+              "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD": "1",
               "NEXT_PUBLIC_SANITY_PROJECT_ID": "${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}",
               "NEXT_PUBLIC_SANITY_DATASET": "${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}",
               "NEXT_PUBLIC_SANITY_API_VERSION": "${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}",
