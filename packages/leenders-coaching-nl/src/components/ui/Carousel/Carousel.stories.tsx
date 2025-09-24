@@ -143,9 +143,6 @@ export const EmptyCarousel: Story = {
   args: {
     slides: [],
   },
-  play: async ({ canvas: _canvas }) => {
-    /* Empty carousel should render without errors. */
-  },
 };
 
 export const ManySlides: Story = {
@@ -325,53 +322,6 @@ export const CarouselNavigation: Story = {
   },
 };
 
-export const CarouselDotNavigation: Story = {
-  args: {
-    slides: testimonials.map((testimonial) => (
-      <TestimonialSlide key={testimonial.name} {...testimonial} />
-    )),
-  },
-  play: async ({ canvas, userEvent, step }) => {
-    await step('Verify dot indicators exist', async () => {
-      /* Check that all three dot indicators are present. */
-      const firstDot = canvas.getByLabelText('Ga naar slide 1');
-      const secondDot = canvas.getByLabelText('Ga naar slide 2');
-      const thirdDot = canvas.getByLabelText('Ga naar slide 3');
-
-      expect(firstDot).toBeInTheDocument();
-      expect(secondDot).toBeInTheDocument();
-      expect(thirdDot).toBeInTheDocument();
-    });
-
-    await step('Test dot navigation functionality', async () => {
-      /* Click on the second dot and verify it's clickable. */
-      const secondDot = canvas.getByLabelText('Ga naar slide 2');
-      await userEvent.click(secondDot);
-
-      /* Verify the dot is still present after clicking. */
-      expect(secondDot).toBeInTheDocument();
-    });
-
-    await step('Test third dot navigation', async () => {
-      /* Click on the third dot and verify it's clickable. */
-      const thirdDot = canvas.getByLabelText('Ga naar slide 3');
-      await userEvent.click(thirdDot);
-
-      /* Verify the dot is still present after clicking. */
-      expect(thirdDot).toBeInTheDocument();
-    });
-
-    await step('Test first dot navigation', async () => {
-      /* Click on the first dot and verify it's clickable. */
-      const firstDot = canvas.getByLabelText('Ga naar slide 1');
-      await userEvent.click(firstDot);
-
-      /* Verify the dot is still present after clicking. */
-      expect(firstDot).toBeInTheDocument();
-    });
-  },
-};
-
 export const CarouselSwipeGestures: Story = {
   args: {
     slides: testimonials.map((testimonial) => (
@@ -475,41 +425,6 @@ export const CarouselAccessibility: Story = {
 
       expect(nextButton).toBeInTheDocument();
       expect(prevButton).toBeInTheDocument();
-    });
-
-    await step('Check dot indicators accessibility', async () => {
-      const dots = canvas.getAllByRole('button');
-      const slideDots = dots.filter((button: Element) =>
-        button.getAttribute('aria-label')?.includes('Ga naar slide')
-      );
-
-      /* If there are no slide dots with aria-labels, check for any dot buttons. */
-      if (slideDots.length === 0) {
-        /* Look for any small circular buttons that might be dots. */
-        const allDots = dots.filter(
-          (button: Element) =>
-            button.className.includes('rounded-full') &&
-            button.className.includes('w-2') &&
-            button.className.includes('h-2')
-        );
-        expect(allDots.length).toBeGreaterThan(0);
-      } else {
-        expect(slideDots.length).toBeGreaterThan(0);
-
-        /* Check that first dot is selected initially. */
-        const firstDot = slideDots.find((button: Element) =>
-          button.getAttribute('aria-label')?.includes('Ga naar slide 1')
-        );
-        expect(firstDot).toBeInTheDocument();
-      }
-    });
-
-    await step('Check live region for screen readers', async () => {
-      /* Check if there is a live region (may not be present in all implementations). */
-      const liveRegion = canvas.queryByRole('status');
-      if (liveRegion) {
-        expect(liveRegion).toBeInTheDocument();
-      }
     });
   },
 };

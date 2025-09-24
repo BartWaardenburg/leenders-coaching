@@ -104,14 +104,6 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
     [page, slides.length]
   );
 
-  const goToSlide = useCallback(
-    (index: number) => {
-      const newDirection = index > page ? 1 : -1;
-      setPage([index, newDirection]);
-    },
-    [page]
-  );
-
   return (
     <Box className={cn('group px-4 sm:px-8 relative', className)}>
       {/* Main carousel area */}
@@ -247,31 +239,36 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
 
         {/* Dot indicators */}
         {slides.length > 1 && (
-          <Stack direction="row" justify="center" className="mt-8">
+          <Stack direction="row" justify="center" className="mt-8 gap-2">
             {slides.map((_, index) => (
-              <motion.button
+              <MotionBox
                 key={index}
-                onClick={() => goToSlide(index)}
                 className={cn(
-                  'relative p-1.5 rounded-full transition-colors duration-200 cursor-pointer',
-                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-                  'focus-visible:ring-foreground dark:focus-visible:ring-foreground',
-                  'focus-visible:ring-offset-background'
+                  'rounded-full',
+                  index === page
+                    ? 'bg-foreground dark:bg-foreground'
+                    : 'bg-foreground/30 dark:bg-foreground/30'
                 )}
-                whileHover={shouldReduceMotion ? {} : { scale: 1.3 }}
-                whileTap={shouldReduceMotion ? {} : { scale: 0.9 }}
-                transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
-                aria-label={`Ga naar slide ${index + 1}`}
-              >
-                <div
-                  className={cn(
-                    'rounded-full transition-all duration-200',
-                    index === page
-                      ? 'w-3 h-3 bg-foreground dark:bg-foreground'
-                      : 'w-2.5 h-2.5 bg-foreground/30 dark:bg-foreground/30'
-                  )}
-                />
-              </motion.button>
+                style={{
+                  width: '12px',
+                  height: '12px',
+                  willChange: 'transform',
+                }}
+                animate={{
+                  scale: index === page ? 1 : 0.833,
+                  opacity: index === page ? 1 : 0.3,
+                }}
+                initial={false}
+                transition={{
+                  duration: shouldReduceMotion ? 0 : 0.3,
+                  ease: 'easeInOut',
+                }}
+                aria-label={`Slide ${index + 1} van ${slides.length}`}
+                role="status"
+                aria-valuenow={index + 1}
+                aria-valuemin={1}
+                aria-valuemax={slides.length}
+              />
             ))}
           </Stack>
         )}
