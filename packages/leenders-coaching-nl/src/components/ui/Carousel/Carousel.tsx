@@ -263,11 +263,7 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
                   duration: shouldReduceMotion ? 0 : 0.3,
                   ease: 'easeInOut',
                 }}
-                aria-label={`Slide ${index + 1} van ${slides.length}`}
-                role="status"
-                aria-valuenow={index + 1}
-                aria-valuemin={1}
-                aria-valuemax={slides.length}
+                aria-label={`Huidige slide ${index + 1} van ${slides.length}`}
               />
             ))}
           </Stack>
