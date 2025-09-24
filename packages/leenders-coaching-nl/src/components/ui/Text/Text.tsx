@@ -20,10 +20,8 @@ const textVariants = cva('leading-relaxed transition-theme', {
       error: 'text-sm text-destructive',
       playfair: 'font-playfair text-lg text-foreground',
       navigation: 'font-playfair text-4xl text-inherit',
-      'card-meta':
-        'text-[13px] uppercase text-foreground/60 dark:text-foreground/80',
-      'card-excerpt':
-        'text-base leading-relaxed text-foreground/70 dark:text-foreground/90',
+      'card-meta': 'text-[13px] uppercase text-foreground',
+      'card-excerpt': 'text-base leading-relaxed text-foreground',
       quote: 'text-xl md:text-2xl text-foreground',
     },
     weight: {

@@ -29,15 +29,16 @@ export const Logo = () => {
     return (
       <Link
         href="/"
-        className="relative block w-52 aspect-[3.5/1] overflow-hidden"
+        className="relative block w-52 aspect-[3/1] overflow-hidden"
       >
         <div className="absolute inset-0 flex items-center justify-center">
           <Image
             src={logoColor}
             alt="Simone Leenders Coaching"
-            width={400}
-            height={133}
-            className="object-cover w-full scale-[1.5]"
+            width={936}
+            height={312}
+            sizes="(max-width: 768px) 208px, 208px"
+            className="object-cover w-full"
             priority
           />
         </div>
@@ -46,17 +47,15 @@ export const Logo = () => {
   }
 
   return (
-    <Link
-      href="/"
-      className="relative block w-52 aspect-[3.5/1] overflow-hidden"
-    >
+    <Link href="/" className="relative block w-52 aspect-[3/1] overflow-hidden">
       <div className="absolute inset-0 flex items-center justify-center">
         <Image
           src={isDark ? logoWhite : logoColor}
           alt="Simone Leenders Coaching"
-          width={400}
-          height={133}
-          className="object-cover w-full scale-[1.5]"
+          width={936}
+          height={312}
+          sizes="(max-width: 768px) 208px, 208px"
+          className="object-cover w-full"
           priority
         />
       </div>
