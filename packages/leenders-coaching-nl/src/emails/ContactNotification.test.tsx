@@ -151,7 +151,10 @@ describe('ContactNotification', () => {
     const { getByTestId } = render(<ContactNotification {...props} />);
 
     const logo = getByTestId('img');
-    expect(logo).toHaveAttribute('src', '/images/logo-color.png');
+    expect(logo).toHaveAttribute(
+      'src',
+      'https://leenders-coaching.nl/images/logo-color.png'
+    );
     expect(logo).toHaveAttribute('alt', 'Leenders Coaching');
   });
 

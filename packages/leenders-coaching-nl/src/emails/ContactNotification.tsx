@@ -31,8 +31,9 @@ export const ContactNotification = ({
   return (
     <Html>
       <Head>
-        <style dangerouslySetInnerHTML={{
-          __html: `
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
             @font-face {
               font-family: 'Playfair Display';
               font-style: normal;
@@ -63,8 +64,9 @@ export const ContactNotification = ({
               line-height: 1.25;
               color: rgb(48, 36, 29);
             }
-          `
-        }} />
+          `,
+          }}
+        />
       </Head>
       <Preview>Nieuw contactformulier bericht van {name}</Preview>
       <Body style={main}>
@@ -74,7 +76,7 @@ export const ContactNotification = ({
               <Column style={{ verticalAlign: 'middle' }}>
                 <div style={{ textAlign: 'center', margin: '0 auto' }}>
                   <Img
-                    src="/images/logo-color.png"
+                    src={`${process.env.NEXT_PUBLIC_APP_URL || 'https://leenders-coaching.nl'}/images/logo-color.png`}
                     width="200"
                     height="auto"
                     alt="Leenders Coaching"
@@ -100,7 +102,9 @@ export const ContactNotification = ({
 
               <Text style={infoLabel}>Email</Text>
               <Text style={infoValue}>
-                <Link href={`mailto:${email}`} style={link}>{email}</Link>
+                <Link href={`mailto:${email}`} style={link}>
+                  {email}
+                </Link>
               </Text>
 
               <Text style={infoLabel}>Onderwerp</Text>
@@ -117,7 +121,8 @@ export const ContactNotification = ({
 
           <Section style={footerSection}>
             <Text style={footer}>
-              © {new Date().getFullYear()} Leenders Coaching. Alle rechten voorbehouden.
+              © {new Date().getFullYear()} Leenders Coaching. Alle rechten
+              voorbehouden.
             </Text>
           </Section>
         </Container>
@@ -128,7 +133,8 @@ export const ContactNotification = ({
 
 const main = {
   backgroundColor: '#F5F5F5',
-  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+  fontFamily:
+    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
   color: '#1F2937',
   padding: '24px 0',
 };
@@ -167,7 +173,8 @@ const section = {
 };
 
 const heading = {
-  fontFamily: '"Playfair Display", serif, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
+  fontFamily:
+    '"Playfair Display", serif, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
   fontSize: '38px',
   fontWeight: '700',
   color: 'rgb(48, 36, 29)',
@@ -185,7 +192,8 @@ const heading = {
 
 const infoLabel = {
   fontSize: '13px',
-  fontFamily: 'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
+  fontFamily:
+    'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
   fontWeight: '500',
   color: '#6B7280',
   marginBottom: '8px',
@@ -196,7 +204,8 @@ const infoLabel = {
 };
 
 const infoValue = {
-  fontFamily: 'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
+  fontFamily:
+    'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
   fontWeight: '400',
   fontSize: '16px',
   color: '#1F2937',
@@ -209,7 +218,8 @@ const infoValue = {
 };
 
 const messageStyle = {
-  fontFamily: 'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
+  fontFamily:
+    'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
   fontWeight: '400',
   fontSize: '16px',
   color: '#1F2937',
@@ -234,7 +244,8 @@ const link = {
   color: '#1F2937',
   textDecoration: 'none',
   fontWeight: '500',
-  fontFamily: 'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
+  fontFamily:
+    'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
   fontSize: '13px',
   letterSpacing: '0.1em',
   borderBottom: '1px solid rgba(31, 41, 55, 0.2)',
@@ -248,7 +259,8 @@ const footerSection = {
 };
 
 const footer = {
-  fontFamily: 'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
+  fontFamily:
+    'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
   fontWeight: '400',
   fontSize: '13px',
   color: '#6B7280',
@@ -258,4 +270,4 @@ const footer = {
   lineHeight: '1.75',
 };
 
-export default ContactNotification; 
+export default ContactNotification;
