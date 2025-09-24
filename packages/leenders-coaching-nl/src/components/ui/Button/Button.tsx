@@ -44,6 +44,7 @@ const buttonVariants = cva(
 type ButtonBaseProps = {
   isLoading?: boolean;
   fullWidthUntil?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  fullWidth?: boolean;
   disabled?: boolean;
   role?: 'button' | 'link';
 } & VariantProps<typeof buttonVariants>;
@@ -91,6 +92,7 @@ export const Button = forwardRef<
       size,
       isLoading = false,
       fullWidthUntil,
+      fullWidth = false,
       children,
       disabled,
       href,
@@ -102,7 +104,7 @@ export const Button = forwardRef<
       buttonVariants({
         variant,
         size,
-        fullWidth: fullWidthUntil ? true : false,
+        fullWidth: fullWidth || !!fullWidthUntil,
       }),
       fullWidthUntil && WIDTH_UNTIL[fullWidthUntil],
       className

@@ -172,13 +172,13 @@ export const PricingCard = ({
             </Box>
 
             {callToAction && callToAction.label && callToAction.href && (
-              <Flex className="mt-auto" justify="end">
+              <Flex className="mt-auto">
                 <Button
                   href={callToAction.href}
                   variant={callToAction.variant || variant}
                   role="button"
                   className="transition-theme"
-                  fullWidthUntil="lg"
+                  fullWidth
                   target={callToAction.isExternal ? '_blank' : undefined}
                   rel={
                     callToAction.isExternal ? 'noopener noreferrer' : undefined
