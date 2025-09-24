@@ -87,7 +87,7 @@ runs:
       id: cache-playwright
       uses: actions/cache@v4
       with:
-        path: ${{ env.HOME }}/.cache/ms-playwright
+        path: ${{ github.workspace }}/.cache/ms-playwright
         key: >-
           playwright-${{ runner.os }}-
           v1-${{ hashFiles('packages/leenders-coaching-nl/package.json') }}-
@@ -98,28 +98,26 @@ runs:
     - name: Install Playwright OS deps (Linux only)
       if: runner.os == 'Linux'
       shell: bash
-      working-directory: ${{ inputs.working-directory }}
       run: pnpm dlx playwright install-deps chromium
 
     - name: Install Playwright browsers
       shell: bash
-      working-directory: ${{ inputs.working-directory }}
       env:
-        PLAYWRIGHT_BROWSERS_PATH: ${{ env.HOME }}/.cache/ms-playwright
+        PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/ms-playwright
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 0
       run: pnpm dlx playwright install chromium
 
-    - name: Verify Chromium presence
+    - name: Assert PW path
       shell: bash
       run: |
-        ls -la "$HOME/.cache/ms-playwright" || true
-        test -d "$HOME/.cache/ms-playwright" || (echo "No Playwright cache dir" && exit 1)
+        : "${PLAYWRIGHT_BROWSERS_PATH:?missing}"
+        test -w "$(dirname "$PLAYWRIGHT_BROWSERS_PATH")"
 
     - name: Run comprehensive tests
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       env:
-        PLAYWRIGHT_BROWSERS_PATH: ${{ env.HOME }}/.cache/ms-playwright
+        PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/ms-playwright
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
       run: pnpm run ${{ inputs.test-command }}
 
