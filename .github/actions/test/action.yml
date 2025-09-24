@@ -83,6 +83,16 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: pnpm run ${{ inputs.quality-command }}
 
+    - name: Skip Playwright install in container
+      if: ${{ env.PLAYWRIGHT_BROWSERS_PATH == '/ms-playwright' }}
+      shell: bash
+      run: |
+        echo "✅ Using prebaked browsers at $PLAYWRIGHT_BROWSERS_PATH"
+        echo "📁 Browser directory contents:"
+        ls -la "$PLAYWRIGHT_BROWSERS_PATH" || true
+        echo "🔍 Available browsers:"
+        find "$PLAYWRIGHT_BROWSERS_PATH" -maxdepth 3 -type f -name 'chrome' -o -name 'chromium' | head -5 || true
+
     - name: Cache Playwright browsers
       if: ${{ env.PLAYWRIGHT_BROWSERS_PATH != '/ms-playwright' }}
       id: cache-playwright
@@ -96,7 +106,7 @@ runs:
         restore-keys: |
           playwright-${{ runner.os }}-
 
-    - name: Install Playwright browsers + Linux deps
+    - name: Install Playwright browsers + Linux deps (non-container only)
       if: ${{ runner.os == 'Linux' && env.PLAYWRIGHT_BROWSERS_PATH != '/ms-playwright' }}
       shell: bash
       env:
