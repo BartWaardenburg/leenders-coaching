@@ -95,23 +95,15 @@ runs:
         restore-keys: |
           playwright-${{ runner.os }}-
 
-    - name: Install Playwright OS deps (Linux only)
+    - name: Install Playwright browsers + Linux deps
       if: runner.os == 'Linux'
-      shell: bash
-      run: pnpm dlx playwright install-deps chromium
-
-    - name: Install Playwright browsers
       shell: bash
       env:
         PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/ms-playwright
-        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 0
       run: |
-        echo "Installing Playwright browsers to: $PLAYWRIGHT_BROWSERS_PATH"
-        pnpm dlx playwright install
-        echo "Browser installation complete. Contents:"
-        ls -la "$PLAYWRIGHT_BROWSERS_PATH" || echo "No browsers directory found"
-        echo "Looking for chromium_headless_shell:"
-        find "$PLAYWRIGHT_BROWSERS_PATH" -name "*headless_shell*" -type d || echo "No headless shell found"
+        sudo apt-get update
+        # playwright will apt-get what it needs (incl. GTK4) and download chromium
+        pnpm dlx playwright install --with-deps chromium
 
     - name: Assert PW path
       shell: bash
