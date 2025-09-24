@@ -76,7 +76,15 @@ export const ImageRenderer = ({
 
   // Handle static images and URL strings
   if (isStaticImage(image)) {
-    return <NextImage src={image} alt={alt} className={className} {...props} />;
+    return (
+      <NextImage
+        src={image}
+        alt={alt}
+        className={className}
+        fetchPriority={props.priority ? 'high' : undefined}
+        {...props}
+      />
+    );
   }
 
   // Fallback for any other case

@@ -99,6 +99,7 @@ export function SanityImage({
     alt: alt ?? image?.alt ?? '',
     sizes,
     priority,
+    fetchPriority: priority ? 'high' : undefined,
     placeholder: blurDataURL ? 'blur' : 'empty',
     blurDataURL: blurDataURL || undefined,
     className,

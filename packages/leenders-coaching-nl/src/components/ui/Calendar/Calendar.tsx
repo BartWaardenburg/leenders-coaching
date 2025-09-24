@@ -384,14 +384,9 @@ export const Calendar: FC<CalendarProps> = ({
 
           {/* Calendar grid */}
           <Box className="border border-foreground/20">
-            <Box
-              ref={gridRef}
-              role="grid"
-              aria-label="Kalender"
-              className="grid grid-cols-7"
-            >
+            <Box ref={gridRef} role="grid" aria-label="Kalender">
               {weeks.map((week, weekIndex) => (
-                <div role="row" className="contents" key={weekIndex}>
+                <Box role="row" className="grid grid-cols-7" key={weekIndex}>
                   {week.map((day, dayIndex) => {
                     const dayIsCurrentMonth = isCurrentMonth(day, currentDate);
                     const dayIsToday = isToday(day);
@@ -485,7 +480,7 @@ export const Calendar: FC<CalendarProps> = ({
                       </MotionBox>
                     );
                   })}
-                </div>
+                </Box>
               ))}
             </Box>
           </Box>

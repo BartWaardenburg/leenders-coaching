@@ -10,12 +10,26 @@ import { StatsWriterPlugin } from 'webpack-stats-plugin';
  * - Optionally writes Webpack stats to JSON for bundle analysis.
  */
 const nextConfig: NextConfig = {
+  /**
+   * Experimental configuration for modern browser optimization
+   */
   experimental: {
     viewTransition: true,
+    /**
+     * Optimize package imports to reduce bundle size
+     */
+    optimizePackageImports: ['@sanity/image-url', '@portabletext/react'],
   },
   eslint: {
     /* Ignore ESLint errors during production builds */
     ignoreDuringBuilds: true,
+  },
+  /**
+   * Optimize SWC for modern browsers
+   * This reduces transpilation of ES2019+ features that are natively supported
+   */
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
   },
   images: {
     /* Allow remote images from Sanity CDN */
