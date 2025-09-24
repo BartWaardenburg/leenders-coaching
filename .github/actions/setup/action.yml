@@ -45,9 +45,10 @@ runs:
         cache: pnpm
         cache-dependency-path: '**/pnpm-lock.yaml'
 
-    - name: Install dependencies (no browser downloads)
+    - name: Install dependencies (no scripts, no PW downloads)
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       env:
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
-      working-directory: ${{ inputs.working-directory }}
-      run: pnpm run ${{ inputs.install-command }}
+        PNPM_SKIP_LIFECYCLE_SCRIPTS: '1'
+      run: pnpm install --frozen-lockfile --ignore-scripts

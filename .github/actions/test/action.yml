@@ -105,7 +105,13 @@ runs:
       env:
         PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/ms-playwright
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 0
-      run: pnpm dlx playwright install chromium
+      run: |
+        echo "Installing Playwright browsers to: $PLAYWRIGHT_BROWSERS_PATH"
+        pnpm dlx playwright install
+        echo "Browser installation complete. Contents:"
+        ls -la "$PLAYWRIGHT_BROWSERS_PATH" || echo "No browsers directory found"
+        echo "Looking for chromium_headless_shell:"
+        find "$PLAYWRIGHT_BROWSERS_PATH" -name "*headless_shell*" -type d || echo "No headless shell found"
 
     - name: Assert PW path
       shell: bash
