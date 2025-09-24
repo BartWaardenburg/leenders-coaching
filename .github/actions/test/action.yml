@@ -107,11 +107,17 @@ runs:
           playwright-${{ runner.os }}-
 
     - name: Install Playwright browsers + Linux deps (non-container only)
-      if: ${{ runner.os == 'Linux' && env.PLAYWRIGHT_BROWSERS_PATH != '/ms-playwright' }}
+      if: ${{ runner.os == 'Linux' }}
       shell: bash
       env:
         PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/ms-playwright
       run: |
+        # Skip installation if we're in the Playwright container
+        if [[ "$PLAYWRIGHT_BROWSERS_PATH" == "/ms-playwright" ]]; then
+          echo "✅ Skipping browser installation - using container browsers"
+          exit 0
+        fi
+
         set -eux
         sudo apt-get update
         pnpm dlx playwright install --with-deps chromium
