@@ -44,8 +44,6 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    # Checkout should be done explicitly in the workflow before calling this action
-
     - name: Setup environment
       uses: ./.github/actions/setup
       with:
@@ -83,8 +81,21 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: pnpm run ${{ inputs.quality-command }}
 
-    - name: Check Playwright environment and setup browsers
+    - name: Check if browser tests are needed
       id: browser-check
+      shell: bash
+      run: |
+        if [[ "${{ inputs.test-command }}" != "" ]]; then
+          echo "browser_tests_needed=true" >> $GITHUB_OUTPUT
+          echo "🧪 Browser tests detected - setting up Playwright"
+        else
+          echo "browser_tests_needed=false" >> $GITHUB_OUTPUT
+          echo "📋 No browser tests - skipping Playwright setup"
+        fi
+
+    - name: Check Playwright environment and setup browsers
+      if: ${{ steps.browser-check.outputs.browser_tests_needed == 'true' }}
+      id: playwright-check
       shell: bash
       run: |
         if [[ "${PLAYWRIGHT_BROWSERS_PATH:-}" == "/ms-playwright" ]]; then
@@ -98,7 +109,7 @@ runs:
         fi
 
     - name: Cache Playwright browsers
-      if: ${{ steps.browser-check.outputs.container_mode == 'false' }}
+      if: ${{ steps.browser-check.outputs.browser_tests_needed == 'true' && steps.playwright-check.outputs.container_mode == 'false' }}
       id: cache-playwright
       uses: actions/cache@v4
       with:
@@ -111,7 +122,7 @@ runs:
           playwright-${{ runner.os }}-
 
     - name: Install Playwright browsers + Linux deps (non-container only)
-      if: ${{ runner.os == 'Linux' && steps.browser-check.outputs.container_mode == 'false' }}
+      if: ${{ runner.os == 'Linux' && steps.browser-check.outputs.browser_tests_needed == 'true' && steps.playwright-check.outputs.container_mode == 'false' }}
       shell: bash
       env:
         PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/ms-playwright
@@ -123,12 +134,14 @@ runs:
         find "$PLAYWRIGHT_BROWSERS_PATH" -maxdepth 3 -type f -name 'chrome' | xargs -r ls -l
 
     - name: Assert PW path
+      if: ${{ steps.browser-check.outputs.browser_tests_needed == 'true' }}
       shell: bash
       run: |
         : "${PLAYWRIGHT_BROWSERS_PATH:?missing}"
         test -w "$(dirname "$PLAYWRIGHT_BROWSERS_PATH")"
 
     - name: Run comprehensive tests
+      if: ${{ inputs.test-command != '' }}
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       env:
