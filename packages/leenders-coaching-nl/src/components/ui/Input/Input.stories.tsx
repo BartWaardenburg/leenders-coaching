@@ -4,7 +4,6 @@ import { expect, fn } from 'storybook/test';
 import { Input } from './Input';
 import { Box } from '../Box/Box';
 import { Text } from '../Text/Text';
-import { waitForAnimationsToComplete } from '@/mocks/test-utils';
 
 const meta = {
   title: 'UI/Input',
@@ -46,7 +45,6 @@ export const Default: Story = {
     onChange: fn(),
   },
   play: async ({ canvas, userEvent, args }) => {
-    await waitForAnimationsToComplete('input-test');
     const input = canvas.getByPlaceholderText('Voer hier je tekst in');
     await expect(input).toBeVisible();
 
@@ -63,7 +61,6 @@ export const Bordered: Story = {
     variant: 'bordered',
   },
   play: async ({ canvas }) => {
-    await waitForAnimationsToComplete('input-test');
     const input = canvas.getByPlaceholderText('Voer hier je tekst in');
     await expect(input).toBeVisible();
   },
@@ -77,7 +74,6 @@ export const WithLabel: Story = {
     onChange: fn(),
   },
   play: async ({ canvas, userEvent, args }) => {
-    await waitForAnimationsToComplete('input-test');
     const input = canvas.getByLabelText('Email adres');
     await expect(input).toBeVisible();
 
@@ -96,7 +92,6 @@ export const WithLabelBordered: Story = {
     variant: 'bordered',
   },
   play: async ({ canvas }) => {
-    await waitForAnimationsToComplete('input-test');
     const input = canvas.getByLabelText('Email adres');
     await expect(input).toBeVisible();
   },
@@ -110,13 +105,11 @@ export const WithError: Story = {
     placeholder: 'Voer je wachtwoord in',
   },
   play: async ({ canvas }) => {
-    await waitForAnimationsToComplete('input-test');
     const input = canvas.getByLabelText('Wachtwoord');
     await expect(input).toBeVisible();
     await expect(
       canvas.getByText('Wachtwoord moet minimaal 8 karakters lang zijn')
     ).toBeVisible();
-    // Input rendering complete - no animation wait needed
   },
 };
 
@@ -129,13 +122,11 @@ export const WithErrorBordered: Story = {
     variant: 'bordered',
   },
   play: async ({ canvas }) => {
-    await waitForAnimationsToComplete('input-test');
     const input = canvas.getByLabelText('Wachtwoord');
     await expect(input).toBeVisible();
     await expect(
       canvas.getByText('Wachtwoord moet minimaal 8 karakters lang zijn')
     ).toBeVisible();
-    // Input rendering complete - no animation wait needed
   },
 };
 
@@ -147,11 +138,9 @@ export const Disabled: Story = {
     onChange: fn(),
   },
   play: async ({ canvas, userEvent, args }) => {
-    await waitForAnimationsToComplete('input-test');
     const input = canvas.getByLabelText('Gebruikersnaam');
     await expect(input).toBeVisible();
     await expect(input).toBeDisabled();
-    // Input rendering complete - no animation wait needed
 
     // Test that typing doesn't work when disabled
     await userEvent.type(input, 'test');
@@ -168,11 +157,9 @@ export const DisabledBordered: Story = {
     variant: 'bordered',
   },
   play: async ({ canvas }) => {
-    await waitForAnimationsToComplete('input-test');
     const input = canvas.getByLabelText('Gebruikersnaam');
     await expect(input).toBeVisible();
     await expect(input).toBeDisabled();
-    // Input rendering complete - no animation wait needed
   },
 };
 
@@ -184,10 +171,8 @@ export const Textarea: Story = {
     onChange: fn(),
   },
   play: async ({ canvas, userEvent, args }) => {
-    await waitForAnimationsToComplete('input-test');
     const textarea = canvas.getByLabelText('Bericht');
     await expect(textarea).toBeVisible();
-    // Input rendering complete - no animation wait needed
 
     // Test typing in textarea
     await userEvent.type(
@@ -209,10 +194,8 @@ export const TextareaBordered: Story = {
     variant: 'bordered',
   },
   play: async ({ canvas }) => {
-    await waitForAnimationsToComplete('input-test');
     const textarea = canvas.getByLabelText('Bericht');
     await expect(textarea).toBeVisible();
-    // Input rendering complete - no animation wait needed
   },
 };
 
@@ -224,11 +207,9 @@ export const TextareaWithError: Story = {
     error: 'Bericht is verplicht',
   },
   play: async ({ canvas }) => {
-    await waitForAnimationsToComplete('input-test');
     const textarea = canvas.getByLabelText('Bericht');
     await expect(textarea).toBeVisible();
     await expect(canvas.getByText('Bericht is verplicht')).toBeVisible();
-    // Input rendering complete - no animation wait needed
   },
 };
 
@@ -241,11 +222,9 @@ export const TextareaWithErrorBordered: Story = {
     variant: 'bordered',
   },
   play: async ({ canvas }) => {
-    await waitForAnimationsToComplete('input-test');
     const textarea = canvas.getByLabelText('Bericht');
     await expect(textarea).toBeVisible();
     await expect(canvas.getByText('Bericht is verplicht')).toBeVisible();
-    // Input rendering complete - no animation wait needed
   },
 };
 
