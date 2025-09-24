@@ -33,8 +33,8 @@ export const Footer = ({
   socialLinks,
   ...props
 }: FooterProps) => {
-  const instagramLink = socialLinks?.find(
-    (link) => link.platform?.toLowerCase() === 'instagram'
+  const linkedinLink = socialLinks?.find(
+    (link) => link.platform?.toLowerCase() === 'linkedin'
   );
 
   return (
@@ -115,15 +115,15 @@ export const Footer = ({
               </Box>
             )}
 
-            {instagramLink?.url && (
+            {linkedinLink?.url && (
               <Box>
                 <Link
-                  href={instagramLink.url}
+                  href={linkedinLink.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm underline hover:text-primary transition-theme"
+                  className="text-sm underline hover:text-primary transition-theme flex items-center gap-1"
                 >
-                  Instagram
+                  LinkedIn
                 </Link>
               </Box>
             )}
