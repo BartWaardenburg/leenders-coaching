@@ -83,18 +83,27 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: pnpm run ${{ inputs.quality-command }}
 
-    - name: Skip Playwright install in container
-      if: ${{ env.PLAYWRIGHT_BROWSERS_PATH == '/ms-playwright' }}
+    - name: Check Playwright environment and setup browsers
+      id: browser-check
       shell: bash
       run: |
-        echo "✅ Using prebaked browsers at $PLAYWRIGHT_BROWSERS_PATH"
-        echo "📁 Browser directory contents:"
-        ls -la "$PLAYWRIGHT_BROWSERS_PATH" || true
-        echo "🔍 Available browsers:"
-        find "$PLAYWRIGHT_BROWSERS_PATH" -maxdepth 3 -type f -name 'chrome' -o -name 'chromium' | head -5 || true
+        echo "🔍 Checking Playwright environment..."
+        echo "PLAYWRIGHT_BROWSERS_PATH: ${PLAYWRIGHT_BROWSERS_PATH:-not set}"
+
+        if [[ "${PLAYWRIGHT_BROWSERS_PATH:-}" == "/ms-playwright" ]]; then
+          echo "✅ Using prebaked browsers at $PLAYWRIGHT_BROWSERS_PATH"
+          echo "📁 Browser directory contents:"
+          ls -la "$PLAYWRIGHT_BROWSERS_PATH" || true
+          echo "🔍 Available browsers:"
+          find "$PLAYWRIGHT_BROWSERS_PATH" -maxdepth 3 -type f -name 'chrome' -o -name 'chromium' | head -5 || true
+          echo "container_mode=true" >> $GITHUB_OUTPUT
+        else
+          echo "📦 Setting up browsers for regular runner..."
+          echo "container_mode=false" >> $GITHUB_OUTPUT
+        fi
 
     - name: Cache Playwright browsers
-      if: ${{ env.PLAYWRIGHT_BROWSERS_PATH != '/ms-playwright' }}
+      if: ${{ steps.browser-check.outputs.container_mode == 'false' }}
       id: cache-playwright
       uses: actions/cache@v4
       with:
@@ -107,7 +116,7 @@ runs:
           playwright-${{ runner.os }}-
 
     - name: Install Playwright browsers + Linux deps (non-container only)
-      if: ${{ runner.os == 'Linux' && env.PLAYWRIGHT_BROWSERS_PATH != '/ms-playwright' }}
+      if: ${{ runner.os == 'Linux' && steps.browser-check.outputs.container_mode == 'false' }}
       shell: bash
       env:
         PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/ms-playwright
