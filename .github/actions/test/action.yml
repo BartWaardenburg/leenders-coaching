@@ -101,9 +101,11 @@ runs:
       env:
         PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/ms-playwright
       run: |
+        set -eux
         sudo apt-get update
-        # playwright will apt-get what it needs (incl. GTK4) and download chromium
-        pnpm dlx playwright install --with-deps chromium
+        pnpm dlx playwright install --with-deps chromium chromium-headless-shell
+        echo "Installed browsers:"
+        find "$PLAYWRIGHT_BROWSERS_PATH" -maxdepth 3 -type f -name 'chrome' -o -name 'headless_shell' | xargs -r ls -l
 
     - name: Assert PW path
       shell: bash

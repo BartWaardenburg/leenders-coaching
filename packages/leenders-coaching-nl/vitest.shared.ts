@@ -115,6 +115,8 @@ export const browserSetup = {
     headless: true,
     provider: 'playwright',
     instances: [{ browser: 'chromium' }],
+    // Prefer regular chromium over headless shell if available
+    useHeadlessShell: false,
   },
   setupFiles: ['.storybook/vitest.setup.ts'],
 };
