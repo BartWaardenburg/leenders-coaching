@@ -20,7 +20,7 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || 'https://leenders-coaching.nl'
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://leenders-coaching.nl'
   ),
   title: {
     template: '%s | Leenders Coaching',

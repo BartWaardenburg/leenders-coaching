@@ -73,7 +73,7 @@ export const ContactConfirmation = ({
               <Column style={{ verticalAlign: 'middle' }}>
                 <div style={{ textAlign: 'center', margin: '0 auto' }}>
                   <Img
-                    src={`${process.env.NEXT_PUBLIC_APP_URL || 'https://leenders-coaching.nl'}/images/logo-color.png`}
+                    src={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://leenders-coaching.nl'}/images/logo-color.png`}
                     width="200"
                     height="auto"
                     alt="Leenders Coaching"

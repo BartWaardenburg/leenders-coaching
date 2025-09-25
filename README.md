@@ -236,12 +236,8 @@ graph TB
    RESEND_API_KEY=your_resend_api_key
 
    # Application Configuration
-   NEXT_PUBLIC_APP_URL=http://localhost:3000
+   NEXT_PUBLIC_SITE_URL=https://www.leenders-coaching.nl
 
-   # Sanity Studio Configuration (for content seeding)
-   SANITY_STUDIO_PROJECT_ID=your_sanity_project_id
-   SANITY_STUDIO_DATASET=production
-   EDITOR_SANITY_AUTH_TOKEN=your_sanity_editor_token
    ```
 
 5. **Start development servers:**
