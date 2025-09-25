@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "sanity dev",
     "start": "sanity start",
-    "build": "sanity build",
+    "build": "sanity build && sanity schema deploy --manifest-dir ./dist/static",
     "deploy": "sanity deploy",
     "extract-schema": "sanity schema extract",
     "generate-types": "sanity typegen generate",

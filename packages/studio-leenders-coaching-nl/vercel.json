@@ -1,7 +1,8 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "pnpm build",
   "devCommand": "pnpm dev",
-  "framework": "sanity",
+  "framework": "sanity-v3",
   "outputDirectory": "dist",
   "regions": ["fra1"]
 }
