@@ -73,7 +73,7 @@ export const ContactConfirmation = ({
               <Column style={{ verticalAlign: 'middle' }}>
                 <div style={{ textAlign: 'center', margin: '0 auto' }}>
                   <Img
-                    src={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://leenders-coaching.nl'}/images/logo-color.png`}
+                    src={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.leenders-coaching.nl'}/images/logo-color.png`}
                     width="200"
                     height="auto"
                     alt="Leenders Coaching"
@@ -109,7 +109,7 @@ export const ContactConfirmation = ({
             </Text>
 
             <Section style={buttonContainer}>
-              <Button href="https://leenders-coaching.nl/" style={button}>
+              <Button href="https://www.leenders-coaching.nl" style={button}>
                 Bezoek mijn website
               </Button>
             </Section>
@@ -124,14 +124,14 @@ export const ContactConfirmation = ({
               <br />
               <Link
                 style={footerLink}
-                href="https://leenders-coaching.nl/privacy"
+                href="https://www.leenders-coaching.nl/privacy"
               >
                 Privacy Beleid
               </Link>{' '}
               •{' '}
               <Link
                 style={footerLink}
-                href="https://leenders-coaching.nl/voorwaarden"
+                href="https://www.leenders-coaching.nl/voorwaarden"
               >
                 Algemene Voorwaarden
               </Link>

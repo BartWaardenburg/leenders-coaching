@@ -150,7 +150,7 @@ export const mockSanityBlock = {
         {
           _key: 'link-1',
           _type: 'link',
-          href: 'https://leenders-coaching.nl',
+          href: 'https://www.leenders-coaching.nl',
         },
       ],
     },

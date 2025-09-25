@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { draftMode } from 'next/headers';
-import { VisualEditing } from 'next-sanity';
+import { VisualEditing } from 'next-sanity/visual-editing';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { Box } from '@/components/ui/Box/Box';
 import { GlobalDataProvider } from '@/components/providers/GlobalDataProvider';

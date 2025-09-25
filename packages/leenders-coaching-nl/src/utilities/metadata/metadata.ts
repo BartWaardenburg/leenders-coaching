@@ -10,7 +10,7 @@ const defaultMetadata = {
   openGraph: {
     type: 'website' as const,
     locale: 'nl_NL',
-    url: 'https://leenders-coaching.nl',
+    url: 'https://www.leenders-coaching.nl',
     siteName: 'Leenders Coaching',
     images: [
       {
@@ -266,7 +266,7 @@ export const generateMetadata = async ({
 
   /* Generate dynamic Open Graph image URL */
   const generateDynamicOGImage = () => {
-    const baseUrl = 'https://leenders-coaching.nl';
+    const baseUrl = 'https://www.leenders-coaching.nl';
     const params = new URLSearchParams();
 
     params.set('title', pageTitle);

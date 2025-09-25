@@ -23,7 +23,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "frame-ancestors 'self' https://studio.leenders-coaching.nl"
+          "value": "frame-ancestors 'self' http://localhost:* https://studio.leenders-coaching.nl"
         },
         {
           "key": "X-XSS-Protection",

@@ -37,7 +37,7 @@ export const generatePageMetadata = async (
       title: fallbackTitle,
       description:
         'Professionele coaching voor persoonlijke en professionele groei.',
-      url: `https://leenders-coaching.nl/${page?.slug?.current || ''}`,
+      url: `https://www.leenders-coaching.nl/${page?.slug?.current || ''}`,
     });
   }
 
@@ -52,11 +52,11 @@ export const generatePageMetadata = async (
     '@type': 'WebPage',
     name: metadata.title || fallbackTitle,
     description: metadata.description,
-    url: `https://leenders-coaching.nl/${page.slug?.current || ''}`,
+    url: `https://www.leenders-coaching.nl/${page.slug?.current || ''}`,
     publisher: {
       '@type': 'Organization',
       name: 'Leenders Coaching',
-      url: 'https://leenders-coaching.nl',
+      url: 'https://www.leenders-coaching.nl',
     },
   };
 
@@ -67,7 +67,7 @@ export const generatePageMetadata = async (
     image: metadata.image,
     type: ogType,
     structuredData,
-    url: `https://leenders-coaching.nl/${page.slug?.current || ''}`,
+    url: `https://www.leenders-coaching.nl/${page.slug?.current || ''}`,
   });
 };
 

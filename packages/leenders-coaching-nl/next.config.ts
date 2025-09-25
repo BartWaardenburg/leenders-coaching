@@ -60,7 +60,10 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "frame-ancestors 'self' https://studio.leenders-coaching.nl",
+            value:
+              process.env.NODE_ENV === 'development'
+                ? "frame-ancestors 'self' http://localhost:* https://studio.leenders-coaching.nl"
+                : "frame-ancestors 'self' https://studio.leenders-coaching.nl",
           },
         ],
       },

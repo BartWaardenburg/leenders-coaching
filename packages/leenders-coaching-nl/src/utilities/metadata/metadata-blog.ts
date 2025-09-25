@@ -73,12 +73,12 @@ export const generateBlogPostMetadata = async (
       name: 'Leenders Coaching',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://leenders-coaching.nl/logo.png',
+        url: 'https://www.leenders-coaching.nl/logo.png',
       },
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://leenders-coaching.nl/blog/${slug}`,
+      '@id': `https://www.leenders-coaching.nl/blog/${slug}`,
     },
   };
 
@@ -89,7 +89,7 @@ export const generateBlogPostMetadata = async (
     type: 'article',
     noindex: false, // Simplified - no robots config in new schema
     structuredData,
-    url: `https://leenders-coaching.nl/blog/${slug}`,
+    url: `https://www.leenders-coaching.nl/blog/${slug}`,
   });
 };
 
@@ -138,7 +138,7 @@ export const generateBlogCategoryMetadata = async (
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://leenders-coaching.nl/blog/category/${slug}`,
+      '@id': `https://www.leenders-coaching.nl/blog/category/${slug}`,
     },
   };
 
@@ -152,6 +152,6 @@ export const generateBlogCategoryMetadata = async (
     type: 'website',
     noindex: false,
     structuredData,
-    url: `https://leenders-coaching.nl/blog/categorie/${slug}`,
+    url: `https://www.leenders-coaching.nl/blog/categorie/${slug}`,
   });
 };

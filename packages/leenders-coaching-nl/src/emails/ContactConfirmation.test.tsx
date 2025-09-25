@@ -116,7 +116,7 @@ describe('ContactConfirmation', () => {
     const logo = getByTestId('img');
     expect(logo).toHaveAttribute(
       'src',
-      'https://leenders-coaching.nl/images/logo-color.png'
+      'https://www.leenders-coaching.nl/images/logo-color.png'
     );
     expect(logo).toHaveAttribute('alt', 'Leenders Coaching');
   });
@@ -130,7 +130,7 @@ describe('ContactConfirmation', () => {
     const { getByTestId } = render(<ContactConfirmation {...props} />);
 
     const button = getByTestId('button');
-    expect(button).toHaveAttribute('href', 'https://leenders-coaching.nl/');
+    expect(button).toHaveAttribute('href', 'https://www.leenders-coaching.nl');
     expect(button.textContent).toContain('Bezoek mijn website');
   });
 
