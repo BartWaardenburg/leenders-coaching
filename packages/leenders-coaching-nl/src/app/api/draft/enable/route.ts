@@ -25,5 +25,8 @@ export const { GET } = defineEnableDraftMode({
   client: client.withConfig({
     token: process.env.SANITY_VIEWER_TOKEN || process.env.SANITY_API_TOKEN,
     useCdn: false,
+    stega: {
+      studioUrl: process.env.NEXT_PUBLIC_SANITY_STUDIO_URL,
+    },
   }),
 });
