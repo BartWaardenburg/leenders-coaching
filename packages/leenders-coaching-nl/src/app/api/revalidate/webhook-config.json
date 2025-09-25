@@ -2,7 +2,7 @@
   "webhook": {
     "name": "Next.js ISR Revalidation",
     "description": "Revalidates cache tags and paths when content is updated",
-    "url": "https://YOUR_DOMAIN/api/revalidate",
+    "url": "https://leenders-coaching.nl/api/revalidate",
     "events": ["create", "update", "delete", "unpublish"],
     "filter": "_type in [\"post\", \"homePage\", \"aboutPage\", \"coachingPage\", \"contactPage\", \"approachPage\", \"page\", \"header\", \"footer\", \"configuration\", \"category\"]",
     "projection": {

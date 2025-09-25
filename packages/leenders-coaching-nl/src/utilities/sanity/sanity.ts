@@ -66,7 +66,6 @@ export const publishedClient = createClient({
   apiVersion:
     process.env.NEXT_PUBLIC_SANITY_API_VERSION || FALLBACK_CONFIG.apiVersion,
   useCdn: process.env.NODE_ENV === 'production',
-  // No token - allows CDN caching for published content
 });
 
 /* Private Sanity client for draft content (bypasses CDN) */
@@ -79,7 +78,7 @@ export const draftClient = createClient({
     (isNonProductionEnvironment() ? FALLBACK_CONFIG.dataset : ''),
   apiVersion:
     process.env.NEXT_PUBLIC_SANITY_API_VERSION || FALLBACK_CONFIG.apiVersion,
-  useCdn: false, // Disable CDN for drafts
+  useCdn: false,
   token: process.env.SANITY_API_TOKEN,
 });
 
