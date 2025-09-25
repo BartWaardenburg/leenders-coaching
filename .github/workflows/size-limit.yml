@@ -30,6 +30,7 @@ jobs:
       NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
       NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
       SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
+      SANITY_REVALIDATE_SECRET: ${{ secrets.SANITY_REVALIDATE_SECRET }}
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
     steps:
@@ -87,6 +88,7 @@ jobs:
           NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
           NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
           SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
+          SANITY_REVALIDATE_SECRET: ${{ secrets.SANITY_REVALIDATE_SECRET }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
         run: |
           OUT="$GITHUB_WORKSPACE/packages/leenders-coaching-nl/.bundle-analysis/size-results-main.json"
