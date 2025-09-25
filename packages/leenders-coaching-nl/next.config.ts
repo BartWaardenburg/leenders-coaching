@@ -55,6 +55,15 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "frame-ancestors 'self' https://studio.leenders-coaching.nl",
+          },
+        ],
+      },
     ];
   },
   /**
