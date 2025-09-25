@@ -1,6 +1,7 @@
 'use client';
 
 import type { ComponentPropsWithoutRef } from 'react';
+import { useEffect, useState } from 'react';
 import * as reactHookForm from 'react-hook-form';
 
 import { Section } from '@/components/ui/Section';
@@ -14,6 +15,7 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { submitContactForm } from '@/utilities/contact';
 import { useToast } from '@/components/providers/ToastProvider';
+import TurnstileWidget from '@/components/ui/TurnstileWidget';
 
 export type ContactFormData = {
   name: string;
@@ -61,6 +63,13 @@ export const SectionForm = ({
     reset,
   } = reactHookForm.useForm<ContactFormData>();
 
+  /* Turnstile token state */
+  const [tsToken, setTsToken] = useState('');
+  const [startedAt, setStartedAt] = useState<number>(Date.now());
+  const [company, setCompany] = useState(''); // honeypot
+
+  useEffect(() => setStartedAt(Date.now()), []);
+
   /* Safely use toast - handle case where ToastProvider is not available during SSG */
   let showToast: ((message: string, options?: ToastOptions) => void) | null =
     null;
@@ -74,10 +83,15 @@ export const SectionForm = ({
 
   const handleFormSubmit = async (data: ContactFormData) => {
     try {
+      if (!tsToken) throw new Error('turnstile_missing');
       await submitContactForm({
         ...data,
         formConfig: form,
+        turnstileToken: tsToken,
+        startedAt,
+        company,
       });
+      setTsToken('');
       reset();
       if (showToast) {
         showToast(
@@ -161,6 +175,22 @@ export const SectionForm = ({
                 error={errors.message?.message}
                 {...register('message', { required: 'Bericht is verplicht' })}
               />
+              <input
+                name="company"
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+                style={{
+                  position: 'absolute',
+                  left: '-9999px',
+                  height: 0,
+                  width: 0,
+                }}
+                aria-hidden="true"
+              />
+              <input type="hidden" name="startedAt" value={startedAt} />
+              <TurnstileWidget cdata="contact" onToken={setTsToken} />
               <Box className="flex w-full @md:justify-end">
                 <Button
                   type="submit"

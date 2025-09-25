@@ -3,6 +3,7 @@ import { Resend } from 'resend';
 import { ContactNotification, ContactConfirmation } from '@/emails';
 import type { ContactFormData } from '@/components/sections/SectionForm/SectionForm';
 import type { FormConfiguration } from '@/types/sanity/schema';
+import { clientIp, validateTurnstile } from '@/utilities/turnstile';
 
 /* Initialize Resend with API key from environment variables */
 const resendApiKey = process.env.RESEND_API_KEY;
@@ -13,6 +14,9 @@ const resend = new Resend(resendApiKey);
 
 type ContactFormRequest = ContactFormData & {
   formConfig?: FormConfiguration;
+  turnstileToken?: string;
+  startedAt?: number;
+  company?: string;
 };
 
 /**
@@ -36,6 +40,34 @@ export async function POST(request: Request) {
         { error: 'Missing required fields' },
         { status: 400 }
       );
+    }
+
+    /* Security validations */
+    if (data.company?.trim()) {
+      return NextResponse.json({ error: 'bot' }, { status: 400 });
+    }
+    if (!data.startedAt || Date.now() - Number(data.startedAt) < 1200) {
+      return NextResponse.json({ error: 'too_fast' }, { status: 400 });
+    }
+
+    /* Turnstile validation (mandatory) */
+    const ip = clientIp(request);
+    const v = await validateTurnstile(data.turnstileToken || '', ip);
+    if (!v.success || !v.cdata || !['contact', 'booking'].includes(v.cdata)) {
+      return NextResponse.json({ error: 'captcha' }, { status: 400 });
+    }
+
+    /* Hostname validation */
+    const allowed = new Set([
+      'leenders-coaching.nl',
+      'www.leenders-coaching.nl',
+    ]);
+    if (process.env.NODE_ENV !== 'production') {
+      allowed.add('localhost');
+      allowed.add('127.0.0.1');
+    }
+    if (v.hostname && !allowed.has(v.hostname)) {
+      return NextResponse.json({ error: 'captcha' }, { status: 400 });
     }
 
     /* Get configuration from form config or use defaults */

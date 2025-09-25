@@ -35,6 +35,7 @@ export const RootLayout = async ({ children, fonts }: RootLayoutProps) => {
       lang="nl"
       className={fonts.variables.join(' ')}
       suppressHydrationWarning
+      data-scroll-behavior="smooth"
     >
       <Box as="body" className="antialiased min-h-screen flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>

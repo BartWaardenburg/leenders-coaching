@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { Stack } from '@/components/ui/Stack';
 import type { FieldErrors, UseFormRegister } from 'react-hook-form';
 
-type AppointmentFormData = {
+export type AppointmentFormData = {
   name: string;
   email: string;
   phone?: string;

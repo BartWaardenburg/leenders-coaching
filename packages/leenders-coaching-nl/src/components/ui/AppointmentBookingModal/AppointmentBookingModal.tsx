@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { useState } from 'react';
+import type { TimeSlot } from '@/types/sanity/schema';
 import { useForm } from 'react-hook-form';
 import { Modal } from '@/components/ui/Modal';
 import { Stack } from '@/components/ui/Stack';
@@ -11,13 +12,16 @@ import { Box } from '@/components/ui/Box';
 import { TimeSlotSelector } from '@/components/ui/TimeSlotSelector';
 import { AppointmentForm } from '@/components/ui/AppointmentForm';
 import { useToast } from '@/components/providers/ToastProvider';
-import type { TimeSlot } from '@/types/sanity/schema';
+import TurnstileWidget from '@/components/ui/TurnstileWidget';
 
 type AppointmentFormData = {
   name: string;
   email: string;
   phone?: string;
   message?: string;
+  turnstileToken?: string;
+  startedAt?: number;
+  company?: string;
 };
 
 type AppointmentBookingModalProps = {
@@ -74,6 +78,8 @@ export const AppointmentBookingModal = ({
     hasAttemptedSubmitWithoutTimeSlot,
     setHasAttemptedSubmitWithoutTimeSlot,
   ] = useState(false);
+  const [tsToken, setTsToken] = useState('');
+  const [company, setCompany] = useState(''); // honeypot
 
   const {
     register,
@@ -97,12 +103,24 @@ export const AppointmentBookingModal = ({
       return;
     }
 
+    if (!tsToken) {
+      showToast(
+        'Er is iets misgegaan met de verificatie. Probeer het opnieuw.',
+        { variant: 'pink' }
+      );
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       await onSubmit({
         ...data,
         selectedTimeSlot,
+        turnstileToken: tsToken,
+        startedAt: Date.now(),
+        company,
       });
+      setTsToken('');
       handleClose();
     } catch (error) {
       console.error('Error submitting appointment:', error);
@@ -174,6 +192,18 @@ export const AppointmentBookingModal = ({
           errors={errors}
           isSubmitting={isSubmitting}
         />
+
+        <input
+          name="company"
+          value={company}
+          onChange={(e) => setCompany(e.target.value)}
+          tabIndex={-1}
+          autoComplete="off"
+          style={{ position: 'absolute', left: '-9999px', height: 0, width: 0 }}
+          aria-hidden="true"
+        />
+
+        <TurnstileWidget cdata="booking" onToken={setTsToken} />
       </Stack>
     </Modal>
   );

@@ -3,6 +3,9 @@ import type { FormConfiguration } from '@/types/sanity/schema';
 
 type ContactFormRequest = ContactFormData & {
   formConfig?: FormConfiguration;
+  turnstileToken?: string;
+  startedAt?: number;
+  company?: string;
 };
 
 /**
