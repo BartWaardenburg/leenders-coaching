@@ -20,7 +20,7 @@ export default defineConfig({
     structureTool({
       structure,
     }),
-    visionTool(),
+    ...(process.env.NODE_ENV === 'development' ? [visionTool()] : []),
     presentationTool({
       name: 'presentation',
       title: 'Presentation',
@@ -33,6 +33,8 @@ export default defineConfig({
               'https://leenders-coaching.nl',
         previewMode: {
           enable: '/api/draft/enable',
+          disable: '/api/draft/disable',
+          shareAccess: true,
         },
       },
       allowOrigins: [

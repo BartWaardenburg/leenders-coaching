@@ -66,6 +66,9 @@ export const publishedClient = createClient({
   apiVersion:
     process.env.NEXT_PUBLIC_SANITY_API_VERSION || FALLBACK_CONFIG.apiVersion,
   useCdn: process.env.NODE_ENV === 'production',
+  stega: {
+    studioUrl: process.env.NEXT_PUBLIC_SANITY_STUDIO_URL,
+  },
 });
 
 /* Private Sanity client for draft content (bypasses CDN) */
@@ -80,6 +83,9 @@ export const draftClient = createClient({
     process.env.NEXT_PUBLIC_SANITY_API_VERSION || FALLBACK_CONFIG.apiVersion,
   useCdn: false,
   token: process.env.SANITY_API_TOKEN,
+  stega: {
+    studioUrl: process.env.NEXT_PUBLIC_SANITY_STUDIO_URL,
+  },
 });
 
 /* Legacy client for backward compatibility */
