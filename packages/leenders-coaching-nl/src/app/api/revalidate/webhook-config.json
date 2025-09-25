@@ -1,29 +1,19 @@
 {
-  "pathBasedRevalidation": {
-    "name": "Path-based Revalidation for Next.js",
-    "description": "Surgically revalidates individual pages when content is updated",
-    "url": "https://your-domain.com/api/revalidate/path",
-    "events": ["create", "update", "delete"],
-    "filter": "_type in [\"post\", \"homePage\", \"aboutPage\", \"coachingPage\", \"contactPage\", \"approachPage\"]",
+  "webhook": {
+    "name": "Next.js ISR Revalidation",
+    "description": "Revalidates cache tags and paths when content is updated",
+    "url": "https://YOUR_DOMAIN/api/revalidate",
+    "events": ["create", "update", "delete", "unpublish"],
+    "filter": "_type in [\"post\", \"homePage\", \"aboutPage\", \"coachingPage\", \"contactPage\", \"approachPage\", \"page\", \"header\", \"footer\", \"configuration\", \"category\"]",
     "projection": {
-      "path": "select(\n  _type == \"post\" => \"/blog/\" + slug.current,\n  _type == \"homePage\" => \"/\",\n  _type == \"aboutPage\" => \"/over-mij\",\n  _type == \"coachingPage\" => \"/coaching\",\n  _type == \"contactPage\" => \"/contact\",\n  _type == \"approachPage\" => \"/aanpak\"\n)"
+      "_type": "_type",
+      "slug": "slug.current",
+      "path": "select(\n  _type == \"post\" => \"/blog/\" + slug.current,\n  _type == \"category\" => \"/blog/categorie/\" + slug.current,\n  _type == \"homePage\" => \"/\",\n  _type == \"aboutPage\" => \"/over-mij\",\n  _type == \"coachingPage\" => \"/coaching\",\n  _type == \"contactPage\" => \"/contact\",\n  _type == \"approachPage\" => \"/aanpak\",\n  _type == \"page\" => \"/\" + slug.current,\n  _type in [\"header\", \"footer\", \"configuration\"] => null\n)"
     },
     "httpMethod": "POST",
     "apiVersion": "v2021-03-25",
     "includeDrafts": false,
     "headers": {},
-    "secret": "SANITY_REVALIDATE_SECRET"
-  },
-  "tagBasedRevalidation": {
-    "name": "Tag-based Revalidation for Global Content",
-    "description": "Revalidates cache tags for global content changes",
-    "url": "https://your-domain.com/api/revalidate",
-    "events": ["create", "update", "delete"],
-    "filter": "_type in [\"header\", \"footer\", \"configuration\", \"category\"]",
-    "httpMethod": "POST",
-    "apiVersion": "v2021-03-25",
-    "includeDrafts": false,
-    "headers": {},
-    "secret": "SANITY_REVALIDATE_SECRET"
+    "secret": "SANITY_WEBHOOK_SECRET"
   }
 }

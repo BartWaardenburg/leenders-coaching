@@ -18,8 +18,13 @@ export const getPage = async (type: string) => {
   }`;
 
   const result = await executeQuery(query, isDraftMode, [
-    'pages',
     type.toLowerCase(),
+    type,
+    'post',
+    'posts',
+    'blog',
+    'category',
+    'categories',
   ]);
 
   return result;
@@ -37,5 +42,14 @@ export const getHomePage = async () => {
     ${GENERIC_SECTION_FRAGMENT}
   }`;
 
-  return executeQuery(query, isDraftMode, ['pages', 'home']);
+  return executeQuery(query, isDraftMode, [
+    'homePage',
+    'homepage',
+    'home',
+    'post',
+    'posts',
+    'blog',
+    'category',
+    'categories',
+  ]);
 };

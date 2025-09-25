@@ -1,1 +1,8 @@
-export { sanityFetch, sanityFetchDraft, client } from './sanity';
+export {
+  sanityFetch,
+  sanityFetchTagged,
+  sanityFetchDraft,
+  client,
+  publishedClient,
+  draftClient,
+} from './sanity';

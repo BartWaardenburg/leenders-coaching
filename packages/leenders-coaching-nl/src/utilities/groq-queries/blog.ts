@@ -20,7 +20,7 @@ export const getBlogPosts = async () => {
     ${BLOG_POST_FULL_FIELDS}
   }`;
 
-  return executeQuery(query, isDraftMode, ['posts', 'blog']);
+  return executeQuery(query, isDraftMode, ['post', 'posts', 'blog']);
 };
 
 /**
@@ -31,11 +31,11 @@ export const getBlogPosts = async () => {
 export const getBlogPostBySlug = async (slug: string) => {
   const isDraftMode = await getDraftModeStatus();
 
-  const query = `*[_type == "post" && slug.current == "${slug}" && defined(title)][0] {
+  const query = `*[_type == "post" && slug.current == $slug && defined(title)][0] {
     ${BLOG_POST_FULL_FIELDS}
   }`;
 
-  return executeQuery(query, isDraftMode, ['posts', 'blog', `post-${slug}`]);
+  return executeQuery(query, isDraftMode, ['post', `post:${slug}`], { slug });
 };
 
 /**
@@ -50,7 +50,7 @@ export const getCategories = async (useDraft?: boolean) => {
     ${CATEGORY_FULL_FIELDS}
   }`;
 
-  return executeQuery(query, isDraftMode, ['categories']);
+  return executeQuery(query, isDraftMode, ['category', 'categories']);
 };
 
 /**
@@ -61,11 +61,13 @@ export const getCategories = async (useDraft?: boolean) => {
 export const getCategoryBySlug = async (slug: string) => {
   const isDraftMode = await getDraftModeStatus();
 
-  const query = `*[_type == "category" && slug.current == "${slug}"][0] {
+  const query = `*[_type == "category" && slug.current == $slug][0] {
     ${CATEGORY_FULL_FIELDS}
   }`;
 
-  return executeQuery(query, isDraftMode, ['categories', `category-${slug}`]);
+  return executeQuery(query, isDraftMode, ['category', `category:${slug}`], {
+    slug,
+  });
 };
 
 /**
@@ -79,18 +81,18 @@ export const getPostsByCategorySlug = async (
 ) => {
   const isDraftMode = await getDraftModeStatus(useDraft);
 
-  const query = `*[_type == "post" && references(*[_type == "category" && slug.current == "${categorySlug}"]._id)] | order(publishedAt desc) {
+  const query = `*[_type == "post" && references(*[_type == "category" && slug.current == $categorySlug]._id)] | order(publishedAt desc) {
     ${BLOG_POST_LIST_FIELDS},
     ${CATEGORIES_FRAGMENT},
     ${CONTENT_FRAGMENT}
   }`;
 
-  return executeQuery(query, isDraftMode, [
-    'posts',
-    'blog',
-    'categories',
-    `category-${categorySlug}`,
-  ]);
+  return executeQuery(
+    query,
+    isDraftMode,
+    ['posts', 'blog', 'categories', 'category', `category:${categorySlug}`],
+    { categorySlug }
+  );
 };
 
 /**
@@ -101,15 +103,15 @@ export const getPostsByCategorySlug = async (
 export const getPostsByCategory = async (categoryId: string) => {
   const isDraftMode = await getDraftModeStatus();
 
-  const query = `*[_type == "post" && references("${categoryId}")] | order(publishedAt desc) {
+  const query = `*[_type == "post" && references($categoryId)] | order(publishedAt desc) {
     ${BLOG_POST_LIST_FIELDS},
     ${CATEGORIES_MINIMAL_FRAGMENT}
   }`;
 
-  return executeQuery(query, isDraftMode, [
-    'posts',
-    'blog',
-    'categories',
-    `category-${categoryId}`,
-  ]);
+  return executeQuery(
+    query,
+    isDraftMode,
+    ['posts', 'blog', 'categories', 'category', `category-${categoryId}`],
+    { categoryId }
+  );
 };

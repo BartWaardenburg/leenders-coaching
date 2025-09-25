@@ -27,9 +27,11 @@ export const getGlobalData = async (): Promise<GLOBAL_DATA_QUERYResult> => {
   }`;
 
   return executeQuery<GLOBAL_DATA_QUERYResult>(query, isDraftMode, [
+    'header',
+    'footer',
+    'configuration',
     'global',
     'navigation',
-    'footer',
     'settings',
   ]);
 };
@@ -52,5 +54,5 @@ export const getSiteSettings = async (): Promise<{
   return executeQuery<{
     title?: string;
     description?: string;
-  } | null>(query, isDraftMode, ['settings']);
+  } | null>(query, isDraftMode, ['configuration', 'settings']);
 };

@@ -270,7 +270,6 @@ export const Carousel = ({ slides, className }: CarouselProps) => {
                   ease: 'easeInOut',
                 }}
                 aria-current={index === page ? 'true' : 'false'}
-                aria-label={`Slide ${index + 1} van ${slides.length}`}
               />
             ))}
           </Stack>

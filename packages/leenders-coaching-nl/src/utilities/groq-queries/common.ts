@@ -1,5 +1,6 @@
 import { sanityFetch, sanityFetchDraft } from '@/utilities/sanity';
 import { draftMode } from 'next/headers';
+import type { QueryParams } from '@sanity/client';
 
 /**
  * Common GROQ query fragments and helper functions
@@ -27,17 +28,19 @@ export const getDraftModeStatus = async (
  * @param query - The GROQ query string
  * @param isDraftMode - Whether draft mode is enabled
  * @param cacheTags - Cache tags for ISR
+ * @param params - Query parameters
  * @returns Query result
  */
 export const executeQuery = async <T>(
   query: string,
   isDraftMode: boolean,
-  cacheTags: string[] = []
+  cacheTags: string[] = [],
+  params: QueryParams = {}
 ): Promise<T> => {
   if (isDraftMode) {
-    return sanityFetchDraft<T>(query);
+    return sanityFetchDraft<T>(query, params);
   }
-  return sanityFetch<T>(query, {}, cacheTags);
+  return sanityFetch<T>(query, params, cacheTags, isDraftMode);
 };
 
 /**

@@ -55,8 +55,8 @@ const FALLBACK_CONFIG = {
   apiVersion: '2024-02-14',
 } as const;
 
-/* Sanity client configuration for Next.js with cache tag support and fallbacks */
-export const client = createClient({
+/* Public Sanity client for published content (CDN enabled) */
+export const publishedClient = createClient({
   projectId:
     process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
     (isNonProductionEnvironment() ? FALLBACK_CONFIG.projectId : ''),
@@ -66,22 +66,64 @@ export const client = createClient({
   apiVersion:
     process.env.NEXT_PUBLIC_SANITY_API_VERSION || FALLBACK_CONFIG.apiVersion,
   useCdn: process.env.NODE_ENV === 'production',
+  // No token - allows CDN caching for published content
+});
+
+/* Private Sanity client for draft content (bypasses CDN) */
+export const draftClient = createClient({
+  projectId:
+    process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
+    (isNonProductionEnvironment() ? FALLBACK_CONFIG.projectId : ''),
+  dataset:
+    process.env.NEXT_PUBLIC_SANITY_DATASET ||
+    (isNonProductionEnvironment() ? FALLBACK_CONFIG.dataset : ''),
+  apiVersion:
+    process.env.NEXT_PUBLIC_SANITY_API_VERSION || FALLBACK_CONFIG.apiVersion,
+  useCdn: false, // Disable CDN for drafts
   token: process.env.SANITY_API_TOKEN,
 });
+
+/* Legacy client for backward compatibility */
+export const client = publishedClient;
 
 /**
  * Enhanced fetch function with cache tags for ISR
  * @param query - The GROQ query string
  * @param params - Query parameters
  * @param tags - Cache tags for revalidation
+ * @param isDraftMode - Whether to use draft mode (defaults to false)
  * @returns Promise resolving to the typed result
  */
 export async function sanityFetch<T>(
   query: string,
   params: QueryParams = {},
-  tags?: string[]
+  tags?: string[],
+  isDraftMode: boolean = false
 ): Promise<T> {
-  return client.fetch<T>(query, params, {
+  const clientToUse = isDraftMode ? draftClient : publishedClient;
+  return clientToUse.fetch<T>(query, params, {
+    cache: 'force-cache',
+    next: {
+      tags: tags || ['sanity'],
+    },
+  });
+}
+
+/**
+ * Enhanced fetch function with object parameter structure for better DX
+ * @param options - Configuration object with query, params, and tags
+ * @returns Promise resolving to the typed result
+ */
+export async function sanityFetchTagged<T>({
+  query,
+  params = {},
+  tags,
+}: {
+  query: string;
+  params?: QueryParams;
+  tags?: string[];
+}): Promise<T> {
+  return publishedClient.fetch<T>(query, params, {
     cache: 'force-cache',
     next: {
       tags: tags || ['sanity'],
@@ -99,7 +141,7 @@ export async function sanityFetchDraft<T>(
   query: string,
   params: QueryParams = {}
 ): Promise<T> {
-  return client.fetch<T>(query, params, {
+  return draftClient.fetch<T>(query, params, {
     cache: 'no-store',
     perspective: 'drafts',
   });

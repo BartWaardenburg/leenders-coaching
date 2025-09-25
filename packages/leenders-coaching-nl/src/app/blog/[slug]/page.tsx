@@ -9,9 +9,9 @@ import {
 
 /* Types for the blog post page */
 type BlogPostPageProps = {
-  params: Promise<{
+  params: {
     slug: string;
-  }>;
+  };
 };
 
 /**
@@ -20,20 +20,14 @@ type BlogPostPageProps = {
 export const generateMetadata = async ({
   params,
 }: BlogPostPageProps): Promise<Metadata> => {
-  const resolvedParams = await params;
-  const post = (await getBlogPostBySlug(
-    resolvedParams.slug
-  )) as ResolvedBlogPost;
+  const post = (await getBlogPostBySlug(params.slug)) as ResolvedBlogPost;
 
-  return await generateBlogPostMetadata(post, resolvedParams.slug);
+  return await generateBlogPostMetadata(post, params.slug);
 };
 
 /* Blog post page component */
 const BlogPostPage = async ({ params }: BlogPostPageProps) => {
-  const resolvedParams = await params;
-  const post = (await getBlogPostBySlug(
-    resolvedParams.slug
-  )) as ResolvedBlogPost;
+  const post = (await getBlogPostBySlug(params.slug)) as ResolvedBlogPost;
 
   if (!post) {
     notFound();

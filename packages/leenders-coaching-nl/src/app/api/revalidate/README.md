@@ -1,115 +1,149 @@
-# Revalidation API Routes
+# ISR + On-Demand Revalidation Setup
 
-This directory contains API routes for cache revalidation when content is updated in Sanity Studio.
+This setup provides optimal performance for your Next.js application with Sanity CMS by using Incremental Static Regeneration (ISR) with on-demand revalidation via webhooks.
 
-## Routes
+## Setup Overview
 
-### `/api/revalidate` - Tag-based Revalidation
+The setup consists of:
 
-- **Purpose**: Revalidates cache tags for broad content updates
-- **Use Case**: When global content (navigation, footer, settings) changes
-- **Method**: POST
-- **Security**: Query parameter `secret`
+1. **Optimized Sanity Clients**: Separate clients for published (CDN-enabled) vs draft content
+2. **Tagged Data Fetches**: Using cache tags to enable targeted revalidation
+3. **Revalidation API Endpoint**: Handles Sanity webhooks to trigger cache invalidation
+4. **Sanity Webhook Configuration**: Configures Sanity to call the revalidation endpoint
 
-### `/api/revalidate/path` - Path-based Revalidation
+## Environment Variables Required
 
-- **Purpose**: Surgically revalidates individual pages by their path
-- **Use Case**: When specific posts or pages are updated
-- **Method**: POST
-- **Security**: Uses `parseBody` from `next-sanity/webhook` for signature validation
+Add these environment variables to your Vercel deployment:
 
-## Webhook Configuration
-
-### Path-based Revalidation Webhook
-
-Use this webhook template for path-based revalidation:
-
-**URL**: `https://your-domain.com/api/revalidate/path`
-
-**Events**: `create`, `update`, `delete`
-
-**Filter**: `_type in ["post", "homePage", "aboutPage", "coachingPage", "contactPage", "approachPage"]`
-
-**Projection**:
-
-```groq
-{
-  "path": select(
-    _type == "post" => "/blog/" + slug.current,
-    _type == "homePage" => "/",
-    _type == "aboutPage" => "/over-mij",
-    _type == "coachingPage" => "/coaching",
-    _type == "contactPage" => "/contact",
-    _type == "approachPage" => "/aanpak"
-  )
-}
+```env
+NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
+NEXT_PUBLIC_SANITY_DATASET=production
+NEXT_PUBLIC_SANITY_API_VERSION=2025-01-01
+SANITY_WEBHOOK_SECRET=your_actual_secret_value
+SANITY_API_TOKEN=your_sanity_auth_token
 ```
 
-**HTTP Method**: POST
+## Sanity Webhook Configuration
 
-**Secret**: Same as `SANITY_REVALIDATE_SECRET` environment variable
+**Important**: In Sanity Studio webhook settings:
 
-### Tag-based Revalidation Webhook
+- **URL**: `https://your-domain.com/api/revalidate`
+- **Secret**: Use your **actual secret value** (e.g., `sk_live_abc123`), **NOT** the environment variable name
+- **Filter**: `_type in ["post", "homePage", "aboutPage", "coachingPage", "contactPage", "approachPage", "page", "header", "footer", "configuration", "category"]`
+- **Events**: create, update, delete, unpublish
 
-Use this webhook template for tag-based revalidation:
+**Note**: The secret value in Vercel (`SANITY_WEBHOOK_SECRET`) must match exactly what you enter in Sanity Studio.
 
-**URL**: `https://your-domain.com/api/revalidate`
+## Client Optimization
 
-**Events**: `create`, `update`, `delete`
+The setup uses separate Sanity clients for optimal performance:
 
-**Filter**: `_type in ["header", "footer", "configuration", "category"]`
+- **`publishedClient`**: No token, CDN enabled - Used for published content fetches
+- **`draftClient`**: With token, CDN disabled - Used only when `draftMode` is true
+- **Benefit**: Published content uses Sanity's global CDN for faster response times
 
-**HTTP Method**: POST
+This ensures:
 
-**Secret**: Same as `SANITY_REVALIDATE_SECRET` environment variable
+- ✅ **CDN caching** for all published content
+- ✅ **No unnecessary API calls** for public data
+- ✅ **Proper draft access** only when needed
 
-## Benefits of Path-based Revalidation
+## How It Works
 
-1. **Surgical Updates**: Only the specific page is revalidated
-2. **Longer Cache Times**: Can safely use longer cache times since individual pages can be revalidated on-demand
-3. **Reduced Sanity Requests**: Less frequent cache invalidation means fewer API calls
-4. **Better Performance**: More granular control over what gets revalidated
+### 1. Tagged Data Fetches
 
-## Testing
-
-### Local Development with Ngrok
-
-1. Install ngrok: `npm install -g ngrok`
-2. Start your Next.js app: `pnpm dev`
-3. In another terminal: `ngrok http 3000`
-4. Use the ngrok URL in your webhook configuration
-5. Test by updating content in Sanity Studio
-
-### Production Testing
-
-1. Update a blog post in Sanity Studio
-2. Check the webhook logs in your deployment platform
-3. Verify the specific page is revalidated (cache MISS on next request)
-4. Confirm other pages remain cached (cache HIT)
-
-## Troubleshooting
-
-### Stale Data Issues
-
-If you see stale data after revalidation, add a delay to the webhook:
+Use the `sanityFetchTagged` function in your pages/components:
 
 ```typescript
-const { isValidSignature, body } = await parseBody<WebhookPayload>(
-  req,
-  process.env.SANITY_REVALIDATE_SECRET,
-  true // Add delay to wait for CDN update
-);
+import { sanityFetchTagged } from '@/utilities/sanity';
+
+const post = await sanityFetchTagged<ResolvedBlogPost>({
+  query: `*[_type == "post" && slug.current == $slug && defined(title)][0] { ... }`,
+  params: { slug },
+  tags: ['post', `post:${slug}`], // Tags for revalidation
+});
 ```
 
-### Webhook Not Firing
+### 2. Revalidation Endpoint
 
-1. Check webhook URL is correct
-2. Verify secret matches environment variable
-3. Ensure webhook is enabled for the correct events
-4. Check webhook logs in Sanity project dashboard
+The `/api/revalidate` endpoint handles Sanity webhooks and:
 
-### Cache Not Clearing
+- Validates the webhook signature
+- Revalidates cache tags based on content type and slug
+- Revalidates specific paths for immediate updates
 
-1. Verify the path being revalidated matches the actual route
-2. Check that `revalidatePath` is being called with the correct path
-3. Ensure the page is using cached data (not `cache: 'no-store'`)
+### 3. Sanity Webhook Configuration
+
+Configure a webhook in your Sanity project with:
+
+- **URL**: `https://your-domain.com/api/revalidate`
+- **Secret**: Your `SANITY_WEBHOOK_SECRET`
+- **Filter**: `_type in ["post", "homePage", "aboutPage", "coachingPage", "contactPage", "approachPage", "page", "header", "footer", "configuration", "category"]`
+- **Projection**: `{"_type": _type, "slug": slug.current, "path": select(_type == "post" => "/blog/" + slug.current, _type == "homePage" => "/", _type == "aboutPage" => "/over-mij", _type == "coachingPage" => "/coaching", _type == "contactPage" => "/contact", _type == "approachPage" => "/aanpak", _type == "page" => "/" + slug.current, _type in ["header", "footer", "configuration"] => null)}`
+- **Events**: create, update, delete, unpublish
+
+## Content Types Handled
+
+### Posts & Blog
+
+- **Posts**: `/blog/[slug]` - Tagged with `['post', 'posts', 'blog', 'post:${slug}']`
+- **Categories**: `/blog/categorie/[slug]` - Tagged with `['category', 'categories', 'category:${slug}']`
+- **Blog listing**: `/blog` - Tagged with `['post', 'posts', 'blog']`
+
+### Pages
+
+- **Home**: `/` - Tagged with `['homePage', 'homepage', 'home']`
+- **About**: `/over-mij` - Tagged with `['aboutPage', 'aboutpage']`
+- **Coaching**: `/coaching` - Tagged with `['coachingPage', 'coachingpage']`
+- **Contact**: `/contact` - Tagged with `['contactPage', 'contactpage']`
+- **Approach**: `/aanpak` - Tagged with `['approachPage', 'approachpage']`
+- **Generic pages**: `/${slug}` - Tagged with `['page', 'pages']`
+
+### Global Content
+
+- **Header**: Affects all pages - Tagged with `['header', 'navigation', 'global']`
+- **Footer**: Affects all pages - Tagged with `['footer', 'global']`
+- **Site Settings**: Affects all pages - Tagged with `['configuration', 'settings', 'global']`
+
+## Benefits
+
+- **No Redeploys**: Content updates happen instantly via webhooks
+- **Targeted Revalidation**: Only affected pages are revalidated
+- **Better Performance**: Static generation with on-demand updates
+- **Granular Control**: Tag-based revalidation for different content types
+- **Comprehensive Coverage**: Handles all content types in your project
+
+## When to Use Full Redeploy
+
+Only use a Vercel Deploy Hook if:
+
+- You precompute routes in `generateStaticParams` and don't revalidate them
+- You change code, environment variables, or schema affecting build output
+- You need a complete cache flush
+
+## Testing the Setup
+
+1. Update any content in Sanity Studio (post, page, or global content)
+2. Check that the webhook triggers (check Vercel function logs)
+3. Verify that only the specific content and affected pages are revalidated
+4. Confirm the page shows updated content immediately
+
+## Example Revalidation Behavior
+
+**When a blog post is updated:**
+
+- Revalidates tag: `post:${slug}`
+- Revalidates path: `/blog/${slug}`
+- Only that specific blog post page is updated
+
+**When global content (header/footer) is updated:**
+
+- Revalidates tags: `['header', 'footer', 'configuration', 'global', 'navigation', 'settings']`
+- Revalidates path: `/`
+- All pages that use global content are updated
+
+**When a page is updated:**
+
+- Revalidates tag: `${_type}` (e.g., `homePage`)
+- Revalidates path: `/${corresponding-path}`
+- Only that specific page is updated
