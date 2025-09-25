@@ -1,8 +1,15 @@
 import { client } from '@/utilities/sanity';
 import { defineEnableDraftMode } from 'next-sanity/draft-mode';
 
-export const dynamic = 'force-dynamic'; // ensure no caching
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+
+const token = process.env.SANITY_VIEWER_TOKEN ?? process.env.SANITY_API_TOKEN;
+if (!token) {
+  throw new Error(
+    'Missing SANITY_VIEWER_TOKEN (or SANITY_API_TOKEN) for preview'
+  );
+}
 
 /**
  * Enable draft mode for visual editing
@@ -17,5 +24,6 @@ export const revalidate = 0;
 export const { GET } = defineEnableDraftMode({
   client: client.withConfig({
     token: process.env.SANITY_VIEWER_TOKEN || process.env.SANITY_API_TOKEN,
+    useCdn: false,
   }),
 });
