@@ -117,9 +117,8 @@ export const SectionBlog = ({
           {description && (
             <Text
               testid="section-description"
-              variant="muted"
-              textAlign="center"
-              maxWidth="2xl"
+              variant="large"
+              className="max-w-2xl mx-auto"
             >
               {description}
             </Text>
