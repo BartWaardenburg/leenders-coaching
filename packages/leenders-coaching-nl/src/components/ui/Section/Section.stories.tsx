@@ -105,6 +105,19 @@ export const WithBorder: Story = {
   },
 };
 
+export const WithBorderNoBackground: Story = {
+  args: {
+    children: 'Sectie met rand maar geen achtergrond',
+    border: true,
+  },
+  play: async ({ canvas }) => {
+    await expect(
+      canvas.getByText('Sectie met rand maar geen achtergrond')
+    ).toBeVisible();
+    await waitForMotionAnimations({ canvas });
+  },
+};
+
 export const NoPadding: Story = {
   args: {
     children: 'Sectie zonder padding',

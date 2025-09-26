@@ -109,7 +109,10 @@ export const Section = ({
         !noPadding && 'py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24',
         'transition-theme bg-background',
         background && backgroundStyles[background],
-        border && background && ['border-y', borderStyles[background]],
+        border &&
+          (background
+            ? ['border-y', borderStyles[background]]
+            : 'border-y border-border'),
         '@container',
         className
       )}

@@ -82,7 +82,7 @@ export const draftClient = createClient({
   apiVersion:
     process.env.NEXT_PUBLIC_SANITY_API_VERSION || FALLBACK_CONFIG.apiVersion,
   useCdn: false,
-  token: process.env.SANITY_API_TOKEN,
+  token: process.env.SANITY_VIEWER_TOKEN || process.env.SANITY_API_TOKEN,
   stega: {
     studioUrl: process.env.NEXT_PUBLIC_SANITY_STUDIO_URL,
   },
@@ -148,6 +148,10 @@ export async function sanityFetchDraft<T>(
 ): Promise<T> {
   return draftClient.fetch<T>(query, params, {
     cache: 'no-store',
-    perspective: 'drafts',
+    perspective: 'previewDrafts',
   });
 }
+
+/* Note: The executeQuery function in groq-queries/common.ts already handles
+ * draft mode switching using the existing publishedClient and draftClient.
+ * Additional client functions are not needed. */
