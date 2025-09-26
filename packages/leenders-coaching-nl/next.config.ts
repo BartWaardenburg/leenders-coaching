@@ -83,8 +83,8 @@ const nextConfig: NextConfig = {
           {
             key: 'Content-Security-Policy',
             value: isDevelopment
-              ? `frame-ancestors 'self' http://localhost:* https://*.sanity.studio ${studioUrl} https://leenders-coaching.nl`
-              : `frame-ancestors 'self' https://*.sanity.studio ${studioUrl} https://leenders-coaching.nl`,
+              ? `default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://*.cloudflare.com; frame-src https://challenges.cloudflare.com https://*.cloudflare.com; style-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; connect-src 'self' https://challenges.cloudflare.com https://*.cloudflare.com; img-src 'self' data: https:; frame-ancestors 'self' http://localhost:* https://*.sanity.studio ${studioUrl} https://leenders-coaching.nl`
+              : `default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://*.cloudflare.com; frame-src https://challenges.cloudflare.com https://*.cloudflare.com; style-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; connect-src 'self' https://challenges.cloudflare.com https://*.cloudflare.com; img-src 'self' data: https:; frame-ancestors 'self' https://*.sanity.studio ${studioUrl} https://leenders-coaching.nl`,
           },
           {
             key: 'X-Content-Type-Options',
