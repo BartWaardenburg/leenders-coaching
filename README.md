@@ -3,9 +3,9 @@
 <div align="center">
 
 [![Codecov](https://codecov.io/gh/bartwaardenburg/leenders-coaching/branch/main/graph/badge.svg)](https://codecov.io/gh/bartwaardenburg/leenders-coaching)
-[![Next.js](https://img.shields.io/badge/Next.js-15.5.2-black?style=flat&logo=next.js)](https://nextjs.org/)
-[![Sanity](https://img.shields.io/badge/Sanity-4.6.1-FF3E00?style=flat&logo=sanity)](https://sanity.io/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1.12-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-15.5.4-black?style=flat&logo=next.js)](https://nextjs.org/)
+[![Sanity](https://img.shields.io/badge/Sanity-4.10.0-FF3E00?style=flat&logo=sanity)](https://sanity.io/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1.13-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
 
 _A modern, high-performance coaching website built with cutting-edge web technologies_
@@ -135,28 +135,28 @@ graph TB
 
 <!-- Tech Stack Icons -->
 <div align="center">
-<img src="https://img.shields.io/badge/Next.js-15.5.2-black?style=for-the-badge&logo=next.js" alt="Next.js" />
+<img src="https://img.shields.io/badge/Next.js-15.5.4-black?style=for-the-badge&logo=next.js" alt="Next.js" />
 <img src="https://img.shields.io/badge/React-19.1.1-61DAFB?style=for-the-badge&logo=react" alt="React" />
 <img src="https://img.shields.io/badge/TypeScript-5.9.2-3178C6?style=for-the-badge&logo=typescript" alt="TypeScript" />
-<img src="https://img.shields.io/badge/Tailwind-4.1.12-38B2AC?style=for-the-badge&logo=tailwind-css" alt="Tailwind CSS" />
+<img src="https://img.shields.io/badge/Tailwind-4.1.13-38B2AC?style=for-the-badge&logo=tailwind-css" alt="Tailwind CSS" />
 </div>
 
 | Technology          | Version  | Purpose                         |
 | ------------------- | -------- | ------------------------------- |
-| **Next.js**         | 15.5.2   | React Framework with App Router |
+| **Next.js**         | 15.5.4   | React Framework with App Router |
 | **React**           | 19.1.1   | UI Library                      |
 | **TypeScript**      | 5.9.2    | Type Safety                     |
-| **Tailwind CSS**    | 4.1.12   | Utility-First CSS Framework     |
-| **Motion**          | 12.23.12 | Animation Library               |
-| **React Hook Form** | 7.62.0   | Form Management                 |
-| **Zod**             | 4.1.5    | Schema Validation               |
+| **Tailwind CSS**    | 4.1.13   | Utility-First CSS Framework     |
+| **Motion**          | 12.23.21 | Animation Library               |
+| **React Hook Form** | 7.63.0   | Form Management                 |
+| **Zod**             | 4.1.11   | Schema Validation               |
 
 ### 🗄️ Backend & CMS
 
 | Technology | Version | Purpose              |
 | ---------- | ------- | -------------------- |
-| **Sanity** | 4.6.1   | Headless CMS         |
-| **Resend** | 6.0.2   | Email Service        |
+| **Sanity** | 4.10.0  | Headless CMS         |
+| **Resend** | 6.1.0   | Email Service        |
 | **Vercel** | -       | Hosting & Deployment |
 
 ### 🧪 Testing & Quality
@@ -164,7 +164,7 @@ graph TB
 <!-- Testing Badges -->
 <div align="center">
 <img src="https://img.shields.io/badge/Vitest-3.2.4-6E9F18?style=for-the-badge&logo=vitest" alt="Vitest" />
-<img src="https://img.shields.io/badge/Storybook-9.1.4-FF4785?style=for-the-badge&logo=storybook" alt="Storybook" />
+<img src="https://img.shields.io/badge/Storybook-9.1.5-FF4785?style=for-the-badge&logo=storybook" alt="Storybook" />
 <img src="https://img.shields.io/badge/Chromatic-13.1.4-FF4785?style=for-the-badge&logo=chromatic" alt="Chromatic" />
 <img src="https://img.shields.io/badge/Lighthouse-0.15.1-F44B21?style=for-the-badge&logo=lighthouse" alt="Lighthouse" />
 </div>
@@ -173,7 +173,7 @@ graph TB
 | ------------------- | ------- | ------------------------- |
 | **Vitest**          | 3.2.4   | Unit Testing              |
 | **Testing Library** | 16.3.0  | Component Testing         |
-| **Storybook**       | 9.1.4   | Component Development     |
+| **Storybook**       | 9.1.5   | Component Development     |
 | **Chromatic**       | 13.1.4  | Visual Regression Testing |
 | **Lighthouse CI**   | 0.15.1  | Performance Testing       |
 | **Playwright**      | -       | E2E Testing               |
@@ -183,8 +183,8 @@ graph TB
 
 | Technology     | Version | Purpose                |
 | -------------- | ------- | ---------------------- |
-| **pnpm**       | 10.15.1 | Package Manager        |
-| **ESLint**     | 9.34.0  | Code Linting           |
+| **pnpm**       | 10.17.1 | Package Manager        |
+| **ESLint**     | 9.35.0  | Code Linting           |
 | **Prettier**   | 3.6.2   | Code Formatting        |
 | **Husky**      | -       | Git Hooks              |
 | **Commitlint** | -       | Commit Message Linting |
@@ -196,7 +196,7 @@ graph TB
 ### 📋 Prerequisites
 
 - **Node.js** 22.0.0 or higher
-- **pnpm** 10.15.1 or higher
+- **pnpm** 10.17.1 or higher
 - **Sanity Account** (for CMS functionality)
 - **Resend Account** (for email functionality)
 
@@ -289,20 +289,13 @@ graph TB
 
 ### 🗄️ Studio Commands (`packages/studio-leenders-coaching-nl`)
 
-| Command                          | Description                            |
-| -------------------------------- | -------------------------------------- |
-| `pnpm dev`                       | Start Sanity Studio development server |
-| `pnpm build`                     | Build Sanity Studio                    |
-| `pnpm deploy`                    | Deploy to Sanity                       |
-| `pnpm update-types`              | Update TypeScript types from schema    |
-| `pnpm validate:schema`           | Validate Sanity schema                 |
-| `pnpm seed:all`                  | Seed all pages with content            |
-| `pnpm seed:create-home-page`     | Create home page content               |
-| `pnpm seed:create-about-page`    | Create about page content              |
-| `pnpm seed:create-coaching-page` | Create coaching page content           |
-| `pnpm seed:create-approach-page` | Create approach page content           |
-| `pnpm seed:create-contact-page`  | Create contact page content            |
-| `pnpm seed:create-blog-page`     | Create blog page content               |
+| Command                | Description                            |
+| ---------------------- | -------------------------------------- |
+| `pnpm dev`             | Start Sanity Studio development server |
+| `pnpm build`           | Build Sanity Studio                    |
+| `pnpm deploy`          | Deploy to Sanity                       |
+| `pnpm update-types`    | Update TypeScript types from schema    |
+| `pnpm validate:schema` | Validate Sanity schema                 |
 
 ---
 
@@ -594,23 +587,6 @@ schemaTypes/
 ├── sections/         # Reusable section schemas
 ├── objects/          # Object definitions
 └── configuration/    # Site configuration
-```
-
-#### 🌱 Content Seeding
-
-Automated content seeding scripts for rapid setup:
-
-```bash
-# Seed all pages
-pnpm seed:all
-
-# Seed specific pages
-pnpm seed:create-home-page
-pnpm seed:create-about-page
-pnpm seed:create-coaching-page
-pnpm seed:create-approach-page
-pnpm seed:create-contact-page
-pnpm seed:create-blog-page
 ```
 
 #### 🔄 Type Generation
