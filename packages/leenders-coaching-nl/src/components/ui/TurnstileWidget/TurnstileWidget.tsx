@@ -54,8 +54,9 @@ export default function TurnstileWidget({ onToken, cdata, className }: Props) {
   return (
     <>
       <Script
+        id="cf-turnstile"
         src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
         onReady={() => {
           if (ref.current && window.turnstile && !widgetId.current) {
             widgetId.current = window.turnstile.render(ref.current, {
