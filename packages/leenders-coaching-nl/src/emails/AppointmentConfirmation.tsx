@@ -163,10 +163,10 @@ export const AppointmentConfirmation = ({
             <Text style={text}>Beste {name},</Text>
 
             <Text style={text}>
-              Bedankt voor je aanvraag—fijn dat je deze stap zet. Ik heb je
-              (kennismakings)gesprek ontvangen. Binnen 24 uur hoor je van mij om
-              de afspraak te bevestigen of een passend alternatief voor te
-              stellen.
+              Bedankt voor je verzoek tot een (kennismakings)gesprek—fijn dat je
+              deze stap zet. Ik heb je verzoek ontvangen. Binnen 24 uur hoor je
+              van mij om de afspraak te bevestigen of een passend alternatief
+              voor te stellen.
             </Text>
 
             <Section style={appointmentBox}>
@@ -194,7 +194,7 @@ export const AppointmentConfirmation = ({
             </Text>
 
             <Text style={text}>
-              • Ik check de agenda en reageer binnen 24 uur
+              • Ik check mijn agenda en reageer binnen 24 uur
               <br />
               • Ik bevestig je afspraak of doe een alternatief voorstel
               <br />• Je ontvangt een bevestiging met alle details
