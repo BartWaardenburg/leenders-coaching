@@ -16,7 +16,6 @@ interface TurnstileOptions {
 declare global {
   interface Window {
     turnstile?: {
-      ready: (cb: () => void) => void;
       render: (el: HTMLElement | string, opts: TurnstileOptions) => string;
       reset: (id?: string) => void;
       remove: (id: string) => void;
@@ -52,11 +51,25 @@ export default function TurnstileWidget({ onToken, cdata, className }: Props) {
       });
     };
 
-    if (window.turnstile?.ready) window.turnstile.ready(renderOnce);
-    else {
-      const t = setInterval(renderOnce, 150);
-      return () => clearInterval(t);
-    }
+    // Wait for turnstile to be available, then render once
+    const checkAndRender = () => {
+      if (window.turnstile) {
+        renderOnce();
+      } else {
+        // Fallback: check every 150ms until turnstile is available
+        const t = setInterval(() => {
+          if (window.turnstile) {
+            clearInterval(t);
+            renderOnce();
+          }
+        }, 150);
+        return () => clearInterval(t);
+      }
+    };
+
+    // Start checking immediately
+    const timeout = setTimeout(checkAndRender, 0);
+    return () => clearTimeout(timeout);
   }, [cdata, onToken]);
 
   // Optional cleanup when unmounting:
@@ -72,10 +85,7 @@ export default function TurnstileWidget({ onToken, cdata, className }: Props) {
 
   return (
     <>
-      <Script
-        src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
-        defer
-      />
+      <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" />
       <div ref={ref} className={className} />
     </>
   );

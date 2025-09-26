@@ -41,6 +41,8 @@ export default defineConfig({
         'https://www.leenders-coaching.nl',
         'https://leenders-coaching.nl',
         'http://localhost:*',
+        'https://studio.leenders-coaching.nl',
+        'https://*.sanity.studio',
       ],
     }),
   ],

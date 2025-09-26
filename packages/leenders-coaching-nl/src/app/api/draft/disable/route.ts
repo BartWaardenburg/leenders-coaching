@@ -15,8 +15,11 @@ export const GET = async (request: NextRequest) => {
   const secret =
     searchParams.get('sanity-preview-secret') ?? searchParams.get('secret');
 
+  const previewSecret = process.env.SANITY_PREVIEW_SECRET;
+  const revalidateSecret = process.env.SANITY_REVALIDATE_SECRET;
+
   /* Verify the secret token to prevent unauthorized access */
-  if (secret !== process.env.SANITY_REVALIDATE_SECRET) {
+  if (secret !== previewSecret && secret !== revalidateSecret) {
     return new Response('Invalid token', { status: 401 });
   }
 

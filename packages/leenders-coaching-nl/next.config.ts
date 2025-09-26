@@ -45,6 +45,11 @@ const nextConfig: NextConfig = {
    * @returns {Promise<Array<{source: string, headers: Array<{key: string, value: string}>}>>}
    */
   headers: async () => {
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    const studioUrl =
+      process.env.NEXT_PUBLIC_SANITY_STUDIO_URL ||
+      'https://studio.leenders-coaching.nl';
+
     return [
       {
         source: '/api/og',
@@ -56,14 +61,50 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        source: '/api/draft/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+          {
+            key: 'Pragma',
+            value: 'no-cache',
+          },
+          {
+            key: 'Expires',
+            value: '0',
+          },
+        ],
+      },
+      {
         source: '/:path*',
         headers: [
           {
             key: 'Content-Security-Policy',
-            value:
-              process.env.NODE_ENV === 'development'
-                ? "frame-ancestors 'self' http://localhost:* https://*.sanity.studio https://studio.leenders-coaching.nl"
-                : "frame-ancestors 'self' https://*.sanity.studio https://studio.leenders-coaching.nl",
+            value: isDevelopment
+              ? `frame-ancestors 'self' http://localhost:* https://*.sanity.studio ${studioUrl} https://leenders-coaching.nl`
+              : `frame-ancestors 'self' https://*.sanity.studio ${studioUrl} https://leenders-coaching.nl`,
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'X-Sanity-CORS',
+            value: 'true',
           },
         ],
       },
