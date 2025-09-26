@@ -100,6 +100,8 @@ runs:
         else
           echo "📦 Setting up browsers for regular runner..."
           echo "container_mode=false" >> $GITHUB_OUTPUT
+          # pick a stable, writable cache location
+          echo "PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright" >> "$GITHUB_ENV"
         fi
 
     - name: Cache Playwright browsers
@@ -107,7 +109,7 @@ runs:
       id: cache-playwright
       uses: actions/cache@v4
       with:
-        path: ${{ github.workspace }}/.cache/ms-playwright
+        path: $HOME/.cache/ms-playwright
         key: >-
           playwright-${{ runner.os }}-
           v1-${{ hashFiles('packages/leenders-coaching-nl/package.json') }}-
@@ -118,27 +120,31 @@ runs:
     - name: Install Playwright browsers + Linux deps (non-container only)
       if: ${{ runner.os == 'Linux' && steps.browser-check.outputs.container_mode == 'false' }}
       shell: bash
-      env:
-        PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/ms-playwright
       run: |
         set -eux
         sudo apt-get update
-        pnpm dlx playwright install --with-deps chromium
+        pnpm exec playwright install --with-deps chromium
         echo "Installed browsers:"
         find "$PLAYWRIGHT_BROWSERS_PATH" -maxdepth 3 -type f -name 'chrome' | xargs -r ls -l
+
+    - name: Set PW download skip flag (only when prebaked)
+      if: ${{ steps.browser-check.outputs.container_mode == 'true' }}
+      shell: bash
+      run: echo "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1" >> "$GITHUB_ENV"
 
     - name: Assert PW path
       shell: bash
       run: |
         : "${PLAYWRIGHT_BROWSERS_PATH:?missing}"
         test -w "$(dirname "$PLAYWRIGHT_BROWSERS_PATH")"
+        ls -la "$PLAYWRIGHT_BROWSERS_PATH" || true
 
     - name: Run comprehensive tests
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       env:
         PLAYWRIGHT_BROWSERS_PATH: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
-        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: ${{ env.PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD }}
       run: pnpm run ${{ inputs.test-command }}
 
     - name: Upload coverage to Codecov

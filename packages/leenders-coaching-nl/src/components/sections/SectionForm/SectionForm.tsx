@@ -95,7 +95,7 @@ export const SectionForm = ({
       reset();
       if (showToast) {
         showToast(
-          'Bedankt voor je bericht! We nemen zo snel mogelijk contact met je op.',
+          'Bedankt voor je bericht! Ik neem zo snel mogelijk contact met je op.',
           {
             variant: 'green',
             duration: 5000,

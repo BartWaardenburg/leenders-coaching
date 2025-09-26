@@ -526,7 +526,7 @@ export const mockFormSection = {
   title: 'Interne Form Titel',
   displayTitle: 'Neem Contact Op',
   description:
-    'Vul het formulier in en we nemen zo snel mogelijk contact met je op. We beantwoorden graag al je vragen over coaching en onze diensten.',
+    'Vul het formulier in en ik neem zo snel mogelijk contact met je op. Ik beantwoord graag al je vragen over coaching en mijn diensten.',
   background: 'white',
   border: false,
   submitLabel: 'Verstuur Bericht',

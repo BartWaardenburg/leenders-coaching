@@ -36,6 +36,18 @@ vi.mock('resend', () => ({
   })),
 }));
 
+/*
+ * Mock the Turnstile utility.
+ */
+vi.mock('@/utilities/turnstile', () => ({
+  validateTurnstile: vi.fn().mockResolvedValue({
+    success: true,
+    hostname: 'localhost',
+    cdata: 'contact',
+  }),
+  clientIp: vi.fn().mockReturnValue('127.0.0.1'),
+}));
+
 /**
  * Test suite for the contact API route.
  * Covers valid submissions, missing fields, invalid JSON, and error handling.
@@ -64,6 +76,8 @@ describe('POST /api/contact', () => {
       phone: '+31 6 12345678',
       message: 'Hallo, ik ben geïnteresseerd in jullie coaching diensten.',
       subject: 'Vraag over coaching sessies',
+      turnstileToken: 'test-turnstile-token',
+      startedAt: Date.now() - 2000, // 2 seconds ago, meets minimum 1.2s requirement
     };
 
     const request = new NextRequest('http://localhost:3000/api/contact', {

@@ -128,7 +128,7 @@ export const mockAlertData = {
     type: 'success' as const,
     title: 'Succesvol Verzonden',
     message:
-      'Je bericht is succesvol verzonden. We nemen zo snel mogelijk contact met je op.',
+      'Je bericht is succesvol verzonden. Ik neem zo snel mogelijk contact met je op.',
     dismissible: true,
   },
   error: {
@@ -216,7 +216,7 @@ export const mockModalData = {
   contact: {
     title: 'Neem Contact Op',
     description:
-      'Vul het formulier in en we nemen zo snel mogelijk contact met je op.',
+      'Vul het formulier in en ik neem zo snel mogelijk contact met je op.',
     content: 'Contact formulier content hier...',
   },
   confirmation: {

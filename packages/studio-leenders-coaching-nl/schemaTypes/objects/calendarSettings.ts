@@ -136,7 +136,7 @@ export const calendarSettings = defineType({
           title: 'Succesbericht',
           type: 'text',
           initialValue:
-            'Bedankt voor je afspraak aanvraag! We nemen zo snel mogelijk contact met je op.',
+            'Bedankt voor je verzoek tot een afspraak! Ik neem zo snel mogelijk contact met je op.',
         },
       ],
       hidden: ({ parent }) => !parent?.bookingEnabled,
