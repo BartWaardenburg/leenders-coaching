@@ -9,6 +9,7 @@ interface TurnstileOptions {
   callback?: (token: string) => void;
   'error-callback'?: () => void;
   'expired-callback'?: () => void;
+  'timeout-callback'?: () => void;
   theme?: 'light' | 'dark' | 'auto';
   size?: 'normal' | 'compact';
 }
@@ -39,39 +40,6 @@ export default function TurnstileWidget({ onToken, cdata, className }: Props) {
   const ref = useRef<HTMLDivElement | null>(null);
   const widgetId = useRef<string | undefined>(undefined);
 
-  useEffect(() => {
-    const renderOnce = () => {
-      if (!ref.current || !window.turnstile || widgetId.current) return;
-      widgetId.current = window.turnstile.render(ref.current, {
-        sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
-        cData: cdata,
-        callback: onToken,
-        'error-callback': () => onToken(''),
-        'expired-callback': () => onToken(''),
-      });
-    };
-
-    // Wait for turnstile to be available, then render once
-    const checkAndRender = () => {
-      if (window.turnstile) {
-        renderOnce();
-      } else {
-        // Fallback: check every 150ms until turnstile is available
-        const t = setInterval(() => {
-          if (window.turnstile) {
-            clearInterval(t);
-            renderOnce();
-          }
-        }, 150);
-        return () => clearInterval(t);
-      }
-    };
-
-    // Start checking immediately
-    const timeout = setTimeout(checkAndRender, 0);
-    return () => clearTimeout(timeout);
-  }, [cdata, onToken]);
-
   // Optional cleanup when unmounting:
   useEffect(() => {
     return () => {
@@ -87,7 +55,22 @@ export default function TurnstileWidget({ onToken, cdata, className }: Props) {
     <>
       <Script
         src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
-        strategy="beforeInteractive"
+        strategy="afterInteractive"
+        onReady={() => {
+          if (ref.current && window.turnstile && !widgetId.current) {
+            widgetId.current = window.turnstile.render(ref.current, {
+              sitekey:
+                process.env.NODE_ENV === 'development'
+                  ? '1x00000000000000000000AA'
+                  : process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
+              cData: cdata,
+              callback: onToken,
+              'error-callback': () => onToken(''),
+              'expired-callback': () => onToken(''),
+              'timeout-callback': () => onToken(''),
+            });
+          }
+        }}
       />
       <div ref={ref} className={className} />
     </>

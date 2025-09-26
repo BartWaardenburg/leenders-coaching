@@ -37,7 +37,10 @@ export async function validateTurnstile(
   'error-codes'?: string[];
 }> {
   const body = new URLSearchParams({
-    secret: process.env.TURNSTILE_SECRET_KEY!,
+    secret:
+      process.env.NODE_ENV === 'development'
+        ? '2x0000000000000000000000000000000AA'
+        : process.env.TURNSTILE_SECRET_KEY!,
     response: token,
   });
 

@@ -61,6 +61,7 @@ export const metadata: Metadata = {
   },
   other: {
     preconnect: 'https://cdn.sanity.io',
+    dns_prefetch: 'https://challenges.cloudflare.com',
   },
 };
 
