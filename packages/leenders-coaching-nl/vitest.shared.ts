@@ -108,6 +108,7 @@ export const jsdomSetup = {
 /**
  * Browser environment setup for Storybook tests.
  * Uses Playwright for browser-based testing.
+ * Optimized for container usage with prebaked browsers.
  */
 export const browserSetup = {
   browser: {
@@ -117,6 +118,8 @@ export const browserSetup = {
     instances: [{ browser: 'chromium' }],
     // Prefer regular chromium over headless shell if available
     useHeadlessShell: false,
+    // Container-optimized settings
+    isolate: false, // Better performance in containers
   },
   setupFiles: ['.storybook/vitest.setup.ts'],
 };

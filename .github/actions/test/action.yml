@@ -83,12 +83,12 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: pnpm run ${{ inputs.quality-command }}
 
-    - name: Check Playwright environment and setup browsers
-      id: browser-check
+    - name: Verify Playwright container setup
       shell: bash
       run: |
-        echo "🔍 Checking Playwright environment..."
+        echo "🔍 Verifying Playwright container environment..."
         echo "PLAYWRIGHT_BROWSERS_PATH: ${PLAYWRIGHT_BROWSERS_PATH:-not set}"
+        echo "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: ${PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD:-not set}"
 
         if [[ "${PLAYWRIGHT_BROWSERS_PATH:-}" == "/ms-playwright" ]]; then
           echo "✅ Using prebaked browsers at $PLAYWRIGHT_BROWSERS_PATH"
@@ -96,55 +96,23 @@ runs:
           ls -la "$PLAYWRIGHT_BROWSERS_PATH" || true
           echo "🔍 Available browsers:"
           find "$PLAYWRIGHT_BROWSERS_PATH" -maxdepth 3 -type f -name 'chrome' -o -name 'chromium' | head -5 || true
-          echo "container_mode=true" >> $GITHUB_OUTPUT
+          
+          # Verify browser executables are accessible
+          if ! find "$PLAYWRIGHT_BROWSERS_PATH" -maxdepth 3 -type f -name 'chrome' -o -name 'chromium' | head -1 | xargs -I {} test -x {}; then
+            echo "❌ Browser executables are not accessible"
+            exit 1
+          fi
+          echo "✅ Browser executables are accessible"
         else
-          echo "📦 Setting up browsers for regular runner..."
-          echo "container_mode=false" >> $GITHUB_OUTPUT
-          # pick a stable, writable cache location
-          echo "PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright" >> "$GITHUB_ENV"
+          echo "❌ Expected PLAYWRIGHT_BROWSERS_PATH to be /ms-playwright in container"
+          echo "Current value: ${PLAYWRIGHT_BROWSERS_PATH:-not set}"
+          echo "This action is designed to run in the Playwright container only."
+          exit 1
         fi
-
-    - name: Cache Playwright browsers
-      if: ${{ steps.browser-check.outputs.container_mode == 'false' }}
-      id: cache-playwright
-      uses: actions/cache@v4
-      with:
-        path: $HOME/.cache/ms-playwright
-        key: >-
-          playwright-${{ runner.os }}-
-          v1-${{ hashFiles('packages/leenders-coaching-nl/package.json') }}-
-          lock-${{ hashFiles('pnpm-lock.yaml') }}
-        restore-keys: |
-          playwright-${{ runner.os }}-
-
-    - name: Install Playwright browsers + Linux deps (non-container only)
-      if: ${{ runner.os == 'Linux' && steps.browser-check.outputs.container_mode == 'false' }}
-      shell: bash
-      run: |
-        set -eux
-        sudo apt-get update
-        pnpm exec playwright install --with-deps chromium
-        echo "Installed browsers:"
-        find "$PLAYWRIGHT_BROWSERS_PATH" -maxdepth 3 -type f -name 'chrome' | xargs -r ls -l
-
-    - name: Set PW download skip flag (only when prebaked)
-      if: ${{ steps.browser-check.outputs.container_mode == 'true' }}
-      shell: bash
-      run: echo "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1" >> "$GITHUB_ENV"
-
-    - name: Assert PW path
-      shell: bash
-      run: |
-        : "${PLAYWRIGHT_BROWSERS_PATH:?missing}"
-        test -w "$(dirname "$PLAYWRIGHT_BROWSERS_PATH")"
-        ls -la "$PLAYWRIGHT_BROWSERS_PATH" || true
 
     - name: Run comprehensive tests
       shell: bash
       working-directory: ${{ inputs.working-directory }}
-      env:
-        PLAYWRIGHT_BROWSERS_PATH: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
-        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: ${{ env.PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD }}
       run: pnpm run ${{ inputs.test-command }}
 
     - name: Upload coverage to Codecov
