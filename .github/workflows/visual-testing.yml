@@ -158,7 +158,7 @@ jobs:
     name: 'Accessibility Testing'
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.55.1-jammy
+      image: mcr.microsoft.com/playwright:v1.55.0-jammy
       options: --ipc=host
     timeout-minutes: 15
     needs: build-storybook
