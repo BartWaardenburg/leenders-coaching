@@ -85,7 +85,10 @@ export default function TurnstileWidget({ onToken, cdata, className }: Props) {
 
   return (
     <>
-      <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" />
+      <Script
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+        strategy="beforeInteractive"
+      />
       <div ref={ref} className={className} />
     </>
   );
