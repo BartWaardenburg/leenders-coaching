@@ -684,6 +684,7 @@ jobs:
       SANITY_VIEWER_TOKEN: ${{ secrets.SANITY_VIEWER_TOKEN }}
       SANITY_REVALIDATE_SECRET: ${{ secrets.SANITY_REVALIDATE_SECRET }}
       SANITY_WEBHOOK_SECRET: ${{ secrets.SANITY_WEBHOOK_SECRET }}
+      SANITY_PREVIEW_SECRET: ${{ secrets.SANITY_PREVIEW_SECRET }}
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
     steps:
       - uses: actions/checkout@v5
