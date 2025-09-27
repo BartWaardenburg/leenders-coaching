@@ -128,7 +128,7 @@ jobs:
       NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
       NEXT_PUBLIC_STUDIO_URL: ${{ secrets.NEXT_PUBLIC_STUDIO_URL }}
       SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
-      SANITY_AUTH_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
+      SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
       SANITY_VIEWER_TOKEN: ${{ secrets.SANITY_VIEWER_TOKEN }}
       SANITY_REVALIDATE_SECRET: ${{ secrets.SANITY_REVALIDATE_SECRET }}
       SANITY_WEBHOOK_SECRET: ${{ secrets.SANITY_WEBHOOK_SECRET }}
@@ -157,7 +157,7 @@ jobs:
               "NEXT_PUBLIC_SANITY_API_VERSION": "${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}",
               "NEXT_PUBLIC_STUDIO_URL": "${{ secrets.NEXT_PUBLIC_STUDIO_URL }}",
               "SANITY_API_TOKEN": "${{ secrets.SANITY_API_TOKEN }}",
-              "SANITY_AUTH_TOKEN": "${{ secrets.SANITY_API_TOKEN }}",
+              "SANITY_AUTH_TOKEN": "${{ secrets.SANITY_AUTH_TOKEN }}",
               "SANITY_VIEWER_TOKEN": "${{ secrets.SANITY_VIEWER_TOKEN }}",
               "RESEND_API_KEY": "${{ secrets.RESEND_API_KEY }}"
             }

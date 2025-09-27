@@ -229,6 +229,7 @@ graph TB
    NEXT_PUBLIC_SANITY_DATASET=production
    NEXT_PUBLIC_SANITY_API_VERSION=2024-02-14
    SANITY_API_TOKEN=your_sanity_api_token
+   SANITY_AUTH_TOKEN=your_sanity_auth_token
    SANITY_REVALIDATE_SECRET=your_random_secret_string
    SANITY_VIEWER_TOKEN=your_sanity_viewer_token
 
