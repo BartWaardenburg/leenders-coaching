@@ -82,6 +82,21 @@ export const generateBlogPostMetadata = async (
     },
   };
 
+  /* Generate breadcrumbs for blog posts */
+  const breadcrumbs = [
+    { name: 'Blog', url: '/blog' },
+    ...(post.categories && post.categories.length > 0
+      ? post.categories
+          .filter((cat) => cat !== null)
+          .slice(0, 1) // Use first category for breadcrumbs
+          .map((cat) => ({
+            name: cat!.title,
+            url: `/blog/categorie/${cat!.slug.current}`,
+          }))
+      : []),
+    { name: metadata?.title || title || 'Untitled Post', url: `/blog/${slug}` },
+  ];
+
   return generateMetadata({
     title: metadata?.title || title || 'Untitled Post',
     description: metadata?.description || description || '',
@@ -90,6 +105,7 @@ export const generateBlogPostMetadata = async (
     noindex: false, // Simplified - no robots config in new schema
     structuredData,
     url: `https://www.leenders-coaching.nl/blog/${slug}`,
+    breadcrumbs,
   });
 };
 
@@ -138,9 +154,18 @@ export const generateBlogCategoryMetadata = async (
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://www.leenders-coaching.nl/blog/category/${slug}`,
+      '@id': `https://www.leenders-coaching.nl/blog/categorie/${slug}`,
     },
   };
+
+  /* Generate breadcrumbs for category pages */
+  const breadcrumbs = [
+    { name: 'Blog', url: '/blog' },
+    {
+      name: metadata?.title || title || 'Category',
+      url: `/blog/categorie/${slug}`,
+    },
+  ];
 
   return generateMetadata({
     title: metadata?.title || `${title} - Blog Categorieën`,
@@ -153,5 +178,6 @@ export const generateBlogCategoryMetadata = async (
     noindex: false,
     structuredData,
     url: `https://www.leenders-coaching.nl/blog/categorie/${slug}`,
+    breadcrumbs,
   });
 };

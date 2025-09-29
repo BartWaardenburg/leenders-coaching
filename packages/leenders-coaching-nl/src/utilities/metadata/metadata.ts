@@ -46,6 +46,10 @@ type GenerateMetadataOptions = {
   noindex?: boolean;
   structuredData?: object;
   url?: string;
+  breadcrumbs?: Array<{
+    name: string;
+    url: string;
+  }>;
 };
 
 /**
@@ -82,6 +86,20 @@ type ArticleStructuredData = {
       url: string;
     };
   };
+};
+
+/**
+ * Structured data schema for breadcrumb entities.
+ */
+type BreadcrumbStructuredData = {
+  '@context': 'https://schema.org';
+  '@type': 'BreadcrumbList';
+  itemListElement: Array<{
+    '@type': 'ListItem';
+    position: number;
+    name: string;
+    item: string;
+  }>;
 };
 
 /**
@@ -190,6 +208,34 @@ export const generateArticleStructuredData = ({
 });
 
 /**
+ * Generates breadcrumb structured data for search engine optimization.
+ * @param breadcrumbs - Array of breadcrumb items with name and url
+ * @param baseUrl - Base URL for the website (defaults to site URL)
+ * @returns Breadcrumb structured data object
+ */
+export const generateBreadcrumbStructuredData = (
+  breadcrumbs: Array<{ name: string; url: string }>,
+  baseUrl: string = 'https://www.leenders-coaching.nl'
+): BreadcrumbStructuredData => ({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: baseUrl,
+    },
+    ...breadcrumbs.map((crumb, index) => ({
+      '@type': 'ListItem' as const,
+      position: index + 2,
+      name: crumb.name,
+      item: `${baseUrl}${crumb.url}`,
+    })),
+  ],
+});
+
+/**
  * Generates organization structured data for search engine optimization.
  * @param name - The organization name
  * @param description - Optional organization description
@@ -229,6 +275,7 @@ export const generateOrganizationStructuredData = ({
  * @param noindex - Whether to prevent indexing (default: false)
  * @param structuredData - Optional custom structured data
  * @param url - Optional canonical URL for the page
+ * @param breadcrumbs - Optional breadcrumb navigation items
  * @returns Complete metadata object for Next.js
  */
 export const generateMetadata = async ({
@@ -239,6 +286,7 @@ export const generateMetadata = async ({
   noindex = false,
   structuredData,
   url,
+  breadcrumbs,
 }: GenerateMetadataOptions): Promise<Metadata> => {
   /* Get site metadata from Sanity */
   const siteMetadata = await getSiteMetadata();
@@ -263,6 +311,11 @@ export const generateMetadata = async ({
           description || siteMetadata.description
         )
     : structuredData;
+
+  /* Generate breadcrumb structured data if provided */
+  const breadcrumbStructuredData = breadcrumbs
+    ? generateBreadcrumbStructuredData(breadcrumbs)
+    : null;
 
   /* Generate dynamic Open Graph image URL */
   const generateDynamicOGImage = () => {
@@ -298,17 +351,33 @@ export const generateMetadata = async ({
     },
   ];
 
+  /* Prepare Open Graph metadata with enhanced article support */
+  const openGraphMetadata = {
+    title: pageTitle,
+    description: description || siteMetadata.description,
+    type,
+    url: url || defaultMetadata.openGraph.url,
+    images: finalImages,
+    siteName: siteMetadata.title,
+    ...(type === 'article' &&
+    structuredData &&
+    'datePublished' in structuredData
+      ? {
+          publishedTime: (structuredData as ArticleStructuredData)
+            .datePublished,
+          modifiedTime: (structuredData as ArticleStructuredData).dateModified,
+          authors: [
+            (structuredData as ArticleStructuredData).author?.name ||
+              'Leenders Coaching',
+          ],
+        }
+      : {}),
+  };
+
   return {
     title: pageTitle,
     description: description || siteMetadata.description,
-    openGraph: {
-      title: pageTitle,
-      description: description || siteMetadata.description,
-      type,
-      url: url || defaultMetadata.openGraph.url,
-      images: finalImages,
-      siteName: siteMetadata.title,
-    },
+    openGraph: openGraphMetadata,
     twitter: {
       card: 'summary_large_image',
       images: finalImages,
@@ -325,7 +394,15 @@ export const generateMetadata = async ({
       },
     },
     other: {
-      'script:ld+json': JSON.stringify(defaultStructuredData),
+      ...(breadcrumbStructuredData && {
+        'script:ld+json': JSON.stringify([
+          defaultStructuredData,
+          breadcrumbStructuredData,
+        ]),
+      }),
+      ...(!breadcrumbStructuredData && {
+        'script:ld+json': JSON.stringify(defaultStructuredData),
+      }),
     },
   };
 };
