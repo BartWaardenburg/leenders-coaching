@@ -1,8 +1,16 @@
-import type { ComponentPropsWithoutRef } from 'react';
+import { Children } from 'react';
+import type {
+  ComponentProps,
+  ComponentPropsWithoutRef,
+  ReactNode,
+} from 'react';
 import { cn } from '@/utilities/cn';
 import { Box } from '../Box';
 import { Container } from '../Container';
 import { pastelVariant, type PastelVariant } from '@/utilities/tokens';
+import { Heading } from '../Heading';
+import { Text } from '../Text';
+import { Stack } from '../Stack';
 
 /**
  * Background styles mapping for pastel colors with dark mode support
@@ -64,7 +72,7 @@ const maxWidthStyles: Record<MaxWidth, string> = {
  */
 type SectionProps = {
   /** Child elements to render within the section */
-  children: React.ReactNode;
+  children: ReactNode;
   /** Pastel color theme for background and borders */
   background?: PastelVariant;
   /** Whether to show colored borders on top and bottom */
@@ -75,7 +83,15 @@ type SectionProps = {
   maxWidth?: MaxWidth;
   /** Test identifier for testing purposes */
   testid?: string;
-} & ComponentPropsWithoutRef<'section'>;
+  /** Optional section title */
+  title?: ReactNode;
+  /** Optional section description */
+  description?: ReactNode;
+  /** Heading level for the title */
+  headingLevel?: ComponentProps<typeof Heading>['level'];
+} & Omit<ComponentPropsWithoutRef<'section'>, 'children' | 'title' | 'content'>;
+
+export type SectionBaseProps = Omit<ComponentProps<typeof Section>, 'children'>;
 
 /**
  * Generic section component with consistent spacing and container
@@ -100,8 +116,66 @@ export const Section = ({
   maxWidth,
   className,
   testid,
+  title,
+  description,
+  headingLevel,
   ...props
 }: SectionProps) => {
+  const showHeader = Boolean(title) || Boolean(description);
+
+  const hasContent = Children.count(children) > 0;
+
+  const descriptionContent = (() => {
+    if (
+      description === null ||
+      description === undefined ||
+      description === false
+    ) {
+      return null;
+    }
+
+    return (
+      <Text
+        variant="large"
+        textAlign="center"
+        maxWidth="2xl"
+        className="mx-auto"
+      >
+        {description}
+      </Text>
+    );
+  })();
+
+  const header = showHeader ? (
+    <Stack
+      space={4}
+      className={cn(
+        'items-center text-center',
+        hasContent ? 'mb-12' : undefined
+      )}
+    >
+      {title && (
+        <Heading
+          level={headingLevel ?? 'h2'}
+          variant="large"
+          showBorder
+          borderColor={background ?? 'default'}
+          textAlign="center"
+        >
+          {title}
+        </Heading>
+      )}
+      {descriptionContent}
+    </Stack>
+  ) : null;
+
+  const content = (
+    <>
+      {header}
+      {children}
+    </>
+  );
+
   return (
     <Box
       as="section"
@@ -121,10 +195,10 @@ export const Section = ({
     >
       {!noPadding ? (
         <Container className={maxWidth ? maxWidthStyles[maxWidth] : undefined}>
-          {children}
+          {content}
         </Container>
       ) : (
-        children
+        content
       )}
     </Box>
   );

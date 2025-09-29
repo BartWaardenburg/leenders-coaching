@@ -29,7 +29,6 @@ export const transformFormSection = (
   return {
     title: data.displayTitle || undefined,
     description: data.description || '',
-    submitLabel: data.form?.submitLabel || undefined,
     background: data.background,
     border: data.border,
     form: data.form,

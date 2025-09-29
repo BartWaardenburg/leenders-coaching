@@ -59,10 +59,6 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
   },
-  other: {
-    preconnect: 'https://cdn.sanity.io',
-    dns_prefetch: 'https://challenges.cloudflare.com',
-  },
 };
 
 type LayoutProps = {

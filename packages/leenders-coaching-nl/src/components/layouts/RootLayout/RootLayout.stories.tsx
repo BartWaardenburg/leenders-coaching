@@ -136,8 +136,8 @@ export const AllSections: Story = {
       <SectionForm
         title={mockFormSection.displayTitle}
         description={mockFormSection.description}
-        submitLabel={mockFormSection.submitLabel}
         background="blue"
+        form={mockFormSection.form}
       />
       <SectionCalendar
         title={mockCalendarSection.displayTitle}

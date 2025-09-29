@@ -1,7 +1,5 @@
-import { Section } from '@/components/ui/Section';
+import { Section, type SectionBaseProps } from '@/components/ui/Section';
 import type { PastelVariant } from '@/utilities/tokens';
-import { Heading } from '@/components/ui/Heading';
-import { Text } from '@/components/ui/Text';
 import { Stack } from '@/components/ui/Stack';
 import { Box } from '@/components/ui/Box';
 import { PricingCard } from '@/components/ui/PricingCard/PricingCard';
@@ -28,64 +26,22 @@ interface PricingPackage {
   variant?: PastelVariant;
 }
 
-interface SectionPricingProps {
-  title?: string;
-  description?: string;
+interface SectionPricingProps extends SectionBaseProps {
   packages: PricingPackage[];
-  className?: string;
-  background?: PastelVariant;
-  border?: boolean;
-  testid?: string;
 }
 
 /**
  * SectionPricing component displays pricing packages for coaching services
  */
 export const SectionPricing = ({
-  title,
-  description,
   packages,
-  className,
-  background,
-  border = false,
-  testid,
+  maxWidth = '6xl',
   ...props
 }: SectionPricingProps) => {
   return (
-    <Section
-      background={background}
-      border={border}
-      className={className}
-      maxWidth="6xl"
-      testid={testid}
-      {...props}
-    >
+    <Section maxWidth={maxWidth} {...props}>
       <Box className="mx-auto">
         <Stack gap={8} testid="stack">
-          {(title || description) && (
-            <Stack space={4} className="text-center">
-              {title && (
-                <Heading
-                  level="h2"
-                  variant="large"
-                  showBorder
-                  borderColor={background}
-                  textAlign="center"
-                >
-                  {title}
-                </Heading>
-              )}
-              {description && (
-                <Text
-                  variant="large"
-                  className="max-w-2xl mx-auto"
-                  testid="text"
-                >
-                  {description}
-                </Text>
-              )}
-            </Stack>
-          )}
           <Grid
             cols={{
               base: 1,

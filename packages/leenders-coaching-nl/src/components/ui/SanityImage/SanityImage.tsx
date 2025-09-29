@@ -110,10 +110,12 @@ export function SanityImage({
     },
   } satisfies Partial<NextImageProps>;
 
-  /* If caller uses `fill`, omit width/height and use loader */
+  /* If caller uses `fill`, ensure we set position relative on a wrapping container */
   if ('fill' in rest && rest.fill) {
     return (
-      <NextImage src={baseUrl} loader={loader} fill {...common} {...rest} />
+      <span className="relative block h-full w-full">
+        <NextImage src={baseUrl} loader={loader} fill {...common} {...rest} />
+      </span>
     );
   }
 

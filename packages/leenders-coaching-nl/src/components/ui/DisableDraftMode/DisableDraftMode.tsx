@@ -15,6 +15,10 @@ import { iconPaths } from '@/utilities/icons-config';
 type DisableDraftModeProps = {
   variant?: PastelVariant;
   className?: string;
+  /**
+   * Force the component to render even when iframe detection would hide it (e.g. in Storybook)
+   */
+  forceVisible?: boolean;
 };
 
 /**
@@ -25,6 +29,7 @@ type DisableDraftModeProps = {
 export const DisableDraftMode = ({
   variant = 'blue',
   className,
+  forceVisible = false,
 }: DisableDraftModeProps) => {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -38,12 +43,12 @@ export const DisableDraftMode = ({
   }, []);
 
   /* Don't render anything until mounted on client */
-  if (!isMounted) {
+  if (!forceVisible && !isMounted) {
     return null;
   }
 
   /* Don't show the button if we're in an iframe (Presentation tool) */
-  if (isInIframe) {
+  if (!forceVisible && isInIframe) {
     return null;
   }
 

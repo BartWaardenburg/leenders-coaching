@@ -53,3 +53,25 @@ export const getHomePage = async () => {
     'categories',
   ]);
 };
+
+/**
+ * Query to get all static pages for sitemap generation
+ * @returns All static pages with slugs for sitemap
+ */
+export const getStaticPagesForSitemap = async (): Promise<
+  Array<{
+    _id: string;
+    slug: { current: string };
+    _updatedAt: string;
+  }>
+> => {
+  const isDraftMode = await getDraftModeStatus();
+
+  const query = `*[_type in ["homePage", "aboutPage", "coachingPage", "contactPage", "approachPage", "privacyPage", "voorwaardenPage", "blogPage"] && defined(slug)] {
+    _id,
+    slug,
+    _updatedAt
+  }`;
+
+  return executeQuery(query, isDraftMode, ['pages', 'sitemap']);
+};

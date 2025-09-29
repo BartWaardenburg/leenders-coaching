@@ -1,13 +1,6 @@
-import type { ComponentPropsWithoutRef } from 'react';
-
 import { Button } from '@/components/ui/Button';
 import { ButtonGroup } from '@/components/ui/ButtonGroup';
-import { Heading } from '@/components/ui/Heading';
-import { Section } from '@/components/ui/Section';
-import type { PastelVariant } from '@/utilities/tokens';
-import { Stack } from '@/components/ui/Stack';
-import { Text } from '@/components/ui/Text';
-import { Box } from '@/components/ui/Box';
+import { Section, type SectionBaseProps } from '@/components/ui/Section';
 
 type CallToAction = {
   href?: string;
@@ -24,77 +17,37 @@ type CallToAction = {
   isExternal?: boolean;
 };
 
-type SectionHeaderProps = {
-  title?: string;
-  description?: string;
+interface SectionHeaderProps extends SectionBaseProps {
   ctas?: CallToAction[];
-  border?: boolean;
-  background?: PastelVariant;
-} & ComponentPropsWithoutRef<'section'>;
+}
 
 /**
  * Section header component with centered title, optional description and right-aligned CTAs
  */
 export const SectionHeader = ({
-  title,
-  description,
   ctas,
-  border = false,
-  background,
-  className,
+  maxWidth = '5xl',
   ...props
-}: SectionHeaderProps) => {
-  return (
-    <Section
-      background={background}
-      border={border}
-      className={className}
-      maxWidth="5xl"
-      {...props}
-    >
-      <Stack gap={8} className="md:items-start">
-        <Box className="w-full text-center">
-          {(title || description) && (
-            <>
-              {title && (
-                <Heading
-                  level="h1"
-                  variant="large"
-                  showBorder
-                  borderColor={background}
-                  textAlign="center"
-                >
-                  {title}
-                </Heading>
-              )}
-              {description && (
-                <Text variant="large" className="mt-6 md:text-xl">
-                  {description}
-                </Text>
-              )}
-            </>
-          )}
-        </Box>
-        {ctas && ctas.length > 0 && (
-          <ButtonGroup width="full" justify="end" align="center">
-            {ctas
-              .filter((cta) => cta.label && cta.href)
-              .map((cta, index) => (
-                <Button
-                  key={index}
-                  size="lg"
-                  fullWidthUntil="sm"
-                  href={cta.href}
-                  variant={cta.variant}
-                  target={cta.isExternal ? '_blank' : undefined}
-                  rel={cta.isExternal ? 'noopener noreferrer' : undefined}
-                >
-                  {cta.label}
-                </Button>
-              ))}
-          </ButtonGroup>
-        )}
-      </Stack>
-    </Section>
-  );
-};
+}: SectionHeaderProps) => (
+  <Section headingLevel="h1" maxWidth={maxWidth} {...props}>
+    {ctas && ctas.length > 0 && (
+      <ButtonGroup width="full" justify="end" align="center">
+        {ctas
+          .filter((cta) => cta.label && cta.href)
+          .map((cta, index) => (
+            <Button
+              key={index}
+              size="lg"
+              fullWidthUntil="sm"
+              href={cta.href}
+              variant={cta.variant}
+              target={cta.isExternal ? '_blank' : undefined}
+              rel={cta.isExternal ? 'noopener noreferrer' : undefined}
+            >
+              {cta.label}
+            </Button>
+          ))}
+      </ButtonGroup>
+    )}
+  </Section>
+);

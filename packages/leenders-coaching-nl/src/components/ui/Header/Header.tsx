@@ -247,7 +247,7 @@ export const Header = ({
                   className="h-full"
                 >
                   <Flex direction="column" className="h-full justify-between">
-                    <Box as="nav" className="mb-16 text-left md:text-right">
+                    <Box as="nav" className="mb-16 text-right">
                       <h2 id="header-menu-title" className="sr-only">
                         Navigatiemenu
                       </h2>

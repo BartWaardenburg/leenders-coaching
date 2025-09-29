@@ -86,31 +86,7 @@ export const FAQSection: Story = {
 export const FormSection: Story = {
   args: {
     type: 'sectionForm',
-    data: {
-      _type: 'sectionForm',
-      title: 'Interne Formulier Titel',
-      displayTitle: 'Neem Contact Op',
-      description: 'Neem contact op met ons team',
-      form: {
-        submitLabel: 'Verstuur Bericht',
-        fields: [
-          {
-            _key: 'field-1',
-            type: 'text',
-            label: 'Naam',
-            required: true,
-          },
-          {
-            _key: 'field-2',
-            type: 'email',
-            label: 'E-mail',
-            required: true,
-          },
-        ],
-      },
-      background: 'white',
-      border: false,
-    },
+    data: mockFormSection,
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByTestId('section')).toBeInTheDocument();

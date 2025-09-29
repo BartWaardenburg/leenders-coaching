@@ -529,5 +529,8 @@ export const mockFormSection = {
     'Vul het formulier in en ik neem zo snel mogelijk contact met je op. Ik beantwoord graag al je vragen over coaching en mijn diensten.',
   background: 'white',
   border: false,
-  submitLabel: 'Verstuur Bericht',
+  form: {
+    _type: 'formConfiguration' as const,
+    submitLabel: 'Verstuur Bericht',
+  },
 };

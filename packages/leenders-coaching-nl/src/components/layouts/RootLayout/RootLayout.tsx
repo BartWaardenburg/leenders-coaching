@@ -12,6 +12,7 @@ import {
   defaultConfig,
 } from '@/components/providers/ConfigProvider';
 import { DisableDraftMode } from '@/components/ui/DisableDraftMode';
+import { PreconnectResources } from '@/components/ui/PreconnectResources';
 
 import '@/app/globals.css';
 
@@ -38,6 +39,7 @@ export const RootLayout = async ({ children, fonts }: RootLayoutProps) => {
       data-scroll-behavior="smooth"
     >
       <Box as="body" className="antialiased min-h-screen flex flex-col">
+        <PreconnectResources />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ConfigProvider config={defaultConfig}>
             <GlobalDataProvider>

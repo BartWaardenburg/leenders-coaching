@@ -4,11 +4,11 @@
     "description": "Revalidates cache tags and paths when content is updated",
     "url": "https://www.leenders-coaching.nl/api/revalidate",
     "events": ["create", "update", "delete", "unpublish"],
-    "filter": "_type in [\"post\", \"homePage\", \"aboutPage\", \"coachingPage\", \"contactPage\", \"approachPage\", \"page\", \"header\", \"footer\", \"configuration\", \"category\"]",
+    "filter": "_type in [\"post\", \"homePage\", \"aboutPage\", \"coachingPage\", \"contactPage\", \"approachPage\", \"privacyPage\", \"voorwaardenPage\", \"page\", \"header\", \"footer\", \"configuration\", \"category\"]",
     "projection": {
       "_type": "_type",
       "slug": "slug.current",
-      "path": "select(\n  _type == \"post\" => \"/blog/\" + slug.current,\n  _type == \"category\" => \"/blog/categorie/\" + slug.current,\n  _type == \"homePage\" => \"/\",\n  _type == \"aboutPage\" => \"/over-mij\",\n  _type == \"coachingPage\" => \"/coaching\",\n  _type == \"contactPage\" => \"/contact\",\n  _type == \"approachPage\" => \"/aanpak\",\n  _type == \"page\" => \"/\" + slug.current,\n  _type in [\"header\", \"footer\", \"configuration\"] => null\n)"
+      "path": "select(\n  _type == \"post\" => \"/blog/\" + slug.current,\n  _type == \"category\" => \"/blog/categorie/\" + slug.current,\n  _type == \"homePage\" => \"/\",\n  _type == \"aboutPage\" => \"/over-mij\",\n  _type == \"coachingPage\" => \"/coaching\",\n  _type == \"contactPage\" => \"/contact\",\n  _type == \"approachPage\" => \"/aanpak\",\n  _type == \"privacyPage\" => \"/privacy\",\n  _type == \"voorwaardenPage\" => \"/voorwaarden\",\n  _type == \"page\" => \"/\" + slug.current,\n  _type in [\"header\", \"footer\", \"configuration\"] => null\n)"
     },
     "httpMethod": "POST",
     "apiVersion": "v2021-03-25",

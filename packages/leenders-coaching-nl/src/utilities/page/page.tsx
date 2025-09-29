@@ -33,11 +33,15 @@ export const generatePageMetadata = async (
   fallbackTitle: string
 ): Promise<Metadata> => {
   if (!page?.metadata) {
+    const breadcrumbs =
+      fallbackTitle === 'Blog' ? [{ name: 'Blog', url: '/blog' }] : undefined;
+
     return generateMetadataUtil({
       title: fallbackTitle,
       description:
         'Professionele coaching voor persoonlijke en professionele groei.',
       url: `https://www.leenders-coaching.nl/${page?.slug?.current || ''}`,
+      breadcrumbs,
     });
   }
 
@@ -60,6 +64,10 @@ export const generatePageMetadata = async (
     },
   };
 
+  /* Generate breadcrumbs based on page type */
+  const breadcrumbs =
+    fallbackTitle === 'Blog' ? [{ name: 'Blog', url: '/blog' }] : undefined;
+
   /* Use the comprehensive metadata utility which includes JSON-LD */
   return generateMetadataUtil({
     title: metadata.title || fallbackTitle,
@@ -68,6 +76,7 @@ export const generatePageMetadata = async (
     type: ogType,
     structuredData,
     url: `https://www.leenders-coaching.nl/${page.slug?.current || ''}`,
+    breadcrumbs,
   });
 };
 

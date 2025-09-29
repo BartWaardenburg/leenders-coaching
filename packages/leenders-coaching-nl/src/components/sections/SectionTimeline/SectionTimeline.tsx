@@ -1,76 +1,27 @@
 'use client';
 
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
-
-import { Section } from '@/components/ui/Section';
-import type { PastelVariant } from '@/utilities/tokens';
-import { Stack } from '@/components/ui/Stack';
-import { Heading } from '@/components/ui/Heading';
+import { Section, type SectionBaseProps } from '@/components/ui/Section';
 import { Box } from '@/components/ui/Box';
 import { Timeline, type TimelineStep } from '@/components/ui/Timeline';
-import { Text } from '@/components/ui/Text';
 
-type SectionTimelineProps = {
-  /** The title of the section */
-  title?: ReactNode;
-  /** Optional description text */
-  description?: ReactNode;
+interface SectionTimelineProps extends SectionBaseProps {
   /** Array of timeline steps */
   steps: TimelineStep[];
-  /** Optional background color */
-  background?: PastelVariant;
-  /** Whether to show a border */
-  border?: boolean;
-} & ComponentPropsWithoutRef<'section'>;
+}
 
 /**
  * Section component for displaying a timeline with optional title and description
  */
 export const SectionTimeline = ({
-  title,
-  description,
   steps,
   background,
-  border = false,
-  className,
+  maxWidth = '7xl',
   ...props
 }: SectionTimelineProps) => {
   return (
-    <Section
-      background={background}
-      border={border}
-      className={className}
-      maxWidth="7xl"
-      {...props}
-    >
+    <Section maxWidth={maxWidth} background={background} {...props}>
       <Box className="mx-auto max-w-4xl" data-testid="box">
-        <Stack gap={8}>
-          {(title || description) && (
-            <Stack space={4} className="text-center">
-              {title && (
-                <Heading
-                  level="h2"
-                  variant="large"
-                  showBorder
-                  borderColor={background}
-                  textAlign="center"
-                >
-                  {title}
-                </Heading>
-              )}
-              {description && (
-                <Text
-                  variant="large"
-                  className="max-w-2xl mx-auto"
-                  testid="text"
-                >
-                  {description}
-                </Text>
-              )}
-            </Stack>
-          )}
-          <Timeline steps={steps} testid="timeline" color={background} />
-        </Stack>
+        <Timeline steps={steps} testid="timeline" color={background} />
       </Box>
     </Section>
   );

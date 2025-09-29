@@ -1,15 +1,11 @@
 'use client';
 
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useState, useCallback, useRef, useEffect } from 'react';
 
-import { Section } from '@/components/ui/Section';
-import type { PastelVariant } from '@/utilities/tokens';
-import { Stack } from '@/components/ui/Stack';
-import { Heading } from '@/components/ui/Heading';
+import { Section, type SectionBaseProps } from '@/components/ui/Section';
 import { Box } from '@/components/ui/Box';
 import { Calendar } from '@/components/ui/Calendar';
-import { Text } from '@/components/ui/Text';
 import { TimeSlotIndicator } from '@/components/ui/TimeSlotIndicator';
 import { AppointmentBookingModal } from '@/components/ui/AppointmentBookingModal';
 import { useToast } from '@/components/providers/ToastProvider';
@@ -29,11 +25,7 @@ type AppointmentFormData = {
 /**
  * Props for the SectionCalendar component.
  */
-type SectionCalendarProps = {
-  /** The title of the section */
-  title?: ReactNode;
-  /** Optional description text */
-  description?: ReactNode;
+interface SectionCalendarProps extends SectionBaseProps {
   /** The initial date to display the calendar for */
   initialDate?: Date;
   /** Optional render prop for day content */
@@ -42,13 +34,9 @@ type SectionCalendarProps = {
   onSelectDate?: (date: Date) => void;
   /** Configuration for disabled dates */
   disabledDates?: DisabledDates;
-  /** Optional background color */
-  background?: PastelVariant;
-  /** Whether to show a border */
-  border?: boolean;
   /** Calendar settings including booking configuration */
   settings?: CalendarSettings;
-} & ComponentPropsWithoutRef<'section'>;
+}
 
 /**
  * Returns available time slots for a specific date.
@@ -110,16 +98,13 @@ const hasAvailableTimeSlots = (
  * @returns ReactNode
  */
 export const SectionCalendar = ({
-  title,
-  description,
   initialDate,
   renderDay,
   onSelectDate,
   disabledDates,
   background,
-  border = false,
-  className,
   settings,
+  maxWidth = '5xl',
   ...props
 }: SectionCalendarProps): ReactNode => {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState<boolean>(false);
@@ -304,52 +289,21 @@ export const SectionCalendar = ({
     [selectedDate, settings?.bookingFormConfig?.successMessage]
   );
 
-  /**
-   * Renders the main section with calendar and optional booking modal.
-   */
   return (
     <>
-      <Section
-        background={background}
-        border={border}
-        className={className}
-        maxWidth="5xl"
-        {...props}
-      >
+      <Section maxWidth={maxWidth} background={background} {...props}>
         <Box className="mx-auto">
-          <Stack gap={8}>
-            {(title || description) && (
-              <Stack space={4} className="text-center">
-                {title && (
-                  <Heading
-                    level="h2"
-                    variant="large"
-                    showBorder
-                    borderColor={background}
-                    textAlign="center"
-                  >
-                    {title}
-                  </Heading>
-                )}
-                {description && (
-                  <Text variant="large" className="max-w-2xl mx-auto">
-                    {description}
-                  </Text>
-                )}
-              </Stack>
+          <Calendar
+            initialDate={initialDateStable}
+            renderDay={renderDayWithTimeSlots}
+            onSelectDate={handleDateSelect}
+            disabledDates={createEnhancedDisabledDates(
+              disabledDates,
+              settings?.availableTimeSlots,
+              settings?.bookingEnabled ? 6 : undefined
             )}
-            <Calendar
-              initialDate={initialDateStable}
-              renderDay={renderDayWithTimeSlots}
-              onSelectDate={handleDateSelect}
-              disabledDates={createEnhancedDisabledDates(
-                disabledDates,
-                settings?.availableTimeSlots,
-                settings?.bookingEnabled ? 6 : undefined
-              )}
-              maxMonthsInFuture={settings?.bookingEnabled ? 6 : undefined}
-            />
-          </Stack>
+            maxMonthsInFuture={settings?.bookingEnabled ? 6 : undefined}
+          />
         </Box>
       </Section>
 
