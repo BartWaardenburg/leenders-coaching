@@ -1,4 +1,4 @@
-export { getPage, getHomePage } from './pages';
+export { getPage, getHomePage, getStaticPagesForSitemap } from './pages';
 
 export { getGlobalData, getSiteSettings } from './global';
 
@@ -9,4 +9,6 @@ export {
   getCategoryBySlug,
   getPostsByCategory,
   getPostsByCategorySlug,
+  getBlogPostsForSitemap,
+  getCategoriesForSitemap,
 } from './blog';

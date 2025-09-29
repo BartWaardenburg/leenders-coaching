@@ -3,13 +3,12 @@ import type { Config } from 'tailwindcss';
 /**
  * Tailwind CSS configuration for leenders-coaching-nl.
  * - Enables dark mode via class strategy.
- * - Scans src and .storybook directories for class usage.
  * - Centers the container and sets responsive padding and max width.
  * @see https://tailwindcss.com/docs/configuration
  */
 const config: Config = {
   darkMode: 'class',
-  content: ['./src/**/*.{ts,tsx}', './.storybook/**/*.{ts,tsx}'],
+  content: ['./src/**/*.{ts,tsx}'],
   theme: {
     container: {
       center: true,

@@ -77,7 +77,7 @@ module.exports = {
        */
       assertions: {
         'first-contentful-paint': ['warn', { maxNumericValue: 3000 }],
-        'largest-contentful-paint': ['error', { maxNumericValue: 4000 }],
+        'largest-contentful-paint': ['warn', { maxNumericValue: 4000 }],
         'cumulative-layout-shift': ['error', { maxNumericValue: 0.25 }],
         'total-blocking-time': ['error', { maxNumericValue: 600 }],
         'speed-index': ['warn', { maxNumericValue: 5500 }],

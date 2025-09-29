@@ -115,3 +115,51 @@ export const getPostsByCategory = async (categoryId: string) => {
     { categoryId }
   );
 };
+
+/**
+ * Query to get all blog posts for sitemap generation
+ * Minimal fields needed for sitemap - no image requirement, just slug and dates
+ * @returns All published blog posts with minimal fields for sitemap
+ */
+export const getBlogPostsForSitemap = async (): Promise<
+  Array<{
+    _id: string;
+    slug: { current: string };
+    publishedAt: string;
+    _updatedAt: string;
+  }>
+> => {
+  const isDraftMode = await getDraftModeStatus();
+
+  const query = `*[_type == "post" && defined(slug) && defined(publishedAt)] | order(publishedAt desc) {
+    _id,
+    slug,
+    publishedAt,
+    _updatedAt
+  }`;
+
+  return executeQuery(query, isDraftMode, ['posts', 'blog', 'sitemap']);
+};
+
+/**
+ * Query to get all categories for sitemap generation
+ * Minimal fields needed for sitemap - just slug and updated date
+ * @returns All categories with minimal fields for sitemap
+ */
+export const getCategoriesForSitemap = async (): Promise<
+  Array<{
+    _id: string;
+    slug: { current: string };
+    _updatedAt: string;
+  }>
+> => {
+  const isDraftMode = await getDraftModeStatus();
+
+  const query = `*[_type == "category" && defined(slug)] | order(title asc) {
+    _id,
+    slug,
+    _updatedAt
+  }`;
+
+  return executeQuery(query, isDraftMode, ['categories', 'sitemap']);
+};

@@ -62,6 +62,8 @@ export async function POST(req: NextRequest) {
           // Fallback: if path is missing (delete/unpublish), revalidate blog listing
           if (!path) revalidatePath('/blog');
         }
+        // Revalidate sitemap when blog posts change
+        revalidateTag('sitemap');
         break;
 
       case 'category':
@@ -82,8 +84,12 @@ export async function POST(req: NextRequest) {
       case 'coachingPage':
       case 'contactPage':
       case 'approachPage':
+      case 'privacyPage':
+      case 'voorwaardenPage':
       case 'page':
         if (path) revalidatePath(path);
+        // Revalidate sitemap when pages change
+        revalidateTag('sitemap');
         break;
 
       case 'header':
@@ -94,6 +100,7 @@ export async function POST(req: NextRequest) {
         revalidateTag('navigation');
         revalidateTag('footer');
         revalidateTag('settings');
+        revalidateTag('sitemap');
         revalidatePath('/');
         break;
     }
