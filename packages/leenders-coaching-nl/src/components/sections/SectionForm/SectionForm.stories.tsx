@@ -1,8 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SectionForm } from './SectionForm';
-import { Input } from '@/components/ui/Input';
-import { Button } from '@/components/ui/Button';
-import { Stack } from '@/components/ui/Stack';
 import { Box } from '@/components/ui/Box';
 import { mockFormSection } from '@/mocks';
 
@@ -22,10 +19,6 @@ const meta = {
       control: 'text',
       description: 'De beschrijving tekst',
     },
-    submitLabel: {
-      control: 'text',
-      description: 'Label voor de verzendknop',
-    },
     background: {
       control: 'select',
       options: ['blue', 'purple', 'green', 'pink', 'yellow', 'teal'],
@@ -41,32 +34,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const FormContent = () => (
-  <Stack gap={6}>
-    <Input label="Naam" type="text" name="name" placeholder="Je naam" />
-    <Input
-      label="E-mail"
-      type="email"
-      name="email"
-      placeholder="uw@email.com"
-    />
-    <Input
-      label="Bericht"
-      as="textarea"
-      name="message"
-      placeholder="Je bericht"
-    />
-    <Button type="submit" variant="blue" className="w-full">
-      Versturen
-    </Button>
-  </Stack>
-);
-
 export const Default: Story = {
   args: {
     title: mockFormSection.displayTitle,
     description: mockFormSection.description,
-    children: <FormContent />,
+    form: mockFormSection.form,
   },
 };
 
@@ -97,7 +69,10 @@ export const CustomSubmitLabel: Story = {
   args: {
     title: 'Aangepaste Verzendknop',
     description: 'Dit formulier heeft een aangepast verzendknop label.',
-    submitLabel: 'Verstuur Bericht Nu',
+    form: {
+      _type: 'formConfiguration',
+      submitLabel: 'Verstuur Bericht Nu',
+    },
     background: 'yellow',
     border: true,
   },
@@ -111,16 +86,24 @@ export const AllBackgroundVariants: Story = {
   render: () => (
     <Box className="space-y-0">
       {(['blue', 'purple', 'green', 'pink', 'yellow', 'teal'] as const).map(
-        (background) => (
-          <SectionForm
-            key={background}
-            title={`${background.charAt(0).toUpperCase() + background.slice(1)} Achtergrond`}
-            description={`Dit formulier demonstreert de ${background} achtergrond variant.`}
-            submitLabel={`Verstuur ${background.charAt(0).toUpperCase() + background.slice(1)} Formulier`}
-            background={background}
-            border={true}
-          />
-        )
+        (background) => {
+          const capitalized =
+            background.charAt(0).toUpperCase() + background.slice(1);
+
+          return (
+            <SectionForm
+              key={background}
+              title={`${capitalized} Achtergrond`}
+              description={`Dit formulier demonstreert de ${background} achtergrond variant.`}
+              background={background}
+              border={true}
+              form={{
+                _type: 'formConfiguration',
+                submitLabel: `Verstuur ${capitalized} Formulier`,
+              }}
+            />
+          );
+        }
       )}
     </Box>
   ),
@@ -131,7 +114,10 @@ export const LongContent: Story = {
     title: 'Contactformulier Met Lange Inhoud',
     description:
       'Dit is een langere beschrijving die demonstreert hoe de formulier sectie uitgebreidere tekstinhoud afhandelt. Het toont hoe de lay-out zich aanpast aan verschillende hoeveelheden inhoud terwijl het goede leesbaarheid en visuele hiërarchie behoudt. De tekst kan over meerdere regels lopen en de sectie zal het elegant afhandelen.',
-    submitLabel: 'Verstuur Uw Bericht',
+    form: {
+      _type: 'formConfiguration',
+      submitLabel: 'Verstuur Uw Bericht',
+    },
     background: 'teal',
     border: true,
   },

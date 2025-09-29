@@ -1,8 +1,8 @@
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { ImageRenderer } from '@/components/ui/ImageRenderer';
 import { isValidImage, type ImageSource } from '@/utilities/image';
 
-import { Section } from '@/components/ui/Section';
+import { Section, type SectionBaseProps } from '@/components/ui/Section';
 import type { PastelVariant } from '@/utilities/tokens';
 import { Grid } from '@/components/ui/Grid';
 import { Heading } from '@/components/ui/Heading';
@@ -25,7 +25,7 @@ type CallToAction = {
     | 'teal';
 };
 
-type SectionFeaturedProps = {
+interface SectionFeaturedProps extends SectionBaseProps {
   /** The title of the section */
   title?: ReactNode;
   /** The description text */
@@ -40,7 +40,7 @@ type SectionFeaturedProps = {
   border?: boolean;
   /** Whether to reverse the layout (image on right) */
   reverse?: boolean;
-} & ComponentPropsWithoutRef<'section'>;
+}
 
 /**
  * A section component with a 50/50 layout featuring an image and content
@@ -55,8 +55,14 @@ export const SectionFeatured = ({
   border = false,
   reverse = false,
   className,
+  noPadding = true,
+  maxWidth,
   ...props
 }: SectionFeaturedProps) => {
+  const sectionClassName = className
+    ? `pb-8 sm:pb-0 ${className}`
+    : 'pb-8 sm:pb-0';
+
   const Content = (
     <Stack gap={6} className="max-w-lg" testid="content-stack" justify="center">
       {title && (
@@ -94,10 +100,11 @@ export const SectionFeatured = ({
 
   return (
     <Section
+      maxWidth={maxWidth}
       background={background}
       border={border}
-      noPadding
-      className={`pb-8 sm:pb-0 ${className}`}
+      noPadding={noPadding}
+      className={sectionClassName}
       {...props}
     >
       <Grid

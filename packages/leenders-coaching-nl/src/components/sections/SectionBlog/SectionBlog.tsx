@@ -1,12 +1,10 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Section } from '@/components/ui/Section';
+import { Section, type SectionBaseProps } from '@/components/ui/Section';
 import type { PastelVariant } from '@/utilities/tokens';
-import { Heading } from '@/components/ui/Heading';
 import { Text } from '@/components/ui/Text';
 import { Box } from '@/components/ui/Box';
-import { Flex } from '@/components/ui/Flex';
 import { Grid } from '@/components/ui/Grid';
 import { Card } from '@/components/ui/Card';
 import { Pagination } from '@/components/ui/Pagination';
@@ -26,11 +24,7 @@ export type BlogPost = {
   variant?: PastelVariant;
 };
 
-interface SectionBlogProps {
-  /** The title of the section */
-  title?: string;
-  /** The description text */
-  description: string;
+interface SectionBlogProps extends SectionBaseProps {
   /** Array of blog posts to display */
   posts?: BlogPost[];
   /**
@@ -38,27 +32,15 @@ interface SectionBlogProps {
    * @default 6
    */
   postsPerPage?: number;
-  className?: string;
-  /** Optional background color */
-  background?: PastelVariant;
-  /** Whether to show a border */
-  border?: boolean;
-  /** Test ID for the section */
-  testid?: string;
 }
 
 /**
  * Component for displaying blog posts in a grid layout with pagination
  */
 export const SectionBlog = ({
-  title,
-  description,
   posts = [],
   postsPerPage = 6,
-  className,
-  background,
-  border = false,
-  testid,
+  maxWidth = '7xl',
   ...props
 }: SectionBlogProps) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -93,39 +75,7 @@ export const SectionBlog = ({
   };
 
   return (
-    <Section
-      background={background}
-      border={border}
-      className={className}
-      maxWidth="7xl"
-      data-testid={testid}
-      {...props}
-    >
-      {(title || description) && (
-        <Flex direction="column" items="center" className="mb-16">
-          {title && (
-            <Heading
-              level="h2"
-              variant="large"
-              showBorder
-              borderColor={background}
-              textAlign="center"
-            >
-              {title}
-            </Heading>
-          )}
-          {description && (
-            <Text
-              testid="section-description"
-              variant="large"
-              className="max-w-2xl mx-auto"
-            >
-              {description}
-            </Text>
-          )}
-        </Flex>
-      )}
-
+    <Section maxWidth={maxWidth} {...props}>
       <Box className="w-full">
         {posts.length > 0 ? (
           <>

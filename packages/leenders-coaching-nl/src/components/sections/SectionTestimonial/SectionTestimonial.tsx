@@ -1,13 +1,8 @@
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import type { StaticImageData } from 'next/image';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
-import { Section } from '@/components/ui/Section';
-import type { PastelVariant } from '@/utilities/tokens';
-import { Stack } from '@/components/ui/Stack';
-import { Heading } from '@/components/ui/Heading';
+import { Section, type SectionBaseProps } from '@/components/ui/Section';
 import { Box } from '@/components/ui/Box';
-import { Text } from '@/components/ui/Text';
 import { Quote } from '@/components/ui/Quote';
 import { Person } from '@/components/ui/Person';
 import { Carousel } from '@/components/ui/Carousel';
@@ -23,18 +18,10 @@ export type Testimonial = {
   image?: string | StaticImageData | SanityImageSource;
 };
 
-type SectionTestimonialProps = {
-  /** The title of the section */
-  title?: ReactNode;
-  /** Optional description text */
-  description?: ReactNode;
+interface SectionTestimonialProps extends SectionBaseProps {
   /** Array of testimonials */
   testimonials: Testimonial[];
-  /** Optional background color */
-  background?: PastelVariant;
-  /** Whether to show a border */
-  border?: boolean;
-} & ComponentPropsWithoutRef<'section'>;
+}
 
 const TestimonialSlide = ({ quote, name, role, image }: Testimonial) => (
   <Box className="w-full max-w-2xl mx-auto px-4">
@@ -57,51 +44,20 @@ const TestimonialSlide = ({ quote, name, role, image }: Testimonial) => (
  * Section component for displaying testimonials in a carousel
  */
 export const SectionTestimonial = ({
-  title,
-  description,
   testimonials,
-  background,
-  border = false,
-  className,
+  maxWidth,
   ...props
 }: SectionTestimonialProps) => {
   return (
-    <Section
-      background={background}
-      border={border}
-      className={className}
-      {...props}
-    >
+    <Section maxWidth={maxWidth} {...props}>
       <Box className="mx-auto max-w-3xl">
-        <Stack gap={12}>
-          {(title || description) && (
-            <Stack space={4} className="text-center">
-              {title && (
-                <Heading
-                  level="h2"
-                  variant="large"
-                  showBorder
-                  borderColor={background}
-                  textAlign="center"
-                >
-                  {title}
-                </Heading>
-              )}
-              {description && (
-                <Text variant="large" maxWidth="2xl" className="mx-auto">
-                  {description}
-                </Text>
-              )}
-            </Stack>
-          )}
-          <Box className="p-8 -mx-4 sm:mx-0">
-            <Carousel
-              slides={testimonials.map((testimonial) => (
-                <TestimonialSlide key={testimonial.name} {...testimonial} />
-              ))}
-            />
-          </Box>
-        </Stack>
+        <Box className="p-8 -mx-4 sm:mx-0">
+          <Carousel
+            slides={testimonials.map((testimonial) => (
+              <TestimonialSlide key={testimonial.name} {...testimonial} />
+            ))}
+          />
+        </Box>
       </Box>
     </Section>
   );
