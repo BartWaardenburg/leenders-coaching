@@ -18,6 +18,11 @@ const meta = {
       control: 'text',
       description: 'Extra CSS klassen',
     },
+    forceVisible: {
+      table: {
+        disable: true,
+      },
+    },
   },
 } satisfies Meta<typeof DisableDraftMode>;
 
@@ -27,6 +32,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     variant: 'blue',
+    forceVisible: true,
   },
   decorators: [
     (Story) => {

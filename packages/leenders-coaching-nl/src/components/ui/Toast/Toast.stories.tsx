@@ -10,6 +10,9 @@ import { Button } from '@/components/ui/Button';
 import { waitForMotionAnimations } from '../../../test/chromatic-utils';
 import { mockAlertData } from '@/mocks';
 
+const maintenanceToastMatcher =
+  /We zijn momenteel bezig met het verbeteren van onze website\. Excuses voor eventuele ongemakken\.?/i;
+
 /**
  * Demo component for showing toasts using the ToastProvider context.
  * Shows a default toast on mount and allows showing another toast via button click.
@@ -78,19 +81,11 @@ export const Default: Story = {
   render: () => <ToastDemo />,
   play: async ({ canvas }) => {
     /* Wait for toast to be present in the DOM first */
-    await expect(
-      canvas.getByText(
-        'We zijn momenteel bezig met het verbeteren van onze website. Excuses voor eventuele ongemakken.'
-      )
-    ).toBeInTheDocument();
+    await expect(canvas.getByText(maintenanceToastMatcher)).toBeInTheDocument();
     /* Wait for animations to complete (handles reduced motion) */
     await waitForMotionAnimations({ canvas });
     /* Now the toast should be visible regardless of motion preferences */
-    expect(
-      canvas.getByText(
-        'We zijn momenteel bezig met het verbeteren van onze website. Excuses voor eventuele ongemakken.'
-      )
-    ).toBeVisible();
+    expect(canvas.getByText(maintenanceToastMatcher)).toBeVisible();
   },
 };
 
@@ -155,17 +150,11 @@ export const Interactive: Story = {
     );
 
     /* Wait for the toast to appear in the DOM first */
-    await expect(
-      canvas.getByText(
-        'We zijn momenteel bezig met het verbeteren van onze website. Excuses voor eventuele ongemakken.'
-      )
-    ).toBeInTheDocument();
+    await expect(canvas.getByText(maintenanceToastMatcher)).toBeInTheDocument();
     /* Wait for animations to complete (handles reduced motion) */
     await waitForMotionAnimations({ canvas });
     /* For reduced motion environments, check if element exists and is functional */
-    const toastElement = canvas.getByText(
-      'We zijn momenteel bezig met het verbeteren van onze website. Excuses voor eventuele ongemakken.'
-    );
+    const toastElement = canvas.getByText(maintenanceToastMatcher);
     /* If not visible due to reduced motion, at least verify it exists and is accessible */
     try {
       expect(toastElement).toBeVisible();
