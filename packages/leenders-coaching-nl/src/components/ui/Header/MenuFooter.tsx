@@ -44,6 +44,7 @@ type SocialLink = {
 
 type MenuFooterProps = {
   sections: MenuFooter;
+  onLinkClick?: () => void;
 };
 
 /* Animation variants for the footer sections container */
@@ -122,6 +123,7 @@ const FooterSection = ({
 type SocialLinkProps = {
   href: string;
   label: string;
+  onClick?: () => void;
 };
 
 /**
@@ -129,13 +131,14 @@ type SocialLinkProps = {
  * @param props - The social link props.
  * @returns A styled social media link with appropriate icon.
  */
-const SocialLinkItem = ({ href, label }: SocialLinkProps) => (
+const SocialLinkItem = ({ href, label, onClick }: SocialLinkProps) => (
   <motion.div variants={linkVariants}>
     <Link
       href={href}
       className="text-muted-foreground hover:text-foreground transition-colors"
       target="_blank"
       rel="noopener noreferrer"
+      onClick={onClick}
     >
       <Flex items="center" gap={2}>
         {label}
@@ -154,8 +157,12 @@ const SocialLinkItem = ({ href, label }: SocialLinkProps) => (
  * @param props - The menu footer props containing section data.
  * @returns The complete menu footer with animated sections.
  */
-export const MenuFooter = ({ sections }: MenuFooterProps) => {
+export const MenuFooter = ({ sections, onLinkClick }: MenuFooterProps) => {
   if (!sections.about || !sections.contact) return null;
+
+  const handleLinkClick = () => {
+    onLinkClick?.();
+  };
 
   return (
     <Box className="transition-theme">
@@ -191,6 +198,7 @@ export const MenuFooter = ({ sections }: MenuFooterProps) => {
                           <SocialLinkItem
                             href={link.url}
                             label={link.platform}
+                            onClick={handleLinkClick}
                           />
                         </Box>
                       )
@@ -212,6 +220,7 @@ export const MenuFooter = ({ sections }: MenuFooterProps) => {
                       <Link
                         href={sections.contact.projectEnquiry.href || '#'}
                         className="text-sm underline hover:text-primary transition-theme ml-1"
+                        onClick={handleLinkClick}
                       >
                         {sections.contact.projectEnquiry.linkText}
                       </Link>
@@ -227,6 +236,7 @@ export const MenuFooter = ({ sections }: MenuFooterProps) => {
                       <Link
                         href={sections.contact.generalEnquiry.href || '#'}
                         className="text-sm underline hover:text-primary transition-theme ml-1"
+                        onClick={handleLinkClick}
                       >
                         {sections.contact.generalEnquiry.linkText}
                       </Link>
@@ -241,6 +251,7 @@ export const MenuFooter = ({ sections }: MenuFooterProps) => {
                     <Link
                       href="/privacy"
                       className="text-sm underline hover:text-primary transition-theme ml-1"
+                      onClick={handleLinkClick}
                     >
                       Privacy
                     </Link>
@@ -254,6 +265,7 @@ export const MenuFooter = ({ sections }: MenuFooterProps) => {
                     <Link
                       href="/voorwaarden"
                       className="text-sm underline hover:text-primary transition-theme ml-1"
+                      onClick={handleLinkClick}
                     >
                       Voorwaarden
                     </Link>

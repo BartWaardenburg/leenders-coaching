@@ -256,7 +256,10 @@ export const Header = ({
                         onItemClick={() => setIsMenuOpen(false)}
                       />
                     </Box>
-                    <HeaderMenuFooter sections={menuFooter} />
+                    <HeaderMenuFooter
+                      sections={menuFooter}
+                      onLinkClick={() => setIsMenuOpen(false)}
+                    />
                   </Flex>
                 </motion.div>
               </Container>
