@@ -1,7 +1,7 @@
 'use client';
 
 import React, { ViewTransitionProps } from 'react';
-import { unstable_ViewTransition as ReactViewTransition } from 'react';
+import { ViewTransition as ReactViewTransition } from 'react';
 
 /**
  * Wrapper component for React's experimental ViewTransition API.
