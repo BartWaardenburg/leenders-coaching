@@ -23,8 +23,8 @@
   "dependencies": {
     "@sanity/client": "7.12.0",
     "@sanity/presentation": "2.0.0",
-    "@sanity/types": "4.10.2",
-    "@sanity/vision": "4.10.2",
+    "@sanity/types": "4.10.3",
+    "@sanity/vision": "4.10.3",
     "dotenv": "17.2.3",
     "lodash.defaults": "4.2.0",
     "lodash.difference": "4.5.0",
@@ -34,7 +34,7 @@
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-is": "19.2.0",
-    "sanity": "4.10.2",
+    "sanity": "4.10.3",
     "styled-components": "6.1.19"
   },
   "devDependencies": {
@@ -46,9 +46,9 @@
     "ts-node": "10.9.2",
     "typescript": "5.9.3"
   },
-  "packageManager": "pnpm@10.18.0",
+  "packageManager": "pnpm@10.18.3",
   "engines": {
     "node": ">=22.0.0",
-    "pnpm": "10.18.0"
+    "pnpm": "10.18.3"
   }
 }
