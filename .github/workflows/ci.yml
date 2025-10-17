@@ -19,7 +19,7 @@ jobs:
     name: 'Quality Checks'
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.55.1-jammy
+      image: mcr.microsoft.com/playwright:v1.56.1-jammy
       options: --ipc=host
     timeout-minutes: 10
 
@@ -63,7 +63,7 @@ jobs:
     name: 'Frontend Tests'
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.55.1-jammy
+      image: mcr.microsoft.com/playwright:v1.56.1-jammy
       options: --ipc=host
     timeout-minutes: 15
     permissions:
