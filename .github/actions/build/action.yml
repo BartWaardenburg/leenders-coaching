@@ -128,7 +128,7 @@ runs:
 
     - name: Upload build artifacts
       if: ${{ inputs.package-build == 'true' }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: ${{ inputs.package-name }}-build-${{ inputs.github-sha }}
         path: ${{ inputs.package-name }}-build.tar.gz
