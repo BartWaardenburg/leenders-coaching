@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import * as React from 'react';
 import { expect, fn } from 'storybook/test';
 import { Form } from './Form';
 import { Box } from '../Box/Box';
