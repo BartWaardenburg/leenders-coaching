@@ -11,6 +11,12 @@ import { StatsWriterPlugin } from 'webpack-stats-plugin';
  */
 const nextConfig: NextConfig = {
   /**
+   * Turbopack is the default bundler in Next.js 16.
+   * An empty config silences the migration warning since our webpack config
+   * is only used for bundle analysis which runs with --webpack flag.
+   */
+  turbopack: {},
+  /**
    * Experimental configuration for modern browser optimization
    */
   experimental: {
@@ -19,10 +25,6 @@ const nextConfig: NextConfig = {
      * Optimize package imports to reduce bundle size
      */
     optimizePackageImports: ['@sanity/image-url', '@portabletext/react'],
-  },
-  eslint: {
-    /* Ignore ESLint errors during production builds */
-    ignoreDuringBuilds: true,
   },
   /**
    * Optimize SWC for modern browsers

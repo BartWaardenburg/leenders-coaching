@@ -1,5 +1,5 @@
 import type { StaticImageData } from 'next/image';
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import type { SanityImageSource } from '@sanity/image-url';
 
 import { Section, type SectionBaseProps } from '@/components/ui/Section';
 import { Box } from '@/components/ui/Box';

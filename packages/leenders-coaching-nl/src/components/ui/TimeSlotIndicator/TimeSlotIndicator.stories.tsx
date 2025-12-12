@@ -1,4 +1,3 @@
-import React from 'react';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { TimeSlotIndicator } from './TimeSlotIndicator';
 import { Box } from '@/components/ui/Box';

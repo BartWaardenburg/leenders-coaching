@@ -50,31 +50,31 @@ export async function POST(req: NextRequest) {
 
     const { _type, slug, path } = body;
 
-    if (_type) revalidateTag(_type);
+    if (_type) revalidateTag(_type, 'max');
 
     // Handle different content types
     switch (_type) {
       case 'post':
         const postSlug = typeof slug === 'string' ? slug : slug?.current;
         if (postSlug) {
-          revalidateTag(`post:${postSlug}`);
-          if (path) revalidatePath(path);
+          revalidateTag(`post:${postSlug}`, 'max');
+          if (path) revalidatePath(path, 'page');
           // Fallback: if path is missing (delete/unpublish), revalidate blog listing
-          if (!path) revalidatePath('/blog');
+          if (!path) revalidatePath('/blog', 'page');
         }
         // Revalidate sitemap when blog posts change
-        revalidateTag('sitemap');
+        revalidateTag('sitemap', 'max');
         break;
 
       case 'category':
         const categorySlug = typeof slug === 'string' ? slug : slug?.current;
         if (categorySlug) {
-          revalidateTag(`category:${categorySlug}`);
-          if (path) revalidatePath(path);
+          revalidateTag(`category:${categorySlug}`, 'max');
+          if (path) revalidatePath(path, 'page');
           // Fallback: if path is missing (delete/unpublish), revalidate parent listings
           if (!path) {
-            revalidatePath('/blog'); // listing
-            revalidateTag('category'); // covers category pages that query by tag
+            revalidatePath('/blog', 'page'); // listing
+            revalidateTag('category', 'max'); // covers category pages that query by tag
           }
         }
         break;
@@ -87,21 +87,21 @@ export async function POST(req: NextRequest) {
       case 'privacyPage':
       case 'voorwaardenPage':
       case 'page':
-        if (path) revalidatePath(path);
+        if (path) revalidatePath(path, 'page');
         // Revalidate sitemap when pages change
-        revalidateTag('sitemap');
+        revalidateTag('sitemap', 'max');
         break;
 
       case 'header':
       case 'footer':
       case 'configuration':
         // Global content affects all pages
-        revalidateTag('global');
-        revalidateTag('navigation');
-        revalidateTag('footer');
-        revalidateTag('settings');
-        revalidateTag('sitemap');
-        revalidatePath('/');
+        revalidateTag('global', 'max');
+        revalidateTag('navigation', 'max');
+        revalidateTag('footer', 'max');
+        revalidateTag('settings', 'max');
+        revalidateTag('sitemap', 'max');
+        revalidatePath('/', 'page');
         break;
     }
 

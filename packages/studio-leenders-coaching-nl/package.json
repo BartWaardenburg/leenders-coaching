@@ -21,34 +21,34 @@
     "sanity"
   ],
   "dependencies": {
-    "@sanity/client": "7.12.0",
+    "@sanity/client": "7.13.2",
     "@sanity/presentation": "2.0.0",
-    "@sanity/types": "4.10.3",
-    "@sanity/vision": "4.10.3",
+    "@sanity/types": "4.21.1",
+    "@sanity/vision": "4.21.1",
     "dotenv": "17.2.3",
     "lodash.defaults": "4.2.0",
     "lodash.difference": "4.5.0",
     "lodash.flatten": "4.4.0",
     "lodash.union": "4.6.0",
     "nanoid": "5.1.6",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
-    "react-is": "19.2.0",
-    "sanity": "4.10.3",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-is": "19.2.3",
+    "sanity": "4.21.1",
     "styled-components": "6.1.19"
   },
   "devDependencies": {
     "@sanity/eslint-config-studio": "5.0.2",
-    "@types/node": "24.8.1",
-    "@types/react": "19.2.2",
-    "eslint": "9.37.0",
-    "prettier": "3.6.2",
+    "@types/node": "25.0.1",
+    "@types/react": "19.2.7",
+    "eslint": "9.39.1",
+    "prettier": "3.7.4",
     "ts-node": "10.9.2",
     "typescript": "5.9.3"
   },
-  "packageManager": "pnpm@10.18.3",
+  "packageManager": "pnpm@10.25.0",
   "engines": {
     "node": ">=22.0.0",
-    "pnpm": "10.18.3"
+    "pnpm": "10.25.0"
   }
 }

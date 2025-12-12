@@ -3,7 +3,7 @@
 import { cn } from '@/utilities/cn';
 import { motion, useReducedMotion, type HTMLMotionProps } from 'motion/react';
 import type { StaticImageData } from 'next/image';
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import type { SanityImageSource } from '@sanity/image-url';
 import { Avatar } from '@/components/ui/Avatar';
 import { Heading } from '@/components/ui/Heading';
 import { Text } from '@/components/ui/Text';

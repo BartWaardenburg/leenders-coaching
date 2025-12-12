@@ -1,7 +1,7 @@
 'use client';
 
 import NextImage, { ImageProps as NextImageProps } from 'next/image';
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import type { SanityImageSource } from '@sanity/image-url';
 import {
   createSanityLoader,
   getLQIP,

@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
+import { playwright } from '@vitest/browser-playwright';
 
 const pkgRoot = fileURLToPath(new URL('.', import.meta.url));
 
@@ -114,10 +115,8 @@ export const browserSetup = {
   browser: {
     enabled: true,
     headless: true,
-    provider: 'playwright',
-    instances: [{ browser: 'chromium' }],
-    // Prefer regular chromium over headless shell if available
-    useHeadlessShell: false,
+    provider: playwright(),
+    instances: [{ browser: 'chromium' as const }],
     // Container-optimized settings
     isolate: false, // Better performance in containers
   },

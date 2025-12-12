@@ -1,4 +1,3 @@
-import React from 'react';
 import type { ComponentProps } from 'react';
 import type { SectionCards } from '@/components/sections/SectionCards';
 import type { SectionCards as SanitySectionCards } from '@/types/sanity/schema';

@@ -1,12 +1,12 @@
-import imageUrlBuilder from '@sanity/image-url';
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import { createImageUrlBuilder } from '@sanity/image-url';
+import type { SanityImageSource } from '@sanity/image-url';
 import { client } from '@/utilities/sanity';
 
 /**
  * Internal builder that respects crop + hotspot when width/height are set
  * Let Sanity CDN pick the best format for the browser (WebP/AVIF) and control quality
  */
-const builder = imageUrlBuilder(client);
+const builder = createImageUrlBuilder(client);
 export const urlFor = (source: SanityImageSource) => builder.image(source);
 
 /**

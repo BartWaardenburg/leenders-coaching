@@ -1,6 +1,9 @@
 import type { StorybookConfig } from '@storybook/nextjs-vite';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { visualizer } from 'rollup-plugin-visualizer';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * Storybook configuration for leenders-coaching-nl.
