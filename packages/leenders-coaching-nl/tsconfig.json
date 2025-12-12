@@ -26,6 +26,7 @@
     "types": [],
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "verbatimModuleSyntax": false,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "forceConsistentCasingInFileNames": true

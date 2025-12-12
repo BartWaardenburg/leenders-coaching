@@ -87,9 +87,12 @@ const eslintConfig = [
       "@typescript-eslint/no-misused-promises": ["error", {
         "checksVoidReturn": false
       }],
-      "@typescript-eslint/no-unused-vars": ["warn", {
+      "@typescript-eslint/no-unused-vars": ["error", {
         "argsIgnorePattern": "^_",
-        "varsIgnorePattern": "^_"
+        "varsIgnorePattern": "^_",
+        "args": "all",
+        "caughtErrors": "all",
+        "ignoreRestSiblings": true
       }],
       "@typescript-eslint/no-explicit-any": "error",
 
@@ -100,6 +103,7 @@ const eslintConfig = [
       "react/jsx-uses-vars": "error",
 
       /* Import rules */
+      "import/no-unused-modules": "off", // Too slow for large projects
       /*
       "import/order": ["error", {
         "newlines-between": "always",
