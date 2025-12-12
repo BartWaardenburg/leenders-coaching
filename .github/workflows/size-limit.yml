@@ -344,7 +344,7 @@ jobs:
           fi
 
       - name: '📁 Upload Bundle Analysis Artifacts'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: 'bundle-analysis-${{ github.run_number }}'
           path: |
