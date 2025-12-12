@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ViewTransitionProps } from 'react';
+import type { ViewTransitionProps } from 'react';
 import { ViewTransition as ReactViewTransition } from 'react';
 
 /**

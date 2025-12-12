@@ -1,4 +1,3 @@
-import React from 'react';
 import { ImageResponse } from 'next/og';
 
 import { getSiteSettings } from '@/utilities/groq-queries';
@@ -83,75 +82,184 @@ export async function GET(request: Request) {
     ]);
 
     return new ImageResponse(
-      (
+      <div
+        style={{
+          height: '100%',
+          width: '100%',
+          display: 'flex',
+          background: backgrounds[variant as keyof typeof backgrounds],
+          position: 'relative',
+        }}
+      >
+        {/* Image Section - Uses custom image from Sanity metadata if provided, otherwise falls back to default */}
         <div
           style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '40%',
             height: '100%',
-            width: '100%',
             display: 'flex',
-            background: backgrounds[variant as keyof typeof backgrounds],
-            position: 'relative',
+            overflow: 'hidden',
+            borderRight: '1px solid rgba(0,0,0,0.1)',
           }}
         >
-          {/* Image Section - Uses custom image from Sanity metadata if provided, otherwise falls back to default */}
-          <div
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={imagePath}
+            alt={title}
+            width={defaultImageConfig.width}
+            height={defaultImageConfig.height}
             style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '40%',
+              width: '100%',
               height: '100%',
-              display: 'flex',
-              overflow: 'hidden',
-              borderRight: '1px solid rgba(0,0,0,0.1)',
+              objectFit: 'cover',
             }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={imagePath}
-              alt={title}
-              width={defaultImageConfig.width}
-              height={defaultImageConfig.height}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-              }}
-            />
-          </div>
+          />
+        </div>
 
-          {/* Content Section */}
+        {/* Content Section */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '48px',
+            paddingLeft: '528px',
+            width: '100%',
+            height: '100%',
+          }}
+        >
+          {/* Featured Label if needed */}
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
-              padding: '48px',
-              paddingLeft: '528px',
-              width: '100%',
-              height: '100%',
+              gap: '12px',
+              marginBottom: '24px',
             }}
           >
-            {/* Featured Label if needed */}
+            <div
+              style={{
+                display: 'flex',
+                fontFamily: 'Montserrat',
+                fontSize: '24px',
+                color: 'rgba(0,0,0,0.6)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+              }}
+            >
+              {siteTitle}
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                width: '48px',
+                height: '2px',
+                background: 'rgba(0,0,0,0.1)',
+              }}
+            />
+          </div>
+
+          {/* Title */}
+          <div
+            style={{
+              display: 'flex',
+              fontFamily: 'Playfair Display',
+              fontSize: '64px',
+              fontWeight: 700,
+              color: 'rgba(0,0,0,0.8)',
+              lineHeight: 1.2,
+              marginBottom: '24px',
+            }}
+          >
+            {title}
+          </div>
+
+          {/* Metadata Section */}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              borderTop: '1px solid rgba(0,0,0,0.1)',
+              borderBottom: '1px solid rgba(0,0,0,0.1)',
+              marginBottom: description ? '24px' : 0,
+            }}
+          >
+            {searchParams.get('date') && (
+              <div
+                style={{
+                  display: 'flex',
+                  padding: '16px 16px',
+                  borderRight: '1px solid rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    fontFamily: 'Montserrat',
+                    fontSize: '22px',
+                    textTransform: 'uppercase',
+                    color: 'rgba(0,0,0,0.6)',
+                  }}
+                >
+                  {searchParams.get('date')}
+                </div>
+              </div>
+            )}
+            {searchParams.get('categories') && (
+              <div
+                style={{
+                  display: 'flex',
+                  padding: '16px 16px',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    fontFamily: 'Montserrat',
+                    fontSize: '22px',
+                    textTransform: 'uppercase',
+                    color: 'rgba(0,0,0,0.6)',
+                  }}
+                >
+                  {searchParams.get('categories')}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Description */}
+          {description && (
+            <div
+              style={{
+                display: 'flex',
+                fontFamily: 'Montserrat',
+                fontSize: '24px',
+                color: 'rgba(0,0,0,0.6)',
+                lineHeight: 1.5,
+              }}
+            >
+              {description}
+            </div>
+          )}
+
+          {/* Read Article Link Indicator */}
+          <div
+            style={{
+              display: 'flex',
+              marginTop: 'auto',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+            }}
+          >
             <div
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '12px',
-                marginBottom: '24px',
+                alignItems: 'flex-end',
+                gap: '8px',
               }}
             >
-              <div
-                style={{
-                  display: 'flex',
-                  fontFamily: 'Montserrat',
-                  fontSize: '24px',
-                  color: 'rgba(0,0,0,0.6)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
-                }}
-              >
-                {siteTitle}
-              </div>
               <div
                 style={{
                   display: 'flex',
@@ -160,133 +268,22 @@ export async function GET(request: Request) {
                   background: 'rgba(0,0,0,0.1)',
                 }}
               />
-            </div>
-
-            {/* Title */}
-            <div
-              style={{
-                display: 'flex',
-                fontFamily: 'Playfair Display',
-                fontSize: '64px',
-                fontWeight: 700,
-                color: 'rgba(0,0,0,0.8)',
-                lineHeight: 1.2,
-                marginBottom: '24px',
-              }}
-            >
-              {title}
-            </div>
-
-            {/* Metadata Section */}
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                borderTop: '1px solid rgba(0,0,0,0.1)',
-                borderBottom: '1px solid rgba(0,0,0,0.1)',
-                marginBottom: description ? '24px' : 0,
-              }}
-            >
-              {searchParams.get('date') && (
-                <div
-                  style={{
-                    display: 'flex',
-                    padding: '16px 16px',
-                    borderRight: '1px solid rgba(0,0,0,0.1)',
-                  }}
-                >
-                  <div
-                    style={{
-                      display: 'flex',
-                      fontFamily: 'Montserrat',
-                      fontSize: '22px',
-                      textTransform: 'uppercase',
-                      color: 'rgba(0,0,0,0.6)',
-                    }}
-                  >
-                    {searchParams.get('date')}
-                  </div>
-                </div>
-              )}
-              {searchParams.get('categories') && (
-                <div
-                  style={{
-                    display: 'flex',
-                    padding: '16px 16px',
-                  }}
-                >
-                  <div
-                    style={{
-                      display: 'flex',
-                      fontFamily: 'Montserrat',
-                      fontSize: '22px',
-                      textTransform: 'uppercase',
-                      color: 'rgba(0,0,0,0.6)',
-                    }}
-                  >
-                    {searchParams.get('categories')}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Description */}
-            {description && (
               <div
                 style={{
                   display: 'flex',
                   fontFamily: 'Montserrat',
-                  fontSize: '24px',
+                  fontSize: '16px',
                   color: 'rgba(0,0,0,0.6)',
-                  lineHeight: 1.5,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
                 }}
               >
-                {description}
-              </div>
-            )}
-
-            {/* Read Article Link Indicator */}
-            <div
-              style={{
-                display: 'flex',
-                marginTop: 'auto',
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-end',
-                  gap: '8px',
-                }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    width: '48px',
-                    height: '2px',
-                    background: 'rgba(0,0,0,0.1)',
-                  }}
-                />
-                <div
-                  style={{
-                    display: 'flex',
-                    fontFamily: 'Montserrat',
-                    fontSize: '16px',
-                    color: 'rgba(0,0,0,0.6)',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.1em',
-                  }}
-                >
-                  Lees meer
-                </div>
+                Lees meer
               </div>
             </div>
           </div>
         </div>
-      ),
+      </div>,
       {
         width: 1200,
         height: 630,

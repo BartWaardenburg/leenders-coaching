@@ -35,27 +35,27 @@
     "validate:types": "test -f packages/studio-leenders-coaching-nl/sanity-typegen.json && echo '✅ Types generated successfully'"
   },
   "devDependencies": {
-    "@babel/preset-react": "7.27.1",
-    "@babel/preset-typescript": "7.27.1",
-    "@commitlint/cli": "19.8.1",
-    "@commitlint/config-conventional": "19.8.1",
-    "@types/node": "24.8.1",
-    "@types/react": "19.2.2",
-    "@types/react-dom": "19.2.2",
-    "@typescript-eslint/eslint-plugin": "8.46.1",
-    "@typescript-eslint/parser": "8.46.1",
+    "@babel/preset-react": "7.28.5",
+    "@babel/preset-typescript": "7.28.5",
+    "@commitlint/cli": "20.2.0",
+    "@commitlint/config-conventional": "20.2.0",
+    "@types/node": "25.0.1",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "@typescript-eslint/eslint-plugin": "8.49.0",
+    "@typescript-eslint/parser": "8.49.0",
     "babel-loader": "10.0.0",
-    "eslint": "9.37.0",
+    "eslint": "9.39.1",
     "husky": "9.1.7",
-    "lint-staged": "16.2.4",
-    "prettier": "3.6.2",
+    "lint-staged": "16.2.7",
+    "prettier": "3.7.4",
     "typescript": "5.9.3"
   },
   "engines": {
     "node": ">=22.0.0",
-    "pnpm": "10.18.3"
+    "pnpm": "10.25.0"
   },
-  "packageManager": "pnpm@10.18.3",
+  "packageManager": "pnpm@10.25.0",
   "pnpm": {
     "overrides": {
       "tmp": "0.2.5"

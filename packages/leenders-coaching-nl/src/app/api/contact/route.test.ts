@@ -25,16 +25,18 @@ vi.mock('@/emails', () => ({
 /*
  * Mock the Resend email service.
  */
-vi.mock('resend', () => ({
-  Resend: vi.fn().mockImplementation(() => ({
-    emails: {
-      send: vi.fn().mockResolvedValue({
-        data: { id: 'test-email-id' },
-        error: null,
-      }),
+vi.mock('resend', () => {
+  const mockSend = vi.fn().mockResolvedValue({
+    data: { id: 'test-email-id' },
+    error: null,
+  });
+
+  return {
+    Resend: class MockResend {
+      emails = { send: mockSend };
     },
-  })),
-}));
+  };
+});
 
 /*
  * Mock the Turnstile utility.

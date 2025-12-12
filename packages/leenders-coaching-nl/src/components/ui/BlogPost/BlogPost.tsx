@@ -12,7 +12,7 @@ import { SanityImage } from '@/components/ui/SanityImage';
 import { ViewTransition } from '@/components/ui/ViewTransition';
 import { Badge, type BadgeVariant } from '@/components/ui/Badge';
 import { PortableText } from '@/components/ui/PortableText';
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import type { SanityImageSource } from '@sanity/image-url';
 
 import type { PortableTextBlock } from '@portabletext/types';
 import type { PastelVariant } from '@/utilities/tokens';

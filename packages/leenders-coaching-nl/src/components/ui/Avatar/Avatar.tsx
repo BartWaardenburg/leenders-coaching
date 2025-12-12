@@ -2,7 +2,7 @@ import type { ComponentPropsWithoutRef } from 'react';
 import { memo } from 'react';
 import Image from 'next/image';
 import type { StaticImageData } from 'next/image';
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import type { SanityImageSource } from '@sanity/image-url';
 import { SanityImage } from '@/components/ui/SanityImage';
 import { Text } from '@/components/ui/Text';
 import { cn } from '@/utilities/cn';
