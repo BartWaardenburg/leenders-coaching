@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - name: '🔄 Checkout repository'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: '⚙️ Setup Environment'
         uses: ./.github/actions/setup
@@ -201,7 +201,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: '⚙️ Setup Environment'
         uses: ./.github/actions/setup
@@ -283,7 +283,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: '⚙️ Setup Environment'
         uses: ./.github/actions/setup
@@ -473,7 +473,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -687,7 +687,7 @@ jobs:
       SANITY_PREVIEW_SECRET: ${{ secrets.SANITY_PREVIEW_SECRET }}
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: '⚙️ Setup Environment'
         uses: ./.github/actions/setup
