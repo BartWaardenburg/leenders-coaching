@@ -54,7 +54,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: '🗂️ Cache Storybook build'
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: packages/leenders-coaching-nl/storybook-static
           key: storybook-${{ runner.os }}-${{ hashFiles('packages/leenders-coaching-nl/**/*.stories.*', 'packages/leenders-coaching-nl/src/components/**/*.tsx', 'packages/leenders-coaching-nl/.storybook/**/*', 'packages/leenders-coaching-nl/tailwind.config.*') }}
