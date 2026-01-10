@@ -126,7 +126,7 @@
     "storybook": "10.1.7",
     "style-loader": "4.0.0",
     "tailwindcss": "4.1.18",
-    "vite-tsconfig-paths": "5.1.4",
+    "vite-tsconfig-paths": "6.0.4",
     "vitest": "4.0.15",
     "web-vitals": "5.1.0",
     "webpack": "5.103.0",
