@@ -21,10 +21,10 @@
     "sanity"
   ],
   "dependencies": {
-    "@sanity/client": "7.13.2",
+    "@sanity/client": "7.14.0",
     "@sanity/presentation": "2.0.0",
-    "@sanity/types": "4.21.1",
-    "@sanity/vision": "4.21.1",
+    "@sanity/types": "4.22.0",
+    "@sanity/vision": "4.22.0",
     "dotenv": "17.2.3",
     "lodash.defaults": "4.2.0",
     "lodash.difference": "4.5.0",
@@ -34,8 +34,8 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-is": "19.2.3",
-    "sanity": "4.21.1",
-    "styled-components": "6.1.19"
+    "sanity": "4.22.0",
+    "styled-components": "6.3.5"
   },
   "devDependencies": {
     "@sanity/eslint-config-studio": "5.0.2",
@@ -46,9 +46,9 @@
     "ts-node": "10.9.2",
     "typescript": "5.9.3"
   },
-  "packageManager": "pnpm@10.25.0",
+  "packageManager": "pnpm@10.28.0",
   "engines": {
     "node": ">=22.0.0",
-    "pnpm": "10.25.0"
+    "pnpm": "10.28.0"
   }
 }
