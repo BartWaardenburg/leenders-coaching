@@ -35,6 +35,9 @@ interface SectionFormProps extends SectionBaseProps {
   };
 }
 
+// Mailing disabled — set to false to re-enable the contact form
+const MAILING_DISABLED = true;
+
 /**
  * Section component for displaying a contact form with optional title and description
  */
@@ -98,6 +101,14 @@ export const SectionForm = ({ form, maxWidth, ...props }: SectionFormProps) => {
       }
     }
   };
+
+  if (MAILING_DISABLED) {
+    return (
+      <Section maxWidth={maxWidth} {...props}>
+        <Box className="mx-auto @container max-w-2xl" />
+      </Section>
+    );
+  }
 
   return (
     <Section maxWidth={maxWidth} {...props}>

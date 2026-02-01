@@ -19,11 +19,21 @@ type ContactFormRequest = ContactFormData & {
   company?: string;
 };
 
+// Mailing disabled — set to false to re-enable contact form
+const MAILING_DISABLED = true;
+
 /**
  * API handler for contact form submissions
  * POST /api/contact
  */
 export async function POST(request: Request) {
+  if (MAILING_DISABLED) {
+    return NextResponse.json(
+      { error: 'Contact form is temporarily disabled' },
+      { status: 503 }
+    );
+  }
+
   try {
     const data = (await request.json()) as ContactFormRequest;
     const { name, email, subject, message, formConfig } = data;

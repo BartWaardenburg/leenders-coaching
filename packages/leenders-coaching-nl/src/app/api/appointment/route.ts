@@ -25,11 +25,21 @@ type AppointmentFormData = {
   company?: string;
 };
 
+// Mailing disabled — set to false to re-enable appointment booking
+const MAILING_DISABLED = true;
+
 /**
  * API handler for appointment booking submissions
  * POST /api/appointment
  */
 export async function POST(request: Request) {
+  if (MAILING_DISABLED) {
+    return NextResponse.json(
+      { error: 'Appointment booking is temporarily disabled' },
+      { status: 503 }
+    );
+  }
+
   try {
     const data = (await request.json()) as AppointmentFormData;
     const { name, email, phone, message, selectedDate, selectedTimeSlot } =

@@ -289,26 +289,39 @@ export const SectionCalendar = ({
     [selectedDate, settings?.bookingFormConfig?.successMessage]
   );
 
+  // Mailing/booking disabled — set bookingDisabled to false to re-enable
+  const bookingDisabled = true;
+
   return (
     <>
       <Section maxWidth={maxWidth} background={background} {...props}>
         <Box className="mx-auto">
           <Calendar
             initialDate={initialDateStable}
-            renderDay={renderDayWithTimeSlots}
-            onSelectDate={handleDateSelect}
-            disabledDates={createEnhancedDisabledDates(
-              disabledDates,
-              settings?.availableTimeSlots,
-              settings?.bookingEnabled ? 6 : undefined
-            )}
-            maxMonthsInFuture={settings?.bookingEnabled ? 6 : undefined}
+            renderDay={bookingDisabled ? renderDay : renderDayWithTimeSlots}
+            onSelectDate={bookingDisabled ? onSelectDate : handleDateSelect}
+            disabledDates={
+              bookingDisabled
+                ? disabledDates
+                : createEnhancedDisabledDates(
+                    disabledDates,
+                    settings?.availableTimeSlots,
+                    settings?.bookingEnabled ? 6 : undefined
+                  )
+            }
+            maxMonthsInFuture={
+              bookingDisabled
+                ? undefined
+                : settings?.bookingEnabled
+                  ? 6
+                  : undefined
+            }
           />
         </Box>
       </Section>
 
-      {/* Booking modal */}
-      {settings?.bookingEnabled && (
+      {/* Booking modal — disabled while mailing is turned off */}
+      {!bookingDisabled && settings?.bookingEnabled && (
         <AppointmentBookingModal
           isOpen={isBookingModalOpen}
           selectedDate={selectedDate}
