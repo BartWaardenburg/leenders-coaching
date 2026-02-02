@@ -161,7 +161,7 @@ jobs:
         run: pnpm run validate:types
 
       - name: '📤 Upload schema artifacts'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: sanity-schema-${{ github.sha }}
           path: |
