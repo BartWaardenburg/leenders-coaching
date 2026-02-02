@@ -40,7 +40,7 @@ runs:
       run: pnpm --version
 
     - name: Setup Node.js (built-in pnpm cache)
-      uses: actions/setup-node@v5
+      uses: actions/setup-node@v6
       with:
         node-version: ${{ inputs.node-version }}
         cache: pnpm
