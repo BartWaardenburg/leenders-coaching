@@ -38,7 +38,7 @@ jobs:
 
     steps:
       - name: 'Checkout code'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: '⚙️ Setup Environment'
         uses: ./.github/actions/setup
@@ -100,7 +100,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: 'Checkout code'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: '🏗️ Build Package'
         uses: ./.github/actions/build
         with:
@@ -143,7 +143,7 @@ jobs:
 
     steps:
       - name: 'Checkout code'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: '⚙️ Setup Environment'
         uses: ./.github/actions/setup
         with:
@@ -176,7 +176,7 @@ jobs:
 
     steps:
       - name: '🔄 Checkout repository'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: '⚙️ Setup Environment'
         uses: ./.github/actions/setup
