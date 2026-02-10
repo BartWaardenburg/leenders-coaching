@@ -52,16 +52,11 @@ vi.mock('@/utilities/turnstile', () => ({
 
 /**
  * Test suite for the contact API route.
- * Covers valid submissions, missing fields, invalid JSON, and error handling.
+ * Mailing is currently disabled (MAILING_DISABLED = true), so all requests return 503.
  */
 describe('POST /api/contact', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    /*
-     * If you need to mock sendContactEmail's resolved value, do it here.
-     * Example:
-     * vi.mocked(sendContactEmail).mockResolvedValue({ success: true });
-     */
   });
 
   afterEach(() => {
@@ -69,9 +64,9 @@ describe('POST /api/contact', () => {
   });
 
   /**
-   * Should handle valid contact form submission.
+   * All requests should return 503 while mailing is disabled.
    */
-  it('should handle valid contact form submission', async () => {
+  it('should return 503 when mailing is disabled', async () => {
     const mockData = {
       name: 'Jan van der Berg',
       email: 'jan.vandenberg@example.nl',
@@ -79,7 +74,7 @@ describe('POST /api/contact', () => {
       message: 'Hallo, ik ben geïnteresseerd in jullie coaching diensten.',
       subject: 'Vraag over coaching sessies',
       turnstileToken: 'test-turnstile-token',
-      startedAt: Date.now() - 2000, // 2 seconds ago, meets minimum 1.2s requirement
+      startedAt: Date.now() - 2000,
     };
 
     const request = new NextRequest('http://localhost:3000/api/contact', {
@@ -90,153 +85,31 @@ describe('POST /api/contact', () => {
     const response = await POST(request);
     const result = await response.json();
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(503);
     expect(result).toEqual({
-      success: true,
-      notificationId: 'test-email-id',
-      confirmationId: 'test-email-id',
+      error: 'Contact form is temporarily disabled',
     });
   });
 
-  /**
-   * Should handle missing required fields (email, subject).
-   */
-  it('should handle missing required fields', async () => {
-    const mockData = {
-      name: 'Jan van der Berg',
-      /* Missing email, subject */
-      message: 'Hallo, ik ben geïnteresseerd in jullie coaching diensten.',
-    };
-
+  it('should return 503 for missing fields when mailing is disabled', async () => {
     const request = new NextRequest('http://localhost:3000/api/contact', {
       method: 'POST',
-      body: JSON.stringify(mockData),
+      body: JSON.stringify({ name: 'Test' }),
     });
 
     const response = await POST(request);
-    const result = await response.json();
 
-    expect(response.status).toBe(400);
-    expect(result).toEqual({
-      error: 'Missing required fields',
-    });
+    expect(response.status).toBe(503);
   });
 
-  /**
-   * Should handle missing subject field.
-   */
-  it('should handle missing subject field', async () => {
-    const mockData = {
-      name: 'John Doe',
-      email: 'john@example.com',
-      message: 'Test message',
-      /* Missing subject */
-    };
-
-    const request = new NextRequest('http://localhost:3000/api/contact', {
-      method: 'POST',
-      body: JSON.stringify(mockData),
-    });
-
-    const response = await POST(request);
-    const result = await response.json();
-
-    expect(response.status).toBe(400);
-    expect(result).toEqual({
-      error: 'Missing required fields',
-    });
-  });
-
-  /**
-   * Should handle missing name field.
-   */
-  it('should handle missing name field', async () => {
-    const mockData = {
-      email: 'john@example.com',
-      subject: 'Test subject',
-      message: 'Test message',
-      /* Missing name */
-    };
-
-    const request = new NextRequest('http://localhost:3000/api/contact', {
-      method: 'POST',
-      body: JSON.stringify(mockData),
-    });
-
-    const response = await POST(request);
-    const result = await response.json();
-
-    expect(response.status).toBe(400);
-    expect(result).toEqual({
-      error: 'Missing required fields',
-    });
-  });
-
-  /**
-   * Should handle missing email field.
-   */
-  it('should handle missing email field', async () => {
-    const mockData = {
-      name: 'John Doe',
-      subject: 'Test subject',
-      message: 'Test message',
-      /* Missing email */
-    };
-
-    const request = new NextRequest('http://localhost:3000/api/contact', {
-      method: 'POST',
-      body: JSON.stringify(mockData),
-    });
-
-    const response = await POST(request);
-    const result = await response.json();
-
-    expect(response.status).toBe(400);
-    expect(result).toEqual({
-      error: 'Missing required fields',
-    });
-  });
-
-  /**
-   * Should handle missing message field.
-   */
-  it('should handle missing message field', async () => {
-    const mockData = {
-      name: 'John Doe',
-      email: 'john@example.com',
-      subject: 'Test subject',
-      /* Missing message */
-    };
-
-    const request = new NextRequest('http://localhost:3000/api/contact', {
-      method: 'POST',
-      body: JSON.stringify(mockData),
-    });
-
-    const response = await POST(request);
-    const result = await response.json();
-
-    expect(response.status).toBe(400);
-    expect(result).toEqual({
-      error: 'Missing required fields',
-    });
-  });
-
-  /**
-   * Should handle invalid JSON in request body.
-   */
-  it('should handle invalid JSON in request body', async () => {
+  it('should return 503 for invalid JSON when mailing is disabled', async () => {
     const request = new NextRequest('http://localhost:3000/api/contact', {
       method: 'POST',
       body: 'invalid-json',
     });
 
     const response = await POST(request);
-    const result = await response.json();
 
-    expect(response.status).toBe(500);
-    expect(result).toEqual({
-      error: 'Failed to send message',
-    });
+    expect(response.status).toBe(503);
   });
 });

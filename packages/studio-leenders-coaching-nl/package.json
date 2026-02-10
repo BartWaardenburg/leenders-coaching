@@ -23,9 +23,9 @@
   "dependencies": {
     "@sanity/client": "7.14.1",
     "@sanity/presentation": "2.0.0",
-    "@sanity/types": "5.7.0",
-    "@sanity/vision": "5.7.0",
-    "dotenv": "17.2.3",
+    "@sanity/types": "5.9.0",
+    "@sanity/vision": "5.9.0",
+    "dotenv": "17.2.4",
     "lodash.defaults": "4.2.0",
     "lodash.difference": "4.5.0",
     "lodash.flatten": "4.4.0",
@@ -34,14 +34,14 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-is": "19.2.4",
-    "sanity": "5.7.0",
-    "styled-components": "6.3.8"
+    "sanity": "5.9.0",
+    "styled-components": "6.3.9"
   },
   "devDependencies": {
     "@sanity/eslint-config-studio": "6.0.0",
-    "@types/node": "25.0.10",
-    "@types/react": "19.2.10",
-    "eslint": "9.39.2",
+    "@types/node": "25.2.3",
+    "@types/react": "19.2.13",
+    "eslint": "9.28.0",
     "prettier": "3.8.1",
     "ts-node": "10.9.2",
     "typescript": "5.9.3"
