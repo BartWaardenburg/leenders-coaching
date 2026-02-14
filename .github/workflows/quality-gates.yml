@@ -93,7 +93,7 @@ jobs:
 
       - name: '📤 Upload audit results'
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: security-audit-${{ github.sha }}
           path: audit-results.json
@@ -271,7 +271,7 @@ jobs:
           number: ${{ github.event.pull_request.number }}
           path: license-report.md
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: license-scan-${{ github.sha }}
@@ -459,7 +459,7 @@ jobs:
           number: ${{ github.event.pull_request.number }}
           path: dependency-report.md
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: dependency-artifacts-${{ github.sha }}
           path: |
@@ -659,7 +659,7 @@ jobs:
           number: ${{ github.event.pull_request.number }}
           path: code-quality.md
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: code-quality-${{ github.sha }}
@@ -738,7 +738,7 @@ jobs:
 
       - name: '📤 Upload analyzer artifacts'
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: bundle-analyzer-${{ github.sha }}
           path: |
