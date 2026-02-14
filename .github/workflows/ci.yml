@@ -37,7 +37,7 @@ jobs:
 
     steps:
       - name: 'Checkout code'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: '⚙️ Run Quality Checks'
         uses: ./.github/actions/test
         with:
@@ -87,7 +87,7 @@ jobs:
 
     steps:
       - name: 'Checkout code'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: '⚙️ Setup Environment'
         uses: ./.github/actions/setup
@@ -137,7 +137,7 @@ jobs:
 
     steps:
       - name: 'Checkout code'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: '🏗️ Build Studio'
         uses: ./.github/actions/build
         with:
@@ -182,7 +182,7 @@ jobs:
 
     steps:
       - name: 'Checkout code'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: '🏗️ Build All Packages'
         uses: ./.github/actions/build
         with:
