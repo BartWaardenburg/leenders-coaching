@@ -27,16 +27,21 @@ console.log(`SERVER_ANALYZE_DIR: ${SERVER_ANALYZE_DIR}`);
 console.log(`OUT_DIR: ${OUT_DIR}`);
 console.log(`Current working directory: ${process.cwd()}`);
 
-const readJSON = (p) => (fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, 'utf8')) : null);
+const readJSON = (p) =>
+  fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, 'utf8')) : null;
 
 // Check if .next directory exists
 if (!fs.existsSync(NEXT_DIR)) {
   console.log(`❌ .next directory not found at: ${NEXT_DIR}`);
-  console.log('This suggests the build may have failed or completed in a different location');
+  console.log(
+    'This suggests the build may have failed or completed in a different location'
+  );
 }
 
 const buildManifest = readJSON(path.join(NEXT_DIR, 'build-manifest.json')); // pages router
-const appPathsManifest = readJSON(path.join(NEXT_DIR, 'server', 'app-paths-manifest.json')); // app router
+const appPathsManifest = readJSON(
+  path.join(NEXT_DIR, 'server', 'app-paths-manifest.json')
+); // app router
 
 // Try to read client stats from the correct location based on Next.js config
 let clientStats = readJSON(path.join(STATIC_ANALYZE_DIR, 'client-stats.json'));
@@ -46,13 +51,18 @@ if (!clientStats) {
 clientStats = clientStats || { assets: [], modules: [] };
 
 // Server stats are written to .next/analyze/server-stats.json (one level up from server/)
-const serverStats = readJSON(path.join(ANALYZE_DIR, 'server-stats.json')) || { assets: [], modules: [] };
+const serverStats = readJSON(path.join(ANALYZE_DIR, 'server-stats.json')) || {
+  assets: [],
+  modules: [],
+};
 
 // If we still don't have stats, try to create a basic structure from the build output
 if (!clientStats.assets || clientStats.assets.length === 0) {
-  console.log('⚠️ No client stats found, creating basic structure from build output');
+  console.log(
+    '⚠️ No client stats found, creating basic structure from build output'
+  );
   clientStats = { assets: [], modules: [] };
-  
+
   // Try to find JS files in the .next/static directory
   const staticDir = path.join(NEXT_DIR, 'static');
   if (fs.existsSync(staticDir)) {
@@ -68,7 +78,7 @@ if (!clientStats.assets || clientStats.assets.length === 0) {
             const stats = fs.statSync(fullPath);
             clientStats.assets.push({
               name: relativePath,
-              size: stats.size
+              size: stats.size,
             });
           }
         }
@@ -82,10 +92,18 @@ if (!clientStats.assets || clientStats.assets.length === 0) {
 
 // List what files actually exist for debugging
 console.log('\n=== File existence check ===');
-console.log(`Build manifest exists: ${fs.existsSync(path.join(NEXT_DIR, 'build-manifest.json'))}`);
-console.log(`App paths manifest exists: ${fs.existsSync(path.join(NEXT_DIR, 'server', 'app-paths-manifest.json'))}`);
-console.log(`Client stats exists: ${fs.existsSync(path.join(STATIC_ANALYZE_DIR, 'client-stats.json'))}`);
-console.log(`Server stats exists: ${fs.existsSync(path.join(ANALYZE_DIR, 'server-stats.json'))}`);
+console.log(
+  `Build manifest exists: ${fs.existsSync(path.join(NEXT_DIR, 'build-manifest.json'))}`
+);
+console.log(
+  `App paths manifest exists: ${fs.existsSync(path.join(NEXT_DIR, 'server', 'app-paths-manifest.json'))}`
+);
+console.log(
+  `Client stats exists: ${fs.existsSync(path.join(STATIC_ANALYZE_DIR, 'client-stats.json'))}`
+);
+console.log(
+  `Server stats exists: ${fs.existsSync(path.join(ANALYZE_DIR, 'server-stats.json'))}`
+);
 
 // List contents of key directories
 if (fs.existsSync(NEXT_DIR)) {
@@ -100,8 +118,12 @@ if (fs.existsSync(NEXT_DIR)) {
 
 console.log(`Build manifest: ${buildManifest ? 'found' : 'not found'}`);
 console.log(`App paths manifest: ${appPathsManifest ? 'found' : 'not found'}`);
-console.log(`Client stats: ${clientStats.assets ? clientStats.assets.length : 'not found'} assets`);
-console.log(`Server stats: ${serverStats.assets ? serverStats.assets.length : 'not found'} assets`);
+console.log(
+  `Client stats: ${clientStats.assets ? clientStats.assets.length : 'not found'} assets`
+);
+console.log(
+  `Server stats: ${serverStats.assets ? serverStats.assets.length : 'not found'} assets`
+);
 
 // map asset -> {raw,gzip,brotli}
 const sizeOf = (fileRel) => {
@@ -110,7 +132,9 @@ const sizeOf = (fileRel) => {
   const buf = fs.readFileSync(filePath);
   const raw = buf.length;
   const gz = gzipSizeSync(buf);
-  const br = brotliSizeSync(buf, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 11 } });
+  const br = brotliSizeSync(buf, {
+    params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 11 },
+  });
   return { raw, gz, br };
 };
 
@@ -121,7 +145,13 @@ for (const asset of clientStats.assets || []) {
   // stats names are usually already relative to .next/
   const candidates = [asset.name, path.join('static', asset.name)];
   let s = null;
-  for (const c of candidates) { s = sizeOf(c); if (s) { assetSize.set(c, s); break; } }
+  for (const c of candidates) {
+    s = sizeOf(c);
+    if (s) {
+      assetSize.set(c, s);
+      break;
+    }
+  }
 }
 
 // helper to format
@@ -147,7 +177,9 @@ function routeTableFromManifest() {
         const jsFiles = files.filter((f) => f.endsWith('.js'));
         // unique + size sum
         const seen = new Set();
-        let raw = 0, gz = 0, br = 0;
+        let raw = 0,
+          gz = 0,
+          br = 0;
         let count = 0;
 
         for (const file of jsFiles) {
@@ -156,63 +188,70 @@ function routeTableFromManifest() {
           seen.add(key);
           const s = assetSize.get(key) || sizeOf(key);
           if (!s) continue;
-          raw += s.raw; gz += s.gz; br += s.br; count += 1;
+          raw += s.raw;
+          gz += s.gz;
+          br += s.br;
+          count += 1;
         }
 
-        const status =
-          br <= 150 * 1024 ? '🟢' :
-          br <= 250 * 1024 ? '🟡' : '🔴';
-        
+        const status = br <= 150 * 1024 ? '🟢' : br <= 250 * 1024 ? '🟡' : '🔴';
+
         const isEdge = isEdgeRoute(route);
-        rows.push({ 
-          route, 
-          kind: label, 
-          files: count, 
-          raw, 
-          gz, 
-          br, 
+        rows.push({
+          route,
+          kind: label,
+          files: count,
+          raw,
+          gz,
+          br,
           status,
-          isEdge: isEdge ? '⚡' : ''
+          isEdge: isEdge ? '⚡' : '',
         });
       }
     } else if (label === 'app' && m) {
       // App Router: has route -> file mapping
       console.log(`\n=== Processing App Router routes ===`);
       for (const [route, filePath] of Object.entries(m)) {
-        console.log(`Processing route: "${route}" (type: ${typeof route}, length: ${route ? route.length : 'null'})`);
+        console.log(
+          `Processing route: "${route}" (type: ${typeof route}, length: ${route ? route.length : 'null'})`
+        );
 
         // Skip empty or whitespace-only routes
         if (!route || route.trim() === '') {
           console.log(`Skipping empty route: "${route}"`);
           continue;
         }
-        
+
         // Skip special routes but include API routes for edge runtime detection
         if (route.includes('/favicon.ico') || route.includes('/_not-found')) {
           console.log(`Skipping special route: "${route}"`);
           continue;
         }
-        
+
         // Extract the actual route path (remove /page suffix)
         const cleanRoute = route.replace('/page', '');
         console.log(`Clean route: "${cleanRoute}"`);
-        
+
         // For App Router, we need to estimate size based on the route
         // This is a simplified approach - in practice you might want to analyze the actual JS files
-        let raw = 0, gz = 0, br = 0, count = 0;
-        
+        let raw = 0,
+          gz = 0,
+          br = 0,
+          count = 0;
+
         // Try to find associated JS files for this route
-        const routeName = cleanRoute === '/' ? 'index' : cleanRoute.replace('/', '');
+        const routeName =
+          cleanRoute === '/' ? 'index' : cleanRoute.replace('/', '');
         const possibleFiles = [
           `static/chunks/app/${routeName}-*.js`,
-          `static/chunks/app/${routeName}/page-*.js`
+          `static/chunks/app/${routeName}/page-*.js`,
         ];
-        
+
         // For now, use a placeholder size based on route complexity
         if (cleanRoute === '/') {
           raw = 221 * 1024; // 221 kB from CLI output
-          gz = 67 * 1024;   // Approximate gzip
-          br = 58 * 1024;   // Approximate brotli
+          gz = 67 * 1024; // Approximate gzip
+          br = 58 * 1024; // Approximate brotli
           count = 1;
         } else if (cleanRoute === '/blog') {
           raw = 221 * 1024; // 221 kB from CLI output
@@ -226,25 +265,21 @@ function routeTableFromManifest() {
           count = 1;
         }
 
-        const status =
-          br <= 150 * 1024 ? '🟢' :
-          br <= 250 * 1024 ? '🟡' : '🔴';
-        
-        const isEdge = isEdgeRoute(cleanRoute);
-        
+        const status = br <= 150 * 1024 ? '🟢' : br <= 250 * 1024 ? '🟡' : '🔴';
 
-        
+        const isEdge = isEdgeRoute(cleanRoute);
+
         // Only add routes that have a valid, non-empty path
         if (cleanRoute && cleanRoute.trim() !== '') {
-          rows.push({ 
-            route: cleanRoute, 
-            kind: label, 
-            files: count, 
-            raw, 
-            gz, 
-            br, 
+          rows.push({
+            route: cleanRoute,
+            kind: label,
+            files: count,
+            raw,
+            gz,
+            br,
             status,
-            isEdge: isEdge ? '⚡' : ''
+            isEdge: isEdge ? '⚡' : '',
           });
           console.log(`Added route: "${cleanRoute}"`);
         } else {
@@ -258,12 +293,14 @@ function routeTableFromManifest() {
   if (appManifest) addFrom(appManifest, 'app');
 
   // Final filter to remove any empty routes that might have slipped through
-  const filteredRows = rows.filter(row => row.route && row.route.trim() !== '');
-  
+  const filteredRows = rows.filter(
+    (row) => row.route && row.route.trim() !== ''
+  );
+
   console.log(`\n=== Final route count ===`);
   console.log(`Total routes processed: ${rows.length}`);
   console.log(`Valid routes after filtering: ${filteredRows.length}`);
-  
+
   // stable sort by brotli desc
   filteredRows.sort((a, b) => b.br - a.br);
   return filteredRows;
@@ -314,14 +351,61 @@ const modules = topModules();
 
 // Ensure we have at least some data to work with
 if (routes.length === 0) {
-  console.log('⚠️ No routes found, creating basic route structure from build output');
+  console.log(
+    '⚠️ No routes found, creating basic route structure from build output'
+  );
   // Create basic routes based on what we know from the build output
   routes.push(
-    { route: '/', kind: 'app', files: 1, raw: 221 * 1024, gz: 67 * 1024, br: 58 * 1024, status: '🟢', isEdge: '' },
-    { route: '/blog', kind: 'app', files: 1, raw: 221 * 1024, gz: 67 * 1024, br: 58 * 1024, status: '🟢', isEdge: '' },
-    { route: '/coaching', kind: 'app', files: 1, raw: 221 * 1024, gz: 67 * 1024, br: 58 * 1024, status: '🟢', isEdge: '' },
-    { route: '/contact', kind: 'app', files: 1, raw: 221 * 1024, gz: 67 * 1024, br: 58 * 1024, status: '🟢', isEdge: '' },
-    { route: '/over-mij', kind: 'app', files: 1, raw: 221 * 1024, gz: 67 * 1024, br: 58 * 1024, status: '🟢', isEdge: '' }
+    {
+      route: '/',
+      kind: 'app',
+      files: 1,
+      raw: 221 * 1024,
+      gz: 67 * 1024,
+      br: 58 * 1024,
+      status: '🟢',
+      isEdge: '',
+    },
+    {
+      route: '/blog',
+      kind: 'app',
+      files: 1,
+      raw: 221 * 1024,
+      gz: 67 * 1024,
+      br: 58 * 1024,
+      status: '🟢',
+      isEdge: '',
+    },
+    {
+      route: '/coaching',
+      kind: 'app',
+      files: 1,
+      raw: 221 * 1024,
+      gz: 67 * 1024,
+      br: 58 * 1024,
+      status: '🟢',
+      isEdge: '',
+    },
+    {
+      route: '/contact',
+      kind: 'app',
+      files: 1,
+      raw: 221 * 1024,
+      gz: 67 * 1024,
+      br: 58 * 1024,
+      status: '🟢',
+      isEdge: '',
+    },
+    {
+      route: '/over-mij',
+      kind: 'app',
+      files: 1,
+      raw: 221 * 1024,
+      gz: 67 * 1024,
+      br: 58 * 1024,
+      status: '🟢',
+      isEdge: '',
+    }
   );
 }
 
@@ -405,7 +489,7 @@ Please check the workflow logs for details about what went wrong.
 try {
   fs.writeFileSync(path.join(OUT_DIR, 'comment.md'), md);
   console.log(`✅ Wrote comment file to: ${path.join(OUT_DIR, 'comment.md')}`);
-  
+
   // Verify the file was created and has content
   const writtenFile = path.join(OUT_DIR, 'comment.md');
   if (fs.existsSync(writtenFile)) {
@@ -427,12 +511,14 @@ try {
 Please check the workflow logs for details.
 
 *Generated: ${now}*`;
-  
+
   try {
     fs.writeFileSync(path.join(OUT_DIR, 'comment.md'), errorComment);
     console.log('✅ Created error fallback comment file');
   } catch (fallbackError) {
-    console.error(`❌ Failed to create fallback comment: ${fallbackError.message}`);
+    console.error(
+      `❌ Failed to create fallback comment: ${fallbackError.message}`
+    );
     process.exit(1);
   }
 }

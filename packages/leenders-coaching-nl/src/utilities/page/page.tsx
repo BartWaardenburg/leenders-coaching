@@ -150,12 +150,10 @@ export const renderPageSectionsAsync = async (
 
       /* Handle async blog section specially */
       if (sectionType === 'sectionBlog') {
-        const { transformBlogSection } = await import(
-          '@/utilities/sections/blog'
-        );
-        const { SectionBlog } = await import(
-          '@/components/sections/SectionBlog'
-        );
+        const { transformBlogSection } =
+          await import('@/utilities/sections/blog');
+        const { SectionBlog } =
+          await import('@/components/sections/SectionBlog');
 
         try {
           const props = await transformBlogSection(

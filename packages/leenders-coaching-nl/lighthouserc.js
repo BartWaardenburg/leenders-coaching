@@ -15,7 +15,7 @@ const lighthouseConfig = {
         'http://localhost:3000/aanpak',
         'http://localhost:3000/coaching',
         'http://localhost:3000/contact',
-        'http://localhost:3000/blog'
+        'http://localhost:3000/blog',
       ],
       startServerCommand: 'pnpm start',
       startServerReadyPattern: 'Ready in',
@@ -27,10 +27,11 @@ const lighthouseConfig = {
         throttling: {
           rttMs: 150,
           throughputKbps: 1638.4,
-          cpuSlowdownMultiplier: 4
+          cpuSlowdownMultiplier: 4,
         },
         /* Chrome flags for CI environments */
-        chromeFlags: '--no-sandbox --disable-dev-shm-usage --disable-background-timer-throttling --disable-features=VizDisplayCompositor',
+        chromeFlags:
+          '--no-sandbox --disable-dev-shm-usage --disable-background-timer-throttling --disable-features=VizDisplayCompositor',
         /* Skip some audits that can be flaky in local development */
         skipAudits: ['screenshot-thumbnails', 'final-screenshot'],
         /* Increased timeouts for local development */
@@ -39,8 +40,8 @@ const lighthouseConfig = {
         networkQuietThresholdMs: 2000,
         cpuQuietThresholdMs: 2000,
         /* Use simulated throttling for consistency */
-        throttlingMethod: 'simulate'
-      }
+        throttlingMethod: 'simulate',
+      },
     },
     assert: {
       preset: 'lighthouse:recommended',
@@ -64,14 +65,14 @@ const lighthouseConfig = {
         'modern-image-formats': 'warn',
         'efficient-animated-content': 'warn',
         'unused-css-rules': 'warn',
-        'unused-javascript': 'warn'
-      }
+        'unused-javascript': 'warn',
+      },
     },
     upload: {
       /* Upload target for Lighthouse CI results */
-      target: 'temporary-public-storage'
-    }
-  }
+      target: 'temporary-public-storage',
+    },
+  },
 };
 
 module.exports = lighthouseConfig;

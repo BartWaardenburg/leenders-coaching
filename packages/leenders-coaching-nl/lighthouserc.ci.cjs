@@ -28,16 +28,20 @@ module.exports = {
         /**
          * Chrome flags for running in CI environments.
          */
-        chromeFlags: '--no-sandbox --disable-dev-shm-usage --disable-background-timer-throttling --disable-features=VizDisplayCompositor',
+        chromeFlags:
+          '--no-sandbox --disable-dev-shm-usage --disable-background-timer-throttling --disable-features=VizDisplayCompositor',
         /**
          * Extra HTTP headers for requests.
          * Includes Vercel bypass headers if secret is present.
          */
         extraHeaders: {
-          ...(process.env.VERCEL_AUTOMATION_BYPASS_SECRET ? {
-            'x-vercel-protection-bypass': process.env.VERCEL_AUTOMATION_BYPASS_SECRET,
-            'x-vercel-set-bypass-cookie': 'true',
-          } : {}),
+          ...(process.env.VERCEL_AUTOMATION_BYPASS_SECRET
+            ? {
+                'x-vercel-protection-bypass':
+                  process.env.VERCEL_AUTOMATION_BYPASS_SECRET,
+                'x-vercel-set-bypass-cookie': 'true',
+              }
+            : {}),
           'User-Agent': 'Lighthouse-CI-GitHub-Actions',
           'Accept-Language': 'nl-NL,nl;q=0.9,en;q=0.8',
         },
@@ -48,7 +52,12 @@ module.exports = {
         /**
          * Only run these Lighthouse categories.
          */
-        onlyCategories: ['performance', 'accessibility', 'seo', 'best-practices'],
+        onlyCategories: [
+          'performance',
+          'accessibility',
+          'seo',
+          'best-practices',
+        ],
         /**
          * Maximum wait times and quiet thresholds.
          */

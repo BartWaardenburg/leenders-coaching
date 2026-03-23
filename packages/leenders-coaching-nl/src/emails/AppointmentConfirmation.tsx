@@ -195,8 +195,7 @@ export const AppointmentConfirmation = ({
 
             <Text style={text}>
               • Ik check mijn agenda en reageer binnen 24 uur
-              <br />
-              • Ik bevestig je afspraak of doe een alternatief voorstel
+              <br />• Ik bevestig je afspraak of doe een alternatief voorstel
               <br />• Je ontvangt een bevestiging met alle details
             </Text>
 

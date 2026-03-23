@@ -22,8 +22,12 @@ console.log(`Current working directory: ${process.cwd()}`);
 
 // Check if storybook-static directory exists
 if (!fs.existsSync(STORYBOOK_STATIC_DIR)) {
-  console.log(`❌ storybook-static directory not found at: ${STORYBOOK_STATIC_DIR}`);
-  console.log('This suggests the Storybook build may have failed or completed in a different location');
+  console.log(
+    `❌ storybook-static directory not found at: ${STORYBOOK_STATIC_DIR}`
+  );
+  console.log(
+    'This suggests the Storybook build may have failed or completed in a different location'
+  );
   process.exit(1);
 }
 
@@ -34,12 +38,14 @@ if (!fs.existsSync(STORYBOOK_STATIC_DIR)) {
  */
 const getFileSizeInfo = (filePath) => {
   if (!fs.existsSync(filePath)) return null;
-  
+
   try {
     const buf = fs.readFileSync(filePath);
     const raw = buf.length;
     const gz = gzipSizeSync(buf);
-    const br = brotliSizeSync(buf, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 11 } });
+    const br = brotliSizeSync(buf, {
+      params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 11 },
+    });
     return { raw, gz, br };
   } catch (error) {
     console.log(`Error reading file ${filePath}: ${error.message}`);
@@ -55,9 +61,9 @@ const getFileSizeInfo = (filePath) => {
  */
 const findFiles = (dir, extensions = ['.js', '.css']) => {
   const files = [];
-  
+
   if (!fs.existsSync(dir)) return files;
-  
+
   const walk = (d) => {
     try {
       const entries = fs.readdirSync(d, { withFileTypes: true });
@@ -76,7 +82,7 @@ const findFiles = (dir, extensions = ['.js', '.css']) => {
       console.log(`Error reading directory ${d}: ${error.message}`);
     }
   };
-  
+
   walk(dir);
   return files;
 };
@@ -87,9 +93,9 @@ const findFiles = (dir, extensions = ['.js', '.css']) => {
 const analyzeStorybookBundles = () => {
   const assetsDir = path.join(STORYBOOK_STATIC_DIR, 'assets');
   const files = findFiles(assetsDir);
-  
+
   console.log(`\n=== Found ${files.length} asset files ===`);
-  
+
   const bundleInfo = {
     totalFiles: files.length,
     totalSize: { raw: 0, gz: 0, br: 0 },
@@ -97,32 +103,32 @@ const analyzeStorybookBundles = () => {
     categories: {
       js: [],
       css: [],
-      other: []
-    }
+      other: [],
+    },
   };
-  
+
   for (const file of files) {
     const sizeInfo = getFileSizeInfo(file);
     if (!sizeInfo) continue;
-    
+
     const relativePath = path.relative(STORYBOOK_STATIC_DIR, file);
     const ext = path.extname(file);
     const fileName = path.basename(file);
-    
+
     const fileInfo = {
       path: relativePath,
       name: fileName,
       size: sizeInfo.raw,
       gzip: sizeInfo.gz,
       brotli: sizeInfo.br,
-      extension: ext
+      extension: ext,
     };
-    
+
     bundleInfo.files.push(fileInfo);
     bundleInfo.totalSize.raw += sizeInfo.raw;
     bundleInfo.totalSize.gz += sizeInfo.gz;
     bundleInfo.totalSize.br += sizeInfo.br;
-    
+
     // Categorize files
     if (ext === '.js') {
       bundleInfo.categories.js.push(fileInfo);
@@ -132,12 +138,12 @@ const analyzeStorybookBundles = () => {
       bundleInfo.categories.other.push(fileInfo);
     }
   }
-  
+
   // Sort files by brotli size (descending)
   bundleInfo.files.sort((a, b) => b.brotli - a.brotli);
   bundleInfo.categories.js.sort((a, b) => b.brotli - a.brotli);
   bundleInfo.categories.css.sort((a, b) => b.brotli - a.brotli);
-  
+
   return bundleInfo;
 };
 
@@ -147,7 +153,7 @@ const analyzeStorybookBundles = () => {
 const generateReport = (bundleInfo) => {
   const now = new Date().toISOString().replace('T', ' ').replace('Z', ' UTC');
   const fmt = (b) => (typeof b === 'number' ? prettyBytes(b) : 'n/a');
-  
+
   let md = `## 📦 Storybook Bundle Analysis (Vite)
 
 *Generated ${now}*
@@ -167,10 +173,15 @@ const generateReport = (bundleInfo) => {
 
   // Top 10 JS files
   for (const file of bundleInfo.categories.js.slice(0, 10)) {
-    const status = file.brotli <= 100 * 1024 ? '🟢' : file.brotli <= 250 * 1024 ? '🟡' : '🔴';
+    const status =
+      file.brotli <= 100 * 1024
+        ? '🟢'
+        : file.brotli <= 250 * 1024
+          ? '🟡'
+          : '🔴';
     md += `| \`${file.name}\` | ${fmt(file.size)} | ${fmt(file.gzip)} | ${fmt(file.brotli)} ${status} |\n`;
   }
-  
+
   md += `\n</details>\n\n`;
 
   if (bundleInfo.categories.css.length > 0) {
@@ -184,7 +195,7 @@ const generateReport = (bundleInfo) => {
     for (const file of bundleInfo.categories.css) {
       md += `| \`${file.name}\` | ${fmt(file.size)} | ${fmt(file.gzip)} | ${fmt(file.brotli)} |\n`;
     }
-    
+
     md += `\n</details>\n\n`;
   }
 
@@ -195,11 +206,17 @@ const generateReport = (bundleInfo) => {
 |---|---:|---:|---:|---:|
 `;
 
-  for (const file of bundleInfo.files.slice(0, 20)) { // Top 20 files
-    const status = file.brotli <= 100 * 1024 ? '🟢' : file.brotli <= 250 * 1024 ? '🟡' : '🔴';
+  for (const file of bundleInfo.files.slice(0, 20)) {
+    // Top 20 files
+    const status =
+      file.brotli <= 100 * 1024
+        ? '🟢'
+        : file.brotli <= 250 * 1024
+          ? '🟡'
+          : '🔴';
     md += `| \`${file.name}\` | ${file.extension} | ${fmt(file.size)} | ${fmt(file.gzip)} | ${fmt(file.brotli)} ${status} |\n`;
   }
-  
+
   md += `\n</details>\n\n`;
 
   md += `<details>
@@ -220,34 +237,35 @@ const generateReport = (bundleInfo) => {
 // Main execution
 try {
   console.log('\n=== Starting Storybook Bundle Analysis ===');
-  
+
   const bundleInfo = analyzeStorybookBundles();
-  
+
   if (bundleInfo.files.length === 0) {
     console.log('❌ No files found in storybook-static directory');
     process.exit(1);
   }
-  
+
   console.log(`✅ Analyzed ${bundleInfo.files.length} files`);
-  console.log(`📊 Total bundle size: ${prettyBytes(bundleInfo.totalSize.br)} (brotli)`);
-  
+  console.log(
+    `📊 Total bundle size: ${prettyBytes(bundleInfo.totalSize.br)} (brotli)`
+  );
+
   const report = generateReport(bundleInfo);
-  
+
   // Write the report
   const reportPath = path.join(OUT_DIR, 'comment.md');
   fs.writeFileSync(reportPath, report);
-  
+
   console.log(`✅ Bundle analysis report written to: ${reportPath}`);
-  
+
   // Verify the file was created
   if (fs.existsSync(reportPath)) {
     const stats = fs.statSync(reportPath);
     console.log(`📁 Report file size: ${stats.size} bytes`);
   }
-  
 } catch (error) {
   console.error(`❌ Error during bundle analysis: ${error.message}`);
-  
+
   // Create error report
   const errorReport = `## 📦 Storybook Bundle Analysis (Vite)
 
@@ -256,12 +274,14 @@ try {
 Please check the workflow logs for details.
 
 *Generated: ${new Date().toISOString().replace('T', ' ').replace('Z', ' UTC')}*`;
-  
+
   try {
     fs.writeFileSync(path.join(OUT_DIR, 'comment.md'), errorReport);
     console.log('✅ Created error fallback report');
   } catch (fallbackError) {
-    console.error(`❌ Failed to create fallback report: ${fallbackError.message}`);
+    console.error(
+      `❌ Failed to create fallback report: ${fallbackError.message}`
+    );
     process.exit(1);
   }
 }
