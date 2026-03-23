@@ -44,6 +44,9 @@ importers:
       eslint:
         specifier: 9.28.0
         version: 9.28.0(jiti@2.6.1)
+      fallow:
+        specifier: 1.4.0
+        version: 1.4.0
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -2101,6 +2104,62 @@ packages:
     peerDependenciesMeta:
       '@noble/hashes':
         optional: true
+
+  '@fallow-cli/darwin-arm64@1.4.0':
+    resolution:
+      {
+        integrity: sha512-QWBt3+xFwa4sugr8WBmpt2IG4BacojBIGSw6gQTWz2DCuaR8q2t2yHy6xLbkgBSNMypQvtLiY5hpA44JO8dxiQ==,
+      }
+    cpu: [arm64]
+    os: [darwin]
+
+  '@fallow-cli/darwin-x64@1.4.0':
+    resolution:
+      {
+        integrity: sha512-LjlxvYctv0KZVimaGijqVCjJ3lcd2jXLd9df/VibPF70vm7iIWRWchtrScC3RVk2DX7DtfU7L3BkXCHy1vXkOg==,
+      }
+    cpu: [x64]
+    os: [darwin]
+
+  '@fallow-cli/linux-arm64-gnu@1.4.0':
+    resolution:
+      {
+        integrity: sha512-mjTHhmh4DMOFTBVSAxWUX6yxKiJ8A6r15Way3M4jLKxsRxLzaNLutGshtlllshEaSF+zjF79K1JgA3Homr+JCQ==,
+      }
+    cpu: [arm64]
+    os: [linux]
+
+  '@fallow-cli/linux-arm64-musl@1.4.0':
+    resolution:
+      {
+        integrity: sha512-t/66DZA4FGXbCdhT70V2Jb2P8+82eeEwDNevUpfz6qWVwRW2K5g4pi9nRWIoG+eFNDFocwjcxVYAAbqVz/93Hg==,
+      }
+    cpu: [arm64]
+    os: [linux]
+
+  '@fallow-cli/linux-x64-gnu@1.4.0':
+    resolution:
+      {
+        integrity: sha512-n1JLVyCgANJC3MsFuPoS63Uzxub9Aq3EjNTqkQmtsswdL+IejOGlQL8dUfurjTJ8KWuj1AVmUTHLDU/5cAvL7g==,
+      }
+    cpu: [x64]
+    os: [linux]
+
+  '@fallow-cli/linux-x64-musl@1.4.0':
+    resolution:
+      {
+        integrity: sha512-DnkT+PHd/fvJRPT5adMOI2mV4tEDI2fiRx/zUWtW6+QYq/pr/f5Jd5n+mVxXp+Ce6nZ9DhIjlwmKAJSVydOMvA==,
+      }
+    cpu: [x64]
+    os: [linux]
+
+  '@fallow-cli/win32-x64-msvc@1.4.0':
+    resolution:
+      {
+        integrity: sha512-QFWjZLaFpwUqydDorLz7f5Whgf/mizUyX5PLtjgth+0T7i+fylVYATGKTVZOB0gFMcJ0J/hXe+RKRp21TvPJMA==,
+      }
+    cpu: [x64]
+    os: [win32]
 
   '@floating-ui/core@1.7.4':
     resolution:
@@ -6243,6 +6302,7 @@ packages:
         integrity: sha512-RkaJzeJKDbaDWTIPiJwubyljaEPwpVWkm9Rt5h9Nd6h7tEXTJ3VB4qxdZBioV7JO5yLUaOKwz7vDOzlncUsegw==,
       }
     engines: { node: '>=10.0.0' }
+    deprecated: Security vulnerability fixed in 5.2.0, please upgrade
 
   before-after-hook@4.0.0:
     resolution:
@@ -8099,6 +8159,14 @@ packages:
         integrity: sha512-GDhU9ntwuKyGXdZBUgTIe+vXnWj0fppUEtMDL0+idd5Sta8TGpHssn/eusA9mrPr9qNDym6SxAYZjNvCn/9RBg==,
       }
     engines: { node: '>= 10.17.0' }
+    hasBin: true
+
+  fallow@1.4.0:
+    resolution:
+      {
+        integrity: sha512-k5i65sJ/9+uMbUjK+zyCkAf3ZZaGS6c+vKa2EXoGQcHG5n4/dMv01RQFHBdexxRPc5VRKu6StK/cSTisk9CfYg==,
+      }
+    engines: { node: '>=16' }
     hasBin: true
 
   fast-content-type-parse@3.0.0:
@@ -15677,6 +15745,27 @@ snapshots:
     optionalDependencies:
       '@noble/hashes': 2.0.1
 
+  '@fallow-cli/darwin-arm64@1.4.0':
+    optional: true
+
+  '@fallow-cli/darwin-x64@1.4.0':
+    optional: true
+
+  '@fallow-cli/linux-arm64-gnu@1.4.0':
+    optional: true
+
+  '@fallow-cli/linux-arm64-musl@1.4.0':
+    optional: true
+
+  '@fallow-cli/linux-x64-gnu@1.4.0':
+    optional: true
+
+  '@fallow-cli/linux-x64-musl@1.4.0':
+    optional: true
+
+  '@fallow-cli/win32-x64-msvc@1.4.0':
+    optional: true
+
   '@floating-ui/core@1.7.4':
     dependencies:
       '@floating-ui/utils': 0.2.10
@@ -19972,6 +20061,18 @@ snapshots:
       '@types/yauzl': 2.10.3
     transitivePeerDependencies:
       - supports-color
+
+  fallow@1.4.0:
+    dependencies:
+      detect-libc: 2.1.2
+    optionalDependencies:
+      '@fallow-cli/darwin-arm64': 1.4.0
+      '@fallow-cli/darwin-x64': 1.4.0
+      '@fallow-cli/linux-arm64-gnu': 1.4.0
+      '@fallow-cli/linux-arm64-musl': 1.4.0
+      '@fallow-cli/linux-x64-gnu': 1.4.0
+      '@fallow-cli/linux-x64-musl': 1.4.0
+      '@fallow-cli/win32-x64-msvc': 1.4.0
 
   fast-content-type-parse@3.0.0: {}
 

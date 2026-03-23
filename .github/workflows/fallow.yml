@@ -1,0 +1,23 @@
+name: Dead Code Analysis
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  fallow:
+    name: Dead Code Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: fallow-rs/fallow@v1
+        with:
+          format: sarif

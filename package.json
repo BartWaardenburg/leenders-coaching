@@ -46,6 +46,7 @@
     "@typescript-eslint/parser": "8.55.0",
     "babel-loader": "10.0.0",
     "eslint": "9.28.0",
+    "fallow": "1.4.0",
     "husky": "9.1.7",
     "lint-staged": "16.2.7",
     "prettier": "3.8.1",
