@@ -21,34 +21,34 @@
     "sanity"
   ],
   "dependencies": {
-    "@sanity/client": "7.14.1",
+    "@sanity/client": "7.20.0",
     "@sanity/presentation": "2.0.0",
-    "@sanity/types": "5.9.0",
-    "@sanity/vision": "5.9.0",
-    "dotenv": "17.2.4",
+    "@sanity/types": "5.17.1",
+    "@sanity/vision": "5.17.1",
+    "dotenv": "17.3.1",
     "lodash.defaults": "4.2.0",
     "lodash.difference": "4.5.0",
     "lodash.flatten": "4.4.0",
     "lodash.union": "4.6.0",
-    "nanoid": "5.1.6",
+    "nanoid": "5.1.7",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-is": "19.2.4",
-    "sanity": "5.9.0",
-    "styled-components": "6.3.9"
+    "sanity": "5.17.1",
+    "styled-components": "6.3.12"
   },
   "devDependencies": {
     "@sanity/eslint-config-studio": "6.0.0",
     "@types/node": "25.2.3",
-    "@types/react": "19.2.13",
-    "eslint": "9.28.0",
+    "@types/react": "19.2.14",
+    "eslint": "9.39.4",
     "prettier": "3.8.1",
     "ts-node": "10.9.2",
     "typescript": "5.9.3"
   },
-  "packageManager": "pnpm@10.25.0",
+  "packageManager": "pnpm@10.32.1",
   "engines": {
     "node": ">=22.0.0",
-    "pnpm": "10.25.0"
+    "pnpm": "10.32.1"
   }
 }

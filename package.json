@@ -37,26 +37,26 @@
   "devDependencies": {
     "@babel/preset-react": "7.28.5",
     "@babel/preset-typescript": "7.28.5",
-    "@commitlint/cli": "20.4.1",
-    "@commitlint/config-conventional": "20.4.1",
+    "@commitlint/cli": "20.4.3",
+    "@commitlint/config-conventional": "20.4.3",
     "@types/node": "25.2.3",
-    "@types/react": "19.2.13",
+    "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "@typescript-eslint/eslint-plugin": "8.55.0",
-    "@typescript-eslint/parser": "8.55.0",
-    "babel-loader": "10.0.0",
-    "eslint": "9.28.0",
+    "@typescript-eslint/eslint-plugin": "8.56.0",
+    "@typescript-eslint/parser": "8.56.0",
+    "babel-loader": "10.1.1",
+    "eslint": "9.39.4",
     "fallow": "1.4.0",
     "husky": "9.1.7",
-    "lint-staged": "16.2.7",
+    "lint-staged": "16.4.0",
     "prettier": "3.8.1",
     "typescript": "5.9.3"
   },
   "engines": {
     "node": ">=22.0.0",
-    "pnpm": "10.25.0"
+    "pnpm": "10.32.1"
   },
-  "packageManager": "pnpm@10.25.0",
+  "packageManager": "pnpm@10.32.1",
   "pnpm": {
     "overrides": {
       "tmp": "0.2.5",
