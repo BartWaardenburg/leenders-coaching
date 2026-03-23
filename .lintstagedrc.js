@@ -1,28 +1,13 @@
 module.exports = {
   'packages/leenders-coaching-nl/src/**/*.{ts,tsx,js,jsx}': [
-    'prettier --write',
-    (filenames) => {
-      const relativeFiles = filenames.map(f => f.replace('packages/leenders-coaching-nl/', ''));
-      return `cd packages/leenders-coaching-nl && npx eslint --fix ${relativeFiles.join(' ')}`;
-    }
+    'oxfmt --write',
+    'oxlint --fix',
   ],
   'packages/studio-leenders-coaching-nl/**/*.{ts,tsx,js,jsx}': [
-    'prettier --write',
-    (filenames) => {
-      const relativeFiles = filenames.map(f => f.replace('packages/studio-leenders-coaching-nl/', ''));
-      return `cd packages/studio-leenders-coaching-nl && npx eslint --fix ${relativeFiles.join(' ')}`;
-    }
+    'oxfmt --write',
   ],
-  '**/*.json': [
-    'prettier --write'
-  ],
-  '**/*.md': [
-    'prettier --write'
-  ],
-  '**/*.{yml,yaml}': [
-    'prettier --write'
-  ],
-  'packages/**/*.{css,scss}': [
-    'prettier --write'
-  ]
+  '**/*.json': ['oxfmt --write'],
+  '**/*.md': ['oxfmt --write'],
+  '**/*.{yml,yaml}': ['oxfmt --write'],
+  'packages/**/*.{css,scss}': ['oxfmt --write'],
 };

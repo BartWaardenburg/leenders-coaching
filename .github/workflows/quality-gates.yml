@@ -484,12 +484,13 @@ jobs:
           pnpm-version: '10.15.1'
           working-directory: ''
 
-      - name: '🧹 ESLint (json) / TS / Complexity'
+      - name: '🧹 Oxlint (json) / TS / Complexity'
         run: |
           sudo apt-get update -y >/dev/null 2>&1 || true
           sudo apt-get install -y jq >/dev/null 2>&1 || true
-          pnpm --filter leenders-coaching-nl run lint:format > eslint-raw.txt 2>&1 || true
-          sed -n '/^\[/,$p' eslint-raw.txt > eslint.json || echo "[]" > eslint.json
+          pnpm --filter leenders-coaching-nl run lint:format > oxlint-raw.json 2>&1 || true
+          # Extract the JSON object from oxlint output (skip any pnpm output lines)
+          sed -n '/^{/,$p' oxlint-raw.json > oxlint.json || echo '{"diagnostics":[]}' > oxlint.json
           pnpm --parallel run type-check 2>&1 | tee ts.txt || true
 
           # Create a better complexity analysis excluding test files
@@ -542,9 +543,9 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           command -v jq >/dev/null 2>&1 || sudo apt-get install -y jq >/dev/null 2>&1
-          FILES=$(jq 'length' eslint.json)
-          ERR=$(jq 'map(.errorCount)|add // 0' eslint.json)
-          WARN=$(jq 'map(.warningCount)|add // 0' eslint.json)
+          FILES=$(jq '.number_of_files // 0' oxlint.json)
+          ERR=$(jq '[.diagnostics[] | select(.severity=="error")] | length' oxlint.json 2>/dev/null || echo 0)
+          WARN=$(jq '[.diagnostics[] | select(.severity=="warning")] | length' oxlint.json 2>/dev/null || echo 0)
 
           # Check complexity report
           COMPLEXITY_COUNT=$(jq 'length' complexity.json)
@@ -559,14 +560,25 @@ jobs:
             echo "<details>"
             echo "<summary>📋 Code Issues Summary ($ERR errors, $WARN warnings, $TS_ISSUES TypeScript issues)</summary>"
             echo
-            echo "| File | ESLint Errors | ESLint Warnings | TypeScript Issues | Total Issues |"
+            echo "| File | Lint Errors | Lint Warnings | TypeScript Issues | Total Issues |"
             echo "|---|---|---|---|---|"
-            
-            # Process ESLint issues
+
+            # Process oxlint issues (group diagnostics by filename)
             if [ "$ERR" -gt 0 ] || [ "$WARN" -gt 0 ]; then
-              jq -r '.[] | select(.errorCount>0 or .warningCount>0) | "\(.filePath)|\(.errorCount)|\(.warningCount)|0|\(.errorCount + .warningCount)"' eslint.json > eslint-issues.txt
+              jq -r '
+                [.diagnostics[] | {filename, severity}]
+                | group_by(.filename)
+                | .[]
+                | {
+                    filename: .[0].filename,
+                    errors: [.[] | select(.severity=="error")] | length,
+                    warnings: [.[] | select(.severity=="warning")] | length
+                  }
+                | select(.errors>0 or .warnings>0)
+                | "\(.filename)|\(.errors)|\(.warnings)|0|\(.errors + .warnings)"
+              ' oxlint.json > lint-issues.txt 2>/dev/null
             else
-              rm -f eslint-issues.txt
+              rm -f lint-issues.txt
             fi
             
             # Process TypeScript issues
@@ -578,10 +590,10 @@ jobs:
             fi
             
             # Combine and display issues
-            if [ -s eslint-issues.txt ] || [ -s ts-issues.txt ]; then
+            if [ -s lint-issues.txt ] || [ -s ts-issues.txt ]; then
               # Create a combined view (simplified for now - showing top files with most issues)
-              if [ -s eslint-issues.txt ]; then
-                head -n 10 eslint-issues.txt | while IFS='|' read -r filePath esLintErr esLintWarn tsIssues total; do
+              if [ -s lint-issues.txt ]; then
+                head -n 10 lint-issues.txt | while IFS='|' read -r filePath esLintErr esLintWarn tsIssues total; do
                   if [ -n "$filePath" ] && [ "$filePath" != "" ]; then
                     filename=$(echo "$filePath" | sed 's/.*\///')
                     # Clean the file path to remove runner paths
