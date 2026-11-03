@@ -20,7 +20,6 @@ const nextConfig: NextConfig = {
    * Experimental configuration for modern browser optimization
    */
   experimental: {
-    viewTransition: true,
     /**
      * Optimize package imports to reduce bundle size
      */

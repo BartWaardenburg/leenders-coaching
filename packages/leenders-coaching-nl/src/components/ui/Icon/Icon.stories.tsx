@@ -143,8 +143,8 @@ export const AllIcons: Story = {
       </div>
     </div>
   ),
-  play: async ({ canvas }) => {
-    expect(document.querySelectorAll('svg')).toHaveLength(6);
+  play: async ({ canvas, canvasElement }) => {
+    expect(canvasElement.querySelectorAll('svg')).toHaveLength(6);
     await waitForMotionAnimations({ canvas });
   },
 };

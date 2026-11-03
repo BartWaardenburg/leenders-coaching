@@ -2,8 +2,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
+import { createRequire } from 'node:module';
 
 const pkgRoot = fileURLToPath(new URL('.', import.meta.url));
+const require = createRequire(import.meta.url);
 
 /**
  * Dependencies to optimize and exclude for Vitest runs.
@@ -38,6 +40,26 @@ export const storybookPlugin = storybookTest({
     include: ['test'],
   },
 });
+
+/**
+ * The Storybook Next.js plugin maps the `react` key of `test.alias` to a file.
+ * That key also matches `react/compiler-runtime`, which packages built with the
+ * React Compiler import, so the path points inside a file. This plugin puts an
+ * exact alias for that subpath at the start of the resolved alias list.
+ */
+const reactCompilerRuntimeAlias = {
+  name: 'react-compiler-runtime-alias',
+  enforce: 'post' as const,
+  configResolved: (config: {
+    resolve: { alias: { find: string | RegExp; replacement: string }[] };
+  }) => {
+    config.resolve.alias.unshift({
+      find: /^react\/compiler-runtime$/,
+      replacement:
+        require.resolve('next/dist/compiled/react/compiler-runtime.js'),
+    });
+  },
+};
 
 /**
  * Shared plugins configuration for Vitest.
@@ -176,7 +198,7 @@ export const projects = {
   },
   storybook: {
     extends: true as const,
-    plugins: [storybookPlugin],
+    plugins: [storybookPlugin, reactCompilerRuntimeAlias],
     test: {
       name: 'storybook',
       ...browserSetup,

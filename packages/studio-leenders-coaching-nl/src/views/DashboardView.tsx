@@ -1,5 +1,5 @@
 import { Card, Text, Stack, Badge, Flex, Grid, Button } from '@sanity/ui';
-import { DocumentIcon } from '@sanity/icons';
+import { DocumentIcon } from '@sanity/icons/Document';
 import { useClient } from 'sanity';
 import { useEffect, useState } from 'react';
 import type { ReactElement } from 'react';

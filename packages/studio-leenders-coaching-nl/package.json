@@ -10,10 +10,10 @@
     "start": "sanity start",
     "build": "sanity build && sanity schema deploy --manifest-dir ./dist/static",
     "deploy": "sanity deploy",
-    "extract-schema": "sanity schema extract",
+    "extract-schema": "sanity schema extract --force",
     "generate-types": "sanity typegen generate",
     "update-types": "pnpm run extract-schema && pnpm run generate-types",
-    "validate:schema": "sanity schema extract --enforce-required-fields",
+    "validate:schema": "sanity schema extract --enforce-required-fields --force",
     "verify:build": "test -d dist && test -f dist/index.html && echo '✅ Studio build verified'",
     "package:build": "tar -czf studio-build.tar.gz -C . dist 2>/dev/null || echo 'No build artifacts to package'"
   },
@@ -21,27 +21,28 @@
     "sanity"
   ],
   "dependencies": {
-    "@sanity/client": "7.20.0",
+    "@sanity/client": "8.14.1",
+    "@sanity/icons": "5.2.3",
     "@sanity/presentation": "2.0.0",
-    "@sanity/types": "5.17.1",
-    "@sanity/vision": "5.17.1",
-    "dotenv": "17.3.1",
+    "@sanity/types": "6.21.0",
+    "@sanity/vision": "6.21.0",
+    "dotenv": "18.0.9",
     "lodash.defaults": "4.2.0",
     "lodash.difference": "4.5.0",
     "lodash.flatten": "4.4.0",
     "lodash.union": "4.6.0",
-    "nanoid": "5.1.7",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "react-is": "19.2.4",
-    "sanity": "5.17.1",
-    "styled-components": "6.3.12"
+    "nanoid": "6.0.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "react-is": "19.3.1",
+    "sanity": "6.21.0",
+    "styled-components": "6.6.0"
   },
   "devDependencies": {
     "@types/node": "26.6.6",
-    "@types/react": "19.2.14",
+    "@types/react": "19.3.0",
     "ts-node": "10.9.2",
-    "typescript": "5.9.3"
+    "typescript": "7.0.2"
   },
   "packageManager": "pnpm@10.32.1",
   "engines": {

@@ -28,7 +28,12 @@
     "typescript/triple-slash-reference": "off",
 
     "react/react-in-jsx-scope": "off",
-    "react/prop-types": "off",
+    "react/set-state-in-effect": "warn",
+    "react/purity": "warn",
+    "react/refs": "warn",
+    "react/preserve-manual-memoization": "warn",
+    "react/error-boundaries": "warn",
+    "react/static-components": "warn",
     "react/no-array-index-key": "off",
     "react/jsx-no-constructed-context-values": "off",
     "react/iframe-missing-sandbox": "off",
