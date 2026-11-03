@@ -189,8 +189,8 @@ jobs:
           package-name: 'all-packages'
           package-filter: 'leenders-coaching-nl'
           package-path: 'packages/leenders-coaching-nl'
-          build-command: 'ci:build'
-          verify-command: 'ci:verify'
+          build-command: 'build'
+          verify-command: 'verify:build'
           analyze-bundle: false
           package-build: false
           working-directory: ''
