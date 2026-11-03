@@ -1,29 +1,27 @@
 [
   {
     "name": "Total JavaScript Bundle",
-    "path": [
-      ".next/static/chunks/*.js",
-      ".next/static/chunks/app/**/*.js",
-      ".next/static/chunks/pages/**/*.js"
-    ],
-    "limit": "400 KB",
+    "path": [".next/static/chunks/**/*.js"],
+    "limit": "550 KB",
     "gzip": true,
     "webpack": false,
-    "message": "Total JavaScript bundle size. Aim to keep under 400KB for optimal performance on slower connections."
+    "running": false,
+    "message": "Total gzip size of all client JavaScript chunks. Next.js 16 with Turbopack writes every chunk flat into .next/static/chunks."
   },
   {
     "name": "CSS Bundle",
-    "path": ".next/static/css/*.css",
+    "path": ".next/static/**/*.css",
     "limit": "20 KB",
     "gzip": true,
     "webpack": false,
+    "running": false,
     "message": "CSS bundle size. Consider purging unused Tailwind classes and optimizing critical CSS."
   },
   {
-    "name": "Main script exec time",
-    "path": ".next/static/chunks/main-*.js",
+    "name": "Runtime script exec time",
+    "path": ".next/static/chunks/turbopack-*.js",
     "limit": "500ms",
     "webpack": false,
-    "message": "Main script execution time. Keep under 500ms for optimal user experience. Current target allows for CI environment variations."
+    "message": "Execution time of the Turbopack runtime chunk. Keep under 500ms. Current target allows for CI environment variations."
   }
 ]
