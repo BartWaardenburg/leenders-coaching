@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Text, Stack, Badge, Flex, Grid } from '@sanity/ui';
-import { CalendarIcon, UserIcon } from '@sanity/icons';
+import { CalendarIcon } from '@sanity/icons/Calendar';
+import { UserIcon } from '@sanity/icons/User';
 import type { SanityDocument } from 'sanity';
 import type { ReactElement } from 'react';
 

@@ -1,11 +1,9 @@
 import type { StructureBuilder } from 'sanity/structure';
-import {
-  CogIcon,
-  DocumentIcon,
-  EditIcon,
-  EyeOpenIcon,
-  HomeIcon,
-} from '@sanity/icons';
+import { CogIcon } from '@sanity/icons/Cog';
+import { DocumentIcon } from '@sanity/icons/Document';
+import { EditIcon } from '@sanity/icons/Edit';
+import { EyeOpenIcon } from '@sanity/icons/EyeOpen';
+import { HomeIcon } from '@sanity/icons/Home';
 import { BlogPostsView } from './src/views/BlogPostsView';
 import { DashboardView } from './src/views/DashboardView';
 
