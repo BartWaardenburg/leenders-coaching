@@ -29,11 +29,11 @@ runs:
           echo "⚠️  Not in Playwright container - browsers may need to be installed"
         fi
 
-    - name: Enable Corepack & pin pnpm
+    # Newer Node images ship without Corepack, so npm installs pnpm.
+    # pnpm then switches to the version of the packageManager field.
+    - name: Install pnpm
       shell: bash
-      run: |
-        corepack enable
-        corepack prepare pnpm@${{ inputs.pnpm-version }} --activate
+      run: npm install -g pnpm@${{ inputs.pnpm-version }}
 
     - name: Verify pnpm
       shell: bash
