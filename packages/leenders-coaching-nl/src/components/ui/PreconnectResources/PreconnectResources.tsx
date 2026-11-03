@@ -16,7 +16,9 @@ export const PreconnectResources = (): null => {
   preconnect('https://challenges.cloudflare.com', {
     crossOrigin: 'anonymous',
   });
-  preconnect('https://cdn.sanity.io', { crossOrigin: 'anonymous' });
+  // Images load without CORS, so this connection must not use CORS either.
+  // A CORS preconnect is a separate connection that an <img> request does not reuse.
+  preconnect('https://cdn.sanity.io');
 
   return null;
 };
