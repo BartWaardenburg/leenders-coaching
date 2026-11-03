@@ -46,7 +46,7 @@ jobs:
       - name: '⚙️ Setup Environment'
         uses: ./.github/actions/setup
         with:
-          node-version: '22'
+          node-version: '26'
           pnpm-version: '10.15.1'
           working-directory: ''
 
@@ -77,7 +77,7 @@ jobs:
       - name: '⚙️ Setup Environment (baseline)'
         uses: ./.github/actions/setup
         with:
-          node-version: '22'
+          node-version: '26'
           pnpm-version: '10.15.1'
           working-directory: baseline
 

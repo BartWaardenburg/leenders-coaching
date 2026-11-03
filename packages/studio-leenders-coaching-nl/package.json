@@ -38,14 +38,14 @@
     "styled-components": "6.3.12"
   },
   "devDependencies": {
-    "@types/node": "25.2.3",
+    "@types/node": "26.6.6",
     "@types/react": "19.2.14",
     "ts-node": "10.9.2",
     "typescript": "5.9.3"
   },
   "packageManager": "pnpm@10.32.1",
   "engines": {
-    "node": ">=22.0.0",
+    "node": ">=26.0.0",
     "pnpm": "10.32.1"
   }
 }
