@@ -43,7 +43,7 @@
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "babel-loader": "10.1.1",
-    "fallow": "1.4.0",
+    "fallow": "3.38.1",
     "husky": "9.1.7",
     "lint-staged": "16.4.0",
     "oxfmt": "0.41.0",
